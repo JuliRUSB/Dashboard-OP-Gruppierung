@@ -254,29 +254,38 @@ def create_dashboard(df):
     
     return app
 
-if __name__ == "__main__":
-    API_URL = 'https://fxdb.usb.ch/api/'
-    
-    print("Starte REDCap Export...")
-    df = export_redcap_data(API_URL)
-    
-    if df is not None:
-        print("\nBereite Daten vor...")
-        df = prepare_data(df)
-        
-        print("\nErstelle Dashboard...")
-        app = create_dashboard(df)
-        
-        print("\n" + "="*50)
-        print("Dashboard läuft unter: http://127.0.0.1:8050/")
-        print("Öffne diese URL in deinem Browser!")
-        print("Drücke Ctrl+C zum Beenden")
-        print("="*50 + "\n")
-        
-        try:
-            get_ipython()
-            app.run(debug=True, mode='inline', port=8050)
-        except:
-            app.run(debug=True, port=8050)
-    else:
-        print("Export fehlgeschlagen. Bitte API URL und Token prüfen.")
+# Lokaler Export / Test – auf Streamlit Cloud nicht nötig
+# if __name__ == "__main__":
+#     API_URL = 'https://fxdb.usb.ch/api/'
+#     
+#     print("Starte REDCap Export...")
+#     df = export_redcap_data(API_URL)
+#     
+#     if df is not None:
+#         print("\nBereite Daten vor...")
+#         df = prepare_data(df)
+#         
+#         print("\nErstelle Dashboard...")
+#         app = create_dashboard(df)
+#         
+#         print("\n" + "="*50)
+#         print("Dashboard läuft unter: http://127.0.0.1:8050/")
+#         print("Öffne diese URL in deinem Browser!")
+#         print("Drücke Ctrl+C zum Beenden")
+#         print("="*50 + "\n")
+#         
+#         try:
+#             get_ipython()
+#             app.run(debug=True, mode='inline', port=8050)
+#         except:
+#             app.run(debug=True, port=8050)
+#     else:
+#         print("Export fehlgeschlagen. Bitte API URL und Token prüfen.")
+
+# Für Streamlit Cloud einfach die App definieren
+API_URL = 'https://fxdb.usb.ch/api/'
+df = export_redcap_data(API_URL)
+
+if df is not None:
+    df = prepare_data(df)
+    app = create_dashboard(df)
