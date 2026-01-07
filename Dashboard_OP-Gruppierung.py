@@ -38,6 +38,8 @@ def export_redcap_data(api_url):
 
 def prepare_data(df):
     df = df.copy()
+    
+    # Bereich (Checkboxen) Mapping
     bereich_cols = [col for col in df.columns if col.startswith('bereich___')]
     if bereich_cols:
         mapping = {
@@ -55,6 +57,18 @@ def prepare_data(df):
             return ', '.join([label for col, label in mapping.items() if row.get(col) == '1']) or 'Nicht angegeben'
         df['bereich'] = df.apply(get_bereich, axis=1)
         df = df.drop(columns=bereich_cols)
+        
+    # Zugang (Radiobuttons) Mapping
+    zugang_mapping = {
+        1: 'Offen',
+        2: 'Laparoskopisch',
+        3: 'roboter-assistiert'
+        4: 'konvertiert'
+        5: 'hybrid (2Höhlen-Eingriffe)'
+    }
+    df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
+    df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
+
     df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce')
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     df = df.dropna(subset=['jahr_opdatum'])
