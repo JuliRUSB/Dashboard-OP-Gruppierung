@@ -99,6 +99,6 @@ if df is not None:
         st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
 
 
-if df is not None:
-    df = prepare_data(df)
-    app = create_dashboard(df)
+#if df is not None:
+#    df = prepare_data(df)
+#    app = create_dashboard(df)
