@@ -135,17 +135,23 @@ if df is not None:
     df = prepare_data(df)
 
     # -------- Filter --------
+    
     # -------- Filter für Jahr (Mehrfachauswahl + "Alle") --------
-    jahre = sorted(df['jahr_opdatum'].dropna().unique())
+    jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
         options=["Alle"] + jahre,
-        default=["Alle"]  # standardmässig Alle ausgewählt
+        default=["Alle"]
     )
 
+    # Filter anwenden
     filtered_df = df.copy()
+    # Nur filtern, wenn tatsächlich einzelne Jahre ausgewählt sind
     if "Alle" not in jahr_filter:
-        filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
+        # Alle ausgewählten Jahre in Integer umwandeln, damit der Vergleich stimmt
+        jahr_filter_int = [int(j) for j in jahr_filter]
+        filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
+    # else: "Alle" ausgewählt → keine Filterung
 
 
 
