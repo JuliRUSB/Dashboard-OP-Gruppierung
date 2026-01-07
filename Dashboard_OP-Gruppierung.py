@@ -62,8 +62,8 @@ def prepare_data(df):
     zugang_mapping = {
         1: 'Offen',
         2: 'Laparoskopisch',
-        3: 'roboter-assistiert'
-        4: 'konvertiert'
+        3: 'roboter-assistiert',
+        4: 'konvertiert',
         5: 'hybrid (2Höhlen-Eingriffe)'
     }
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
