@@ -163,7 +163,7 @@ if df is not None:
     filtered_df = df.copy()
 
     if jahr_filter != "Alle":
-        filtered_df = filtered_df[filtered_df['jahr_opdatum'] == jahr_filter]
+         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
     if bereich_filter != "Alle":
         filtered_df = filtered_df[filtered_df['bereich'] == bereich_filter]
