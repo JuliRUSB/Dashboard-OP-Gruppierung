@@ -140,11 +140,11 @@ if df is not None:
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
         options=["Alle"] + jahre,
-        default=["Alle"]  # standardmäßig Alle ausgewählt
+        default=["Alle"]  # standardmässig Alle ausgewählt
     )
 
     filtered_df = df.copy()
-    if not ("Alle" in jahr_filter):
+    if "Alle" not in jahr_filter:
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
 
