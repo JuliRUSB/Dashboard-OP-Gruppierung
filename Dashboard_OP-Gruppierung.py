@@ -145,7 +145,7 @@ if df is not None:
 
     filtered_df = df.copy()
     if not ("Alle" in jahr_filter):
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
+        filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
 
 
