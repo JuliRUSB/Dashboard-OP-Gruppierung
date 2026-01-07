@@ -143,10 +143,10 @@ if df is not None:
         default=["Alle"]  # standardmäßig Alle ausgewählt
     )
 
-    # Filter anwenden
     filtered_df = df.copy()
     if "Alle" not in jahr_filter:
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
+
 
 
     bereich_filter = st.selectbox(
