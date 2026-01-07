@@ -113,7 +113,7 @@ def prepare_data(df):
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # -------- Numerische Felder --------
-    df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')  # Jahr als Integer anzeigen
+    df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
 
     # Zeilen ohne Jahr entfernen
@@ -136,7 +136,7 @@ if df is not None:
 
     # -------- Filter --------
     
-    # -------- Filter für Jahr (Mehrfachauswahl + "Alle") --------
+    # Multiselect mit "Alle" + Mehrfachauswahl
     jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
@@ -146,13 +146,13 @@ if df is not None:
 
     # Filter anwenden
     filtered_df = df.copy()
-    # Nur filtern, wenn tatsächlich einzelne Jahre ausgewählt sind
-    if "Alle" not in jahr_filter:
+
+    # Nur filtern, wenn "Alle" NICHT ausgewählt ist UND mindestens ein Jahr ausgewählt wurde
+    if jahr_filter and "Alle" not in jahr_filter:
         # Alle ausgewählten Jahre in Integer umwandeln, damit der Vergleich stimmt
         jahr_filter_int = [int(j) for j in jahr_filter]
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
-    # else: "Alle" ausgewählt → keine Filterung
-
+    # else: "Alle" ausgewählt oder nichts ausgewählt → keine Filterung, alle Daten anzeigen
 
 
     bereich_filter = st.selectbox(
