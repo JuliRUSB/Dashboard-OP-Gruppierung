@@ -113,7 +113,7 @@ def prepare_data(df):
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # -------- Numerische Felder --------
-    df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce')
+    df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')  # Nullable Integer
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
 
     # Zeilen ohne Jahr entfernen
