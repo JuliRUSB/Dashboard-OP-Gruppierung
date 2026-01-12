@@ -243,7 +243,7 @@ fig_jahr = px.bar(
     jahr_counts_df,
     x='jahr_opdatum',
     y='count',
-    color='jahr_opdatum',
+    #color='jahr_opdatum',
     #color_discrete_map=farben,
     #labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
     title="Fallzahlen pro Jahr"
@@ -261,8 +261,8 @@ fig_quartal = px.bar(
     x='quartal_opdatum',
     y='count',
     color='jahr_opdatum',
-    #color_discrete_map=farben,
-    #labels={'quartal_opdatum':'Quartal','count':'Anzahl Fälle','jahr_opdatum':'Jahr'},
+    color_discrete_map=farben,
+    labels={'quartal_opdatum':'Quartal','count':'Anzahl Fälle','jahr_opdatum':'Jahr'},
     title="Fallzahlen pro Quartal"
 )
 col2.plotly_chart(fig_quartal, use_container_width=True)
