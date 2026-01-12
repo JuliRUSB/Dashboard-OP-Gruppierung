@@ -155,7 +155,7 @@ filtered_df = df.copy()
 if "Alle" not in jahr_filter:
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin([int(j) for j in jahr_filter])]
 
-bereich_filter = st.selectbox(
+    bereich_filter = st.selectbox(
     "Bereich auswählen:",
     ["Alle"] + sorted(df['bereich'].dropna().unique())
     )
