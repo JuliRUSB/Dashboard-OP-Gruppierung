@@ -219,9 +219,9 @@ farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr 
 jahr_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
 st.plotly_chart(
     px.bar(
-        x=quartal_counts.index,
-        y=quartal_counts.values,
-        labels={'x': 'JAhr', 'y': 'Anzahl Fälle'},
+        x=jahr_counts.index,
+        y=jahr_counts.values,
+        labels={'x': 'Jahr', 'y': 'Anzahl Fälle'},
         title="Fallzahlen pro Jahr"
     )
 )
