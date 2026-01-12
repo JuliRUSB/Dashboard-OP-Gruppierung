@@ -33,7 +33,7 @@ def export_redcap_data(api_url):
         'action': 'export',
         'format': 'json',
         'type': 'flat',
-        'fields[0]': 'jahr_opdatum',
+        'fields[0]': 'opdatum',
         'fields[1]': 'bereich',
         'fields[2]': 'hsm',
         'fields[3]': 'zugang',
