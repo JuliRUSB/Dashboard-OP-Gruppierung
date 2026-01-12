@@ -216,26 +216,52 @@ jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
 # --- Jahr ---
-jahr_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
-st.plotly_chart(
-    px.bar(
-        x=jahr_counts.index,
-        y=jahr_counts.values,
-        labels={'x': 'Jahr', 'y': 'Anzahl Fälle'},
-        title="Fallzahlen pro Jahr"
-    )
-)
+#jahr_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
+#st.plotly_chart(
+ #   px.bar(
+ #       x=jahr_counts.index,
+ #       y=jahr_counts.values,
+ #       labels={'x': 'Jahr', 'y': 'Anzahl Fälle'},
+ #       title="Fallzahlen pro Jahr"
+ #   )
+#)
 
 # --- Quartal ---
-quartal_counts = filtered_df['quartal_opdatum'].value_counts().sort_index()
-st.plotly_chart(
-    px.bar(
-        x=quartal_counts.index,
-        y=quartal_counts.values,
-        labels={'x': 'Quartal', 'y': 'Anzahl Fälle'},
-        title="Fallzahlen pro Quartal"
-    )
+#quartal_counts = filtered_df['quartal_opdatum'].value_counts().sort_index()
+#st.plotly_chart(
+ #   px.bar(
+ #       x=quartal_counts.index,
+ #       y=quartal_counts.values,
+ #       labels={'x': 'Quartal', 'y': 'Anzahl Fälle'},
+ #       title="Fallzahlen pro Quartal"
+ #   )
+#)
+
+# --- Graph 1: Fallzahlen pro Jahr ---
+jahr_counts_df = filtered_df.groupby('jahr_opdatum').size().reset_index(name='count')
+fig_jahr = px.bar(
+    jahr_counts_df,
+    x='jahr_opdatum',
+    y='count',
+    color='jahr_opdatum',
+    color_discrete_map=farben,
+    labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
+    title="Fallzahlen pro Jahr"
 )
+col1.plotly_chart(fig_jahr, use_container_width=True)
+
+# --- Graph 2: Fallzahlen pro Quartal (farblich nach Jahr) ---
+quartal_counts_df = filtered_df.groupby(['quartal_opdatum','jahr_von_quartal']).size().reset_index(name='count')
+fig_quartal = px.bar(
+    quartal_counts_df,
+    x='quartal_opdatum',
+    y='count',
+    color='jahr_von_quartal',
+    color_discrete_map=farben,
+    labels={'quartal_opdatum':'Quartal','count':'Anzahl Fälle','jahr_von_quartal':'Jahr'},
+    title="Fallzahlen pro Quartal"
+)
+col2.plotly_chart(fig_quartal, use_container_width=True)
 
 st.plotly_chart(
     px.pie(
