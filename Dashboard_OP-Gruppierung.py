@@ -217,21 +217,26 @@ farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr 
 
 # --- Graph 1: Fallzahlen pro Jahr ---
 jahr_counts_df = filtered_df.groupby('jahr_opdatum').size().reset_index(name='count')
+
+# Farben für jeden Balken in der richtigen Reihenfolge
+marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
+
+# Balkendiagramm ohne color=, nur marker_color verwenden
 fig_jahr = px.bar(
     jahr_counts_df,
     x='jahr_opdatum',
     y='count',
-    color='jahr_opdatum',
-    color_discrete_map=farben,
-    #labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
     title="Fallzahlen pro Jahr"
 )
 
+# Farben zuweisen
+fig_jahr.update_traces(marker_color=marker_colors)
+
 # Achsenbeschriftungen und Legende ausblenden
 fig_jahr.update_layout(
-    xaxis_title=None,                   # X-Achse-Titel ausblenden
-    yaxis_title=None,                   # Y-Achse-Titel ausblenden
-    showlegend=False                    # Legende ausblenden
+    xaxis_title=None,    # X-Achse-Titel ausblenden
+    yaxis_title=None,    # Y-Achse-Titel ausblenden
+    showlegend=False     # Legende ausblenden
 )
 
 col1.plotly_chart(fig_jahr, use_container_width=True)
