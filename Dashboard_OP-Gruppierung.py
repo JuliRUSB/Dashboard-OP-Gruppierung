@@ -144,25 +144,23 @@ if df is not None:
 filtered_df = df.copy()
 
 # Jahr
-jahr_filter = st.selectbox(
-    "Jahr auswählen:",
-    ["Alle"] + sorted(df['jahr_opdatum'].dropna().astype(int).unique()),
-    index=0
+jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
+    jahr_filter = st.multiselect(
+        "Jahr auswählen:",
+        options=jahre,
+        default=jahre  # standardmäßig alle Jahre auswählen
 )
 
 if jahr_filter != "Alle":
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].astype(int) == int(jahr_filter)]
 
 # Quartal
-# Quartale nur aus dem gewählten Jahr
-if jahr_filter != "Alle":
-    quartale_options = sorted(df[df['jahr_opdatum'] == int(jahr_filter)]['quartal_opdatum'].unique())
-else:
-    quartale_options = sorted(df['quartal_opdatum'].unique())
-
-quartal_filter = st.selectbox(
+quartale = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].dropna().unique()
+quartale = sorted(quartale)
+quartal_filter = st.multiselect(
     "Quartal auswählen:",
-    ["Alle"] + list(quartale_options)
+    options=quartale,
+    default=quartale
 )
 
 if quartal_filter != "Alle":
