@@ -215,39 +215,25 @@ col1, col2 = st.columns(2)
 jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
-# --- Jahr ---
-#jahr_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
-#st.plotly_chart(
- #   px.bar(
- #       x=jahr_counts.index,
- #       y=jahr_counts.values,
- #       labels={'x': 'Jahr', 'y': 'Anzahl Fälle'},
- #       title="Fallzahlen pro Jahr"
- #   )
-#)
-
-# --- Quartal ---
-#quartal_counts = filtered_df['quartal_opdatum'].value_counts().sort_index()
-#st.plotly_chart(
- #   px.bar(
- #       x=quartal_counts.index,
- #       y=quartal_counts.values,
- #       labels={'x': 'Quartal', 'y': 'Anzahl Fälle'},
- #       title="Fallzahlen pro Quartal"
- #   )
-#)
-
 # --- Graph 1: Fallzahlen pro Jahr ---
 jahr_counts_df = filtered_df.groupby('jahr_opdatum').size().reset_index(name='count')
 fig_jahr = px.bar(
     jahr_counts_df,
     x='jahr_opdatum',
     y='count',
-    #color='jahr_opdatum',
-    #color_discrete_map=farben,
-    #labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
+    color='jahr_opdatum',
+    color_discrete_map=farben,
+    labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
     title="Fallzahlen pro Jahr"
 )
+
+# Achsenbeschriftungen und Legende ausblenden
+fig_jahr.update_layout(
+    xaxis_title=None,                   # X-Achse-Titel ausblenden
+    yaxis_title=None,                   # Y-Achse-Titel ausblenden
+    showlegend=False                    # Legende ausblenden
+)
+
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
 # --- Graph 2: Fallzahlen pro Quartal (farblich nach Jahr) ---
