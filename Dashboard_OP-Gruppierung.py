@@ -147,8 +147,9 @@ if df is not None:
         default=["Alle"]
     )
 
-    # Daten filtern
-     filtered_df = df.copy()
+    # Initialisierung
+    filtered_df = df.copy()
+    
     # Nur filtern, wenn "Alle" NICHT ausgewählt ist UND mindestens ein Jahr ausgewählt wurde
     if jahr_filter and "Alle" not in jahr_filter:
         # Alle ausgewählten Jahre in Integer umwandeln, damit der Vergleich stimmt
