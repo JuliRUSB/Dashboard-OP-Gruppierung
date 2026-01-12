@@ -218,6 +218,13 @@ st.plotly_chart(
 )
 
 st.plotly_chart(
+    px.bar(
+        filtered_df['quartal_opdatum'].value_counts().sort_index(),
+        title="Fallzahlen pro Jahr"
+    )
+)
+
+st.plotly_chart(
     px.pie(
         filtered_df,
         names='bereich',
