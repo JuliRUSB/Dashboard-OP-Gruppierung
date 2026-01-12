@@ -154,16 +154,24 @@ if jahr_filter:
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
 # Quartal
-quartale = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].dropna().unique()
-quartale = sorted(quartale)
+quartale_df = df[df['jahr_opdatum'].isin(jahr_filter)][['jahr_opdatum', 'quartal_opdatum']].drop_duplicates()
+quartale_df = quartale_df.sort_values(['jahr_opdatum', 'quartal_opdatum'])
+
+quartale_options = []  # --- GEÄNDERT ---
+for jahr in quartale_df['jahr_opdatum'].sort_values().unique():  # --- GEÄNDERT ---
+    quartale_jahr = quartale_df[quartale_df['jahr_opdatum'] == jahr]['quartal_opdatum'].tolist()
+    quartale_options.append(f"--- {jahr} ---")  #optische Überschrift
+    quartale_options.extend(quartale_jahr)  #Quartale des Jahres hinzufügen
+
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
-    options=quartale,
-    default=quartale
+    options=quartale_options,
+    default=[q for q in quartale_df['quartal_opdatum']]  #alle Quartale standardmässig auswählen
 )
 
-if quartal_filter: 
-    filtered_df = filtered_df[filtered_df['quartal_opdatum'].isin(quartal_filter)]
+real_quartale = [q for q in quartal_filter if not q.startswith('---')]  #Überschriften ignorieren
+if real_quartale:
+    filtered_df = filtered_df[filtered_df['quartal_opdatum'].isin(real_quartale)] 
     
 # Bereich
 bereich_filter = st.selectbox(
