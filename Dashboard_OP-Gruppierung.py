@@ -140,16 +140,15 @@ if df is not None:
     # Daten vorbereiten
     df = prepare_data(df)
 
-# -------- Filter --------
-jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
-
-jahr_filter = st.selectbox(
-    "jahr auswählen:",
-    ["Alle"] + jahre,
-    index=0 # "Alle" standardmässig
-)
-
+# --------Filterblock--------
 filtered_df = df.copy()
+
+# Jahr
+jahr_filter = st.selectbox(
+    "Jahr auswählen:",
+    ["Alle"] + sorted(df['jahr_opdatum'].dropna().astype(int).unique()),
+    index=0
+)
 
 if jahr_filter != "Alle":
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].astype(int) == int(jahr_filter)]
