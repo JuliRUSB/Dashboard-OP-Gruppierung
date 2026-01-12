@@ -152,7 +152,7 @@ jahr_filter = st.multiselect(
 )
 
 if jahr_filter: 
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)
+    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
 # Quartal
 quartale = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].dropna().unique()
