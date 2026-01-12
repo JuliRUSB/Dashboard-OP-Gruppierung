@@ -226,6 +226,7 @@ fig_jahr = px.bar(
     jahr_counts_df,
     x='jahr_opdatum',
     y='count',
+    text='count',
     title="Fallzahlen pro Jahr"
 )
 
@@ -242,7 +243,6 @@ fig_jahr.update_layout(
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
 # --- Farbdictionary pro Jahr für Quartale ---
-# Wir brauchen das Jahr aus dem Quartal (z.B. Q1-2021 → 2021)
 filtered_df['jahr_von_quartal'] = filtered_df['quartal_opdatum'].str.split('-').str[1].astype(int)
 jahre_quartal_unique = sorted(filtered_df['jahr_von_quartal'].unique())
 farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
@@ -257,6 +257,7 @@ fig_quartal = px.bar(
     quartal_counts_df,
     x='quartal_opdatum',
     y='count',
+    text='count',
     title="Fallzahlen pro Quartal"
 )
 
