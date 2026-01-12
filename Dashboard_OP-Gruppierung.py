@@ -118,7 +118,7 @@ def prepare_data(df):
 
     # -------- Numerische Felder --------
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  
-    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str)\.str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True) # Quartale im Format QX-JJJJ
+    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True) # Quartale im Format QX-JJJJ
     df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter 
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     # Zeilen ohne Jahr entfernen
