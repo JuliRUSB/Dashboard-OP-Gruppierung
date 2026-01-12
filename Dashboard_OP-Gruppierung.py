@@ -141,8 +141,6 @@ if df is not None:
     df = prepare_data(df)
 
 # -------- Filter --------
-filtered_df = df.copy()
-
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
 
 jahr_filter = st.selectbox(
@@ -151,8 +149,10 @@ jahr_filter = st.selectbox(
     index=0 # "Alle" standardmässig
 )
 
+filtered_df = df.copy()
+
 if jahr_filter != "Alle":
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
+    filtered_df = filtered_df[filtered_df['jahr_opdatum'].int(jahr_filter)]
 
 bereich_filter = st.selectbox(
     "Bereich auswählen:",
