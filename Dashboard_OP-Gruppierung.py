@@ -216,14 +216,14 @@ jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
 # --- Jahr ---
-fig_jahr = px.bar(
-    filtered_df.groupby('jahr_opdatum').size().reset_index(name='count'),
-    x='jahr_opdatum',
-    y='count',
-    color='jahr_opdatum',
-    color_discrete_map=farben,
-    title="Fallzahlen pro Jahr",
-    labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'}
+jahr_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
+st.plotly_chart(
+    px.bar(
+        x=quartal_counts.index,
+        y=quartal_counts.values,
+        labels={'x': 'JAhr', 'y': 'Anzahl Fälle'},
+        title="Fallzahlen pro Jahr"
+    )
 )
 
 # --- Quartal ---
