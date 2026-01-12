@@ -153,6 +153,16 @@ jahr_filter = st.selectbox(
 if jahr_filter != "Alle":
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].astype(int) == int(jahr_filter)]
 
+# Quartal
+quartal_filter = st.selectbox(
+    "Quartal auswählen:",
+    ["Alle"] + sorted(df['quartal_opdatum'].dropna().unique())
+)
+
+if quartal_filter != "Alle":
+    filtered_df = filtered_df[filtered_df['quartal_opdatum'] == quartal_filter]
+    
+# Bereich
 bereich_filter = st.selectbox(
     "Bereich auswählen:",
     ["Alle"] + sorted(df['bereich'].dropna().unique())
@@ -161,6 +171,8 @@ bereich_filter = st.selectbox(
 if bereich_filter != "Alle":
     filtered_df = filtered_df[filtered_df['bereich'] == bereich_filter]
 
+
+# Zugang
 zugang_filter = st.selectbox(
     "Zugang auswählen:",
     ["Alle"] + sorted(df['zugang'].dropna().unique())
