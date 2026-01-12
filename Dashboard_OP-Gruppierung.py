@@ -210,6 +210,11 @@ col3.metric("Bereiche", filtered_df['bereich'].nunique())
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
 
+col1, col2 = st.columns(2)  # zwei Spalten nebeneinander
+
+col1.plotly_chart(jahre_counts)
+col2.plotly_chart(quartal_counts)
+
 # --- Jahr ---
 jahre_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
 st.plotly_chart(
