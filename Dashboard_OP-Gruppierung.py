@@ -241,23 +241,36 @@ fig_jahr.update_layout(
 
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
-# --- Graph 2: Fallzahlen pro Quartal (farblich nach Jahr) ---
-quartal_counts_df = (
-    filtered_df.groupby(['quartal_opdatum', 'jahr_opdatum'])
-    .size()
-    .reset_index(name='count')
-)
+# --- Farbdictionary pro Jahr für Quartale ---
+# Wir brauchen das Jahr aus dem Quartal (z.B. Q1-2021 → 2021)
+filtered_df['jahr_von_quartal'] = filtered_df['quartal_opdatum'].str.split('-').str[1].astype(int)
+jahre_quartal_unique = sorted(filtered_df['jahr_von_quartal'].unique())
+farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
+
+# --- Graph 2: Fallzahlen pro Quartal ---
+quartal_counts_df = filtered_df.groupby('quartal_opdatum').size().reset_index(name='count')
+
+# Farben jedem Balken zuweisen anhand des Jahres
+marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
+
 fig_quartal = px.bar(
     quartal_counts_df,
     x='quartal_opdatum',
     y='count',
-    color='jahr_opdatum',
-    color_discrete_map=farben,
-    labels={'quartal_opdatum':'Quartal','count':'Anzahl Fälle','jahr_opdatum':'Jahr'},
     title="Fallzahlen pro Quartal"
 )
-col2.plotly_chart(fig_quartal, use_container_width=True)
 
+# Farben zuweisen
+fig_quartal.update_traces(marker_color=marker_colors_quartal)
+
+# Achsenbeschriftungen und Legende ausblenden
+fig_quartal.update_layout(
+    xaxis_title=None,
+    yaxis_title=None,
+    showlegend=False
+)
+
+col2.plotly_chart(fig_quartal, use_container_width=True)
 st.plotly_chart(
     px.pie(
         filtered_df,
