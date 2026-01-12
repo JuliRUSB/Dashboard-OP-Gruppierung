@@ -113,7 +113,10 @@ def prepare_data(df):
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # -------- Numerische Felder --------
-    df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')
+    #df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')
+    df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')
+    df['monat_opdatum'] = df['opdatum'].dt.month.astype('Int64')
+    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str)
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
 
     # Zeilen ohne Jahr entfernen
@@ -144,9 +147,8 @@ if df is not None:
         default=["Alle"]
     )
 
-    # Filter anwenden
-    filtered_df = df.copy()
-
+    # Daten filtern
+     filtered_df = df.copy()
     # Nur filtern, wenn "Alle" NICHT ausgewählt ist UND mindestens ein Jahr ausgewählt wurde
     if jahr_filter and "Alle" not in jahr_filter:
         # Alle ausgewählten Jahre in Integer umwandeln, damit der Vergleich stimmt
@@ -164,9 +166,7 @@ if df is not None:
         "Zugang auswählen:",
         ["Alle"] + sorted(df['zugang'].dropna().unique())
     )
-
-    # Daten filtern
-    filtered_df = df.copy()
+    copy()
 
     if jahr_filter != "Alle":
          filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
