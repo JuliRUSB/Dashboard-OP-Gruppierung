@@ -170,71 +170,71 @@ if zugang_filter != "Alle":
 
     
 
-    # -------- Kennzahlen --------
-    st.subheader("Kennzahlen")
+# -------- Kennzahlen --------
+st.subheader("Kennzahlen")
 
-    col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns(3)
 
-    col1.metric("Gesamt Fälle", len(filtered_df))
+col1.metric("Gesamt Fälle", len(filtered_df))
 
-    avg_dindo = filtered_df['max_dindo_calc_surv'].mean()
-    col2.metric(
-        "Ø Clavien-Dindo",
-        f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A"
+avg_dindo = filtered_df['max_dindo_calc_surv'].mean()
+col2.metric(
+    "Ø Clavien-Dindo",
+    f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A"
+)
+
+col3.metric("Bereiche", filtered_df['bereich'].nunique())
+
+# -------- Visualisierungen --------
+st.subheader("Visualisierungen")
+
+st.plotly_chart(
+    px.bar(
+        filtered_df['jahr_opdatum'].value_counts().sort_index(),
+        title="Fallzahlen pro Jahr"
     )
+)
 
-    col3.metric("Bereiche", filtered_df['bereich'].nunique())
+st.plotly_chart(
+    px.pie(
+        filtered_df,
+        names='bereich',
+        title="Verteilung nach Bereich"
+    )
+)
 
-    # -------- Visualisierungen --------
-    st.subheader("Visualisierungen")
+st.plotly_chart(
+    px.bar(
+        filtered_df['max_dindo_calc_surv'].value_counts().sort_index(),
+        title="Clavien-Dindo Komplikationen"
+    )
+)
+
+st.plotly_chart(
+    px.bar(
+        filtered_df['zugang'].value_counts(),
+        title="Verteilung nach Zugangsart"
+    )
+)
+
+# -------- Trendanalyse --------
+if 'jahr_opdatum' in filtered_df.columns and 'bereich' in filtered_df.columns:
+    trend_data = (
+        filtered_df
+        .groupby(['jahr_opdatum', 'bereich'])
+        .size()
+        .reset_index(name='count')
+    )
 
     st.plotly_chart(
-        px.bar(
-            filtered_df['jahr_opdatum'].value_counts().sort_index(),
-            title="Fallzahlen pro Jahr"
+        px.line(
+            trend_data,
+            x='jahr_opdatum',
+            y='count',
+            color='bereich',
+            title="Trend über Zeit nach Bereich"
         )
     )
-
-    st.plotly_chart(
-        px.pie(
-            filtered_df,
-            names='bereich',
-            title="Verteilung nach Bereich"
-        )
-    )
-
-    st.plotly_chart(
-        px.bar(
-            filtered_df['max_dindo_calc_surv'].value_counts().sort_index(),
-            title="Clavien-Dindo Komplikationen"
-        )
-    )
-
-    st.plotly_chart(
-        px.bar(
-            filtered_df['zugang'].value_counts(),
-            title="Verteilung nach Zugangsart"
-        )
-    )
-
-    # -------- Trendanalyse --------
-    if 'jahr_opdatum' in filtered_df.columns and 'bereich' in filtered_df.columns:
-        trend_data = (
-            filtered_df
-            .groupby(['jahr_opdatum', 'bereich'])
-            .size()
-            .reset_index(name='count')
-        )
-
-        st.plotly_chart(
-            px.line(
-                trend_data,
-                x='jahr_opdatum',
-                y='count',
-                color='bereich',
-                title="Trend über Zeit nach Bereich"
-            )
-        )
 
 
 #if df is not None:
