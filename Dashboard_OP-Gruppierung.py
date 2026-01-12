@@ -209,11 +209,11 @@ col3.metric("Bereiche", filtered_df['bereich'].nunique())
 
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
+col1, col2 = st.columns(2)
 
-col1, col2 = st.columns(2)  # zwei Spalten nebeneinander
-
-col1.plotly_chart(jahre_counts)
-col2.plotly_chart(quartal_counts)
+# --- Farbdictionary pro Jahr ---
+jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
+farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
 # --- Jahr ---
 jahre_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
