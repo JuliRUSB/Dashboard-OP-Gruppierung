@@ -140,38 +140,25 @@ if df is not None:
     # Daten vorbereiten
     df = prepare_data(df)
 
-    # -------- Filter --------
+filtered_df = df.copy()
     
 # -------- Filter --------
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
 
-jahr_filter = st.multiselect(
-    "Jahr auswählen:",
-    options=["Alle"] + jahre,
-    default=["Alle"]
-)
-
-# Filter anwenden
-if "Alle" in jahr_filter:
-    filtered_df = df.copy()   # alle Daten für Berechnungen
-    plot_df = df.copy()       # separate DataFrame für Diagramme
-else:
-    filtered_df = df[df['jahr_opdatum'].isin([int(j) for j in jahr_filter])]
-    plot_df = filtered_df.copy()
-    bereich_filter = st.selectbox(
-    "Bereich auswählen:",
-    ["Alle"] + sorted(df['bereich'].dropna().unique())
-    )
-
-    bereich_filter = st.selectbox(
-        "Bereich auswählen:",
+jahr_filter = st.selectbox(
+        "jahr auswählen:",
         ["Alle"] + sorted(df['bereich'].dropna().unique())
     )
 
-    zugang_filter = st.selectbox(
-        "Zugang auswählen:",
-        ["Alle"] + sorted(df['zugang'].dropna().unique())
-    )
+bereich_filter = st.selectbox(
+    "Bereich auswählen:",
+    ["Alle"] + sorted(df['bereich'].dropna().unique())
+)
+
+zugang_filter = st.selectbox(
+    "Zugang auswählen:",
+    ["Alle"] + sorted(df['zugang'].dropna().unique())
+)
     
 
     if jahr_filter != "Alle":
