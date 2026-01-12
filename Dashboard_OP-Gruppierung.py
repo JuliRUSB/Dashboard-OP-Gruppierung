@@ -156,9 +156,10 @@ jahr_filter = st.multiselect(
 filtered_df = df.copy()
 
 # Filter
-if "Alle" not in jahr_filter:
-    jahr_filter_int = [int(j) for j in jahr_filter]
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
+    jahr_filter = st.selectbox(
+        "Jahr auswählen:",
+        ["Alle"] + sorted(df['bereich'].dropna().unique())
+    )
 
     bereich_filter = st.selectbox(
         "Bereich auswählen:",
