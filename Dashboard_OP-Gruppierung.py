@@ -152,12 +152,13 @@ jahr_filter = st.multiselect(
     default=["Alle"]
 )
 
+
+filtered_df = df.copy()
+
 # Filter
-if "Alle" in jahr_filter or not jahr_filter:
-    filtered_df = df.copy()
-else:
+if "Alle" not in jahr_filter:
     jahr_filter_int = [int(j) for j in jahr_filter]
-    filtered_df = df[df['jahr_opdatum'].isin(jahr_filter_int)]
+    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
 
     bereich_filter = st.selectbox(
         "Bereich auswählen:",
