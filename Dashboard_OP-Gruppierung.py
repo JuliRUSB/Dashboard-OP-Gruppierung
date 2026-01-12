@@ -148,8 +148,8 @@ if df is not None:
         "Jahr auswählen:",
         #options=["Alle"] + jahre,
         #default=["Alle"]
-        #options= jahre,
-        #default=["Alle"]
+        options= jahre,
+        default=["Alle"]
     )
 
     # Initialisierung
