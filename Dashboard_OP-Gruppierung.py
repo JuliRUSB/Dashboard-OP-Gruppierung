@@ -122,6 +122,13 @@ def prepare_data(df):
     df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
 
+    # Hilfsspalte zum Sortieren
+    df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter
+
+    # Quartale für den Filter nach Jahr sortieren
+    quartale = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].dropna().unique()
+    quartale = sorted(quartale, key=lambda x: df.loc[df['quartal_opdatum']==x, 'quartal_sort'].min())
+
     # Zeilen ohne Jahr entfernen
     df = df.dropna(subset=['jahr_opdatum'])
 
