@@ -144,11 +144,12 @@ if df is not None:
     
     # Multiselect mit "Alle" + Mehrfachauswahl
     jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
+    # "Alle" als Option hinzufügen
+    optionen_jahre = ["Alle"] + jahre
+    
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
-        #options=["Alle"] + jahre,
-        #default=["Alle"]
-        options= jahre,
+        options=optionen_jahre,
         default=["Alle"]
     )
 
@@ -156,10 +157,9 @@ if df is not None:
     filtered_df = df.copy()
     
     # Jahresfilter nur anwenden, wenn "Alle" **nicht** ausgewählt ist
-    if jahr_filter != ["Alle"]:
+    if "Alle" not in jahr_filter:
         jahr_filter_int = [int(j) for j in jahr_filter]
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
-
 
     bereich_filter = st.selectbox(
         "Bereich auswählen:",
