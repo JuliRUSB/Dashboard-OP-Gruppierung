@@ -154,9 +154,15 @@ if jahr_filter != "Alle":
     filtered_df = filtered_df[filtered_df['jahr_opdatum'].astype(int) == int(jahr_filter)]
 
 # Quartal
+# Quartale nur aus dem gewählten Jahr
+if jahr_filter != "Alle":
+    quartale_options = sorted(df[df['jahr_opdatum'] == int(jahr_filter)]['quartal_opdatum'].unique())
+else:
+    quartale_options = sorted(df['quartal_opdatum'].unique())
+
 quartal_filter = st.selectbox(
     "Quartal auswählen:",
-    ["Alle"] + sorted(df['quartal_opdatum'].dropna().unique())
+    ["Alle"] + list(quartale_options)
 )
 
 if quartal_filter != "Alle":
