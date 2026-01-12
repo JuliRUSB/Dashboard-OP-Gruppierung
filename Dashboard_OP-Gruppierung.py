@@ -140,35 +140,36 @@ if df is not None:
     # Daten vorbereiten
     df = prepare_data(df)
 
-filtered_df = df.copy()
-    
 # -------- Filter --------
+filtered_df = df.copy()
+
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
 
 jahr_filter = st.selectbox(
     "jahr auswählen:",
-    ["Alle"] + sorted(df['bereich'].dropna().unique())
+    ["Alle"] + jahre,
+    index=0 # "Alle" standardmässig
 )
+
+if jahr_filter != "Alle":
+    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
 
 bereich_filter = st.selectbox(
     "Bereich auswählen:",
     ["Alle"] + sorted(df['bereich'].dropna().unique())
 )
 
+if bereich_filter != "Alle":
+    filtered_df = filtered_df[filtered_df['bereich'] == bereich_filter]
+
 zugang_filter = st.selectbox(
     "Zugang auswählen:",
     ["Alle"] + sorted(df['zugang'].dropna().unique())
 )
+if zugang_filter != "Alle":
+    filtered_df = filtered_df[filtered_df['zugang'] == zugang_filter] 
+
     
-
-    if jahr_filter != "Alle":
-         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
-
-    if bereich_filter != "Alle":
-        filtered_df = filtered_df[filtered_df['bereich'] == bereich_filter]
-
-    if zugang_filter != "Alle":
-        filtered_df = filtered_df[filtered_df['zugang'] == zugang_filter]
 
     # -------- Kennzahlen --------
     st.subheader("Kennzahlen")
