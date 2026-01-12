@@ -151,10 +151,13 @@ jahr_filter = st.multiselect(
     default=["Alle"]
 )
 
-filtered_df = df.copy()
-if "Alle" not in jahr_filter:
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin([int(j) for j in jahr_filter])]
-
+# Filter anwenden
+if "Alle" in jahr_filter:
+    filtered_df = df.copy()   # alle Daten für Berechnungen
+    plot_df = df.copy()       # separate DataFrame für Diagramme
+else:
+    filtered_df = df[df['jahr_opdatum'].isin([int(j) for j in jahr_filter])]
+    plot_df = filtered_df.copy()
     bereich_filter = st.selectbox(
     "Bereich auswählen:",
     ["Alle"] + sorted(df['bereich'].dropna().unique())
