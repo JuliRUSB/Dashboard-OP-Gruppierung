@@ -244,7 +244,7 @@ fig_jahr = px.bar(
     x='jahr_opdatum',
     y='count',
     color='jahr_opdatum',
-    color_discrete_map=farben,
+    #color_discrete_map=farben,
     labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
     title="Fallzahlen pro Jahr"
 )
@@ -261,7 +261,7 @@ fig_quartal = px.bar(
     x='quartal_opdatum',
     y='count',
     color='jahr_opdatum',
-    color_discrete_map=farben,
+    #color_discrete_map=farben,
     labels={'quartal_opdatum':'Quartal','count':'Anzahl Fälle','jahr_opdatum':'Jahr'},
     title="Fallzahlen pro Quartal"
 )
