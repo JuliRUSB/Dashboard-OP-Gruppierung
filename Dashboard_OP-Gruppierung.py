@@ -146,9 +146,9 @@ filtered_df = df.copy()
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
 
 jahr_filter = st.selectbox(
-        "jahr auswählen:",
-        ["Alle"] + sorted(df['bereich'].dropna().unique())
-    )
+    "jahr auswählen:",
+    ["Alle"] + sorted(df['bereich'].dropna().unique())
+)
 
 bereich_filter = st.selectbox(
     "Bereich auswählen:",
