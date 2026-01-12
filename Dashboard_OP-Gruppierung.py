@@ -223,7 +223,7 @@ fig_jahr = px.bar(
     y='count',
     color='jahr_opdatum',
     color_discrete_map=farben,
-    labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
+    #labels={'jahr_opdatum':'Jahr','count':'Anzahl Fälle'},
     title="Fallzahlen pro Jahr"
 )
 
