@@ -171,7 +171,7 @@ if df is not None:
         "Zugang auswählen:",
         ["Alle"] + sorted(df['zugang'].dropna().unique())
     )
-    copy()
+    filtered_df = df.copy()
 
     if jahr_filter != "Alle":
          filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
