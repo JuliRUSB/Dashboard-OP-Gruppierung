@@ -117,7 +117,6 @@ def prepare_data(df):
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # -------- Numerische Felder --------
-    #df['jahr_opdatum'] = pd.to_numeric(df['jahr_opdatum'], errors='coerce').astype('Int64')
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')
     df['monat_opdatum'] = df['opdatum'].dt.month.astype('Int64')
     df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str)
@@ -155,7 +154,7 @@ if df is not None:
     filtered_df = df.copy()
     
     # Jahresfilter nur anwenden, wenn "Alle" **nicht** ausgewählt ist
-    if jahr_filter and "Alle" not in jahr_filter:
+    if jahr_filter != ["Alle"]:
         jahr_filter_int = [int(j) for j in jahr_filter]
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
 
@@ -169,7 +168,7 @@ if df is not None:
         "Zugang auswählen:",
         ["Alle"] + sorted(df['zugang'].dropna().unique())
     )
-    filtered_df = df.copy()
+    
 
     if jahr_filter != "Alle":
          filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
