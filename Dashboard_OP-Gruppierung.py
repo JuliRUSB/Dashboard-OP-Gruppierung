@@ -119,7 +119,7 @@ def prepare_data(df):
     # -------- Numerische Felder --------
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')
     df['monat_opdatum'] = df['opdatum'].dt.month.astype('Int64')
-    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str)
+    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
 
     # Zeilen ohne Jahr entfernen
