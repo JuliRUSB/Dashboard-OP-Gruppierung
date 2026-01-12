@@ -145,10 +145,10 @@ filtered_df = df.copy()
 
 # Jahr
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
-    jahr_filter = st.multiselect(
-        "Jahr auswählen:",
-        options=jahre,
-        default=jahre  # standardmäßig alle Jahre auswählen
+jahr_filter = st.multiselect(
+     "Jahr auswählen:",
+    options=jahre,
+    default=jahre  # standardmäßig alle Jahre auswählen
 )
 
 if jahr_filter != "Alle":
