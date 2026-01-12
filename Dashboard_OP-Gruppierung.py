@@ -144,13 +144,12 @@ if df is not None:
     
     # Multiselect mit "Alle" + Mehrfachauswahl
     jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
-    # "Alle" als Option hinzufügen
-    optionen_jahre = ["Alle"] + jahre
     
+    # Multiselect: alle Jahre standardmässig ausgewählt
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
-        options=optionen_jahre,
-        default=["Alle"]
+        options=jahre,
+        default=jahre  # alle Jahre vorab ausgewählt
     )
 
     # Initialisierung
