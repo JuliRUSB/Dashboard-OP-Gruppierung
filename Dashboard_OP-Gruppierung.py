@@ -154,12 +154,10 @@ if df is not None:
     # Initialisierung
     filtered_df = df.copy()
     
-    # Nur filtern, wenn "Alle" NICHT ausgewählt ist UND mindestens ein Jahr ausgewählt wurde
+    # Jahresfilter nur anwenden, wenn "Alle" **nicht** ausgewählt ist
     if jahr_filter and "Alle" not in jahr_filter:
-        # Alle ausgewählten Jahre in Integer umwandeln, damit der Vergleich stimmt
         jahr_filter_int = [int(j) for j in jahr_filter]
         filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter_int)]
-    # else: "Alle" ausgewählt oder nichts ausgewählt → keine Filterung, alle Daten anzeigen
 
 
     bereich_filter = st.selectbox(
