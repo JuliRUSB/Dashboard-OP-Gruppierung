@@ -67,6 +67,10 @@ def prepare_data(df):
     # Kopie erstellen, um Originaldaten nicht zu verändern
     df = df.copy()
 
+    # Sicherstellen, dass opdatum ein datetime ist
+    df['opdatum'] = pd.to_datetime(df['opdatum'], errors='coerce')
+
+
     # -------- Bereich (Checkboxen aus REDCap) --------
     # Checkboxen erzeugen mehrere Spalten: bereich___1, bereich___2, ...
     bereich_cols = [col for col in df.columns if col.startswith('bereich___')]
