@@ -151,8 +151,8 @@ jahr_filter = st.multiselect(
     default=jahre  # standardmäßig alle Jahre auswählen
 )
 
-if jahr_filter != "Alle":
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].astype(int) == int(jahr_filter)]
+if jahr_filter: 
+    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)
 
 # Quartal
 quartale = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].dropna().unique()
@@ -163,8 +163,8 @@ quartal_filter = st.multiselect(
     default=quartale
 )
 
-if quartal_filter != "Alle":
-    filtered_df = filtered_df[filtered_df['quartal_opdatum'] == quartal_filter]
+if quartal_filter: 
+    filtered_df = filtered_df[filtered_df['quartal_opdatum'].isin(quartal_filter)]
     
 # Bereich
 bereich_filter = st.selectbox(
