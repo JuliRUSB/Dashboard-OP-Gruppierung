@@ -210,16 +210,24 @@ col3.metric("Bereiche", filtered_df['bereich'].nunique())
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
 
+# --- Jahr ---
+jahre_counts = filtered_df['jahr_opdatum'].value_counts().sort_index()
 st.plotly_chart(
     px.bar(
-        filtered_df['jahr_opdatum'].value_counts().sort_index(),
+        x=jahre_counts.index,
+        y=jahre_counts.values,
+        labels={'x': 'Jahr', 'y': 'Anzahl Fälle'},
         title="Fallzahlen pro Jahr"
     )
 )
 
+# --- Quartal ---
+quartal_counts = filtered_df['quartal_opdatum'].value_counts().sort_index()
 st.plotly_chart(
     px.bar(
-        filtered_df['quartal_opdatum'].value_counts().sort_index(),
+        x=quartal_counts.index,
+        y=quartal_counts.values,
+        labels={'x': 'Quartal', 'y': 'Anzahl Fälle'},
         title="Fallzahlen pro Quartal"
     )
 )
