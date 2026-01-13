@@ -111,13 +111,23 @@ df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]  # für Jahresplot
 quartale_df = df_jahr[['jahr_opdatum','quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
 quartale_options = quartale_df['quartal_opdatum'].tolist()
 
-# Multiselect Quartal mit key, damit Dropdown beim Filtern offen bleibt
+# Session State für Quartale initialisieren
+if 'quartal_filter' not in st.session_state:
+    st.session_state['quartal_filter'] = quartale_options
+
+# Filter nur gültige Quartale
+st.session_state['quartal_filter'] = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
+
+# Quartal Multiselect, key für Persistenz
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
     options=quartale_options,
-    default=quartale_options,
-    key="quartal_filter"
+    default=st.session_state['quartal_filter'],
+    key='quartal_widget'
 )
+
+# Nur die ausgewählten Quartale behalten
+st.session_state['quartal_filter'] = quartal_filter
 df_quartal = df_jahr[df_jahr['quartal_opdatum'].isin(quartal_filter)]
 
 # Bereich
