@@ -109,7 +109,7 @@ def prepare_data(df):
 # Streamlit App
 # ==================================================
 st.set_page_config(page_title="OP-Gruppierung Dashboard", layout="wide")
-st.title("Dashboard "OP-Gruppierung"")
+st.title("Dashboard OP-Gruppierung")
 
 # Daten laden
 with st.spinner('Lade Daten...'):
