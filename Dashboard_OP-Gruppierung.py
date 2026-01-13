@@ -102,65 +102,69 @@ if df is not None:
 else:
     st.stop()
 
-# -------- Quartale Filter --------
-quartale_df = df[['jahr_opdatum','quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
-quartale_options = quartale_df['quartal_opdatum'].tolist()
+# -------- Dynamische Filter Logik --------
+# Alle Jahre und Quartale
+alle_jahre = sorted(df['jahr_opdatum'].unique())
+alle_quartale = sorted(df['quartal_opdatum'].unique())
 
-# session_state initialisieren, falls nicht vorhanden
-if 'quartal_filter' not in st.session_state:
+# 1) Jahr auswählen
+jahr_filter = st.multiselect("Jahr auswählen:", options=alle_jahre, default=alle_jahre)
+
+# 2) Quartale innerhalb der gewählten Jahre
+quartale_options = sorted(df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].unique())
+# Wenn vorherige Auswahl in Quartalen existiert, behalten, sonst alle auswählen
+if 'quartal_filter' not in st.session_state or not st.session_state['quartal_filter']:
     st.session_state['quartal_filter'] = quartale_options
+else:
+    # Entferne ungültige Quartale
+    st.session_state['quartal_filter'] = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
+    if not st.session_state['quartal_filter']:
+        st.session_state['quartal_filter'] = quartale_options
 
-# Nur gültige Quartale als default
-default_quartal = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
     options=quartale_options,
-    default=default_quartal
+    default=st.session_state['quartal_filter']
 )
 st.session_state['quartal_filter'] = quartal_filter
 
-df_quartal = df[df['quartal_opdatum'].isin(quartal_filter)]
+# Dynamische Anpassung der Jahre: nur Jahre, die noch Quartale haben
+jahr_filter = sorted(df[df['quartal_opdatum'].isin(quartal_filter)]['jahr_opdatum'].unique())
 
-# -------- Jahr Filter dynamisch auf Basis der ausgewählten Quartale --------
-jahre_options = sorted(df_quartal['jahr_opdatum'].unique())
-if 'jahr_filter' not in st.session_state:
-    st.session_state['jahr_filter'] = jahre_options
+# Filter anwenden
+df_filtered = df[
+    (df['jahr_opdatum'].isin(jahr_filter)) &
+    (df['quartal_opdatum'].isin(quartal_filter))
+]
 
-# Standardauswahl: alle noch gültigen Jahre
-default_jahr = [j for j in st.session_state['jahr_filter'] if j in jahre_options]
-jahr_filter = st.multiselect("Jahr auswählen:", options=jahre_options, default=default_jahr)
-st.session_state['jahr_filter'] = jahr_filter
-
-df_jahr = df_quartal[df_quartal['jahr_opdatum'].isin(jahr_filter)]
-
-# -------- Bereich --------
+# Bereich
 bereich_filter = st.selectbox("Bereich auswählen:", ["Alle"] + sorted(df['bereich'].unique()))
 if bereich_filter != "Alle":
-    df_jahr = df_jahr[df_jahr['bereich'] == bereich_filter]
+    df_filtered = df_filtered[df_filtered['bereich'] == bereich_filter]
 
-# -------- Zugang --------
+# Zugang
 zugang_filter = st.selectbox("Zugang auswählen:", ["Alle"] + sorted(df['zugang'].unique()))
 if zugang_filter != "Alle":
-    df_jahr = df_jahr[df_jahr['zugang'] == zugang_filter]
+    df_filtered = df_filtered[df_filtered['zugang'] == zugang_filter]
 
 # -------- Kennzahlen --------
 st.subheader("Kennzahlen")
 col1, col2, col3 = st.columns(3)
-col1.metric("Gesamt Fälle", len(df_jahr))
-avg_dindo = df_jahr['max_dindo_calc_surv'].mean()
+col1.metric("Gesamt Fälle", len(df_filtered))
+avg_dindo = df_filtered['max_dindo_calc_surv'].mean()
 col2.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
-col3.metric("Bereiche", df_jahr['bereich'].nunique())
+col3.metric("Bereiche", df_filtered['bereich'].nunique())
 
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
 col1, col2 = st.columns(2)
 
 # Farbdictionary Jahr
-jahre_unique = sorted(df_jahr['jahr_opdatum'].unique())
+jahre_unique = sorted(df_filtered['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
 # Graph 1: Jahr
-jahr_counts_df = df_jahr.groupby('jahr_opdatum').size().reset_index(name='count')
+jahr_counts_df = df_filtered.groupby('jahr_opdatum').size().reset_index(name='count')
 marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
 fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
 fig_jahr.update_traces(marker_color=marker_colors)
@@ -168,7 +172,7 @@ fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
 # Graph 2: Quartal
-df_quartal_plot = df_jahr.copy()
+df_quartal_plot = df_filtered.copy()
 df_quartal_plot['jahr_von_quartal'] = df_quartal_plot['quartal_opdatum'].str.split('-').str[1].astype(int)
 jahre_quartal_unique = sorted(df_quartal_plot['jahr_von_quartal'].unique())
 farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
@@ -181,15 +185,15 @@ fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
 col2.plotly_chart(fig_quartal, use_container_width=True)
 
 # Pie nach Bereich
-st.plotly_chart(px.pie(df_jahr, names='bereich', title="Verteilung nach Bereich"))
+st.plotly_chart(px.pie(df_filtered, names='bereich', title="Verteilung nach Bereich"))
 
 # Clavien-Dindo
-st.plotly_chart(px.bar(df_jahr['max_dindo_calc_surv'].value_counts().sort_index(), title="Clavien-Dindo Komplikationen"))
+st.plotly_chart(px.bar(df_filtered['max_dindo_calc_surv'].value_counts().sort_index(), title="Clavien-Dindo Komplikationen"))
 
 # Zugang
-st.plotly_chart(px.bar(df_jahr['zugang'].value_counts(), title="Verteilung nach Zugangsart"))
+st.plotly_chart(px.bar(df_filtered['zugang'].value_counts(), title="Verteilung nach Zugangsart"))
 
 # Trendanalyse
-if 'jahr_opdatum' in df_jahr.columns and 'bereich' in df_jahr.columns:
-    trend_data = df_jahr.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
+if 'jahr_opdatum' in df_filtered.columns and 'bereich' in df_filtered.columns:
+    trend_data = df_filtered.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
     st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
