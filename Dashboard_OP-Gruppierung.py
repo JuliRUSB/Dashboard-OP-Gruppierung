@@ -102,29 +102,36 @@ if df is not None:
 else:
     st.stop()
 
-# -------- Session State für dynamische Filter --------
+# -------- Session State initialisieren --------
 if 'jahr_filter' not in st.session_state:
-    st.session_state['jahr_filter'] = sorted(df['jahr_opdatum'].astype(int).unique())
+    st.session_state['jahr_filter'] = sorted(df['jahr_opdatum'].unique())
 if 'quartal_filter' not in st.session_state:
     st.session_state['quartal_filter'] = sorted(df['quartal_opdatum'].unique())
 
-# -------- Dynamische Filter-Logik --------
+# -------- Dynamische Filter Logik --------
+# Zuerst alle verfügbaren Quartale nach Session-State und ausgewählten Jahren bestimmen
+def get_available_quartale(selected_jahre):
+    return sorted(df[df['jahr_opdatum'].isin(selected_jahre)]['quartal_opdatum'].unique())
+
+# Zuerst alle verfügbaren Jahre nach Session-State und ausgewählten Quartalen bestimmen
+def get_available_jahre(selected_quartale):
+    return sorted(df[df['quartal_opdatum'].isin(selected_quartale)]['jahr_opdatum'].unique())
+
 # Filter: Jahr
-jahr_options = sorted(df['jahr_opdatum'].unique())
+available_jahre = get_available_jahre(st.session_state['quartal_filter'])
 jahr_filter = st.multiselect(
     "Jahr auswählen:",
-    options=jahr_options,
-    default=[j for j in st.session_state['jahr_filter'] if j in jahr_options]
+    options=available_jahre,
+    default=[j for j in st.session_state['jahr_filter'] if j in available_jahre]
 )
 st.session_state['jahr_filter'] = jahr_filter
 
 # Filter: Quartal
-# nur Quartale anzeigen, die in den gewählten Jahren vorkommen
-quartale_options = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].sort_values().unique()
+available_quartale = get_available_quartale(st.session_state['jahr_filter'])
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
-    options=quartale_options,
-    default=[q for q in st.session_state['quartal_filter'] if q in quartale_options]
+    options=available_quartale,
+    default=[q for q in st.session_state['quartal_filter'] if q in available_quartale]
 )
 st.session_state['quartal_filter'] = quartal_filter
 
