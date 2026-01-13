@@ -180,7 +180,7 @@ bereich_filter = st.selectbox(
 )
 
 if bereich_filter != "Alle":
-    filtered_df = filtered_df[filtered_df['bereich'] == bereich_filter]
+    filtered_bereich_df = df_bereich[df_bereich['bereich'] == bereich_filter]
 
 
 # Zugang
@@ -189,7 +189,7 @@ zugang_filter = st.selectbox(
     ["Alle"] + sorted(df['zugang'].dropna().unique())
 )
 if zugang_filter != "Alle":
-    filtered_df = filtered_df[filtered_df['zugang'] == zugang_filter] 
+    filtered_zugang_df = df_zugang[df_zugang['zugang'] == zugang_filter] 
 
     
 
