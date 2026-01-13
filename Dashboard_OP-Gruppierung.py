@@ -198,7 +198,7 @@ st.subheader("Kennzahlen")
 
 col1, col2, col3 = st.columns(3)
 
-col1.metric("Gesamt Fälle", len(filtered_df))
+col1.metric("Gesamt Fälle", len(df_jahr))
 
 avg_dindo = filtered_df['max_dindo_calc_surv'].mean()
 col2.metric(
