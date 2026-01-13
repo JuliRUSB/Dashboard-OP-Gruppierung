@@ -207,6 +207,23 @@ col2.metric(
 
 col3.metric("Bereiche", filtered_df['bereich'].nunique())
 
+# ==================================================
+# Datenaufteilung für Plots
+# ==================================================
+
+# Basis
+df_base = df.copy()
+
+# Jahresfilter (für BEIDE Plots)
+df_jahr = df_base[df_base['jahr_opdatum'].isin(jahre_auswahl)]
+
+# Quartalsfilter (NUR für Quartalsplot)
+df_quartal = df_jahr.copy()
+if quartale_auswahl:
+    df_quartal = df_quartal[df_quartal['quartal_opdatum'].isin(quartale_auswahl)]
+
+
+
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
 col1, col2 = st.columns(2)
