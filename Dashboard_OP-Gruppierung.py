@@ -1,59 +1,57 @@
 # ==================================================
-# Imports
+# Imports – Bibliotheken laden
 # ==================================================
-import os                      # Zugriff auf Umgebungsvariablen
-import requests                # Für HTTP-Requests (z.B. REDCap API)
-import pandas as pd            # Datenverarbeitung mit DataFrames
-import plotly.express as px    # Plotly Express für einfache Visualisierungen
-import streamlit as st         # Für die Web-App
-import urllib3                 # Für das Unterdrücken von HTTPS-Warnungen
+import os                          # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
+import requests                    # HTTP-Requests (hier für REDCap API)
+import pandas as pd                # Datenverarbeitung mit DataFrames
+import plotly.express as px        # Plotly Express für Diagramme
+import streamlit as st             # Streamlit für Web-App
+import urllib3                     # Bibliothek für HTTP-Kommunikation
 
-# Deaktiviert unsichere HTTPS-Warnungen, die von REDCap verursacht werden können
+# Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ==================================================
 # Konfiguration
 # ==================================================
-API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API Endpoint
+API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 
 # ==================================================
 # Datenexport aus REDCap
 # ==================================================
-@st.cache_data(ttl=300)  # Cache die Funktionsergebnisse für 5 Minuten, um API-Aufrufe zu sparen
+@st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
 def export_redcap_data(api_url):
     """Exportiert Daten aus REDCap mit Caching"""
-    
-    # API-Token aus Umgebungsvariablen holen
+    # API-Token aus Umgebungsvariable holen
     API_TOKEN = os.getenv("tok_op_gruppen")
     if not API_TOKEN:
         st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
         return None
     
-    # Parameter für den POST-Request an REDCap
+    # Daten für POST-Request definieren
     data = {
         'token': API_TOKEN,
-        'content': 'record',           # Daten sollen als Records exportiert werden
-        'action': 'export',            # Export-Aktion
-        'format': 'json',              # JSON-Format
-        'type': 'flat',                # Flache Tabellenstruktur
-        'fields[0]': 'opdatum',        # Felder, die exportiert werden sollen
+        'content': 'record',              # Datentyp: Records
+        'action': 'export',               # Aktion: Export
+        'format': 'json',                 # Format: JSON
+        'type': 'flat',                   # Flache Struktur (nicht verschachtelt)
+        'fields[0]': 'opdatum',           # Felder, die exportiert werden sollen
         'fields[1]': 'bereich',
         'fields[2]': 'hsm',
         'fields[3]': 'zugang',
         'fields[4]': 'max_dindo_calc_surv',
-        'rawOrLabel': 'raw',           # Rohwerte statt Labels
+        'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
         'exportSurveyFields': 'false',
         'exportDataAccessGroups': 'false',
         'returnFormat': 'json'
     }
-    
-    # API-Aufruf
     try:
+        # API-Request senden (POST)
         r = requests.post(api_url, data=data, verify=False, timeout=30)
-        r.raise_for_status()  # Fehler bei HTTP-Statuscodes > 399
-        return pd.DataFrame(r.json())  # Rückgabe als Pandas DataFrame
+        r.raise_for_status()  # Fehler werfen, falls HTTP-Status nicht OK
+        return pd.DataFrame(r.json())  # JSON in DataFrame umwandeln
     except requests.exceptions.RequestException as e:
         st.error(f"Fehler beim Export: {e}")
         return None
@@ -63,14 +61,14 @@ def export_redcap_data(api_url):
 # ==================================================
 @st.cache_data
 def prepare_data(df):
-    """Bereitet die Rohdaten auf für die Analyse"""
+    """Bereitet die Rohdaten auf"""
     if df is None or df.empty:
         return None
-        
-    df = df.copy()  # Kopie erstellen, um Originaldaten nicht zu verändern
-    df['opdatum'] = pd.to_datetime(df['opdatum'], errors='coerce')  # Datumsspalte in Datetime umwandeln
     
-    # Bereichsspalten: Multiple-Choice-Felder in lesbare Labels umwandeln
+    df = df.copy()  # Kopie, damit Originaldaten nicht verändert werden
+    df['opdatum'] = pd.to_datetime(df['opdatum'], errors='coerce')  # Datum konvertieren
+    
+    # Bereich: Spalten mit 'bereich___' zusammenfassen
     bereich_cols = [c for c in df.columns if c.startswith('bereich___')]
     if bereich_cols:
         mapping = {
@@ -84,13 +82,13 @@ def prepare_data(df):
             'bereich___8': 'Pankreas',
             'bereich___9': 'Upper-GI'
         }
-        # Funktion zur Umwandlung von Multiple-Choice in Text
+        # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_bereich(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['bereich'] = df.apply(get_bereich, axis=1)
-        df = df.drop(columns=bereich_cols)  # Rohspalten löschen
+        df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
 
-    # Zugang: numerische Codes in lesbare Labels umwandeln
+    # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
         1: 'Offen',
         2: 'Laparoskopisch',
@@ -101,45 +99,49 @@ def prepare_data(df):
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
-    # Weitere Felder vorbereiten
+    # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
-    # Quartal in Q1-2026 Format umwandeln
-    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
-    df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter  # Hilfsfeld für Sortierung
+    # Quartal als "Q1-2026"-Format
+    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(
+        r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
+    # Quartals-Sortierung als Zahl (für Diagramme)
+    df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     
-    df = df.dropna(subset=['jahr_opdatum'])  # Zeilen ohne gültiges Jahr entfernen
+    # Zeilen ohne gültiges Datum entfernen
+    df = df.dropna(subset=['jahr_opdatum'])
     
     return df
 
 # ==================================================
 # Streamlit App
 # ==================================================
-st.set_page_config(page_title="OP-Gruppierung Dashboard", layout="wide")
+st.set_page_config(page_title="OP-Gruppierung Dashboard", layout="wide")  # Layout festlegen
 st.title("Dashboard OP-Gruppierung")
 
-# Daten laden mit Ladeanzeige
+# Daten laden
 with st.spinner('Lade Daten...'):
-    df_raw = export_redcap_data(API_URL)
-    df = prepare_data(df_raw)
+    df_raw = export_redcap_data(API_URL)  # Daten aus REDCap exportieren
+    df = prepare_data(df_raw)             # Daten aufbereiten
 
+# Fehlerbehandlung: keine Daten
 if df is None or df.empty:
     st.error("Keine Daten verfügbar.")
     st.stop()
 
 # -------- Session State initialisieren --------
-# Liste aller Jahre und Quartale für Filter
+# Alle Jahre und Quartale sammeln
 alle_jahre = sorted(df['jahr_opdatum'].dropna().unique().tolist())
 alle_quartale = sorted(df['quartal_opdatum'].dropna().unique().tolist())
 
-# Session State speichert die gewählten Filter zwischen
+# Session State verwenden, damit Auswahl zwischen Reloads erhalten bleibt
 if 'selected_jahre' not in st.session_state:
     st.session_state.selected_jahre = alle_jahre
 if 'selected_quartale' not in st.session_state:
     st.session_state.selected_quartale = alle_quartale
 
 # -------- Sidebar für Filter --------
-# Breite der Sidebar mit CSS anpassen
+# Breite der Sidebar anpassen
 st.markdown(
     """
     <style>
@@ -154,7 +156,7 @@ st.markdown(
 with st.sidebar:
     st.header("Filter")
     
-    # Multiselect für Jahr
+    # Filter: Jahr (Multi-Select)
     jahr_filter = st.multiselect(
         "Jahr auswählen:",
         options=alle_jahre,
@@ -162,17 +164,19 @@ with st.sidebar:
         key='jahr_select'
     )
 
-    # Wenn Jahr geändert wird, Quartale dynamisch anpassen
+    # Änderungen in Jahr-Auswahl erkennen und Quartale anpassen
     if jahr_filter != st.session_state.selected_jahre:
         hinzugefuegt = set(jahr_filter) - set(st.session_state.selected_jahre)
         entfernt = set(st.session_state.selected_jahre) - set(jahr_filter)
         
         neue_quartale = set(st.session_state.selected_quartale)
         
+        # Neue Jahre -> Quartale hinzufügen
         if hinzugefuegt:
             jahr_quartale = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
             neue_quartale.update(jahr_quartale)
         
+        # Entfernte Jahre -> Quartale entfernen
         if entfernt:
             jahr_quartale = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
             neue_quartale -= set(jahr_quartale)
@@ -180,7 +184,7 @@ with st.sidebar:
         st.session_state.selected_quartale = sorted(neue_quartale)
         st.session_state.selected_jahre = jahr_filter
 
-    # Multiselect für Quartal
+    # Filter: Quartal
     verfuegbare_quartale = sorted(df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].unique()) if jahr_filter else []
     gueltige_quartale = [q for q in st.session_state.selected_quartale if q in verfuegbare_quartale]
 
@@ -191,7 +195,7 @@ with st.sidebar:
         key='quartal_select'
     )
 
-    # Quartal-Änderung → Jahre dynamisch anpassen
+    # Änderungen in Quartal-Auswahl erkennen und Jahre anpassen
     if quartal_filter != gueltige_quartale:
         neue_jahre = []
         for jahr in jahr_filter:
@@ -202,32 +206,35 @@ with st.sidebar:
         if neue_jahre != jahr_filter:
             st.session_state.selected_jahre = neue_jahre
             st.session_state.selected_quartale = quartal_filter
-            st.rerun()  # App neu starten, damit Filter greifen
+            st.rerun()
         
         st.session_state.selected_quartale = quartal_filter
 
     st.divider()
     
-    # Selectbox für Bereich
+    # Bereich-Filter (Dropdown)
     bereich_filter = st.selectbox(
         "Bereich auswählen:", 
         ["Alle"] + sorted(df['bereich'].unique())
     )
 
-    # Selectbox für Zugang
+    # Zugang-Filter (Dropdown)
     zugang_filter = st.selectbox(
         "Zugang auswählen:", 
         ["Alle"] + sorted(df['zugang'].unique())
     )
 
 # -------- Daten filtern --------
-df_jahr_filtered = df[df['jahr_opdatum'].isin(jahr_filter)].copy()  # Nur Jahre für Jahresgraph
+# Nach Jahren filtern für Jahresgraph
+df_jahr_filtered = df[df['jahr_opdatum'].isin(jahr_filter)].copy()
+
+# Nach Jahren und Quartalen filtern für Quartalgraph & Details
 df_filtered = df[
     (df['jahr_opdatum'].isin(jahr_filter)) &
     (df['quartal_opdatum'].isin(quartal_filter))
-].copy()  # Jahre + Quartale für Quartalgraph & Detailanalysen
+].copy()
 
-# Weitere Filter anwenden
+# Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['bereich'] == bereich_filter]
     df_filtered = df_filtered[df_filtered['bereich'] == bereich_filter]
@@ -238,20 +245,20 @@ if zugang_filter != "Alle":
 
 # -------- Kennzahlen --------
 st.header("Kennzahlen")
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 
 with col1:
-    st.metric("Gesamt Fälle", len(df_filtered))
+    st.metric("Gesamt Fälle", len(df_filtered))  # Anzahl gefilterter Fälle
     
 with col2:
-    avg_dindo = df_filtered['max_dindo_calc_surv'].mean()
+    avg_dindo = df_filtered['max_dindo_calc_surv'].mean()  # Durchschnitt Clavien-Dindo
     st.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
     
 with col3:
-    st.metric("Bereiche", df_filtered['bereich'].nunique())
+    st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
     
 with col4:
-    st.metric("Zeitraum", f"{len(jahr_filter)} Jahre, {len(quartal_filter)} Quartale")
+    st.metric("Zeitraum", f"{len(jahr_filter)} Jahre, {len(quartal_filter)} Quartale")  # Zeitraum anzeigen
 
 st.divider()
 
@@ -262,9 +269,9 @@ if len(df_filtered) == 0:
     st.warning("Keine Daten für die gewählten Filter verfügbar.")
     st.stop()
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)  # Zwei Spalten für Graphen
 
-# Funktion zur Farbe pro Jahr
+# Funktion für Farbzuordnung nach Jahr
 def get_color_for_year(jahr):
     return f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})"
 
@@ -273,6 +280,7 @@ with col1:
     if len(df_jahr_filtered) > 0:
         jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
+        
         farben_jahr = {jahr: get_color_for_year(jahr) for jahr in jahr_counts_df['jahr_opdatum']}
         marker_colors = [farben_jahr[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
         
@@ -292,6 +300,7 @@ with col2:
     if len(df_filtered) > 0:
         quartal_counts_df = df_filtered.groupby('quartal_opdatum', as_index=False).size()
         quartal_counts_df.columns = ['quartal_opdatum', 'count']
+        
         quartal_counts_df['jahr'] = quartal_counts_df['quartal_opdatum'].str.split('-').str[1].astype(int)
         farben_quartal = {jahr: get_color_for_year(jahr) for jahr in quartal_counts_df['jahr'].unique()}
         marker_colors_quartal = [farben_quartal[jahr] for jahr in quartal_counts_df['jahr']]
@@ -309,11 +318,11 @@ with col2:
 
 st.divider()
 
-# -------- Weitere Analysen --------
+# -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-
 tab1, tab2, tab3, tab4 = st.tabs(["Bereich", "Zugang", "Komplikationen", "Trends"])
 
+# Bereich-Piechart
 with tab1:
     if df_filtered['bereich'].nunique() > 0:
         fig_bereich = px.pie(df_filtered, names='bereich', title="Verteilung nach Bereich", hole=0.3)
@@ -321,6 +330,7 @@ with tab1:
     else:
         st.info("Keine Bereichsdaten verfügbar")
 
+# Zugang-Barchart
 with tab2:
     if df_filtered['zugang'].nunique() > 0:
         zugang_counts = df_filtered['zugang'].value_counts().reset_index()
@@ -331,6 +341,7 @@ with tab2:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
+# Komplikationen-Barchart (Clavien-Dindo)
 with tab3:
     dindo_data = df_filtered['max_dindo_calc_surv'].dropna()
     if len(dindo_data) > 0:
@@ -342,6 +353,7 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
+# Trends über Jahre nach Bereich
 with tab4:
     if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
         trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
@@ -350,4 +362,3 @@ with tab4:
         st.plotly_chart(fig_trend, use_container_width=True)
     else:
         st.info("Nicht genügend Daten für Trendanalyse")
-
