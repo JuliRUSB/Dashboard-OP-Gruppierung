@@ -103,42 +103,81 @@ else:
     st.stop()
 
 # -------- Session State initialisieren --------
-if 'jahr_filter' not in st.session_state:
+if 'initialized' not in st.session_state:
     st.session_state['jahr_filter'] = sorted(df['jahr_opdatum'].unique())
-if 'quartal_filter' not in st.session_state:
     st.session_state['quartal_filter'] = sorted(df['quartal_opdatum'].unique())
+    st.session_state['initialized'] = True
 
-# -------- Dynamische Filter Logik --------
-# Zuerst alle verfügbaren Quartale nach Session-State und ausgewählten Jahren bestimmen
-def get_available_quartale(selected_jahre):
-    return sorted(df[df['jahr_opdatum'].isin(selected_jahre)]['quartal_opdatum'].unique())
+# -------- Hilfsfunktionen --------
+def get_quartale_fuer_jahre(jahre):
+    """Gibt alle Quartale zurück, die zu den angegebenen Jahren gehören"""
+    return sorted(df[df['jahr_opdatum'].isin(jahre)]['quartal_opdatum'].unique())
 
-# Zuerst alle verfügbaren Jahre nach Session-State und ausgewählten Quartalen bestimmen
-def get_available_jahre(selected_quartale):
-    return sorted(df[df['quartal_opdatum'].isin(selected_quartale)]['jahr_opdatum'].unique())
+def get_jahre_fuer_quartale(quartale):
+    """Gibt alle Jahre zurück, die zu den angegebenen Quartalen gehören"""
+    return sorted(df[df['quartal_opdatum'].isin(quartale)]['jahr_opdatum'].unique())
 
-# Filter: Jahr
-available_jahre = get_available_jahre(st.session_state['quartal_filter'])
-jahr_filter = st.multiselect(
+def extrahiere_jahr_aus_quartal(quartal_str):
+    """Extrahiert das Jahr aus einem Quartal-String (z.B. 'Q1-2024' -> 2024)"""
+    return int(quartal_str.split('-')[1])
+
+# -------- Filter: Jahr --------
+alle_jahre = sorted(df['jahr_opdatum'].unique())
+jahr_filter_neu = st.multiselect(
     "Jahr auswählen:",
-    options=available_jahre,
-    default=[j for j in st.session_state['jahr_filter'] if j in available_jahre]
+    options=alle_jahre,
+    default=st.session_state['jahr_filter'],
+    key='jahr_multiselect'
 )
-st.session_state['jahr_filter'] = jahr_filter
 
-# Filter: Quartal
-available_quartale = get_available_quartale(st.session_state['jahr_filter'])
-quartal_filter = st.multiselect(
+# -------- Dynamische Anpassung der Quartale basierend auf Jahresauswahl --------
+# Wenn Jahre hinzugefügt wurden: entsprechende Quartale hinzufügen
+# Wenn Jahre entfernt wurden: entsprechende Quartale entfernen
+if set(jahr_filter_neu) != set(st.session_state['jahr_filter']):
+    hinzugefuegte_jahre = set(jahr_filter_neu) - set(st.session_state['jahr_filter'])
+    entfernte_jahre = set(st.session_state['jahr_filter']) - set(jahr_filter_neu)
+    
+    aktuelle_quartale = set(st.session_state['quartal_filter'])
+    
+    # Quartale für hinzugefügte Jahre hinzufügen
+    if hinzugefuegte_jahre:
+        neue_quartale = get_quartale_fuer_jahre(list(hinzugefuegte_jahre))
+        aktuelle_quartale.update(neue_quartale)
+    
+    # Quartale für entfernte Jahre entfernen
+    if entfernte_jahre:
+        zu_entfernende_quartale = get_quartale_fuer_jahre(list(entfernte_jahre))
+        aktuelle_quartale -= set(zu_entfernende_quartale)
+    
+    st.session_state['quartal_filter'] = sorted(aktuelle_quartale)
+    st.session_state['jahr_filter'] = jahr_filter_neu
+
+# -------- Filter: Quartal --------
+verfuegbare_quartale = get_quartale_fuer_jahre(jahr_filter_neu) if jahr_filter_neu else []
+quartal_filter_neu = st.multiselect(
     "Quartal auswählen:",
-    options=available_quartale,
-    default=[q for q in st.session_state['quartal_filter'] if q in available_quartale]
+    options=verfuegbare_quartale,
+    default=[q for q in st.session_state['quartal_filter'] if q in verfuegbare_quartale],
+    key='quartal_multiselect'
 )
-st.session_state['quartal_filter'] = quartal_filter
 
-# Daten filtern
+# -------- Dynamische Anpassung der Jahre basierend auf Quartalauswahl --------
+# Wenn alle Quartale eines Jahres abgewählt werden, Jahr auch abwählen
+if set(quartal_filter_neu) != set(st.session_state['quartal_filter']):
+    # Prüfe, welche Jahre noch durch die gewählten Quartale repräsentiert werden
+    jahre_aus_quartalen = get_jahre_fuer_quartale(quartal_filter_neu)
+    
+    # Aktualisiere die Jahresauswahl entsprechend
+    if set(jahre_aus_quartalen) != set(jahr_filter_neu):
+        st.session_state['jahr_filter'] = jahre_aus_quartalen
+        st.rerun()
+    
+    st.session_state['quartal_filter'] = quartal_filter_neu
+
+# -------- Daten filtern --------
 df_filtered = df[
-    (df['jahr_opdatum'].isin(jahr_filter)) &
-    (df['quartal_opdatum'].isin(quartal_filter))
+    (df['jahr_opdatum'].isin(st.session_state['jahr_filter'])) &
+    (df['quartal_opdatum'].isin(st.session_state['quartal_filter']))
 ]
 
 # Bereich
