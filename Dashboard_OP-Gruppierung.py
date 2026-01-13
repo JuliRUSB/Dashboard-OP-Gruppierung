@@ -1,331 +1,227 @@
 # ==================================================
 # Imports
 # ==================================================
-import os                          # Zugriff auf Umgebungsvariablen (API-Token)
-import requests                    # HTTP-Requests zur REDCap-API
-import pandas as pd                # Datenverarbeitung mit DataFrames
-import plotly.express as px         # Plotly Express für Diagramme
-import plotly.graph_objects as go   # Erweiterte Plotly-Funktionen (hier nicht zwingend genutzt)
-import streamlit as st              # Streamlit für das Web-Dashboard
-import urllib3                      # Unterdrücken von SSL-Warnungen
+import os
+import requests
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+import urllib3
 
-# SSL-Warnungen deaktivieren (weil verify=False verwendet wird)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 
 # ==================================================
 # Konfiguration
 # ==================================================
-API_URL = 'https://fxdb.usb.ch/api/'
-
+API_URL = "https://fxdb.usb.ch/api/"
 
 # ==================================================
 # Datenexport aus REDCap
 # ==================================================
 def export_redcap_data(api_url):
-    # API-Token aus Umgebungsvariable lesen
     API_TOKEN = os.getenv("tok_op_gruppen")
 
-    # Parameter für den REDCap-API-Export
     data = {
-        'token': API_TOKEN,
-        'content': 'record',
-        'action': 'export',
-        'format': 'json',
-        'type': 'flat',
-        'fields[0]': 'opdatum',
-        'fields[1]': 'bereich',
-        'fields[2]': 'hsm',
-        'fields[3]': 'zugang',
-        'fields[4]': 'max_dindo_calc_surv',
-        'rawOrLabel': 'raw',
-        'rawOrLabelHeaders': 'raw',
-        'exportCheckboxLabel': 'false',
-        'exportSurveyFields': 'false',
-        'exportDataAccessGroups': 'false',
-        'returnFormat': 'json'
+        "token": API_TOKEN,
+        "content": "record",
+        "action": "export",
+        "format": "json",
+        "type": "flat",
+        "fields[0]": "opdatum",
+        "fields[1]": "bereich",
+        "fields[2]": "hsm",
+        "fields[3]": "zugang",
+        "fields[4]": "max_dindo_calc_surv",
+        "rawOrLabel": "raw",
+        "rawOrLabelHeaders": "raw",
+        "exportCheckboxLabel": "false",
+        "exportSurveyFields": "false",
+        "exportDataAccessGroups": "false",
+        "returnFormat": "json",
     }
 
-    try:
-        # POST-Request an die REDCap-API
-        r = requests.post(api_url, data=data, verify=False)
-        r.raise_for_status()  # Fehler bei HTTP-Status ≠ 200
-
-        # JSON-Antwort in DataFrame umwandeln
-        return pd.DataFrame(r.json())
-
-    except requests.exceptions.RequestException as e:
-        # Fehlermeldung im Streamlit-UI anzeigen
-        st.error(f"Fehler beim Export: {e}")
-        return None
-
+    r = requests.post(api_url, data=data, verify=False)
+    r.raise_for_status()
+    return pd.DataFrame(r.json())
 
 # ==================================================
 # Datenaufbereitung
 # ==================================================
 def prepare_data(df):
-    # Kopie erstellen, um Originaldaten nicht zu verändern
     df = df.copy()
+    df["opdatum"] = pd.to_datetime(df["opdatum"], errors="coerce")
 
-    # Sicherstellen, dass opdatum ein datetime ist
-    df['opdatum'] = pd.to_datetime(df['opdatum'], errors='coerce')
-
-
-    # -------- Bereich (Checkboxen aus REDCap) --------
-    # Checkboxen erzeugen mehrere Spalten: bereich___1, bereich___2, ...
-    bereich_cols = [col for col in df.columns if col.startswith('bereich___')]
-
+    # Bereich (Checkboxen)
+    bereich_cols = [c for c in df.columns if c.startswith("bereich___")]
     if bereich_cols:
-        # Mapping der Checkbox-Codes auf Klartext
         mapping = {
-            'bereich___1': 'Allgemein',
-            'bereich___2': 'BMC',
-            'bereich___3': 'Endokrin',
-            'bereich___4': 'Chirurgische Onkologie/Sarkome',
-            'bereich___5': 'Hernien',
-            'bereich___6': 'Kolorektal',
-            'bereich___7': 'Leber',
-            'bereich___8': 'Pankreas',
-            'bereich___9': 'Upper-GI'
+            "bereich___1": "Allgemein",
+            "bereich___2": "BMC",
+            "bereich___3": "Endokrin",
+            "bereich___4": "Chirurgische Onkologie/Sarkome",
+            "bereich___5": "Hernien",
+            "bereich___6": "Kolorektal",
+            "bereich___7": "Leber",
+            "bereich___8": "Pankreas",
+            "bereich___9": "Upper-GI",
         }
 
-        # Pro Zeile alle gesetzten Checkboxen (Wert == '1') sammeln
         def get_bereich(row):
-            return ', '.join(
-                label for col, label in mapping.items() if row.get(col) == '1'
-            ) or 'Nicht angegeben'
+            return ", ".join(
+                label for col, label in mapping.items() if row.get(col) == "1"
+            ) or "Nicht angegeben"
 
-        # Neue Spalte "bereich" erzeugen
-        df['bereich'] = df.apply(get_bereich, axis=1)
-
-        # Ursprüngliche Checkbox-Spalten entfernen
+        df["bereich"] = df.apply(get_bereich, axis=1)
         df = df.drop(columns=bereich_cols)
 
-    # -------- Zugang (Radiobutton aus REDCap) --------
+    # Zugang
     zugang_mapping = {
-        1: 'Offen',
-        2: 'Laparoskopisch',
-        3: 'roboter-assistiert',
-        4: 'konvertiert',
-        5: 'hybrid (2Höhlen-Eingriffe)'
+        1: "Offen",
+        2: "Laparoskopisch",
+        3: "roboter-assistiert",
+        4: "konvertiert",
+        5: "hybrid (2Höhlen-Eingriffe)",
     }
+    df["zugang"] = pd.to_numeric(df["zugang"], errors="coerce").map(zugang_mapping).fillna("Unbekannt")
 
-    # Zugang in numerischen Typ umwandeln
-    df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
-
-    # Numerische Codes in Klartext übersetzen
-    df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
-
-    # -------- Numerische Felder --------
-    df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  
-    df['quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(r'(\d{4})Q(\d)', r'Q\2-\1', regex=True) # Quartale im Format QX-JJJJ
-    df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter 
-    df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
-    # Zeilen ohne Jahr entfernen
-    df = df.dropna(subset=['jahr_opdatum'])
+    # Zeitfelder
+    df["jahr_opdatum"] = df["opdatum"].dt.year.astype("Int64")
+    df["quartal_opdatum"] = (
+        df["opdatum"]
+        .dt.to_period("Q")
+        .astype(str)
+        .str.replace(r"(\d{4})Q(\d)", r"Q\2-\1", regex=True)
+    )
+    df["max_dindo_calc_surv"] = pd.to_numeric(df["max_dindo_calc_surv"], errors="coerce")
+    df = df.dropna(subset=["jahr_opdatum"])
 
     return df
-
 
 # ==================================================
 # Streamlit App
 # ==================================================
 st.title("OP-Gruppierung Dashboard")
 
-# Daten laden
-df = export_redcap_data(API_URL)
+df = prepare_data(export_redcap_data(API_URL))
 
-if df is not None:
-    # Daten vorbereiten
-    df = prepare_data(df)
+# ==================================================
+# Filter
+# ==================================================
+jahre = sorted(df["jahr_opdatum"].dropna().astype(int).unique())
+jahr_filter = st.multiselect("Jahr auswählen:", jahre, default=jahre)
 
-# -------- Filter --------
-
-# Jahr
-jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
-jahr_filter = st.multiselect(
-    "Jahr auswählen:",
-    options=jahre,
-    default=jahre
-)
-
-# Quartal (abhängig vom Jahr)
 quartale_df = (
-    df[df['jahr_opdatum'].isin(jahr_filter)]
-    [['jahr_opdatum', 'quartal_opdatum']]
+    df[df["jahr_opdatum"].isin(jahr_filter)]
+    [["jahr_opdatum", "quartal_opdatum"]]
     .drop_duplicates()
-    .sort_values(['jahr_opdatum', 'quartal_opdatum'])
+    .sort_values(["jahr_opdatum", "quartal_opdatum"])
 )
 
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
-    options=quartale_df['quartal_opdatum'].tolist(),
-    default=quartale_df['quartal_opdatum'].tolist()
+    quartale_df["quartal_opdatum"].tolist(),
+    default=quartale_df["quartal_opdatum"].tolist(),
 )
 
-# Filter anwenden
-if quartal_filter:
-    filtered_quartal_df = df_quartal[df_quartal['quartal_opdatum'].isin(quartal_filter)]
-    
-# Bereich
 bereich_filter = st.selectbox(
     "Bereich auswählen:",
-    ["Alle"] + sorted(df['bereich'].dropna().unique())
+    ["Alle"] + sorted(df["bereich"].dropna().unique()),
 )
 
-if bereich_filter != "Alle":
-    filtered_bereich_df = df_bereich[df_bereich['bereich'] == bereich_filter]
-
-
-# Zugang
 zugang_filter = st.selectbox(
     "Zugang auswählen:",
-    ["Alle"] + sorted(df['zugang'].dropna().unique())
+    ["Alle"] + sorted(df["zugang"].dropna().unique()),
 )
+
+# ==================================================
+# Datenzustand
+# ==================================================
+df_jahr = df[df["jahr_opdatum"].isin(jahr_filter)]
+
+if bereich_filter != "Alle":
+    df_jahr = df_jahr[df_jahr["bereich"] == bereich_filter]
+
 if zugang_filter != "Alle":
-    filtered_zugang_df = df_zugang[df_zugang['zugang'] == zugang_filter] 
-
-    
-
-# -------- Kennzahlen --------
-st.subheader("Kennzahlen")
-
-col1, col2, col3 = st.columns(3)
-
-col1.metric("Gesamt Fälle", len(df_jahr))
-
-avg_dindo = df_jahr['max_dindo_calc_surv'].mean()
-col2.metric(
-    "Ø Clavien-Dindo",
-    f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A"
-)
-
-col3.metric("Bereiche", df_jahr['bereich'].nunique())
-
-# ==================================================
-# Datenaufteilung für Plots
-# ==================================================
-
-# Basis
-df_base = df.copy()
-
-# ==================================================
-# Datenaufteilung
-# ==================================================
-
-df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]
+    df_jahr = df_jahr[df_jahr["zugang"] == zugang_filter]
 
 df_quartal = df_jahr.copy()
 if quartal_filter:
-    df_quartal = df_quartal[df_quartal['quartal_opdatum'].isin(quartal_filter)]
+    df_quartal = df_quartal[df_quartal["quartal_opdatum"].isin(quartal_filter)]
 
-# -------- Visualisierungen --------
+# ==================================================
+# Kennzahlen
+# ==================================================
+st.subheader("Kennzahlen")
+c1, c2, c3 = st.columns(3)
+
+c1.metric("Gesamt Fälle", len(df_jahr))
+c2.metric(
+    "Ø Clavien-Dindo",
+    f"{df_jahr['max_dindo_calc_surv'].mean():.2f}"
+    if df_jahr["max_dindo_calc_surv"].notna().any()
+    else "N/A",
+)
+c3.metric("Bereiche", df_jahr["bereich"].nunique())
+
+# ==================================================
+# Visualisierungen
+# ==================================================
 st.subheader("Visualisierungen")
 col1, col2 = st.columns(2)
 
-# --- Farbdictionary pro Jahr ---
-jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
-farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
-
-# --- Graph 1: Fallzahlen pro Jahr ---
-jahr_counts_df = df_jahr.groupby('jahr_opdatum').size().reset_index(name='count')
-
-# Farben für jeden Balken in der richtigen Reihenfolge
-marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
-
-# Balkendiagramm ohne color=, nur marker_color verwenden
+# --- pro Jahr ---
+jahr_counts = df_jahr.groupby("jahr_opdatum").size().reset_index(name="count")
 fig_jahr = px.bar(
-    jahr_counts_df,
-    x='jahr_opdatum',
-    y='count',
-    text='count',
-    title="Fallzahlen pro Jahr"
+    jahr_counts,
+    x="jahr_opdatum",
+    y="count",
+    text="count",
+    title="Fallzahlen pro Jahr",
 )
-
-# Farben zuweisen
-fig_jahr.update_traces(marker_color=marker_colors)
-
-# Achsenbeschriftungen und Legende ausblenden
-fig_jahr.update_layout(
-    xaxis_title=None,    # X-Achse-Titel ausblenden
-    yaxis_title=None,    # Y-Achse-Titel ausblenden
-    showlegend=False     # Legende ausblenden
-)
-
+fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
-# --- Farbdictionary pro Jahr für Quartale ---
-filtered_df['jahr_von_quartal'] = filtered_df['quartal_opdatum'].str.split('-').str[1].astype(int)
-jahre_quartal_unique = sorted(filtered_df['jahr_von_quartal'].unique())
-farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
-
-# --- Graph 2: Fallzahlen pro Quartal ---
-quartal_counts_df = df_quartal.groupby('quartal_opdatum').size().reset_index(name='count')
-
-# Farben jedem Balken zuweisen anhand des Jahres
-marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
-
+# --- pro Quartal ---
+quartal_counts = df_quartal.groupby("quartal_opdatum").size().reset_index(name="count")
 fig_quartal = px.bar(
-    quartal_counts_df,
-    x='quartal_opdatum',
-    y='count',
-    text='count',
-    title="Fallzahlen pro Quartal"
+    quartal_counts,
+    x="quartal_opdatum",
+    y="count",
+    text="count",
+    title="Fallzahlen pro Quartal",
 )
-
-# Farben zuweisen
-fig_quartal.update_traces(marker_color=marker_colors_quartal)
-
-# Achsenbeschriftungen und Legende ausblenden
-fig_quartal.update_layout(
-    xaxis_title=None,
-    yaxis_title=None,
-    showlegend=False
-)
-
+fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
 col2.plotly_chart(fig_quartal, use_container_width=True)
-st.plotly_chart(
-    px.pie(
-        filtered_df,
-        names='bereich',
-        title="Verteilung nach Bereich"
-    )
-)
 
+# ==================================================
+# Weitere Plots
+# ==================================================
+st.plotly_chart(px.pie(df_jahr, names="bereich", title="Verteilung nach Bereich"))
 st.plotly_chart(
     px.bar(
-        filtered_df['max_dindo_calc_surv'].value_counts().sort_index(),
-        title="Clavien-Dindo Komplikationen"
+        df_jahr["max_dindo_calc_surv"].value_counts().sort_index(),
+        title="Clavien-Dindo Komplikationen",
     )
+)
+st.plotly_chart(
+    px.bar(df_jahr["zugang"].value_counts(), title="Verteilung nach Zugangsart")
+)
+
+# ==================================================
+# Trendanalyse
+# ==================================================
+trend = (
+    df_jahr.groupby(["jahr_opdatum", "bereich"])
+    .size()
+    .reset_index(name="count")
 )
 
 st.plotly_chart(
-    px.bar(
-        filtered_df['zugang'].value_counts(),
-        title="Verteilung nach Zugangsart"
+    px.line(
+        trend,
+        x="jahr_opdatum",
+        y="count",
+        color="bereich",
+        title="Trend über Zeit nach Bereich",
     )
 )
-
-# -------- Trendanalyse --------
-if 'jahr_opdatum' in filtered_df.columns and 'bereich' in filtered_df.columns:
-    trend_data = (
-        filtered_df
-        .groupby(['jahr_opdatum', 'bereich'])
-        .size()
-        .reset_index(name='count')
-    )
-
-    st.plotly_chart(
-        px.line(
-            trend_data,
-            x='jahr_opdatum',
-            y='count',
-            color='bereich',
-            title="Trend über Zeit nach Bereich"
-        )
-    )
-
-
-#if df is not None:
-#    df = prepare_data(df)
-#    app = create_dashboard(df)
