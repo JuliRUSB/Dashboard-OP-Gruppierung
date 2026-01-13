@@ -152,7 +152,7 @@ jahr_filter = st.multiselect(
 )
 
 if jahr_filter: 
-    filtered_df = filtered_df[filtered_df['jahr_opdatum'].isin(jahr_filter)]
+    filtered_jahr_df = df_jahr[df_jahr['jahr_opdatum'].isin(jahr_filter)]
 
 # Quartal
 quartale_df = df[df['jahr_opdatum'].isin(jahr_filter)][['jahr_opdatum', 'quartal_opdatum']].drop_duplicates()
@@ -171,7 +171,7 @@ quartal_filter = st.multiselect(
 
 # Filter anwenden
 if quartal_filter:
-    filtered_df = filtered_df[filtered_df['quartal_opdatum'].isin(quartal_filter)]
+    filtered_quartal_df = df_quartal[df_quartal['quartal_opdatum'].isin(quartal_filter)]
     
 # Bereich
 bereich_filter = st.selectbox(
