@@ -102,36 +102,33 @@ if df is not None:
 else:
     st.stop()
 
-# -------- Dynamische Filter Logik --------
-# Alle Jahre und Quartale
-alle_jahre = sorted(df['jahr_opdatum'].unique())
-alle_quartale = sorted(df['quartal_opdatum'].unique())
+# -------- Session State für dynamische Filter --------
+if 'jahr_filter' not in st.session_state:
+    st.session_state['jahr_filter'] = sorted(df['jahr_opdatum'].astype(int).unique())
+if 'quartal_filter' not in st.session_state:
+    st.session_state['quartal_filter'] = sorted(df['quartal_opdatum'].unique())
 
-# 1) Jahr auswählen
-jahr_filter = st.multiselect("Jahr auswählen:", options=alle_jahre, default=alle_jahre)
+# -------- Dynamische Filter-Logik --------
+# Filter: Jahr
+jahr_options = sorted(df['jahr_opdatum'].unique())
+jahr_filter = st.multiselect(
+    "Jahr auswählen:",
+    options=jahr_options,
+    default=[j for j in st.session_state['jahr_filter'] if j in jahr_options]
+)
+st.session_state['jahr_filter'] = jahr_filter
 
-# 2) Quartale innerhalb der gewählten Jahre
-quartale_options = sorted(df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].unique())
-# Wenn vorherige Auswahl in Quartalen existiert, behalten, sonst alle auswählen
-if 'quartal_filter' not in st.session_state or not st.session_state['quartal_filter']:
-    st.session_state['quartal_filter'] = quartale_options
-else:
-    # Entferne ungültige Quartale
-    st.session_state['quartal_filter'] = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
-    if not st.session_state['quartal_filter']:
-        st.session_state['quartal_filter'] = quartale_options
-
+# Filter: Quartal
+# nur Quartale anzeigen, die in den gewählten Jahren vorkommen
+quartale_options = df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].sort_values().unique()
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
     options=quartale_options,
-    default=st.session_state['quartal_filter']
+    default=[q for q in st.session_state['quartal_filter'] if q in quartale_options]
 )
 st.session_state['quartal_filter'] = quartal_filter
 
-# Dynamische Anpassung der Jahre: nur Jahre, die noch Quartale haben
-jahr_filter = sorted(df[df['quartal_opdatum'].isin(quartal_filter)]['jahr_opdatum'].unique())
-
-# Filter anwenden
+# Daten filtern
 df_filtered = df[
     (df['jahr_opdatum'].isin(jahr_filter)) &
     (df['quartal_opdatum'].isin(quartal_filter))
