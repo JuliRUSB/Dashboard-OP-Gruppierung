@@ -139,34 +139,28 @@ if df is not None:
     # Daten vorbereiten
     df = prepare_data(df)
 
-# --------Filterblock--------
-df_jahr = df.copy()
-df_quartal = df.copy()
+# -------- Filter --------
 
 # Jahr
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
 jahr_filter = st.multiselect(
-     "Jahr auswählen:",
+    "Jahr auswählen:",
     options=jahre,
-    default=jahre  # standardmäßig alle Jahre auswählen
+    default=jahre
 )
 
-if jahr_filter: 
-    filtered_jahr_df = df_jahr[df_jahr['jahr_opdatum'].isin(jahr_filter)]
-
-# Quartal
-quartale_df = df[df['jahr_opdatum'].isin(jahr_filter)][['jahr_opdatum', 'quartal_opdatum']].drop_duplicates()
-
-# Sortieren: zuerst Jahr, dann Quartal (Q1-Q4)
-quartale_df = quartale_df.sort_values(['jahr_opdatum', 'quartal_opdatum'])
-
-# Liste der Quartale für st.multiselect erstellen
-quartale_options = quartale_df['quartal_opdatum'].tolist()  #nur echte Quartale, keine Trennzeilen ---
+# Quartal (abhängig vom Jahr)
+quartale_df = (
+    df[df['jahr_opdatum'].isin(jahr_filter)]
+    [['jahr_opdatum', 'quartal_opdatum']]
+    .drop_duplicates()
+    .sort_values(['jahr_opdatum', 'quartal_opdatum'])
+)
 
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
-    options=quartale_options,
-    default=quartale_options  #alle Quartale standardmässig auswählen ---
+    options=quartale_df['quartal_opdatum'].tolist(),
+    default=quartale_df['quartal_opdatum'].tolist()
 )
 
 # Filter anwenden
@@ -200,13 +194,13 @@ col1, col2, col3 = st.columns(3)
 
 col1.metric("Gesamt Fälle", len(df_jahr))
 
-avg_dindo = filtered_df['max_dindo_calc_surv'].mean()
+avg_dindo = df_jahr['max_dindo_calc_surv'].mean()
 col2.metric(
     "Ø Clavien-Dindo",
     f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A"
 )
 
-col3.metric("Bereiche", filtered_df['bereich'].nunique())
+col3.metric("Bereiche", df_jahr['bereich'].nunique())
 
 # ==================================================
 # Datenaufteilung für Plots
@@ -215,15 +209,15 @@ col3.metric("Bereiche", filtered_df['bereich'].nunique())
 # Basis
 df_base = df.copy()
 
-# Jahresfilter (für BEIDE Plots)
-df_jahr = df_base[df_base['jahr_opdatum'].isin(jahre_auswahl)]
+# ==================================================
+# Datenaufteilung
+# ==================================================
 
-# Quartalsfilter (NUR für Quartalsplot)
+df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]
+
 df_quartal = df_jahr.copy()
-if quartale_auswahl:
-    df_quartal = df_quartal[df_quartal['quartal_opdatum'].isin(quartale_auswahl)]
-
-
+if quartal_filter:
+    df_quartal = df_quartal[df_quartal['quartal_opdatum'].isin(quartal_filter)]
 
 # -------- Visualisierungen --------
 st.subheader("Visualisierungen")
