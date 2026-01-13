@@ -130,6 +130,18 @@ if 'selected_quartale' not in st.session_state:
     st.session_state.selected_quartale = alle_quartale
 
 # -------- Sidebar für Filter --------
+# 1. Breite der Sidebar festlegen
+st.markdown(
+    """
+    <style>
+    section[data-testid="stSidebar"] {
+        width: 450px !important; 
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 with st.sidebar:
     st.header("Filter")
     
