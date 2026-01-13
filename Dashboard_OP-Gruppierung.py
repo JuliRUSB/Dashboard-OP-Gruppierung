@@ -103,81 +103,80 @@ else:
     st.stop()
 
 # -------- Session State initialisieren --------
-if 'initialized' not in st.session_state:
-    st.session_state['jahr_filter'] = sorted(df['jahr_opdatum'].unique())
-    st.session_state['quartal_filter'] = sorted(df['quartal_opdatum'].unique())
-    st.session_state['initialized'] = True
+alle_jahre = sorted(df['jahr_opdatum'].unique())
+alle_quartale = sorted(df['quartal_opdatum'].unique())
 
-# -------- Hilfsfunktionen --------
-def get_quartale_fuer_jahre(jahre):
-    """Gibt alle Quartale zurück, die zu den angegebenen Jahren gehören"""
-    return sorted(df[df['jahr_opdatum'].isin(jahre)]['quartal_opdatum'].unique())
-
-def get_jahre_fuer_quartale(quartale):
-    """Gibt alle Jahre zurück, die zu den angegebenen Quartalen gehören"""
-    return sorted(df[df['quartal_opdatum'].isin(quartale)]['jahr_opdatum'].unique())
-
-def extrahiere_jahr_aus_quartal(quartal_str):
-    """Extrahiert das Jahr aus einem Quartal-String (z.B. 'Q1-2024' -> 2024)"""
-    return int(quartal_str.split('-')[1])
+if 'selected_jahre' not in st.session_state:
+    st.session_state.selected_jahre = alle_jahre
+if 'selected_quartale' not in st.session_state:
+    st.session_state.selected_quartale = alle_quartale
 
 # -------- Filter: Jahr --------
-alle_jahre = sorted(df['jahr_opdatum'].unique())
-jahr_filter_neu = st.multiselect(
+jahr_filter = st.multiselect(
     "Jahr auswählen:",
     options=alle_jahre,
-    default=st.session_state['jahr_filter'],
-    key='jahr_multiselect'
+    default=st.session_state.selected_jahre
 )
 
-# -------- Dynamische Anpassung der Quartale basierend auf Jahresauswahl --------
-# Wenn Jahre hinzugefügt wurden: entsprechende Quartale hinzufügen
-# Wenn Jahre entfernt wurden: entsprechende Quartale entfernen
-if set(jahr_filter_neu) != set(st.session_state['jahr_filter']):
-    hinzugefuegte_jahre = set(jahr_filter_neu) - set(st.session_state['jahr_filter'])
-    entfernte_jahre = set(st.session_state['jahr_filter']) - set(jahr_filter_neu)
+# Jahr-Änderung erkennen und Quartale anpassen
+if jahr_filter != st.session_state.selected_jahre:
+    hinzugefuegt = set(jahr_filter) - set(st.session_state.selected_jahre)
+    entfernt = set(st.session_state.selected_jahre) - set(jahr_filter)
     
-    aktuelle_quartale = set(st.session_state['quartal_filter'])
+    neue_quartale = set(st.session_state.selected_quartale)
     
-    # Quartale für hinzugefügte Jahre hinzufügen
-    if hinzugefuegte_jahre:
-        neue_quartale = get_quartale_fuer_jahre(list(hinzugefuegte_jahre))
-        aktuelle_quartale.update(neue_quartale)
+    # Quartale für neue Jahre hinzufügen
+    for jahr in hinzugefuegt:
+        jahr_quartale = df[df['jahr_opdatum'] == jahr]['quartal_opdatum'].unique()
+        neue_quartale.update(jahr_quartale)
     
     # Quartale für entfernte Jahre entfernen
-    if entfernte_jahre:
-        zu_entfernende_quartale = get_quartale_fuer_jahre(list(entfernte_jahre))
-        aktuelle_quartale -= set(zu_entfernende_quartale)
+    for jahr in entfernt:
+        jahr_quartale = df[df['jahr_opdatum'] == jahr]['quartal_opdatum'].unique()
+        neue_quartale -= set(jahr_quartale)
     
-    st.session_state['quartal_filter'] = sorted(aktuelle_quartale)
-    st.session_state['jahr_filter'] = jahr_filter_neu
+    st.session_state.selected_quartale = sorted(neue_quartale)
+    st.session_state.selected_jahre = jahr_filter
 
 # -------- Filter: Quartal --------
-verfuegbare_quartale = get_quartale_fuer_jahre(jahr_filter_neu) if jahr_filter_neu else []
-quartal_filter_neu = st.multiselect(
+# Nur Quartale der ausgewählten Jahre anzeigen
+verfuegbare_quartale = sorted(df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].unique())
+gueltige_quartale = [q for q in st.session_state.selected_quartale if q in verfuegbare_quartale]
+
+quartal_filter = st.multiselect(
     "Quartal auswählen:",
     options=verfuegbare_quartale,
-    default=[q for q in st.session_state['quartal_filter'] if q in verfuegbare_quartale],
-    key='quartal_multiselect'
+    default=gueltige_quartale
 )
 
-# -------- Dynamische Anpassung der Jahre basierend auf Quartalauswahl --------
-# Wenn alle Quartale eines Jahres abgewählt werden, Jahr auch abwählen
-if set(quartal_filter_neu) != set(st.session_state['quartal_filter']):
-    # Prüfe, welche Jahre noch durch die gewählten Quartale repräsentiert werden
-    jahre_aus_quartalen = get_jahre_fuer_quartale(quartal_filter_neu)
+# Quartal-Änderung erkennen und Jahre anpassen
+if quartal_filter != gueltige_quartale:
+    # Welche Jahre sind durch die gewählten Quartale abgedeckt?
+    jahre_aus_quartalen = set(df[df['quartal_opdatum'].isin(quartal_filter)]['jahr_opdatum'].unique())
     
-    # Aktualisiere die Jahresauswahl entsprechend
-    if set(jahre_aus_quartalen) != set(jahr_filter_neu):
-        st.session_state['jahr_filter'] = jahre_aus_quartalen
+    # Wenn ein Jahr keine Quartale mehr hat, Jahr auch entfernen
+    neue_jahre = []
+    for jahr in jahr_filter:
+        jahr_quartale = df[df['jahr_opdatum'] == jahr]['quartal_opdatum'].unique()
+        # Prüfe ob mindestens ein Quartal dieses Jahres ausgewählt ist
+        if any(q in quartal_filter for q in jahr_quartale):
+            neue_jahre.append(jahr)
+    
+    if neue_jahre != jahr_filter:
+        st.session_state.selected_jahre = neue_jahre
+        st.session_state.selected_quartale = quartal_filter
         st.rerun()
     
-    st.session_state['quartal_filter'] = quartal_filter_neu
+    st.session_state.selected_quartale = quartal_filter
 
 # -------- Daten filtern --------
+# Für Jahresgraph: nur nach Jahren filtern
+df_jahr_filtered = df[df['jahr_opdatum'].isin(jahr_filter)]
+
+# Für Quartalgraph und Details: nach Jahren UND Quartalen filtern
 df_filtered = df[
-    (df['jahr_opdatum'].isin(st.session_state['jahr_filter'])) &
-    (df['quartal_opdatum'].isin(st.session_state['quartal_filter']))
+    (df['jahr_opdatum'].isin(jahr_filter)) &
+    (df['quartal_opdatum'].isin(quartal_filter))
 ]
 
 # Bereich
@@ -206,37 +205,41 @@ col1, col2 = st.columns(2)
 jahre_unique = sorted(df_filtered['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
-# Graph 1: Jahr
-jahr_counts_df = df_filtered.groupby('jahr_opdatum').size().reset_index(name='count')
-marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
-fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
-fig_jahr.update_traces(marker_color=marker_colors)
-fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
-col1.plotly_chart(fig_jahr, use_container_width=True)
+# Graph 1: Jahr (zeigt ALLE Quartale der ausgewählten Jahre)
+if len(df_jahr_filtered) > 0:
+    jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum').size().reset_index(name='count')
+    marker_colors = [farben.get(jahr, 'rgb(100,100,100)') for jahr in jahr_counts_df['jahr_opdatum']]
+    fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
+    fig_jahr.update_traces(marker_color=marker_colors)
+    fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
+    col1.plotly_chart(fig_jahr, use_container_width=True)
 
-# Graph 2: Quartal
-df_quartal_plot = df_filtered.copy()
-df_quartal_plot['jahr_von_quartal'] = df_quartal_plot['quartal_opdatum'].str.split('-').str[1].astype(int)
-jahre_quartal_unique = sorted(df_quartal_plot['jahr_von_quartal'].unique())
-farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
+    # Graph 2: Quartal (zeigt nur ausgewählte Quartale)
+    df_quartal_plot = df_filtered.copy()
+    if len(df_quartal_plot) > 0:
+        df_quartal_plot['jahr_von_quartal'] = df_quartal_plot['quartal_opdatum'].str.split('-').str[1].astype(int)
+        jahre_quartal_unique = sorted(df_quartal_plot['jahr_von_quartal'].unique())
+        farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
 
-quartal_counts_df = df_quartal_plot.groupby('quartal_opdatum').size().reset_index(name='count')
-marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
-fig_quartal = px.bar(quartal_counts_df, x='quartal_opdatum', y='count', text='count', title="Fallzahlen pro Quartal")
-fig_quartal.update_traces(marker_color=marker_colors_quartal)
-fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
-col2.plotly_chart(fig_quartal, use_container_width=True)
+        quartal_counts_df = df_quartal_plot.groupby('quartal_opdatum').size().reset_index(name='count')
+        marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
+        fig_quartal = px.bar(quartal_counts_df, x='quartal_opdatum', y='count', text='count', title="Fallzahlen pro Quartal")
+        fig_quartal.update_traces(marker_color=marker_colors_quartal)
+        fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
+        col2.plotly_chart(fig_quartal, use_container_width=True)
 
-# Pie nach Bereich
-st.plotly_chart(px.pie(df_filtered, names='bereich', title="Verteilung nach Bereich"))
+    # Pie nach Bereich
+    st.plotly_chart(px.pie(df_filtered, names='bereich', title="Verteilung nach Bereich"))
 
-# Clavien-Dindo
-st.plotly_chart(px.bar(df_filtered['max_dindo_calc_surv'].value_counts().sort_index(), title="Clavien-Dindo Komplikationen"))
+    # Clavien-Dindo
+    st.plotly_chart(px.bar(df_filtered['max_dindo_calc_surv'].value_counts().sort_index(), title="Clavien-Dindo Komplikationen"))
 
-# Zugang
-st.plotly_chart(px.bar(df_filtered['zugang'].value_counts(), title="Verteilung nach Zugangsart"))
+    # Zugang
+    st.plotly_chart(px.bar(df_filtered['zugang'].value_counts(), title="Verteilung nach Zugangsart"))
 
-# Trendanalyse
-if 'jahr_opdatum' in df_filtered.columns and 'bereich' in df_filtered.columns:
-    trend_data = df_filtered.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
-    st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
+    # Trendanalyse
+    if 'jahr_opdatum' in df_filtered.columns and 'bereich' in df_filtered.columns:
+        trend_data = df_filtered.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
+        st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
+else:
+    st.warning("Keine Daten für die gewählten Filter verfügbar.")
