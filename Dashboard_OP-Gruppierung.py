@@ -104,14 +104,20 @@ else:
 
 # -------- Filter --------
 jahre = sorted(df['jahr_opdatum'].astype(int).unique())
-jahr_filter = st.multiselect("Jahr auswählen:", options=jahre, default=jahre)
-df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]  # für Jahresplot und weitere Verarbeitung
+jahr_filter = st.session_state.get("jahr_filter", jahre)
+jahr_filter = st.multiselect("Jahr auswählen:", options=jahre, default=jahr_filter)
+st.session_state["jahr_filter"] = jahr_filter
 
-# Quartale
-quartale_df = df_jahr[['jahr_opdatum', 'quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
+# Quartale: persistent speichern, damit sie nicht zurückgesetzt werden
+quartale_df = df[df['jahr_opdatum'].isin(jahr_filter)][['jahr_opdatum', 'quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
 quartale_options = quartale_df['quartal_opdatum'].tolist()
-quartal_filter = st.multiselect("Quartal auswählen:", options=quartale_options, default=quartale_options)
-df_quartal = df_jahr[df_jahr['quartal_opdatum'].isin(quartal_filter)]  # für Quartalsplot
+quartal_filter = st.session_state.get("quartal_filter", quartale_options)
+quartal_filter = st.multiselect("Quartal auswählen:", options=quartale_options, default=quartal_filter)
+st.session_state["quartal_filter"] = quartal_filter
+
+# Daten nach Filter
+df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]
+df_quartal = df_jahr[df_jahr['quartal_opdatum'].isin(quartal_filter)]
 
 # Bereich
 bereich_filter = st.selectbox("Bereich auswählen:", ["Alle"] + sorted(df['bereich'].unique()))
@@ -173,8 +179,4 @@ st.plotly_chart(px.bar(df_quartal['zugang'].value_counts(), title="Verteilung na
 # Trendanalyse
 if 'jahr_opdatum' in df_quartal.columns and 'bereich' in df_quartal.columns:
     trend_data = df_quartal.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
-    st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
-
-if 'jahr_opdatum' in filtered_df.columns and 'bereich' in filtered_df.columns:
-    trend_data = filtered_df.groupby(['jahr_opdatum','bereich']).size().reset_index(name='count')
     st.plotly_chart(px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', title="Trend über Zeit nach Bereich"))
