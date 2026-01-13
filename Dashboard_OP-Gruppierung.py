@@ -104,19 +104,27 @@ else:
 
 # -------- Filter --------
 jahre = sorted(df['jahr_opdatum'].astype(int).unique())
-jahr_filter = st.session_state.get("jahr_filter", jahre)
-jahr_filter = st.multiselect("Jahr auswählen:", options=jahre, default=jahr_filter)
-st.session_state["jahr_filter"] = jahr_filter
+jahr_filter = st.multiselect("Jahr auswählen:", options=jahre, default=jahre)
+df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]  # für Jahresplot
 
-# Quartale: persistent speichern, damit sie nicht zurückgesetzt werden
-quartale_df = df[df['jahr_opdatum'].isin(jahr_filter)][['jahr_opdatum', 'quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
+# Quartale persistent
+quartale_df = df_jahr[['jahr_opdatum','quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
 quartale_options = quartale_df['quartal_opdatum'].tolist()
-quartal_filter = st.session_state.get("quartal_filter", quartale_options)
-quartal_filter = st.multiselect("Quartal auswählen:", options=quartale_options, default=quartal_filter)
-st.session_state["quartal_filter"] = quartal_filter
 
-# Daten nach Filter
-df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]
+# session_state nutzen, damit Auswahl erhalten bleibt
+if 'quartal_filter' not in st.session_state:
+    st.session_state['quartal_filter'] = quartale_options
+
+# Nur gültige Quartale als default
+default_quartal = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
+
+quartal_filter = st.multiselect(
+    "Quartal auswählen:",
+    options=quartale_options,
+    default=default_quartal
+)
+st.session_state['quartal_filter'] = quartal_filter
+
 df_quartal = df_jahr[df_jahr['quartal_opdatum'].isin(quartal_filter)]
 
 # Bereich
@@ -141,11 +149,11 @@ col3.metric("Bereiche", df_quartal['bereich'].nunique())
 st.subheader("Visualisierungen")
 col1, col2 = st.columns(2)
 
-# --- Farbdictionary pro Jahr für Jahresplot ---
+# Farbdictionary Jahr
 jahre_unique = sorted(df_jahr['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
-# --- Graph 1: Fallzahlen pro Jahr ---
+# Graph 1: Jahr
 jahr_counts_df = df_jahr.groupby('jahr_opdatum').size().reset_index(name='count')
 marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
 fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
@@ -153,13 +161,12 @@ fig_jahr.update_traces(marker_color=marker_colors)
 fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
-# --- Farbdictionary pro Jahr für Quartale ---
+# Graph 2: Quartal
 df_quartal_plot = df_quartal.copy()
 df_quartal_plot['jahr_von_quartal'] = df_quartal_plot['quartal_opdatum'].str.split('-').str[1].astype(int)
 jahre_quartal_unique = sorted(df_quartal_plot['jahr_von_quartal'].unique())
 farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
 
-# --- Graph 2: Fallzahlen pro Quartal ---
 quartal_counts_df = df_quartal_plot.groupby('quartal_opdatum').size().reset_index(name='count')
 marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
 fig_quartal = px.bar(quartal_counts_df, x='quartal_opdatum', y='count', text='count', title="Fallzahlen pro Quartal")
