@@ -107,27 +107,25 @@ jahre = sorted(df['jahr_opdatum'].astype(int).unique())
 jahr_filter = st.multiselect("Jahr auswählen:", options=jahre, default=jahre)
 df_jahr = df[df['jahr_opdatum'].isin(jahr_filter)]  # für Jahresplot
 
-# Quartale
+# -------- Quartale Filter --------
 quartale_df = df_jahr[['jahr_opdatum','quartal_opdatum']].drop_duplicates().sort_values(['jahr_opdatum','quartal_opdatum'])
 quartale_options = quartale_df['quartal_opdatum'].tolist()
 
-# Session State für Quartale initialisieren
+# session_state nutzen
 if 'quartal_filter' not in st.session_state:
     st.session_state['quartal_filter'] = quartale_options
+else:
+    # alte Auswahl beibehalten, neue Quartale hinzufügen
+    st.session_state['quartal_filter'] = [q for q in st.session_state['quartal_filter'] if q in quartale_options] + \
+                                         [q for q in quartale_options if q not in st.session_state['quartal_filter']]
 
-# Filter nur gültige Quartale
-st.session_state['quartal_filter'] = [q for q in st.session_state['quartal_filter'] if q in quartale_options]
-
-# Quartal Multiselect, key für Persistenz
 quartal_filter = st.multiselect(
     "Quartal auswählen:",
     options=quartale_options,
-    default=st.session_state['quartal_filter'],
-    key='quartal_widget'
+    default=st.session_state['quartal_filter']
 )
-
-# Nur die ausgewählten Quartale behalten
 st.session_state['quartal_filter'] = quartal_filter
+
 df_quartal = df_jahr[df_jahr['quartal_opdatum'].isin(quartal_filter)]
 
 # Bereich
