@@ -210,7 +210,7 @@ if len(df_jahr_filtered) > 0:
     jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum').size().reset_index(name='count')
     marker_colors = [farben.get(jahr, 'rgb(100,100,100)') for jahr in jahr_counts_df['jahr_opdatum']]
     fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
-    fig_jahr.update_traces(marker_color=marker_colors)
+    fig_jahr.update_traces(marker_color=marker_colors, textfont_size=16, textposition='inside')
     fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
     col1.plotly_chart(fig_jahr, use_container_width=True)
 
@@ -224,7 +224,7 @@ if len(df_jahr_filtered) > 0:
         quartal_counts_df = df_quartal_plot.groupby('quartal_opdatum').size().reset_index(name='count')
         marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
         fig_quartal = px.bar(quartal_counts_df, x='quartal_opdatum', y='count', text='count', title="Fallzahlen pro Quartal")
-        fig_quartal.update_traces(marker_color=marker_colors_quartal)
+        fig_quartal.update_traces(marker_color=marker_colors_quartal, textfont_size=16, textposition='inside')
         fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
         col2.plotly_chart(fig_quartal, use_container_width=True)
 
