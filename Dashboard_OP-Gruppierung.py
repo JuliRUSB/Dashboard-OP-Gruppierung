@@ -140,7 +140,8 @@ if df is not None:
     df = prepare_data(df)
 
 # --------Filterblock--------
-filtered_df = df.copy()
+df_jahr = df.copy()
+df_quartal = df.copy()
 
 # Jahr
 jahre = sorted(df['jahr_opdatum'].dropna().astype(int).unique())
@@ -233,7 +234,7 @@ jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
 # --- Graph 1: Fallzahlen pro Jahr ---
-jahr_counts_df = filtered_df.groupby('jahr_opdatum').size().reset_index(name='count')
+jahr_counts_df = df_jahr.groupby('jahr_opdatum').size().reset_index(name='count')
 
 # Farben für jeden Balken in der richtigen Reihenfolge
 marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
@@ -265,7 +266,7 @@ jahre_quartal_unique = sorted(filtered_df['jahr_von_quartal'].unique())
 farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
 
 # --- Graph 2: Fallzahlen pro Quartal ---
-quartal_counts_df = filtered_df.groupby('quartal_opdatum').size().reset_index(name='count')
+quartal_counts_df = df_quartal.groupby('quartal_opdatum').size().reset_index(name='count')
 
 # Farben jedem Balken zuweisen anhand des Jahres
 marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
