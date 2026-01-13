@@ -135,29 +135,56 @@ col3.metric("Bereiche", filtered_df['bereich'].nunique())
 st.subheader("Visualisierungen")
 col1, col2 = st.columns(2)
 
-# Farben pro Jahr
-jahre_unique = sorted(filtered_df['jahr_opdatum'].unique())
+# --- Farbdictionary pro Jahr ---
+jahre_unique = sorted(df_jahr['jahr_opdatum'].unique())
 farben = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
 
-# Fallzahlen pro Jahr
-jahr_counts_df = filtered_df.groupby('jahr_opdatum').size().reset_index(name='count')
-marker_colors = [farben[j] for j in jahr_counts_df['jahr_opdatum']]
-fig_jahr = px.bar(jahr_counts_df, x='jahr_opdatum', y='count', text='count', title="Fallzahlen pro Jahr")
+# --- Graph 1: Fallzahlen pro Jahr (nur nach Jahr gefiltert, unabhängig von Quartal) ---
+jahr_counts_df = df[df['jahr_opdatum'].isin(jahr_filter)].groupby('jahr_opdatum').size().reset_index(name='count')
+
+marker_colors = [farben[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
+
+fig_jahr = px.bar(
+    jahr_counts_df,
+    x='jahr_opdatum',
+    y='count',
+    text='count',
+    title="Fallzahlen pro Jahr"
+)
 fig_jahr.update_traces(marker_color=marker_colors)
-fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
+fig_jahr.update_layout(
+    xaxis_title=None,
+    yaxis_title=None,
+    showlegend=False
+)
 col1.plotly_chart(fig_jahr, use_container_width=True)
 
-# Farben pro Jahr für Quartale
-filtered_df['jahr_von_quartal'] = filtered_df['quartal_opdatum'].str.split('-').str[1].astype(int)
-jahre_quartal_unique = sorted(filtered_df['jahr_von_quartal'].unique())
+# --- Farbdictionary pro Jahr für Quartale ---
+df_quartal_plot = df_jahr.copy()
+if quartal_filter:
+    df_quartal_plot = df_quartal_plot[df_quartal_plot['quartal_opdatum'].isin(quartal_filter)]
+
+df_quartal_plot['jahr_von_quartal'] = df_quartal_plot['quartal_opdatum'].str.split('-').str[1].astype(int)
+jahre_quartal_unique = sorted(df_quartal_plot['jahr_von_quartal'].unique())
 farben_quartal = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_quartal_unique}
 
-# Fallzahlen pro Quartal
-quartal_counts_df = filtered_df.groupby('quartal_opdatum').size().reset_index(name='count')
+# --- Graph 2: Fallzahlen pro Quartal ---
+quartal_counts_df = df_quartal_plot.groupby('quartal_opdatum').size().reset_index(name='count')
 marker_colors_quartal = [farben_quartal[int(q.split('-')[1])] for q in quartal_counts_df['quartal_opdatum']]
-fig_quartal = px.bar(quartal_counts_df, x='quartal_opdatum', y='count', text='count', title="Fallzahlen pro Quartal")
+
+fig_quartal = px.bar(
+    quartal_counts_df,
+    x='quartal_opdatum',
+    y='count',
+    text='count',
+    title="Fallzahlen pro Quartal"
+)
 fig_quartal.update_traces(marker_color=marker_colors_quartal)
-fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False)
+fig_quartal.update_layout(
+    xaxis_title=None,
+    yaxis_title=None,
+    showlegend=False
+)
 col2.plotly_chart(fig_quartal, use_container_width=True)
 
 # Pie nach Bereich
