@@ -367,7 +367,7 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# HSM-Balkendiagramm
+#HSM-Balkendiagramm
 with tab4:
     if df_filtered['hsm'].notna().any():
         hsm_counts = (
@@ -381,24 +381,18 @@ with tab4:
         )
         hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
 
-        # Farbe für jeden Balken: eindeutige Kombination Jahr + HSM
-        hsm_counts['jahr_hsm'] = hsm_counts['jahr_opdatum'].astype(str) + "_" + hsm_counts['hsm']
-        farben_palette = px.colors.qualitative.Safe  # oder eine andere Farbpalette
-        farben_dict = {jahr_hsm: farben_palette[i % len(farben_palette)] 
-                       for i, jahr_hsm in enumerate(hsm_counts['jahr_hsm'])}
-
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
             y='count',
-            color='jahr_hsm',
+            color='hsm',
             barmode='group',
             text='count',
             title="HSM nach Jahr",
-            labels={'jahr_hsm': 'HSM'}
+            labels={'hsm': 'HSM'}
         )
-        fig_hsm.update_traces(textposition='inside', textfont_size=18, marker_line_width=0.5)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", showlegend=True)
+        fig_hsm.update_traces(textposition='inside', textfont_size=18)
+        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
         st.info("Keine HSM-Informationen verfügbar")
