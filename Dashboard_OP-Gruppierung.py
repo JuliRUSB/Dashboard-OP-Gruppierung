@@ -330,18 +330,31 @@ with tab1:
     else:
         st.info("Keine Bereichsdaten verfügbar")
 
-# Zugang-Barchart
+# Zugang-Balkendiagramm
 with tab2:
     if df_filtered['zugang'].nunique() > 0:
-        zugang_counts = df_filtered['zugang'].value_counts().reset_index()
-        zugang_counts.columns = ['zugang', 'count']
-        fig_zugang = px.bar(zugang_counts, x='zugang', y='count', text='count', title="Verteilung nach Zugangsart")
+        zugang_counts = (
+            df_filtered
+            .groupby(['jahr_opdatum', 'zugang'], as_index=False)
+            .size()
+        )
+        zugang_counts.columns = ['jahr_opdatum', 'zugang', 'count']
+
+        fig_zugang = px.bar(
+            zugang_counts,
+            x='zugang',
+            y='count',
+            color='jahr_opdatum',
+            barmode='group',
+            text='count',
+            title="Verteilung nach Zugangsart"
+        )
         fig_zugang.update_traces(textposition='outside')
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Barchart (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo)
 with tab3:
     dindo_data = df_filtered['max_dindo_calc_surv'].dropna()
     if len(dindo_data) > 0:
