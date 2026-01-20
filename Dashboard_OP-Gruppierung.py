@@ -369,12 +369,26 @@ with tab3:
 
 # HSM-Balkendiagramm
 with tab4:
-    hsm_data = df_filtered['hsm'].dropna()
-    if len(hsm_data) > 0:
-        hsm_counts = hsm_data.value_counts().sort_index().reset_index()
-        hsm_counts.columns = ['hsm', 'count']
-        fig_hsm = px.bar(hsm_counts, x='hsm', y='count', text='count', title="HSM")
+    if df_filtered['hsm'].notna().any():
+        hsm_counts = (
+            df_filtered
+            .dropna(subset=['hsm', 'jahr_opdatum'])
+            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
+            .size()
+        )
+        hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
+
+        fig_hsm = px.bar(
+            hsm_counts,
+            x='jahr_opdatum',
+            y='count',
+            color='hsm',
+            barmode='group',
+            text='count',
+            title="HSM nach Jahr"
+        )
         fig_hsm.update_traces(textposition='outside')
+        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
         st.info("Keine HSM-Informationen verfügbar")
