@@ -99,7 +99,7 @@ def prepare_data(df):
             'lebergruppen___4': 'Benigne',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
-        def get_lebergruppen(row):
+        def get_leber_gruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['leber_gruppen'] = df.apply(get_leber_gruppen, axis=1)
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
