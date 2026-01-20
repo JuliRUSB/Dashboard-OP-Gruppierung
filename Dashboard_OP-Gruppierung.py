@@ -374,7 +374,7 @@ with tab4:
             df_filtered
             .dropna(subset=['hsm', 'jahr_opdatum'])
             .assign(
-                hsm=lambda d: d['hsm'].map({0: 'Nein', 1: 'Ja'})
+                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
             )
             .groupby(['jahr_opdatum', 'hsm'], as_index=False)
             .size()
