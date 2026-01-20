@@ -320,7 +320,7 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-tab1, tab2, tab3, tab4 = st.tabs(["Bereich", "Zugang", "Komplikationen", "Trends"])
+tab1, tab2, tab3, tab4, tab5 =st.tabs(["Bereich", "Zugang", "Komplikationen", "HSM", "Trends"])
 
 # Bereich-Piechart
 with tab1:
@@ -367,8 +367,20 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# Trends über Jahre nach Bereich
+# HSM-Balkendiagramm
 with tab4:
+    dindo_data = df_filtered['hsm'].dropna()
+    if len(hsm_data) > 0:
+        hsm_counts = hsm_data.value_counts().sort_index().reset_index()
+        hsm_counts.columns = ['hsm', 'count']
+        fig_hsm = px.bar(dindo_counts, x='hsm', y='count', text='count', title="HSM")
+        fig_hsm.update_traces(textposition='outside')
+        st.plotly_chart(fig_dindo, use_container_width=True)
+    else:
+        st.info("Keine HSM-Informationen verfügbar")
+
+# Trends über Jahre nach Bereich
+with tab5:
     if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
         trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
         trend_data.columns = ['jahr_opdatum', 'bereich', 'count']
