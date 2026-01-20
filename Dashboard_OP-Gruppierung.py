@@ -358,7 +358,7 @@ with tab2:
             title="Verteilung nach Zugangsart und Jahr",
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['zugang'].nunique())]
         )
-        fig_zugang.update_traces(textposition='outside')
+        fig_zugang.update_traces(textposition='inside', textfont_size=16)
         fig_zugang.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
@@ -375,7 +375,7 @@ with tab3:
         dindo_farben = [f"rgb({50+int(i)*35},{100+int(i)*40},{150+int(i)*25})" for i in dindo_counts['dindo']]
         
         fig_dindo = px.bar(dindo_counts, x='dindo', y='count', text='count', title="Clavien-Dindo Komplikationen")
-        fig_dindo.update_traces(marker_color=dindo_farben, textposition='outside')
+        fig_dindo.update_traces(marker_color=dindo_farben, textposition='inside', textfont_size=16)
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
@@ -405,7 +405,7 @@ with tab4:
             labels={'hsm': 'HSM'},
             color_discrete_sequence=[f"rgb({90},{140},{180})", f"rgb({130},{180},{220})"]
         )
-        fig_hsm.update_traces(textposition='inside', textfont_size=18)
+        fig_hsm.update_traces(textposition='inside', textfont_size=16)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
