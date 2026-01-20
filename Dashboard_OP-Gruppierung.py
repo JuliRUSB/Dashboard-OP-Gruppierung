@@ -342,14 +342,15 @@ with tab2:
 
         fig_zugang = px.bar(
             zugang_counts,
-            x='zugang',
+            x='jahr_opdatum',
             y='count',
-            color='jahr_opdatum',
+            color='zugang',
             barmode='group',
             text='count',
-            title="Verteilung nach Zugangsart"
+            title="Verteilung nach Zugangsart und Jahr"
         )
         fig_zugang.update_traces(textposition='outside')
+        fig_zugang.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
         st.info("Keine Zugangsdaten verfügbar")
