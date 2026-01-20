@@ -93,10 +93,10 @@ def prepare_data(df):
     leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
     if leber_gruppen_cols:
         mapping = {
-            'lebergruppen___1': 'HCC',
-            'lebergruppen___2': 'CCC',
-            'lebergruppen___3': 'Matastasen',
-            'lebergruppen___4': 'Benigne',
+            'leber_gruppen___1': 'HCC',
+            'leber_gruppen___2': 'CCC',
+            'leber_gruppen___3': 'Matastasen',
+            'leber_gruppen___4': 'Benigne',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_leber_gruppen(row):
