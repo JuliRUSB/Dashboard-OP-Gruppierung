@@ -373,6 +373,9 @@ with tab4:
         hsm_counts = (
             df_filtered
             .dropna(subset=['hsm', 'jahr_opdatum'])
+            .assign(
+                hsm=lambda d: d['hsm'].map({0: 'Nein', 1: 'Ja'})
+            )
             .groupby(['jahr_opdatum', 'hsm'], as_index=False)
             .size()
         )
@@ -385,9 +388,10 @@ with tab4:
             color='hsm',
             barmode='group',
             text='count',
-            title="HSM nach Jahr"
+            title="HSM nach Jahr",
+            labels={'hsm': 'HSM'}
         )
-        fig_hsm.update_traces(textposition='outside')
+        fig_hsm.update_traces(textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
