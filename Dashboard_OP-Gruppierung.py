@@ -368,14 +368,14 @@ with tab2:
             leber_gruppen_counts,
             x='jahr_opdatum',
             y='count',
-            color='Leber-Gruppen',
+            color='leber_gruppen',
             barmode='group',
             text='count',
             title="Verteilung nach Gruppen und Jahr",
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['leber_gruppen'].nunique())]
         )
         fig_leber_gruppen.update_traces(textposition='inside', textfont_size=16)
-        fig_leber_gruppen.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        fig_leber_gruppen.update_layout(xaxis_title="Jahr", yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_leber_gruppen, use_container_width=True)
     else:
         st.info("Keine Daten verfügbar")
