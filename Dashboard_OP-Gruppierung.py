@@ -369,7 +369,7 @@ with tab3:
 
 # HSM-Balkendiagramm
 with tab4:
-    dindo_data = df_filtered['hsm'].dropna()
+    hsm_data = df_filtered['hsm'].dropna()
     if len(hsm_data) > 0:
         hsm_counts = hsm_data.value_counts().sort_index().reset_index()
         hsm_counts.columns = ['hsm', 'count']
