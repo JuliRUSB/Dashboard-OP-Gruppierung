@@ -95,7 +95,7 @@ def prepare_data(df):
         mapping = {
             'leber_gruppen___1': 'HCC',
             'leber_gruppen___2': 'CCC',
-            'leber_gruppen___3': 'Matastasen',
+            'leber_gruppen___3': 'Metastasen',
             'leber_gruppen___4': 'Benigne',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
