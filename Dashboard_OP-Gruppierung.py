@@ -37,9 +37,10 @@ def export_redcap_data(api_url):
         'type': 'flat',                   # Flache Struktur (nicht verschachtelt)
         'fields[0]': 'opdatum',           # Felder, die exportiert werden sollen
         'fields[1]': 'bereich',
-        'fields[2]': 'hsm',
-        'fields[3]': 'zugang',
-        'fields[4]': 'max_dindo_calc_surv',
+        'fields[2]': 'leber_gruppen',
+        'fields[3]': 'hsm',
+        'fields[4]': 'zugang',
+        'fields[5]': 'max_dindo_calc_surv',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -68,7 +69,7 @@ def prepare_data(df):
     df = df.copy()  # Kopie, damit Originaldaten nicht verändert werden
     df['opdatum'] = pd.to_datetime(df['opdatum'], errors='coerce')  # Datum konvertieren
     
-    # Bereich: Spalten mit 'bereich___' zusammenfassen
+    # Bereich: Spalten mit 'bereich___' mappen
     bereich_cols = [c for c in df.columns if c.startswith('bereich___')]
     if bereich_cols:
         mapping = {
@@ -87,7 +88,22 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['bereich'] = df.apply(get_bereich, axis=1)
         df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
-
+    
+    # Leber-Gruppen: Spalten mit 'leber_gruppen___' mappen
+    lebergruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
+    if lebergruppen_cols:
+        mapping = {
+            'lebergruppen___1': 'HCC',
+            'lebergruppen___2': 'CCC',
+            'lebergruppen___3': 'Matastasen',
+            'lebergruppen___4': 'Benigne',
+        }
+        # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+        def get_lebergruppen(row):
+            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+        df['leber_gruppen'] = df.apply(get_lebergruppen, axis=1)
+        df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
+    
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
         1: 'Offen',
