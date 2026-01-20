@@ -351,8 +351,10 @@ with tab1:
     else:
         st.info("Keine Bereichsdaten verfügbar")
 
+# Gruppen-Balkendiagramm
+
 # Zugang-Balkendiagramm
-with tab2:
+with tab3:
     if df_filtered['zugang'].nunique() > 0:
         zugang_counts = (
             df_filtered
@@ -379,8 +381,6 @@ with tab2:
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
         st.info("Keine Zugangsdaten verfügbar")
-
-# Gruppen-Balkendiagramm
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
 with tab4:
