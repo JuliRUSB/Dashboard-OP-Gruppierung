@@ -367,7 +367,7 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# HSM-Balkendiagramm mit Jahresfarben
+# HSM-Balkendiagramm mit Jahresfarben und HSM-Unterscheidung
 with tab4:
     if df_filtered['hsm'].notna().any():
         # HSM in Ja/Nein umwandeln
@@ -381,24 +381,35 @@ with tab4:
         hsm_counts = df_hsm.groupby(['jahr_opdatum', 'hsm'], as_index=False).size()
         hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
 
-        # Farben wie bei Fallzahlen pro Jahr
+        # Basisfarben pro Jahr
         jahre_unique = sorted(hsm_counts['jahr_opdatum'].unique())
-        farben_jahr = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
-        marker_colors = [farben_jahr[jahr] for jahr in hsm_counts['jahr_opdatum']]
+        base_colors = {jahr: (50+jahr%5*40, 100+jahr%3*50, 150+jahr%4*30) for jahr in jahre_unique}
 
+        # Für HSM: Ja hell, Nein dunkel
+        def get_hsm_color(row):
+            r, g, b = base_colors[row['jahr_opdatum']]
+            if row['hsm'] == 'Ja':
+                # etwas aufhellen
+                return f"rgb({min(r+60,255)},{min(g+60,255)},{min(b+60,255)})"
+            else:
+                # etwas abdunkeln
+                return f"rgb({max(r-40,0)},{max(g-40,0)},{max(b-40,0)})"
+
+        hsm_counts['color'] = hsm_counts.apply(get_hsm_color, axis=1)
+
+        # Balkendiagramm
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
             y='count',
-            color='hsm',           # Ja/Nein differenzieren
+            color='hsm',
             barmode='group',
             text='count',
             title="HSM nach Jahr",
             labels={'hsm': 'HSM'}
         )
-
-        # Farben pro Jahr setzen
-        fig_hsm.update_traces(marker_color=marker_colors, textposition='inside', textfont_size=18)
+        # Farben aus Spalte verwenden
+        fig_hsm.update_traces(marker_color=hsm_counts['color'], textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
