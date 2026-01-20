@@ -102,7 +102,7 @@ def prepare_data(df):
         def get_lebergruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['leber_gruppen'] = df.apply(get_lebergruppen, axis=1)
-        df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
+        df = df.drop(columns=lebergruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
