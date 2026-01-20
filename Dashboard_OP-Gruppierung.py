@@ -336,7 +336,7 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Bereich", ""Gruppen", "Zugang", "Komplikationen", "HSM", "Trends"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Bereich", "Gruppen", "Zugang", "Komplikationen", "HSM", "Trends"])
 
 # Bereich-Piechart
 with tab1:
