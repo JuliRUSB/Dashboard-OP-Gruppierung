@@ -336,7 +336,7 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Bereich", "Zugang", "Komplikationen", "HSM", "Trends"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Bereich", ""Gruppen", "Zugang", "Komplikationen", "HSM", "Trends"])
 
 # Bereich-Piechart
 with tab1:
@@ -380,8 +380,10 @@ with tab2:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
+# Gruppen-Balkendiagramm
+
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-with tab3:
+with tab4:
     dindo_data = df_filtered['max_dindo_calc_surv'].dropna()
     if len(dindo_data) > 0:
         dindo_counts = dindo_data.value_counts().sort_index().reset_index()
@@ -397,7 +399,7 @@ with tab3:
         st.info("Keine Komplikationsdaten verfügbar")
 
 #HSM-Balkendiagramm
-with tab4:
+with tab5:
     if df_filtered['hsm'].notna().any():
         hsm_counts = (
             df_filtered
@@ -428,7 +430,7 @@ with tab4:
         st.info("Keine HSM-Informationen verfügbar")
 
 # Trends über Jahre nach Bereich
-with tab5:
+with tab6:
     if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
         trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
         trend_data.columns = ['jahr_opdatum', 'bereich', 'count']
