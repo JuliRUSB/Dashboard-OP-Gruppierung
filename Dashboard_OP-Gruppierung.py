@@ -352,6 +352,33 @@ with tab1:
         st.info("Keine Bereichsdaten verfügbar")
 
 # Gruppen-Balkendiagramm
+with tab2:
+    if df_filtered['leber_gruppen'].nunique() > 0:
+        leber_gruppen_counts = (
+            df_filtered
+            .groupby(['jahr_opdatum', 'leber_gruppen'], as_index=False)
+            .size()
+        )
+        leber_gruppen_counts.columns = ['jahr_opdatum', 'zugang', 'count']
+        
+        # Farben für jedes Jahr
+        farben_jahr_leber_gruppen = {jahr: get_color_for_year(jahr) for jahr in leber_gruppen_counts['jahr_opdatum'].unique()}
+
+        fig_leber_gruppen = px.bar(
+            leber_gruppen_counts,
+            x='jahr_opdatum',
+            y='count',
+            color='leber_gruppen',
+            barmode='group',
+            text='count',
+            title="Verteilung nach Gruppen und Jahr",
+            color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['leber_gruppen'].nunique())]
+        )
+        fig_zugang.update_traces(textposition='inside', textfont_size=16)
+        fig_zugang.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        st.plotly_chart(fig_leber_gruppen, use_container_width=True)
+    else:
+        st.info("Keine Zugangsdaten verfügbar")
 
 # Zugang-Balkendiagramm
 with tab3:
