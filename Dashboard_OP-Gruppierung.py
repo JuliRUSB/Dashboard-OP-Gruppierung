@@ -373,9 +373,9 @@ with tab4:
     if len(hsm_data) > 0:
         hsm_counts = hsm_data.value_counts().sort_index().reset_index()
         hsm_counts.columns = ['hsm', 'count']
-        fig_hsm = px.bar(dindo_counts, x='hsm', y='count', text='count', title="HSM")
+        fig_hsm = px.bar(hsm_counts, x='hsm', y='count', text='count', title="HSM")
         fig_hsm.update_traces(textposition='outside')
-        st.plotly_chart(fig_dindo, use_container_width=True)
+        st.plotly_chart(fig_hsm, use_container_width=True)
     else:
         st.info("Keine HSM-Informationen verfügbar")
 
