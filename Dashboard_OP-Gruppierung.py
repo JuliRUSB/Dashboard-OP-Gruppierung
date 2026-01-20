@@ -367,31 +367,38 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# HSM-Balkendiagramm
+# HSM-Balkendiagramm mit Jahresfarben
 with tab4:
     if df_filtered['hsm'].notna().any():
-        hsm_counts = (
+        # HSM in Ja/Nein umwandeln
+        df_hsm = (
             df_filtered
             .dropna(subset=['hsm', 'jahr_opdatum'])
-            .assign(
-                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
-            )
-            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
-            .size()
+            .assign(hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'}))
         )
+
+        # Gruppieren nach Jahr und HSM
+        hsm_counts = df_hsm.groupby(['jahr_opdatum', 'hsm'], as_index=False).size()
         hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
+
+        # Farben wie bei Fallzahlen pro Jahr
+        jahre_unique = sorted(hsm_counts['jahr_opdatum'].unique())
+        farben_jahr = {jahr: f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})" for jahr in jahre_unique}
+        marker_colors = [farben_jahr[jahr] for jahr in hsm_counts['jahr_opdatum']]
 
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
             y='count',
-            color='hsm',
+            color='hsm',           # Ja/Nein differenzieren
             barmode='group',
             text='count',
             title="HSM nach Jahr",
             labels={'hsm': 'HSM'}
         )
-        fig_hsm.update_traces(textposition='inside', textfont_size=18)
+
+        # Farben pro Jahr setzen
+        fig_hsm.update_traces(marker_color=marker_colors, textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
