@@ -90,8 +90,8 @@ def prepare_data(df):
         df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
     
     # Leber-Gruppen: Spalten mit 'leber_gruppen___' mappen
-    lebergruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
-    if lebergruppen_cols:
+    leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
+    if leber_gruppen_cols:
         mapping = {
             'lebergruppen___1': 'HCC',
             'lebergruppen___2': 'CCC',
@@ -101,8 +101,8 @@ def prepare_data(df):
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_lebergruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
-        df['leber_gruppen'] = df.apply(get_lebergruppen, axis=1)
-        df = df.drop(columns=lebergruppen_cols)  # Ursprüngliche Spalten löschen
+        df['leber_gruppen'] = df.apply(get_leber_gruppen, axis=1)
+        df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
@@ -351,7 +351,7 @@ with tab1:
     else:
         st.info("Keine Bereichsdaten verfügbar")
 
-# Gruppen-Balkendiagramm
+# Leber-Gruppen-Balkendiagramm
 with tab2:
     if df_filtered['leber_gruppen'].nunique() > 0:
         leber_gruppen_counts = (
@@ -359,7 +359,7 @@ with tab2:
             .groupby(['jahr_opdatum', 'leber_gruppen'], as_index=False)
             .size()
         )
-        leber_gruppen_counts.columns = ['jahr_opdatum', 'zugang', 'count']
+        leber_gruppen_counts.columns = ['jahr_opdatum', 'leber_gruppen', 'count']
         
         # Farben für jedes Jahr
         farben_jahr_leber_gruppen = {jahr: get_color_for_year(jahr) for jahr in leber_gruppen_counts['jahr_opdatum'].unique()}
@@ -378,7 +378,7 @@ with tab2:
         fig_zugang.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_leber_gruppen, use_container_width=True)
     else:
-        st.info("Keine Zugangsdaten verfügbar")
+        st.info("Keine Daten verfügbar")
 
 # Zugang-Balkendiagramm
 with tab3:
