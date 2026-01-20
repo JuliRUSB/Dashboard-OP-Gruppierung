@@ -367,48 +367,40 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# HSM-Balkendiagramm mit Jahresfarben und HSM-Unterscheidung
+# HSM-Balkendiagramm mit eigenen Farben pro Balken
 with tab4:
     if df_filtered['hsm'].notna().any():
-        # HSM in Ja/Nein umwandeln
         df_hsm = (
             df_filtered
             .dropna(subset=['hsm', 'jahr_opdatum'])
             .assign(hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'}))
         )
 
-        # Gruppieren nach Jahr und HSM
         hsm_counts = df_hsm.groupby(['jahr_opdatum', 'hsm'], as_index=False).size()
         hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
 
-        # Basisfarben pro Jahr
-        jahre_unique = sorted(hsm_counts['jahr_opdatum'].unique())
-        base_colors = {jahr: (50+jahr%5*40, 100+jahr%3*50, 150+jahr%4*30) for jahr in jahre_unique}
+        # Farbe für jeden Balken einzeln berechnen
+        def get_color(idx):
+            # Zufällige, aber reproduzierbare Farben pro Balken
+            r = 50 + (idx*50)%206
+            g = 100 + (idx*70)%156
+            b = 150 + (idx*40)%106
+            return f"rgb({r},{g},{b})"
 
-        # Für HSM: Ja hell, Nein dunkel
-        def get_hsm_color(row):
-            r, g, b = base_colors[row['jahr_opdatum']]
-            if row['hsm'] == 'Ja':
-                # etwas aufhellen
-                return f"rgb({min(r+60,255)},{min(g+60,255)},{min(b+60,255)})"
-            else:
-                # etwas abdunkeln
-                return f"rgb({max(r-40,0)},{max(g-40,0)},{max(b-40,0)})"
+        hsm_counts['color'] = [get_color(i) for i in range(len(hsm_counts))]
 
-        hsm_counts['color'] = hsm_counts.apply(get_hsm_color, axis=1)
-
-        # Balkendiagramm
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
             y='count',
-            color='hsm',
+            color='hsm',  # Legende bleibt Ja/Nein
             barmode='group',
             text='count',
             title="HSM nach Jahr",
             labels={'hsm': 'HSM'}
         )
-        # Farben aus Spalte verwenden
+
+        # Jede Säule eigene Farbe
         fig_hsm.update_traces(marker_color=hsm_counts['color'], textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
