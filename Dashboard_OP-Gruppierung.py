@@ -367,42 +367,38 @@ with tab3:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-# HSM-Balkendiagramm mit eigenen Farben pro Balken
+# HSM-Balkendiagramm
 with tab4:
     if df_filtered['hsm'].notna().any():
-        df_hsm = (
+        hsm_counts = (
             df_filtered
             .dropna(subset=['hsm', 'jahr_opdatum'])
-            .assign(hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'}))
+            .assign(
+                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
+            )
+            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
+            .size()
         )
-
-        hsm_counts = df_hsm.groupby(['jahr_opdatum', 'hsm'], as_index=False).size()
         hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
 
-        # Farbe für jeden Balken einzeln berechnen
-        def get_color(idx):
-            # Zufällige, aber reproduzierbare Farben pro Balken
-            r = 50 + (idx*50)%206
-            g = 100 + (idx*70)%156
-            b = 150 + (idx*40)%106
-            return f"rgb({r},{g},{b})"
-
-        hsm_counts['color'] = [get_color(i) for i in range(len(hsm_counts))]
+        # Farbe für jeden Balken: eindeutige Kombination Jahr + HSM
+        hsm_counts['jahr_hsm'] = hsm_counts['jahr_opdatum'].astype(str) + "_" + hsm_counts['hsm']
+        farben_palette = px.colors.qualitative.Safe  # oder eine andere Farbpalette
+        farben_dict = {jahr_hsm: farben_palette[i % len(farben_palette)] 
+                       for i, jahr_hsm in enumerate(hsm_counts['jahr_hsm'])}
 
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
             y='count',
-            color='hsm',  # Legende bleibt Ja/Nein
+            color='jahr_hsm',
             barmode='group',
             text='count',
             title="HSM nach Jahr",
-            labels={'hsm': 'HSM'}
+            labels={'jahr_hsm': 'HSM'}
         )
-
-        # Jede Säule eigene Farbe
-        fig_hsm.update_traces(marker_color=hsm_counts['color'], textposition='inside', textfont_size=18)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        fig_hsm.update_traces(textposition='inside', textfont_size=18, marker_line_width=0.5)
+        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", showlegend=True)
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
         st.info("Keine HSM-Informationen verfügbar")
