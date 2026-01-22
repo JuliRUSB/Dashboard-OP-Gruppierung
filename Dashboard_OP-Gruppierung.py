@@ -502,7 +502,6 @@ with tab5:
 with tab6:
     st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
-    # df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     df_los = df_filtered.copy()  # alle Daten
 
     if len(df_los) == 0:
@@ -529,8 +528,8 @@ with tab6:
                 "Median": [f"{median:.0f}"] # 0 Nachkommastellen
             })
 
-            # Index ausblenden, indem reset_index(drop=True) verwendet wird
-            st.table(los_summary.reset_index(drop=True))
+            # Tabelle ohne leere Index-Spalte anzeigen
+            st.dataframe(los_summary, use_container_width=True)
 
 # Trends über Jahre nach Bereich
 with tab7:
