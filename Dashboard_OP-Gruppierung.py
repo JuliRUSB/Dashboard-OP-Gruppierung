@@ -288,10 +288,6 @@ col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 with col1:
     st.metric("Gesamt Fälle", len(df_filtered))  # Anzahl gefilterter Fälle
     
-# with col2:
-    # avg_dindo = df_filtered['max_dindo_calc_surv'].mean()  # Durchschnitt Clavien-Dindo
-    # st.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
-    
 with col2:
     st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
     
@@ -443,13 +439,16 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # Farben: dunkelste Farbe zuerst, dann abgestufte hellere Farben im selben Farbraum
-        dindo_labels = sorted(dindo_counts['dindo'].unique())
-        base_rgb = (60, 100, 140)  # dunkelste Farbe
-        step_rgb = (15, 12, 10)    # Abstufung pro Grad
-        dindo_colors = [
-            f"rgb({base_rgb[0]+i*step_rgb[0]},{base_rgb[1]+i*step_rgb[1]},{base_rgb[2]+i*step_rgb[2]})"
-            for i in range(len(dindo_labels))
+        # Definierte Palette: Satte, professionelle Farben (gedeckt)
+        # Diese Farben sind kräftig genug zur Unterscheidung, aber nicht neon-grell.
+        professional_palette = [
+            '#1F4E79', # Dunkelblau
+            '#2E75B6', # Stahlblau
+            '#548235', # Waldgrün
+            '#767171', # Schiefergrau
+            '#843C0C', # Rostbraun/Terracotta
+            '#C00000', # Dunkelrot (für schwere Komplikationen)
+            '#44546A'  # Blaugrau
         ]
 
         fig_dindo = px.bar(
@@ -460,10 +459,23 @@ with tab4:
             barmode='group',
             text='count',
             title="Clavien-Dindo Komplikationen nach Jahr",
-            color_discrete_sequence=dindo_colors
+            color_discrete_sequence=professional_palette
         )
-        fig_dindo.update_traces(textposition='inside', textfont_size=16)
-        fig_dindo.update_layout(xaxis_title=None, yaxis_title=None)
+        
+        fig_dindo.update_traces(
+            textposition='inside', 
+            textfont_size=16,
+            marker_line_width=1,        # Leichte Kontur für mehr Tiefe
+            marker_line_color="white"
+        )
+        
+        fig_dindo.update_layout(
+            xaxis_title=None, 
+            yaxis_title=None,
+            legend_title_text='Dindo Grad',
+            plot_bgcolor='rgba(0,0,0,0)' # Transparenter Hintergrund für Clean Look
+        )
+        
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
