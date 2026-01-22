@@ -428,9 +428,10 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal
+# Komplikationen-Balkendiagramm (Clavien-Dindo) - Wie in der Abbildung
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
+        # Gruppierung wieder nach JAHR und DINDO-Grad
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
@@ -439,42 +440,40 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # Palette bleibt gleich
+        # Definierte Palette
         professional_palette = [
             '#1F4E79', '#2E75B6', '#548235', '#767171', '#843C0C', '#C00000', '#44546A'
         ]
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='count',                # Jetzt auf der X-Achse
-            y='jahr_opdatum',         # Jetzt auf der Y-Achse
-            color='dindo',
+            x='count',                # Anzahl auf der X-Achse
+            y='dindo',                # Dindo Grade auf der Y-Achse
+            color='jahr_opdatum',     # Farbe nach Jahr
             orientation='h',          # Horizontal ausrichten
-            barmode='group',
+            barmode='group',          # Balken gruppieren (nicht stapeln)
             text='count',
             title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=professional_palette
         )
         
         fig_dindo.update_traces(
-            textposition='outside',   # Text steht jetzt rechts neben den Balken
+            textposition='outside', 
             textfont_size=16,
             marker_line_width=1,
             marker_line_color="white"
         )
         
         fig_dindo.update_layout(
-            xaxis_title=None, 
-            yaxis_title=None,
-            legend_title_text='Clavien-Dindo Grad',
+            xaxis_title="Anzahl Fälle", 
+            yaxis_title="Höchster Clavien-Dindo Grad",
+            legend_title_text='Operationsjahr', # Legende wieder anzeigen und benennen
             plot_bgcolor='rgba(0,0,0,0)',
-            # Die 25er Schritte liegen nun auf der X-Achse
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
                 dtick=25
             ),
-            # Y-Achse als Kategorie (damit Jahre nicht als Zahlenstrahl interpretiert werden)
             yaxis=dict(type='category')
         )
         
