@@ -467,8 +467,8 @@ with tab4:
             plot_bgcolor='rgba(0,0,0,0)',
             # --- Hier die Abstände anpassen ---
             height=700,
-            bargap=0.1,        # Abstand zwischen den Dindo-Grad-Gruppen (reduziert Leerraum vertikal)
-            bargroupgap=0.5,  # Abstand zwischen den Balken innerhalb einer Gruppe (reduziert Leerraum horizontal)
+            bargap=0.05,        # Abstand zwischen den Dindo-Grad-Gruppen (reduziert Leerraum vertikal)
+            bargroupgap=0.01,  # Abstand zwischen den Balken innerhalb einer Gruppe (reduziert Leerraum horizontal)
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
