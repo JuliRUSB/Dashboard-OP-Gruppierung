@@ -431,39 +431,42 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Komplikationen-Balkendiagramm (Clavien-Dindo) – weichere Farbabstufungen
+# Komplikationen-Balkendiagramm (Clavien-Dindo) – Grad auf x-Achse, Farbe = Jahr
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
-            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
+            .groupby(['max_dindo_calc', 'jahr_opdatum'], as_index=False)
             .size()
         )
-        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
+        dindo_counts.columns = ['dindo', 'jahr_opdatum', 'count']
 
-        # weichere, weniger kontrastreiche Farbpalette
-        n_dindo = dindo_counts['dindo'].nunique()
-        dindo_colors = [
-            f"rgb({90+i*12},{130+i*10},{170+i*8})"
-            for i in range(n_dindo)
+        jahre = sorted(dindo_counts['jahr_opdatum'].unique())
+        year_colors = [
+            f"rgb({90+i*15},{130+i*12},{170+i*10})"
+            for i in range(len(jahre))
         ]
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='jahr_opdatum',
+            x='dindo',
             y='count',
-            color='dindo',
+            color='jahr_opdatum',
             barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen nach Jahr",
-            color_discrete_sequence=dindo_colors
+            title="Clavien-Dindo Komplikationen nach Grad und Jahr",
+            color_discrete_sequence=year_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
-        fig_dindo.update_layout(xaxis_title="Jahr", yaxis_title="Anzahl Fälle")
+        fig_dindo.update_layout(
+            xaxis_title="Clavien-Dindo Grad",
+            yaxis_title="Anzahl Fälle"
+        )
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
+
 
 #HSM-Balkendiagramm
 with tab5:
