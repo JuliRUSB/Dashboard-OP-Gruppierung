@@ -525,7 +525,7 @@ with tab6:
                 "Median": [f"{median:.0f}"]
             })
 
-            st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
+            #st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
 
 # Trends über Jahre nach Bereich
 with tab7:
