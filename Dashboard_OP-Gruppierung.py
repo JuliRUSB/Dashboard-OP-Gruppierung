@@ -473,7 +473,7 @@ with tab4:
             xaxis_title=None, 
             yaxis_title=None,
             legend_title_text='Dindo Grad',
-            plot_bgcolor='rgba(0,0,0,0)' # Transparenter Hintergrund für Clean Look
+            plot_bgcolor='rgba(0,0,0,0)', # Transparenter Hintergrund für Clean Look
             yaxis=dict(
                 tickmode='linear',
                 tick0=0,
