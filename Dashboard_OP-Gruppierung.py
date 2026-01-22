@@ -502,15 +502,12 @@ with tab5:
 with tab6:
     st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
-    df_los = df_filtered.copy()  # alle Daten
+    df_los = df_filtered.copy()
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
     else:
-        # Textfeld in Zahl umwandeln
         df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
-
-        # Nur gültige Zahlen berücksichtigen
         df_los_valid = df_los.dropna(subset=['los'])
 
         if df_los_valid.empty:
@@ -520,16 +517,13 @@ with tab6:
             mean = df_los_valid['los'].mean()
             median = df_los_valid['los'].median()
 
-            # DataFrame für Anzeige
             los_summary = pd.DataFrame({
-                "Kennzahl": ["Aufenthaltsdauer (Eintrittsdatum)"],
                 "Count": [count],
-                "Mean": [f"{mean:.2f}"],    # 2 Nachkommastellen
-                "Median": [f"{median:.0f}"] # 0 Nachkommastellen
+                "Mean": [f"{mean:.2f}"],
+                "Median": [f"{median:.0f}"]
             })
 
-            # Tabelle ohne leere Index-Spalte anzeigen
-            st.markdown(los_summary.to_markdown(index=False), unsafe_allow_html=True)
+            st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
 
 # Trends über Jahre nach Bereich
 with tab7:
