@@ -471,7 +471,7 @@ with tab4:
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
-                dtick=25
+                dtick=40
             ),
             yaxis=dict(
                 type='category', 
