@@ -474,6 +474,11 @@ with tab4:
             yaxis_title=None,
             legend_title_text='Dindo Grad',
             plot_bgcolor='rgba(0,0,0,0)' # Transparenter Hintergrund für Clean Look
+            yaxis=dict(
+                tickmode='linear',
+                tick0=0,
+                dtick=25
+            )
         )
         
         st.plotly_chart(fig_dindo, use_container_width=True)
