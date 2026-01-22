@@ -503,10 +503,10 @@ with tab5:
 with tab6:
     #st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
-    df_los = df_filtered.copy()
-
     # Neue Spalte mit festem Text hinzufügen
     df_los['LOS_Eintritts_Austritt'] = 'LOS (Eintrittsdatum/Austrittsdatum)'
+
+    df_los = df_filtered.copy()
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
