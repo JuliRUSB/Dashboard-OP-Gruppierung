@@ -529,8 +529,8 @@ with tab6:
                 "Median": [f"{median:.0f}"] # 0 Nachkommastellen
             })
 
-            # Index ausblenden
-            st.table(los_summary.style.hide_index())
+            # Index ausblenden, indem reset_index(drop=True) verwendet wird
+            st.table(los_summary.reset_index(drop=True))
 
 # Trends über Jahre nach Bereich
 with tab7:
