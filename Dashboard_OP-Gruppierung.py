@@ -41,6 +41,7 @@ def export_redcap_data(api_url):
         'fields[3]': 'hsm',
         'fields[4]': 'zugang',
         'fields[5]': 'max_dindo_calc',
+        'fields[6]':  'los_eintritt_austritt',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -497,20 +498,12 @@ with tab5:
     else:
         st.info("Keine HSM-Informationen verfügbar")
 
-# --------------------------------------------------
-# LOS (Length of Stay) – Neuer Tab
-# --------------------------------------------------
-tab_los = st.tab("LOS")
-
-with tab_los:
+# LOS (Length of Stay)
+with tab6:
     st.subheader("LOS (OP-Datum/Austrittsdatum) ab OP-Datum 2023")
-    
-    # Annahme: df_filtered hat Spalten 'opdatum' und 'austrittsdatum'
-    df_filtered['opdatum'] = pd.to_datetime(df_filtered['opdatum'], errors='coerce')
-    df_filtered['austrittsdatum'] = pd.to_datetime(df_filtered['austrittsdatum'], errors='coerce')
-    
+      
     # LOS berechnen
-    df_filtered['los'] = (df_filtered['austrittsdatum'] - df_filtered['opdatum']).dt.days
+    df_filtered['los_eintritt_austritt']
     
     # Filter für OP ab 2023
     df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023]
