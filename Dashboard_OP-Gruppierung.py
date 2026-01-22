@@ -501,32 +501,46 @@ with tab5:
 
 # LOS (Length of Stay)
 with tab6:
-    #st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
-
     df_los = df_filtered.copy()
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
     else:
-        df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
-        df_los_valid = df_los.dropna(subset=['los'])
+        # --- Berechnung 1: Eintritt/Austritt ---
+        df_los['los_ea'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
+        valid_ea = df_los.dropna(subset=['los_ea'])
+        
+        # --- Berechnung 2: OP-Datum ---
+        df_los['los_op'] = pd.to_numeric(df_los['los_opdatum'], errors='coerce')
+        valid_op = df_los.dropna(subset=['los_op'])
 
-        if df_los_valid.empty:
+        if valid_ea.empty and valid_op.empty:
             st.info("Keine gültigen LOS-Daten vorhanden")
         else:
-            count = df_los_valid['los'].count()
-            mean = df_los_valid['los'].mean()
-            median = df_los_valid['los'].median()
+            # Daten für Zeile 1 sammeln
+            count_ea = valid_ea['los_ea'].count()
+            mean_ea = valid_ea['los_ea'].mean() if count_ea > 0 else 0
+            median_ea = valid_ea['los_ea'].median() if count_ea > 0 else 0
 
+            # Daten für Zeile 2 sammeln
+            count_op = valid_op['los_op'].count()
+            mean_op = valid_op['los_op'].mean() if count_op > 0 else 0
+            median_op = valid_op['los_op'].median() if count_op > 0 else 0
+
+            # Zusammenführen in das DataFrame
             los_summary = pd.DataFrame({
-                "Kategorie": ["LOS (Eintrittsdatum/Austrittsdatum)"],
-                "Count": [count],
-                "Mean": [f"{mean:.2f}"],
-                "Median": [f"{median:.0f}"]
+                "Kategorie": [
+                    "LOS (Eintrittsdatum/Austrittsdatum)", 
+                    "LOS (OP-Datum/Austrittsdatum)"
+                ],
+                "Count": [count_ea, count_op],
+                "Mean": [f"{mean_ea:.2f}", f"{mean_op:.2f}"],
+                "Median": [f"{median_ea:.0f}", f"{median_op:.0f}"]
             })
 
-            #st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
-
+            # Tabelle anzeigen
+            st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
+            
 # Trends über Jahre nach Bereich
 with tab7:
     if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
