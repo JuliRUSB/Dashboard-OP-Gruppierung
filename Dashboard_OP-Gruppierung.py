@@ -505,11 +505,11 @@ with tab6:
     # Filter für OP ab 2023
     #df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     
-    if len(df_los) == 0:
-        st.info("Keine LOS-Daten verfügbar")
-    else:
+    #if len(df_los) == 0:
+    #    st.info("Keine LOS-Daten verfügbar")
+    #else:
         # Textfeld in Zahl umwandeln
-        df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
+       # df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
         
         # Nur gültige Zahlen berücksichtigen
         df_los_valid = df_los.dropna(subset=['los'])
