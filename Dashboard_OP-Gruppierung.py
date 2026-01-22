@@ -502,29 +502,33 @@ with tab5:
 with tab6:
     st.subheader("LOS (OP-Datum/Austrittsdatum) ab OP-Datum 2023")
       
-    # LOS berechnen
-    df_filtered['los_eintritt_austritt']
-    
     # Filter für OP ab 2023
-    df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023]
+    df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     
     if len(df_los) == 0:
         st.info("Keine LOS-Daten ab OP-Datum 2023 verfügbar")
     else:
-        # Kennzahlen berechnen
-        count = df_los['los'].count()
-        mean = df_los['los'].mean()
-        median = df_los['los'].median()
+        # Textfeld in Zahl umwandeln
+        df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
         
-        # DataFrame für Tabelle
-        los_summary = pd.DataFrame({
-            "": ["Aufenthaltsdauer (Bezug OP-Datum)"],
-            "Count": [count],
-            "Mean": [round(mean, 2)],
-            "Median": [median]
-        })
+        # Nur gültige Zahlen berücksichtigen
+        df_los_valid = df_los.dropna(subset=['los'])
         
-        st.table(los_summary)
+        if df_los_valid.empty:
+            st.info("Keine gültigen LOS-Daten vorhanden")
+        else:
+            count = df_los_valid['los'].count()
+            mean = df_los_valid['los'].mean()
+            median = df_los_valid['los'].median()
+            
+            los_summary = pd.DataFrame({
+                "": ["Aufenthaltsdauer (Bezug OP-Datum)"],
+                "Count": [count],
+                "Mean": [round(mean, 2)],
+                "Median": [median]
+            })
+            
+            st.table(los_summary)
 
 # Trends über Jahre nach Bereich
 with tab7:
