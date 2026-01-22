@@ -428,10 +428,9 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Balkendiagramm (Clavien-Dindo) - Wie in der Abbildung
+# Komplikationen-Balkendiagramm (Clavien-Dindo) - Finaler Code
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
-        # Gruppierung wieder nach JAHR und DINDO-Grad
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
@@ -439,42 +438,41 @@ with tab4:
             .size()
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
-
-        # Definierte Palette
-        professional_palette = [
-            '#1F4E79', '#2E75B6', '#548235', '#767171', '#843C0C', '#C00000', '#44546A'
-        ]
+        
+        # Sicherstellen, dass die Jahre als Strings behandelt werden, damit sie diskrete Farben erhalten
+        # und Plotly automatisch genügend Farben zuweist
+        dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='count',                # Anzahl auf der X-Achse
-            y='dindo',                # Dindo Grade auf der Y-Achse
-            color='jahr_opdatum',     # Farbe nach Jahr
+            x='count',                # Anzahl auf der X-Achse (Werteachse)
+            y='dindo',                # Dindo Grade auf der Y-Achse (Kategorieachse)
+            color='jahr_opdatum',     # Farbe nach Jahr (dynamisch angepasst)
             orientation='h',          # Horizontal ausrichten
-            barmode='group',          # Balken gruppieren (nicht stapeln)
-            text='count',
+            barmode='group',          # Balken NEBENEINANDER GRUPPIEREN
             title="Clavien-Dindo Komplikationen nach Jahr",
-            color_discrete_sequence=professional_palette
+            color_discrete_sequence=px.colors.qualitative.Dark24 # Eine integrierte Palette für viele Jahre
         )
         
         fig_dindo.update_traces(
-            textposition='outside', 
-            textfont_size=16,
-            marker_line_width=1,
-            marker_line_color="white"
+            # Textposition kann hier entfernt oder angepasst werden, da es bei "group" komplex wird
+            marker_line_width=0
         )
         
         fig_dindo.update_layout(
             xaxis_title="Anzahl Fälle", 
             yaxis_title="Höchster Clavien-Dindo Grad",
-            legend_title_text='Operationsjahr', # Legende wieder anzeigen und benennen
+            legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
                 dtick=25
             ),
-            yaxis=dict(type='category')
+            yaxis=dict(
+                type='category', 
+                categoryorder='category descending' # Sortiert die Grade von oben nach unten
+            )
         )
         
         st.plotly_chart(fig_dindo, use_container_width=True)
