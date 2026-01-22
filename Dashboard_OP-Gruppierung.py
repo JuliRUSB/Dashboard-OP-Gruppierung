@@ -41,7 +41,8 @@ def export_redcap_data(api_url):
         'fields[3]': 'hsm',
         'fields[4]': 'zugang',
         'fields[5]': 'max_dindo_calc',
-        'fields[6]':  'los_eintritt_austritt',
+        'fields[6]': 'los_opdatum',
+        'fields[7]':  'los_eintritt_austritt',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -500,9 +501,12 @@ with tab5:
 
 # LOS (Length of Stay)
 with tab6:
-    st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
+    #st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
     df_los = df_filtered.copy()
+
+    # Neue Spalte mit festem Text hinzufügen
+    df_los['LOS_Eintritts_Austritt'] = 'LOS (Eintrittsdatum/Austrittsdatum)'
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
