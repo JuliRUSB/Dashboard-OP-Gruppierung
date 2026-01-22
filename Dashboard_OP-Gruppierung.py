@@ -1,3 +1,55 @@
+# Komplikationen-Balkendiagramm (Clavien-Dindo) - Wie in der Abbildung
+with tab4:
+    if df_filtered['max_dindo_calc'].notna().any():
+        # Gruppierung wieder nach JAHR und DINDO-Grad
+        dindo_counts = (
+            df_filtered
+            .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
+            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
+            .size()
+        )
+        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
+
+        # Definierte Palette
+        professional_palette = [
+            '#1F4E79', '#2E75B6', '#548235', '#767171', '#843C0C', '#C00000', '#44546A'
+        ]
+
+        fig_dindo = px.bar(
+            dindo_counts,
+            x='count',                # Anzahl auf der X-Achse
+            y='dindo',                # Dindo Grade auf der Y-Achse
+            color='jahr_opdatum',     # Farbe nach Jahr
+            orientation='h',          # Horizontal ausrichten
+            barmode='group',          # Balken gruppieren (nicht stapeln)
+            text='count',
+            title="Clavien-Dindo Komplikationen nach Jahr",
+            color_discrete_sequence=professional_palette
+        )
+        
+        fig_dindo.update_traces(
+            textposition='outside', 
+            textfont_size=16,
+            marker_line_width=1,
+            marker_line_color="white"
+        )
+        
+        fig_dindo.update_layout(
+            xaxis_title="Anzahl Fälle", 
+            yaxis_title="Höchster Clavien-Dindo Grad",
+            legend_title_text='Operationsjahr', # Legende wieder anzeigen und benennen
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(
+                tickmode='linear',
+                tick0=0,
+                dtick=25
+            ),
+            yaxis=dict(type='category')
+        )
+        
+        st.plotly_chart(fig_dindo, use_container_width=True)
+    else:
+        st.info("Keine Komplikationsdaten verfügbar")
 # ==================================================
 # Imports – Bibliotheken laden
 # ==================================================
