@@ -529,7 +529,7 @@ with tab6:
             })
 
             # Tabelle ohne leere Index-Spalte anzeigen
-            st.dataframe(los_summary, use_container_width=True)
+            st.markdown(los_summary.to_markdown(index=False), unsafe_allow_html=True)
 
 # Trends über Jahre nach Bereich
 with tab7:
