@@ -428,7 +428,7 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -439,23 +439,17 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # Definierte Palette: Satte, professionelle Farben (gedeckt)
-        # Diese Farben sind kräftig genug zur Unterscheidung, aber nicht neon-grell.
+        # Palette bleibt gleich
         professional_palette = [
-            '#1F4E79', # Dunkelblau
-            '#2E75B6', # Stahlblau
-            '#548235', # Waldgrün
-            '#767171', # Schiefergrau
-            '#843C0C', # Rostbraun/Terracotta
-            '#C00000', # Dunkelrot (für schwere Komplikationen)
-            '#44546A'  # Blaugrau
+            '#1F4E79', '#2E75B6', '#548235', '#767171', '#843C0C', '#C00000', '#44546A'
         ]
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='jahr_opdatum',
-            y='count',
+            x='count',                # Jetzt auf der X-Achse
+            y='jahr_opdatum',         # Jetzt auf der Y-Achse
             color='dindo',
+            orientation='h',          # Horizontal ausrichten
             barmode='group',
             text='count',
             title="Clavien-Dindo Komplikationen nach Jahr",
@@ -463,9 +457,9 @@ with tab4:
         )
         
         fig_dindo.update_traces(
-            textposition='outside', 
+            textposition='outside',   # Text steht jetzt rechts neben den Balken
             textfont_size=16,
-            marker_line_width=1,        # Leichte Kontur für mehr Tiefe
+            marker_line_width=1,
             marker_line_color="white"
         )
         
@@ -473,12 +467,15 @@ with tab4:
             xaxis_title=None, 
             yaxis_title=None,
             legend_title_text='Clavien-Dindo Grad',
-            plot_bgcolor='rgba(0,0,0,0)', # Transparenter Hintergrund für Clean Look
-            yaxis=dict(
+            plot_bgcolor='rgba(0,0,0,0)',
+            # Die 25er Schritte liegen nun auf der X-Achse
+            xaxis=dict(
                 tickmode='linear',
                 tick0=0,
                 dtick=25
-            )
+            ),
+            # Y-Achse als Kategorie (damit Jahre nicht als Zahlenstrahl interpretiert werden)
+            yaxis=dict(type='category', autoresize=True)
         )
         
         st.plotly_chart(fig_dindo, use_container_width=True)
