@@ -390,7 +390,7 @@ with tab2:
             y='count',
             color='leber_gruppen',
             barmode='group',
-            text='count',
+            # text='count',
             title="Verteilung nach Gruppen und Jahr",
             labels={'leber_gruppen': 'Leber-Gruppen'},
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['leber_gruppen'].nunique())]
