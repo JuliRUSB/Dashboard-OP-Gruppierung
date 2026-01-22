@@ -464,6 +464,9 @@ with tab4:
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
+            # --- Hier die Abstände anpassen ---
+            bargap=0.1,        # Abstand zwischen den Dindo-Grad-Gruppen (reduziert Leerraum vertikal)
+            bargroupgap=0.05,  # Abstand zwischen den Balken innerhalb einer Gruppe (reduziert Leerraum horizontal)
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
