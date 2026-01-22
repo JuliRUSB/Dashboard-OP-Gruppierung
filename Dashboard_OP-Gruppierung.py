@@ -431,6 +431,7 @@ with tab3:
 
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Kompletter überarbeiteter Dindo-Code mit minimalen Einstellungen für maximale Breite
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -443,36 +444,31 @@ with tab4:
         
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
 
-        # 1. Erstellen Sie die Basis-Figure mit Graph Objects
-        fig_dindo = go.Figure()
+        fig_dindo = px.bar(
+            dindo_counts,
+            x='count',
+            y='dindo',
+            color='jahr_opdatum',
+            orientation='h',          
+            barmode='group',          
+            title="Clavien-Dindo Komplikationen nach Jahr",
+            color_discrete_sequence=px.colors.qualitative.Dark24
+        )
         
-        # Holen Sie sich dynamisch die Jahre und eine Farbpalette
-        years = sorted(dindo_counts['jahr_opdatum'].unique())
-        colors = px.colors.qualitative.Dark24 
+        # Einstellungen für die Balken
+        fig_dindo.update_traces(
+            marker_line_width=1,
+            width=0.9 # Dies sollte die Balken so dick wie möglich machen
+        )
         
-        # 2. Fügen Sie jeden Balken als separaten Trace hinzu, um volle Kontrolle zu haben
-        for i, year in enumerate(years):
-            df_year = dindo_counts[dindo_counts['jahr_opdatum'] == year]
-            
-            fig_dindo.add_trace(
-                go.Bar(
-                    y=df_year['dindo'],
-                    x=df_year['count'],
-                    name=str(year),
-                    orientation='h',
-                    marker_color=colors[i % len(colors)],
-                    width=0.4 # Explizite Breite der einzelnen Balken (Wert zwischen 0 und 1)
-                )
-            )
-
-        # 3. Layout konfigurieren und barmode='group' setzen
+        # Allgemeine Layout-Einstellungen
         fig_dindo.update_layout(
-            barmode='group', # Erzwingt die Gruppierung
             xaxis_title="Anzahl Fälle", 
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
-            height=700, 
+            height=700,
+            # bargap und bargroupgap werden entfernt, da 'width' in update_traces genutzt wird
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
