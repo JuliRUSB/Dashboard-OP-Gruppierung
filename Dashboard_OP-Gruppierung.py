@@ -431,7 +431,9 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Komplikationen-Balkendiagramm (Clavien-Dindo) – Grad auf x-Achse, Farbe = Jahr
+# Komplikationen-Balkendiagramm (Clavien-Dindo)
+# x = Grad, Farbe = Jahr, weichere Farben, gleicher Stil wie die anderen
+
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -442,9 +444,10 @@ with tab4:
         )
         dindo_counts.columns = ['dindo', 'jahr_opdatum', 'count']
 
+        # weiche, gut unterscheidbare Farben pro Jahr
         jahre = sorted(dindo_counts['jahr_opdatum'].unique())
         year_colors = [
-            f"rgb({90+i*15},{130+i*12},{170+i*10})"
+            f"rgb({90+i*18},{130+i*14},{170+i*12})"
             for i in range(len(jahre))
         ]
 
@@ -455,7 +458,7 @@ with tab4:
             color='jahr_opdatum',
             barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen nach Grad und Jahr",
+            title="Clavien-Dindo Komplikationen",
             color_discrete_sequence=year_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
@@ -466,7 +469,6 @@ with tab4:
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
-
 
 #HSM-Balkendiagramm
 with tab5:
