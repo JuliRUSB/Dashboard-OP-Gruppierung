@@ -431,8 +431,6 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-import plotly.graph_objects as go
-
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -443,39 +441,31 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
+        # Farben: dunkelste Farbe zuerst, dann abgestufte hellere Farben im selben Farbraum
         dindo_labels = sorted(dindo_counts['dindo'].unique())
-        jahre = sorted(dindo_counts['jahr_opdatum'].unique())
-
-        # Farben pro Grad
-        base_rgb = (60, 100, 140)
-        step_rgb = (15, 12, 10)
+        base_rgb = (60, 100, 140)  # dunkelste Farbe
+        step_rgb = (15, 12, 10)    # Abstufung pro Grad
         dindo_colors = [
             f"rgb({base_rgb[0]+i*step_rgb[0]},{base_rgb[1]+i*step_rgb[1]},{base_rgb[2]+i*step_rgb[2]})"
             for i in range(len(dindo_labels))
         ]
-        color_map = {label: color for label, color in zip(dindo_labels, dindo_colors)}
 
-        # Go.Bar für jede Dindo-Kategorie
-        fig = go.Figure()
-        for dindo in dindo_labels:
-            df_tmp = dindo_counts[dindo_counts['dindo'] == dindo]
-            fig.add_trace(go.Bar(
-                x=df_tmp['jahr_opdatum'],
-                y=df_tmp['count'],
-                name=dindo,
-                marker_color=color_map[dindo],
-                width=0.6  # Balkenbreite anpassen (0.6 = breiter)
-            ))
-
-        fig.update_layout(
+        fig_dindo = px.bar(
+            dindo_counts,
+            x='jahr_opdatum',
+            y='count',
+            color='dindo',
             barmode='group',
+            text='count',
             title="Clavien-Dindo Komplikationen nach Jahr",
-            xaxis_title="Jahr",
-            yaxis_title="Anzahl Fälle",
-            xaxis={'type':'category'},
+            color_discrete_sequence=dindo_colors
         )
-
-        st.plotly_chart(fig, use_container_width=True)
+        fig_dindo.update_traces(textposition='inside', textfont_size=16)
+        fig_dindo.update_layout(
+            xaxis_title="Jahr",
+            yaxis_title="Anzahl Fälle"
+        )
+        st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
