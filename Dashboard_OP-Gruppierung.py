@@ -14,38 +14,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 # Konfiguration
 # ==================================================
-API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL# LOS (Length of Stay)
-with tab6:
-    st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
-
-    # df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
-    df_los = df_filtered.copy()  # alle Daten
-
-    if len(df_los) == 0:
-        st.info("Keine LOS-Daten verfügbar")
-    else:
-        # Textfeld in Zahl umwandeln
-        df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
-
-        # Nur gültige Zahlen berücksichtigen
-        df_los_valid = df_los.dropna(subset=['los'])
-
-        if df_los_valid.empty:
-            st.info("Keine gültigen LOS-Daten vorhanden")
-        else:
-            count = df_los_valid['los'].count()
-            mean = df_los_valid['los'].mean()
-            median = df_los_valid['los'].median()
-
-            los_summary = pd.DataFrame({
-                "": ["Aufenthaltsdauer (Eintrittsdatum)"],
-                "Count": [count],
-                "Mean": [round(mean, 2)],
-                "Median": [median]
-            })
-
-            st.table(los_summary)
-
+API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL# 
 
 # ==================================================
 # Datenexport aus REDCap
