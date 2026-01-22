@@ -502,6 +502,9 @@ with tab5:
 with tab6:
     st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
+    los_summary.reset_index(drop=True, inplace=True)
+    st.table(los_summary)
+
     # df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     df_los = df_filtered.copy()  # alle Daten
 
