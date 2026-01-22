@@ -431,6 +431,7 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo) – zurück zur Ursprungsversion mit abgestuften Farben
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -441,10 +442,12 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # Farbabstufungen pro Grad
+        # Farben: dunkelste Farbe zuerst, dann abgestufte hellere Farben im selben Farbraum
         dindo_labels = sorted(dindo_counts['dindo'].unique())
+        base_rgb = (60, 100, 140)  # dunkelste Farbe
+        step_rgb = (15, 12, 10)    # Abstufung pro Grad
         dindo_colors = [
-            f"rgb({90+i*12},{130+i*10},{170+i*8})"
+            f"rgb({base_rgb[0]+i*step_rgb[0]},{base_rgb[1]+i*step_rgb[1]},{base_rgb[2]+i*step_rgb[2]})"
             for i in range(len(dindo_labels))
         ]
 
@@ -455,7 +458,7 @@ with tab4:
             color='dindo',
             barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen nach Jahr",
+            title="Clavien-Dindo Komplikationen",
             color_discrete_sequence=dindo_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
