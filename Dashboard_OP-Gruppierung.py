@@ -431,39 +431,36 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Komplikationen-Balkendiagramm (Clavien-Dindo)
-# x = Grad, Farbe = Jahr, weichere Farben, gleicher Stil wie die anderen
-
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
-            .groupby(['max_dindo_calc', 'jahr_opdatum'], as_index=False)
+            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
         )
-        dindo_counts.columns = ['dindo', 'jahr_opdatum', 'count']
+        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # weiche, gut unterscheidbare Farben pro Jahr
-        jahre = sorted(dindo_counts['jahr_opdatum'].unique())
-        year_colors = [
-            f"rgb({90+i*18},{130+i*14},{170+i*12})"
-            for i in range(len(jahre))
+        # Farbabstufungen pro Grad
+        dindo_labels = sorted(dindo_counts['dindo'].unique())
+        dindo_colors = [
+            f"rgb({90+i*12},{130+i*10},{170+i*8})"
+            for i in range(len(dindo_labels))
         ]
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='dindo',
+            x='jahr_opdatum',
             y='count',
-            color='jahr_opdatum',
+            color='dindo',
             barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen",
-            color_discrete_sequence=year_colors
+            title="Clavien-Dindo Komplikationen nach Jahr",
+            color_discrete_sequence=dindo_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
         fig_dindo.update_layout(
-            xaxis_title="Clavien-Dindo Grad",
+            xaxis_title="Jahr",
             yaxis_title="Anzahl Fälle"
         )
         st.plotly_chart(fig_dindo, use_container_width=True)
