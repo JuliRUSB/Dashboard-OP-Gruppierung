@@ -456,7 +456,7 @@ with tab4:
         
         fig_dindo.update_traces(
             # Textposition kann hier entfernt oder angepasst werden, da es bei "group" komplex wird
-            marker_line_width=0,
+            marker_line_width=1,
             width=0.5
         )
         
