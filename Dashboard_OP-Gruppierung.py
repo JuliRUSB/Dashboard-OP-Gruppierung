@@ -524,8 +524,8 @@ with tab6:
             los_summary = pd.DataFrame({
                 "": ["Aufenthaltsdauer (Eintrittsdatum)"],
                 "Count": [count],
-                "Mean": [round(mean, 2)],
-                "Median": [round(median, 0)]
+                "Mean": [f"{mean:.2f}"],    # 2 Nachkommastellen
+                "Median": [f"{median:.0f}"] # 0 Nachkommastellen
             })
 
             st.table(los_summary)
