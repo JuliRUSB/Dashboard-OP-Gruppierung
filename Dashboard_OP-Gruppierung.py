@@ -431,6 +431,7 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo) – weichere Farbabstufungen
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -441,6 +442,13 @@ with tab4:
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
+        # weichere, weniger kontrastreiche Farbpalette
+        n_dindo = dindo_counts['dindo'].nunique()
+        dindo_colors = [
+            f"rgb({90+i*12},{130+i*10},{170+i*8})"
+            for i in range(n_dindo)
+        ]
+
         fig_dindo = px.bar(
             dindo_counts,
             x='jahr_opdatum',
@@ -449,10 +457,7 @@ with tab4:
             barmode='group',
             text='count',
             title="Clavien-Dindo Komplikationen nach Jahr",
-            color_discrete_sequence=[
-                f"rgb({50+i*40},{100+i*50},{150+i*30})"
-                for i in range(dindo_counts['dindo'].nunique())
-            ]
+            color_discrete_sequence=dindo_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
         fig_dindo.update_layout(xaxis_title="Jahr", yaxis_title="Anzahl Fälle")
