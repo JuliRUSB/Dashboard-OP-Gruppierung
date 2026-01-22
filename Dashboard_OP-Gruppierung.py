@@ -506,7 +506,7 @@ with tab6:
     df_los = df_filtered.copy()
     
     # Neue Spalte mit festem Text hinzufügen
-    df_los = df_los.assign(LOS_Eintritts_Austritt='LOS (Eintrittsdatum/Austrittsdatum)')
+    df_los['LOS_Eintritts_Austritt'] = 'LOS (Eintrittsdatum/Austrittsdatum)'
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
