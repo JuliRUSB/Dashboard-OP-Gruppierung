@@ -463,7 +463,7 @@ with tab4:
         )
         
         fig_dindo.update_traces(
-            textposition='inside', 
+            textposition='outside', 
             textfont_size=16,
             marker_line_width=1,        # Leichte Kontur für mehr Tiefe
             marker_line_color="white"
@@ -472,7 +472,7 @@ with tab4:
         fig_dindo.update_layout(
             xaxis_title=None, 
             yaxis_title=None,
-            legend_title_text='Dindo Grad',
+            legend_title_text='Clavien-Dindo Grad',
             plot_bgcolor='rgba(0,0,0,0)', # Transparenter Hintergrund für Clean Look
             yaxis=dict(
                 tickmode='linear',
