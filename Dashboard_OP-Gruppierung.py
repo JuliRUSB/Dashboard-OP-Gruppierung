@@ -502,9 +502,6 @@ with tab5:
 with tab6:
     st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
-    los_summary.reset_index(drop=True, inplace=True)
-    st.table(los_summary)
-
     # df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     df_los = df_filtered.copy()  # alle Daten
 
@@ -524,14 +521,16 @@ with tab6:
             mean = df_los_valid['los'].mean()
             median = df_los_valid['los'].median()
 
+            # DataFrame für Anzeige
             los_summary = pd.DataFrame({
-                "": ["Aufenthaltsdauer (Eintrittsdatum)"],
+                "Kennzahl": ["Aufenthaltsdauer (Eintrittsdatum)"],
                 "Count": [count],
                 "Mean": [f"{mean:.2f}"],    # 2 Nachkommastellen
                 "Median": [f"{median:.0f}"] # 0 Nachkommastellen
             })
 
-            st.table(los_summary)
+            # Index ausblenden
+            st.table(los_summary.style.hide_index())
 
 # Trends über Jahre nach Bereich
 with tab7:
