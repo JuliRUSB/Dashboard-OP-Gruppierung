@@ -356,7 +356,7 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Bereich", "Gruppen", "Zugang", "Komplikationen", "HSM", "Trends"])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugang", "Komplikationen", "HSM", "Aufenthaltsdauer", "Trends"])
 
 # Bereich-Piechart
 with tab1:
@@ -497,8 +497,44 @@ with tab5:
     else:
         st.info("Keine HSM-Informationen verfügbar")
 
+# --------------------------------------------------
+# LOS (Length of Stay) – Neuer Tab
+# --------------------------------------------------
+tab_los = st.tab("LOS")
+
+with tab_los:
+    st.subheader("LOS (OP-Datum/Austrittsdatum) ab OP-Datum 2023")
+    
+    # Annahme: df_filtered hat Spalten 'opdatum' und 'austrittsdatum'
+    df_filtered['opdatum'] = pd.to_datetime(df_filtered['opdatum'], errors='coerce')
+    df_filtered['austrittsdatum'] = pd.to_datetime(df_filtered['austrittsdatum'], errors='coerce')
+    
+    # LOS berechnen
+    df_filtered['los'] = (df_filtered['austrittsdatum'] - df_filtered['opdatum']).dt.days
+    
+    # Filter für OP ab 2023
+    df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023]
+    
+    if len(df_los) == 0:
+        st.info("Keine LOS-Daten ab OP-Datum 2023 verfügbar")
+    else:
+        # Kennzahlen berechnen
+        count = df_los['los'].count()
+        mean = df_los['los'].mean()
+        median = df_los['los'].median()
+        
+        # DataFrame für Tabelle
+        los_summary = pd.DataFrame({
+            "": ["Aufenthaltsdauer (Bezug OP-Datum)"],
+            "Count": [count],
+            "Mean": [round(mean, 2)],
+            "Median": [median]
+        })
+        
+        st.table(los_summary)
+
 # Trends über Jahre nach Bereich
-with tab6:
+with tab7:
     if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
         trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
         trend_data.columns = ['jahr_opdatum', 'bereich', 'count']
