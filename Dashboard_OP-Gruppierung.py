@@ -421,11 +421,11 @@ with tab3:
             color='zugang',
             barmode='group',
             text='count',
-            title="Verteilung nach Zugangsart und Jahr",
+            title="Verteilung nach Zugangsart",
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['zugang'].nunique())]
         )
         fig_zugang.update_traces(textposition='inside', textfont_size=16)
-        fig_zugang.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        fig_zugang.update_layout(xaxis_title=None, yaxis_title="None")
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
         st.info("Keine Zugangsdaten verfügbar")
