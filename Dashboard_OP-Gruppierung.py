@@ -431,20 +431,33 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo) – im gleichen Stil wie die anderen
 with tab4:
-    dindo_data = df_filtered['max_dindo_calc'].dropna()
-    if len(dindo_data) > 0:
-        dindo_counts = dindo_data.value_counts().sort_index().reset_index()
+    if df_filtered['max_dindo_calc'].notna().any():
+        dindo_counts = (
+            df_filtered
+            .groupby('max_dindo_calc', as_index=False)
+            .size()
+        )
         dindo_counts.columns = ['dindo', 'count']
-        
-        # Farben für Dindo-Grade
-        dindo_farben = [f"rgb({50+int(i)*35},{100+int(i)*40},{150+int(i)*25})" for i in dindo_counts['dindo']]
-        
-        fig_dindo = px.bar(dindo_counts, x='dindo', y='count', text='count', title="Clavien-Dindo Komplikationen")
-        fig_dindo.update_traces(marker_color=dindo_farben, textposition='inside', textfont_size=16)
+
+        fig_dindo = px.bar(
+            dindo_counts,
+            x='dindo',
+            y='count',
+            text='count',
+            title="Clavien-Dindo Komplikationen",
+            color_discrete_sequence=[
+                f"rgb({50+i*40},{100+i*50},{150+i*30})"
+                for i in range(dindo_counts['dindo'].nunique())
+            ]
+        )
+        fig_dindo.update_traces(textposition='inside', textfont_size=16)
+        fig_dindo.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
+
 
 #HSM-Balkendiagramm
 with tab5:
