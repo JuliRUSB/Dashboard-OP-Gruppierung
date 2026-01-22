@@ -475,7 +475,7 @@ with tab4:
                 dtick=25
             ),
             # Y-Achse als Kategorie (damit Jahre nicht als Zahlenstrahl interpretiert werden)
-            yaxis=dict(type='category', autoresize=True)
+            yaxis=dict(type='category')
         )
         
         st.plotly_chart(fig_dindo, use_container_width=True)
