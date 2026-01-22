@@ -504,9 +504,6 @@ with tab6:
     #st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
 
     df_los = df_filtered.copy()
-    
-    # Neue Spalte mit festem Text hinzufügen
-    df_los['LOS_Eintritts_Austritt'] = 'LOS (Eintrittsdatum/Austrittsdatum)'
 
     if len(df_los) == 0:
         st.info("Keine LOS-Daten verfügbar")
@@ -522,6 +519,7 @@ with tab6:
             median = df_los_valid['los'].median()
 
             los_summary = pd.DataFrame({
+                "Kategorie": ["LOS (Eintrittsdatum/Austrittsdatum)"],
                 "Count": [count],
                 "Mean": [f"{mean:.2f}"],
                 "Median": [f"{median:.0f}"]
