@@ -492,7 +492,7 @@ with tab5:
             color_discrete_sequence=[f"rgb({90},{140},{180})", f"rgb({130},{180},{220})"]
         )
         fig_hsm.update_traces(textposition='inside', textfont_size=16)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        fig_hsm.update_layout(xaxis_title=None, yaxis_title=None)
         st.plotly_chart(fig_hsm, use_container_width=True)
     else:
         st.info("Keine HSM-Informationen verfügbar")
