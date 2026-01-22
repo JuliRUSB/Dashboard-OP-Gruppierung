@@ -328,7 +328,7 @@ with col1:
             title="Fallzahlen pro Jahr"
         )
         fig_jahr.update_traces(marker_color=marker_colors, textfont_size=16, textposition='inside')
-        fig_jahr.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", showlegend=False, height=400)
+        fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False, height=400)
         st.plotly_chart(fig_jahr, use_container_width=True)
 
 # Graph 2: Quartal
@@ -349,7 +349,7 @@ with col2:
             title="Fallzahlen pro Quartal"
         )
         fig_quartal.update_traces(marker_color=marker_colors_quartal, textfont_size=16, textposition='inside')
-        fig_quartal.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", showlegend=False, height=400)
+        fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False, height=400)
         st.plotly_chart(fig_quartal, use_container_width=True)
 
 st.divider()
@@ -396,7 +396,7 @@ with tab2:
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['leber_gruppen'].nunique())]
         )
         fig_leber_gruppen.update_traces(textposition='inside', textfont_size=16)
-        fig_leber_gruppen.update_layout(xaxis_title="Jahr", yaxis_title="Anzahl Fälle")
+        fig_leber_gruppen.update_layout(xaxis_title=None, yaxis_title=None)
         st.plotly_chart(fig_leber_gruppen, use_container_width=True)
     else:
         st.info("Keine Daten verfügbar")
@@ -425,7 +425,7 @@ with tab3:
             color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['zugang'].nunique())]
         )
         fig_zugang.update_traces(textposition='inside', textfont_size=16)
-        fig_zugang.update_layout(xaxis_title=None, yaxis_title="None")
+        fig_zugang.update_layout(xaxis_title=None, yaxis_title=None)
         st.plotly_chart(fig_zugang, use_container_width=True)
     else:
         st.info("Keine Zugangsdaten verfügbar")
@@ -461,10 +461,7 @@ with tab4:
             color_discrete_sequence=dindo_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
-        fig_dindo.update_layout(
-            xaxis_title="Jahr",
-            yaxis_title="Anzahl Fälle"
-        )
+        fig_dindo.update_layout(xaxis_title=None, yaxis_title=None)
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
