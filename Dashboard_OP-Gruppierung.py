@@ -431,33 +431,34 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Komplikationen-Balkendiagramm (Clavien-Dindo) – im gleichen Stil wie die anderen
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
             df_filtered
-            .groupby('max_dindo_calc', as_index=False)
+            .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
+            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
         )
-        dindo_counts.columns = ['dindo', 'count']
+        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
         fig_dindo = px.bar(
             dindo_counts,
-            x='dindo',
+            x='jahr_opdatum',
             y='count',
+            color='dindo',
+            barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen",
+            title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=[
                 f"rgb({50+i*40},{100+i*50},{150+i*30})"
                 for i in range(dindo_counts['dindo'].nunique())
             ]
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
-        fig_dindo.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        fig_dindo.update_layout(xaxis_title="Jahr", yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
-
 
 #HSM-Balkendiagramm
 with tab5:
