@@ -115,8 +115,8 @@ def prepare_data(df):
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
-        # Clavien-Dindo-Max: numerische Codes in Text umwandeln
-    zugang_mapping = {
+    # Clavien-Dindo-Max: numerische Codes in Text umwandeln
+    max_dindo_calc_mapping = {
         0: 'Keine Komplikation',
         1: 'Grade I',
         2: 'Grade Id',
