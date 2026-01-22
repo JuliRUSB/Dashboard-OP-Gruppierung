@@ -40,7 +40,7 @@ def export_redcap_data(api_url):
         'fields[2]': 'leber_gruppen',
         'fields[3]': 'hsm',
         'fields[4]': 'zugang',
-        'fields[5]': 'max_dindo_calc_surv',
+        'fields[5]': 'max_dindo_calc',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -115,6 +115,26 @@ def prepare_data(df):
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
+        # Clavien-Dindo-Max: numerische Codes in Text umwandeln
+    zugang_mapping = {
+        0: 'Keine Komplikation',
+        1: 'Grade I',
+        2: 'Grade Id',
+        3: 'Grade II',
+        4: 'Grade IId',
+        5: 'Grade IIIa',
+        6: 'Grade IIIa d',
+        7: 'Grade IIIb',
+        8: 'Grade IIIb d',
+        9: 'Grade IVa',
+        10: 'Grade IVa d',
+        11: 'Grade IVb',
+        12: 'Grade IVb d',
+        13: 'Grade V'
+    }
+    df['max_dindo_calc'] = pd.to_numeric(df['max_dindo_calc'], errors='coerce')
+    df['max_dindo_calc'] = df['max_dindo_calc'].map(max_dindo_calc_mapping).fillna('Unbekannt')
+
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
     # Quartal als "Q1-2026"-Format
@@ -122,7 +142,7 @@ def prepare_data(df):
         r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
     # Quartals-Sortierung als Zahl (für Diagramme)
     df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter
-    df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
+    # df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     
     # Zeilen ohne gültiges Datum entfernen
     df = df.dropna(subset=['jahr_opdatum'])
@@ -266,9 +286,9 @@ col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 with col1:
     st.metric("Gesamt Fälle", len(df_filtered))  # Anzahl gefilterter Fälle
     
-with col2:
-    avg_dindo = df_filtered['max_dindo_calc_surv'].mean()  # Durchschnitt Clavien-Dindo
-    st.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
+# with col2:
+    # avg_dindo = df_filtered['max_dindo_calc_surv'].mean()  # Durchschnitt Clavien-Dindo
+    # st.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
     
 with col3:
     st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
@@ -412,7 +432,7 @@ with tab3:
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
 with tab4:
-    dindo_data = df_filtered['max_dindo_calc_surv'].dropna()
+    dindo_data = df_filtered['max_dindo_calc'].dropna()
     if len(dindo_data) > 0:
         dindo_counts = dindo_data.value_counts().sort_index().reset_index()
         dindo_counts.columns = ['dindo', 'count']
