@@ -500,13 +500,13 @@ with tab5:
 
 # LOS (Length of Stay)
 with tab6:
-    st.subheader("LOS (OP-Datum/Austrittsdatum) ab OP-Datum 2023")
+    st.subheader("LOS (Eintrittsdatum/Austrittsdatum)")
       
     # Filter für OP ab 2023
-    df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
+    #df_los = df_filtered[df_filtered['opdatum'].dt.year >= 2023].copy()
     
     if len(df_los) == 0:
-        st.info("Keine LOS-Daten ab OP-Datum 2023 verfügbar")
+        st.info("Keine LOS-Daten verfügbar")
     else:
         # Textfeld in Zahl umwandeln
         df_los['los'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
@@ -522,7 +522,7 @@ with tab6:
             median = df_los_valid['los'].median()
             
             los_summary = pd.DataFrame({
-                "": ["Aufenthaltsdauer (Bezug OP-Datum)"],
+                "": ["Aufenthaltsdauer (Eintrittsdatum)"],
                 "Count": [count],
                 "Mean": [round(mean, 2)],
                 "Median": [median]
