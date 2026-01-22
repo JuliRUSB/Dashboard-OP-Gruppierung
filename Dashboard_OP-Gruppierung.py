@@ -431,7 +431,6 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Komplikationen-Balkendiagramm (Clavien-Dindo) – zurück zur Ursprungsversion mit abgestuften Farben
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -458,13 +457,15 @@ with tab4:
             color='dindo',
             barmode='group',
             text='count',
-            title="Clavien-Dindo Komplikationen",
+            title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=dindo_colors
         )
         fig_dindo.update_traces(textposition='inside', textfont_size=16)
         fig_dindo.update_layout(
             xaxis_title="Jahr",
-            yaxis_title="Anzahl Fälle"
+            yaxis_title="Anzahl Fälle",
+            bargap=0.15,         # Abstand zwischen Gruppen reduzieren
+            bargroupgap=0.05     # Abstand innerhalb der Gruppen reduzieren
         )
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
