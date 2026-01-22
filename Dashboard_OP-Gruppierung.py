@@ -290,10 +290,10 @@ with col1:
     # avg_dindo = df_filtered['max_dindo_calc_surv'].mean()  # Durchschnitt Clavien-Dindo
     # st.metric("Ø Clavien-Dindo", f"{avg_dindo:.2f}" if pd.notna(avg_dindo) else "N/A")
     
-with col3:
+with col2:
     st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
     
-with col4:
+with col3:
     st.metric("Zeitraum", f"{len(jahr_filter)} Jahre, {len(quartal_filter)} Quartale")  # Zeitraum anzeigen
 
 st.divider()
