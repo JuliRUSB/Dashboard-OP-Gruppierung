@@ -470,7 +470,7 @@ with tab4:
 
         fig_dindo.update_layout(
             height=120 * n_dindo,
-            bargap=0.15,
+            bargap=0.01,
             bargroupgap=0.25,
             margin=dict(r=120),
             plot_bgcolor="rgba(0,0,0,0)",
