@@ -457,7 +457,7 @@ with tab4:
         # Einstellungen für die Balken
         fig_dindo.update_traces(
             marker_line_width=1,
-            width=0.4 # Dies sollte die Balken so dick wie möglich machen
+            width=0.2 # Dies sollte die Balken so dick wie möglich machen
         )
         
         # Allgemeine Layout-Einstellungen
@@ -477,8 +477,7 @@ with tab4:
                 type='category', 
                 categoryorder='category descending'
             )
-        )
-        
+        )        
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
