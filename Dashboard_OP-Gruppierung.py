@@ -466,12 +466,12 @@ with tab4:
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
-            height=1100,
+            height=900,
             # bargap und bargroupgap werden entfernt, da 'width' in update_traces genutzt wird
             xaxis=dict(
                 tickmode='linear',
                 tick0=0,
-                dtick=30
+                dtick=20
             ),
             yaxis=dict(
                 type='category', 
