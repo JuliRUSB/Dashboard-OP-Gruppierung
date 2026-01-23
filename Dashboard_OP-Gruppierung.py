@@ -442,7 +442,6 @@ with tab4:
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
 
-        # Reihenfolge der Dindo-Grade
         dindo_order = sorted(dindo_counts['dindo'].unique(), reverse=True)
 
         fig_dindo = px.bar(
@@ -463,49 +462,31 @@ with tab4:
             texttemplate='%{text}'
         )
 
-        # Dynamische Höhe
-        n_dindo = len(dindo_order)
-
         fig_dindo.update_layout(
-            xaxis_title="Anzahl Fälle",
-            yaxis_title="Höchster Clavien-Dindo Grad",
-            legend_title_text="Jahr",
-            plot_bgcolor="rgba(0,0,0,0)",
-            height=120 * n_dindo,
+            height=120 * len(dindo_order),
             bargap=0.15,
             bargroupgap=0.25,
             margin=dict(r=120),
+            plot_bgcolor="rgba(0,0,0,0)",
             xaxis=dict(
+                title="Anzahl Fälle",
                 tickmode="linear",
                 tick0=0,
                 dtick=20
             ),
             yaxis=dict(
+                title="Höchster Clavien-Dindo Grad",
                 type="category",
                 categoryorder="array",
-                categoryarray=dindo_order
-            )
+                categoryarray=dindo_order,
+                showgrid=True,                 # ← DAS ist die Trennlinie
+                gridcolor="rgba(0,0,0,0.25)",
+                gridwidth=1
+            ),
+            legend_title_text="Jahr"
         )
 
-        # Trennlinien zwischen den Dindo-Graden
-        for i in range(len(dindo_order) - 1):
-            fig_dindo.add_shape(
-                type="line",
-                xref="paper",
-                x0=0,
-                x1=1,
-                yref="y",
-                y0=dindo_order[i],
-                y1=dindo_order[i],
-                line=dict(
-                    color="rgba(0,0,0,0.25)",
-                    width=1,
-                    dash="dot"
-                )
-            )
-
         st.plotly_chart(fig_dindo, use_container_width=True)
-
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
