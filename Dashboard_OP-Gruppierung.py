@@ -15,7 +15,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 # Konfiguration
 # ==================================================
-API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL# 
+API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
+
+# Globale Farbpalette
+COLOR_PALETTE = px.colors.qualitative.Safe
 
 # ==================================================
 # Datenexport aus REDCap
@@ -145,12 +148,20 @@ def prepare_data(df):
         r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
     # Quartals-Sortierung als Zahl (für Diagramme)
     df['quartal_sort'] = df['opdatum'].dt.year * 10 + df['opdatum'].dt.quarter
-    # df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     
     # Zeilen ohne gültiges Datum entfernen
     df = df.dropna(subset=['jahr_opdatum'])
     
     return df
+
+# ==================================================
+# Hilfsfunktion für konsistente Farben
+# ==================================================
+def get_color_map(items):
+    """Erstellt ein Farbmapping für eine Liste von Items"""
+    unique_items = sorted(set(items))
+    colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
+    return {item: colors[i] for i, item in enumerate(unique_items)}
 
 # ==================================================
 # Streamlit App
@@ -306,18 +317,15 @@ if len(df_filtered) == 0:
 
 col1, col2 = st.columns(2)  # Zwei Spalten für Graphen
 
-# Funktion für Farbzuordnung nach Jahr
-def get_color_for_year(jahr):
-    return f"rgb({50+jahr%5*40},{100+jahr%3*50},{150+jahr%4*30})"
-
 # Graph 1: Jahr
 with col1:
     if len(df_jahr_filtered) > 0:
         jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
+        jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
         
-        farben_jahr = {jahr: get_color_for_year(jahr) for jahr in jahr_counts_df['jahr_opdatum']}
-        marker_colors = [farben_jahr[jahr] for jahr in jahr_counts_df['jahr_opdatum']]
+        jahr_farben = get_color_map(jahr_counts_df['jahr_str'])
+        marker_colors = [jahr_farben[str(jahr)] for jahr in jahr_counts_df['jahr_opdatum']]
         
         fig_jahr = px.bar(
             jahr_counts_df, 
@@ -336,9 +344,9 @@ with col2:
         quartal_counts_df = df_filtered.groupby('quartal_opdatum', as_index=False).size()
         quartal_counts_df.columns = ['quartal_opdatum', 'count']
         
-        quartal_counts_df['jahr'] = quartal_counts_df['quartal_opdatum'].str.split('-').str[1].astype(int)
-        farben_quartal = {jahr: get_color_for_year(jahr) for jahr in quartal_counts_df['jahr'].unique()}
-        marker_colors_quartal = [farben_quartal[jahr] for jahr in quartal_counts_df['jahr']]
+        quartal_counts_df['jahr'] = quartal_counts_df['quartal_opdatum'].str.split('-').str[1]
+        quartal_farben = get_color_map(quartal_counts_df['jahr'])
+        marker_colors_quartal = [quartal_farben[jahr] for jahr in quartal_counts_df['jahr']]
         
         fig_quartal = px.bar(
             quartal_counts_df, 
@@ -360,12 +368,13 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 # Bereich-Piechart
 with tab1:
     if df_filtered['bereich'].nunique() > 0:
-        # Farbpalette basierend auf der Jahr-Farblogik
-        bereiche = sorted(df_filtered['bereich'].unique())
-        bereich_farben = [f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(len(bereiche))]
-        
-        fig_bereich = px.pie(df_filtered, names='bereich', title="Verteilung nach Bereich", hole=0.3,
-                            color_discrete_sequence=bereich_farben)
+        fig_bereich = px.pie(
+            df_filtered, 
+            names='bereich', 
+            title="Verteilung nach Bereich", 
+            hole=0.3,
+            color_discrete_sequence=COLOR_PALETTE
+        )
         st.plotly_chart(fig_bereich, use_container_width=True)
     else:
         st.info("Keine Bereichsdaten verfügbar")
@@ -379,9 +388,6 @@ with tab2:
             .size()
         )
         leber_gruppen_counts.columns = ['jahr_opdatum', 'leber_gruppen', 'count']
-        
-        # Farben für jedes Jahr
-        farben_jahr_leber_gruppen = {jahr: get_color_for_year(jahr) for jahr in leber_gruppen_counts['jahr_opdatum'].unique()}
 
         fig_leber_gruppen = px.bar(
             leber_gruppen_counts,
@@ -392,7 +398,7 @@ with tab2:
             text='count',
             title="Verteilung nach Gruppen",
             labels={'leber_gruppen': 'Leber-Gruppen'},
-            color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['leber_gruppen'].nunique())]
+            color_discrete_sequence=COLOR_PALETTE
         )
         fig_leber_gruppen.update_traces(textposition='inside', textfont_size=16)
         fig_leber_gruppen.update_layout(xaxis_title=None, yaxis_title=None)
@@ -409,9 +415,6 @@ with tab3:
             .size()
         )
         zugang_counts.columns = ['jahr_opdatum', 'zugang', 'count']
-        
-        # Farben für jedes Jahr
-        farben_jahr_zugang = {jahr: get_color_for_year(jahr) for jahr in zugang_counts['jahr_opdatum'].unique()}
 
         fig_zugang = px.bar(
             zugang_counts,
@@ -421,7 +424,7 @@ with tab3:
             barmode='group',
             text='count',
             title="Verteilung nach Zugangsart",
-            color_discrete_sequence=[f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(df_filtered['zugang'].nunique())]
+            color_discrete_sequence=COLOR_PALETTE
         )
         fig_zugang.update_traces(textposition='inside', textfont_size=16)
         fig_zugang.update_layout(xaxis_title=None, yaxis_title=None)
@@ -454,9 +457,8 @@ with tab4:
             orientation='h',
             barmode='group',
             title="Clavien-Dindo Komplikationen",
-            #color_discrete_sequence=px.colors.qualitative.Dark24,
-            color_discrete_sequence=px.colors.qualitative.Safe,
-            text='count'  # Zahlen an den Balken
+            color_discrete_sequence=COLOR_PALETTE,
+            text='count'
         )
 
         # Balken-Einstellungen
@@ -486,7 +488,7 @@ with tab4:
                 type="category",
                 categoryorder="array",
                 categoryarray=dindo_order,
-                tickson="boundaries",       # echte Trennlinien zwischen den Kategorien
+                tickson="boundaries",
                 showgrid=True,
                 gridcolor="rgba(0,0,0,0.3)",
                 gridwidth=1
@@ -498,7 +500,7 @@ with tab4:
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
-#HSM-Balkendiagramm
+# HSM-Balkendiagramm
 with tab5:
     if df_filtered['hsm'].notna().any():
         hsm_counts = (
@@ -520,7 +522,8 @@ with tab5:
             barmode='group',
             text='count',
             title="HSM nach Jahr",
-            labels={'hsm': 'HSM'}
+            labels={'hsm': 'HSM'},
+            color_discrete_sequence=COLOR_PALETTE
         )
         fig_hsm.update_traces(textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
@@ -576,13 +579,15 @@ with tab7:
         trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
         trend_data.columns = ['jahr_opdatum', 'bereich', 'count']
         
-        # Farbpalette für Bereiche im Trend
-        bereiche_trend = sorted(trend_data['bereich'].unique())
-        trend_farben = [f"rgb({50+i*40},{100+i*50},{150+i*30})" for i in range(len(bereiche_trend))]
-        
-        fig_trend = px.line(trend_data, x='jahr_opdatum', y='count', color='bereich', 
-                           title="Trend über Zeit nach Bereich", markers=True,
-                           color_discrete_sequence=trend_farben)
+        fig_trend = px.line(
+            trend_data, 
+            x='jahr_opdatum', 
+            y='count', 
+            color='bereich', 
+            title="Trend über Zeit nach Bereich", 
+            markers=True,
+            color_discrete_sequence=COLOR_PALETTE
+        )
         st.plotly_chart(fig_trend, use_container_width=True)
     else:
         st.info("Nicht genügend Daten für Trendanalyse")
