@@ -431,7 +431,6 @@ with tab3:
 
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
-# Kompletter überarbeiteter Dindo-Code mit minimalen Einstellungen für maximale Breite
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         dindo_counts = (
@@ -458,7 +457,7 @@ with tab4:
         # Einstellungen für die Balken
         fig_dindo.update_traces(
             marker_line_width=1,
-            width=0.9 # Dies sollte die Balken so dick wie möglich machen
+            width=0.6 # Dies sollte die Balken so dick wie möglich machen
         )
         
         # Allgemeine Layout-Einstellungen
@@ -467,7 +466,7 @@ with tab4:
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
-            height=700,
+            height=900,
             # bargap und bargroupgap werden entfernt, da 'width' in update_traces genutzt wird
             xaxis=dict(
                 tickmode='linear',
