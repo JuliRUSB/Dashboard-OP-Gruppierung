@@ -451,15 +451,16 @@ with tab4:
             orientation='h',
             barmode='group',
             title="Clavien-Dindo Komplikationen nach Jahr",
-            color_discrete_sequence=px.colors.qualitative.Dark24
+            color_discrete_sequence=px.colors.qualitative.Dark24,
+            text='count'   # <-- Zahlen an die Balken
         )
 
-        # Balken: keine fixe width setzen
         fig_dindo.update_traces(
-            marker_line_width=1
+            marker_line_width=1,
+            textposition='outside',   # Zahl rechts neben dem Balken
+            texttemplate='%{text}'    # nur die Zahl, kein Zusatz
         )
 
-        # Anzahl Dindo-Kategorien für dynamische Höhe
         n_dindo = dindo_counts['dindo'].nunique()
 
         fig_dindo.update_layout(
@@ -467,9 +468,9 @@ with tab4:
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text="Jahr",
             plot_bgcolor="rgba(0,0,0,0)",
-            height=120 * n_dindo,      # mehr Platz = breitere Balken
-            bargap=0.15,               # Abstand zwischen Dindo-Graden
-            bargroupgap=0.25,          # Abstand zwischen Jahren innerhalb eines Grades
+            height=120 * n_dindo,
+            bargap=0.15,
+            bargroupgap=0.25,
             xaxis=dict(
                 tickmode="linear",
                 tick0=0,
@@ -488,37 +489,6 @@ with tab4:
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
-
-#HSM-Balkendiagramm
-with tab5:
-    if df_filtered['hsm'].notna().any():
-        hsm_counts = (
-            df_filtered
-            .dropna(subset=['hsm', 'jahr_opdatum'])
-            .assign(
-                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
-            )
-            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
-            .size()
-        )
-        hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
-
-        fig_hsm = px.bar(
-            hsm_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='hsm',
-            barmode='group',
-            text='count',
-            title="HSM nach Jahr",
-            labels={'hsm': 'HSM'},
-            color_discrete_sequence=[f"rgb({90},{140},{180})", f"rgb({130},{180},{220})"]
-        )
-        fig_hsm.update_traces(textposition='inside', textfont_size=16)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title=None)
-        st.plotly_chart(fig_hsm, use_container_width=True)
-    else:
-        st.info("Keine HSM-Informationen verfügbar")
 
 # LOS (Length of Stay)
 with tab6:
