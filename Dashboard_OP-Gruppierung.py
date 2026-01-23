@@ -457,7 +457,7 @@ with tab4:
         # Einstellungen für die Balken
         fig_dindo.update_traces(
             marker_line_width=1,
-            width=0.6 # Dies sollte die Balken so dick wie möglich machen
+            width=0.4 # Dies sollte die Balken so dick wie möglich machen
         )
         
         # Allgemeine Layout-Einstellungen
@@ -466,7 +466,7 @@ with tab4:
             yaxis_title="Höchster Clavien-Dindo Grad",
             legend_title_text='Jahr', 
             plot_bgcolor='rgba(0,0,0,0)',
-            height=900,
+            height=1100,
             # bargap und bargroupgap werden entfernt, da 'width' in update_traces genutzt wird
             xaxis=dict(
                 tickmode='linear',
