@@ -453,7 +453,7 @@ with tab4:
             color='jahr_opdatum',
             orientation='h',
             barmode='group',
-            title="Clavien-Dindo Komplikationen nach Jahr",
+            title="Clavien-Dindo Komplikationen",
             color_discrete_sequence=px.colors.qualitative.Dark24,
             text='count'  # Zahlen an den Balken
         )
@@ -470,12 +470,12 @@ with tab4:
 
         fig_dindo.update_layout(
             height=120 * n_dindo,
-            bargap=0.01,
+            bargap=0.001,
             bargroupgap=0.25,
             margin=dict(r=120),
             plot_bgcolor="rgba(0,0,0,0)",
             xaxis=dict(
-                title="Anzahl Fälle",
+                title=None,
                 tickmode="linear",
                 tick0=0,
                 dtick=10
