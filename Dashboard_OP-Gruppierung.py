@@ -429,10 +429,10 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
+        # Aggregation nach Jahr und Clavien-Dindo-Grad
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
@@ -442,8 +442,10 @@ with tab4:
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
 
+        # Reihenfolge der Dindo-Kategorien
         dindo_order = sorted(dindo_counts['dindo'].unique(), reverse=True)
 
+        # Balkendiagramm erstellen
         fig_dindo = px.bar(
             dindo_counts,
             x='count',
@@ -453,17 +455,21 @@ with tab4:
             barmode='group',
             title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=px.colors.qualitative.Dark24,
-            text='count'
+            text='count'  # Zahlen an den Balken
         )
 
+        # Balken-Einstellungen
         fig_dindo.update_traces(
             marker_line_width=1,
             textposition='outside',
             texttemplate='%{text}'
         )
 
+        # Dynamische Höhe für mehr Abstand zwischen den Balken
+        n_dindo = len(dindo_order)
+
         fig_dindo.update_layout(
-            height=120 * len(dindo_order),
+            height=120 * n_dindo,
             bargap=0.15,
             bargroupgap=0.25,
             margin=dict(r=120),
@@ -479,8 +485,9 @@ with tab4:
                 type="category",
                 categoryorder="array",
                 categoryarray=dindo_order,
-                showgrid=True,                 # ← DAS ist die Trennlinie
-                gridcolor="rgba(0,0,0,0.25)",
+                tickson="boundaries",       # echte Trennlinien zwischen den Kategorien
+                showgrid=True,
+                gridcolor="rgba(0,0,0,0.3)",
                 gridwidth=1
             ),
             legend_title_text="Jahr"
