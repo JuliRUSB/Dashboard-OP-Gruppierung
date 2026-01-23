@@ -440,8 +440,10 @@ with tab4:
             .size()
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
-
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
+
+        # Reihenfolge der Dindo-Grade
+        dindo_order = sorted(dindo_counts['dindo'].unique(), reverse=True)
 
         fig_dindo = px.bar(
             dindo_counts,
@@ -452,16 +454,17 @@ with tab4:
             barmode='group',
             title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=px.colors.qualitative.Dark24,
-            text='count'   # <-- Zahlen an die Balken
+            text='count'
         )
 
         fig_dindo.update_traces(
             marker_line_width=1,
-            textposition='outside',   # Zahl rechts neben dem Balken
-            texttemplate='%{text}'    # nur die Zahl, kein Zusatz
+            textposition='outside',
+            texttemplate='%{text}'
         )
 
-        n_dindo = dindo_counts['dindo'].nunique()
+        # Dynamische Höhe
+        n_dindo = len(dindo_order)
 
         fig_dindo.update_layout(
             xaxis_title="Anzahl Fälle",
@@ -471,6 +474,7 @@ with tab4:
             height=120 * n_dindo,
             bargap=0.15,
             bargroupgap=0.25,
+            margin=dict(r=120),
             xaxis=dict(
                 tickmode="linear",
                 tick0=0,
@@ -479,14 +483,29 @@ with tab4:
             yaxis=dict(
                 type="category",
                 categoryorder="array",
-                categoryarray=sorted(
-                    dindo_counts['dindo'].unique(),
-                    reverse=True
-                )
+                categoryarray=dindo_order
             )
         )
 
+        # Trennlinien zwischen den Dindo-Graden
+        for i in range(len(dindo_order) - 1):
+            fig_dindo.add_shape(
+                type="line",
+                xref="paper",
+                x0=0,
+                x1=1,
+                yref="y",
+                y0=dindo_order[i],
+                y1=dindo_order[i],
+                line=dict(
+                    color="rgba(0,0,0,0.25)",
+                    width=1,
+                    dash="dot"
+                )
+            )
+
         st.plotly_chart(fig_dindo, use_container_width=True)
+
     else:
         st.info("Keine Komplikationsdaten verfügbar")
 
