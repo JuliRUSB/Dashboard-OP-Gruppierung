@@ -440,7 +440,7 @@ with tab4:
             .size()
         )
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
-        
+
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
 
         fig_dindo = px.bar(
@@ -448,36 +448,43 @@ with tab4:
             x='count',
             y='dindo',
             color='jahr_opdatum',
-            orientation='h',          
-            barmode='group',          
+            orientation='h',
+            barmode='group',
             title="Clavien-Dindo Komplikationen nach Jahr",
             color_discrete_sequence=px.colors.qualitative.Dark24
         )
-        
-        # Einstellungen für die Balken
+
+        # Balken: keine fixe width setzen
         fig_dindo.update_traces(
-            marker_line_width=1,
-            width=0.1 # Dies sollte die Balken so dick wie möglich machen
+            marker_line_width=1
         )
-        
-        # Allgemeine Layout-Einstellungen
+
+        # Anzahl Dindo-Kategorien für dynamische Höhe
+        n_dindo = dindo_counts['dindo'].nunique()
+
         fig_dindo.update_layout(
-            xaxis_title="Anzahl Fälle", 
+            xaxis_title="Anzahl Fälle",
             yaxis_title="Höchster Clavien-Dindo Grad",
-            legend_title_text='Jahr', 
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=700,
-            # bargap und bargroupgap werden entfernt, da 'width' in update_traces genutzt wird
+            legend_title_text="Jahr",
+            plot_bgcolor="rgba(0,0,0,0)",
+            height=120 * n_dindo,      # mehr Platz = breitere Balken
+            bargap=0.15,               # Abstand zwischen Dindo-Graden
+            bargroupgap=0.25,          # Abstand zwischen Jahren innerhalb eines Grades
             xaxis=dict(
-                tickmode='linear',
+                tickmode="linear",
                 tick0=0,
                 dtick=20
             ),
             yaxis=dict(
-                type='category', 
-                categoryorder='category descending'
+                type="category",
+                categoryorder="array",
+                categoryarray=sorted(
+                    dindo_counts['dindo'].unique(),
+                    reverse=True
+                )
             )
-        )        
+        )
+
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
