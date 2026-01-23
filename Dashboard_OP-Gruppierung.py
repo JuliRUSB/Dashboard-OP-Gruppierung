@@ -454,7 +454,8 @@ with tab4:
             orientation='h',
             barmode='group',
             title="Clavien-Dindo Komplikationen",
-            color_discrete_sequence=px.colors.qualitative.Dark24,
+            #color_discrete_sequence=px.colors.qualitative.Dark24,
+            color_discrete_sequence=px.colors.qualitative.Safe,
             text='count'  # Zahlen an den Balken
         )
 
