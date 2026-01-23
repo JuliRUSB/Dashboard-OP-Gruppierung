@@ -478,7 +478,7 @@ with tab4:
                 title="Anzahl Fälle",
                 tickmode="linear",
                 tick0=0,
-                dtick=20
+                dtick=10
             ),
             yaxis=dict(
                 title="Höchster Clavien-Dindo Grad",
