@@ -214,13 +214,14 @@ with st.sidebar:
     max_jahr = int(df['jahr_opdatum'].max())
     
     jahr_range = st.slider(
-        "Operationsjahr wählen:",
+        "Operationsjahr durch Verschieben auswählen:",
         min_value=min_jahr,
         max_value=max_jahr,
         value=(min_jahr, max_jahr)
     )
     
     # Quartal-Buttons (Q1-Q4)
+    "Quartal(e) auswählen:",
     quartal_filter = st.session_state.get('selected_quartale', [1, 2, 3, 4])
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
     
