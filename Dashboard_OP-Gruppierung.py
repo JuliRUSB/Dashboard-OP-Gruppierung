@@ -299,7 +299,7 @@ st.header("Kennzahlen")
 col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 
 with col1:
-    st.metric("Gesamt Fälle", len(df_filtered))  # Anzahl gefilterter Fälle
+    st.metric("Gesamt Fälle", len(df_jahr_filtered))  # Anzahl gefilterter Fälle
     
 with col2:
     st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
