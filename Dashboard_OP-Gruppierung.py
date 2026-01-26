@@ -227,13 +227,14 @@ with st.sidebar:
     quartal_filter = st.session_state['selected_quartale']
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
     
-    cols = st.columns(4)
     for i, q in enumerate([1, 2, 3, 4]):
-        if cols[i].button(quartal_labels[i], key=f"quartal_{q}"):
-            if q in quartal_filter:
-                quartal_filter.remove(q)
-            else:
-                quartal_filter.append(q)
+    # Ein Klick invertiert den Status im Session State
+    if cols[i].button(quartal_labels[i], key=f"btn_q_{q}"):
+        if q in st.session_state.selected_quartale:
+            st.session_state.selected_quartale.remove(q)
+        else:
+            st.session_state.selected_quartale.append(q)
+        st.rerun() # Seite neu laden, um Filter sofort anzuwenden
     
     # Sortieren und sicherstellen, dass nur Zahlen drin sind
     quartal_filter = [int(q) for q in quartal_filter if isinstance(q, (int, float))]
