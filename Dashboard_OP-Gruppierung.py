@@ -302,7 +302,7 @@ with col1:
     st.metric("Gesamt Fälle", len(df_jahr_filtered))  # Anzahl gefilterter Fälle
     
 with col2:
-    st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
+    st.metric("Bereiche", df_jahr_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
     
 with col3:
     st.metric("Zeitraum", f"{len(st.session_state['selected_jahre'])} Jahre, {len(st.session_state['selected_quartale'])} Quartale")  # Zeitraum anzeigen
