@@ -220,78 +220,59 @@ with st.sidebar:
         value=(min_jahr, max_jahr)
     )
     
-    # 1. Sicherstellen, dass die Liste im Session State existiert
+    # Sicherstellen, dass die Liste im Session State existiert
     if 'selected_quartale' not in st.session_state:
         st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-    # 2. Definition der Variablen
-    st.write("Quartal(e) auswählen:") # Korrigiert: st.write hinzugefügt
+    st.write("Quartal(e) auswählen:")
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
     quartal_werte = [1, 2, 3, 4]
 
-    # Anzeige der aktuell gewählten Quartale als Text
+    # Anzeige der aktuell gewählten Quartale
     st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
 
-    # 3. Spalten für die Buttons erstellen
+    # Spalten für die Buttons erstellen
     cols = st.columns(4)
 
-    # 4. Die Buttons erstellen (Logik zum An/Abwählen)
+    # Buttons erstellen (Logik zum An/Abwählen)
     for i, q in enumerate(quartal_werte):
         is_active = q in st.session_state['selected_quartale']
-        # Button-Label fett markieren, wenn aktiv
         label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
-    
+
         if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
             if q in st.session_state['selected_quartale']:
                 st.session_state['selected_quartale'].remove(q)
             else:
                 st.session_state['selected_quartale'].append(q)
-            st.rerun() # Seite neu laden, um Filter sofort anzuwenden
+            st.rerun()
 
-        # 3. Spalten für die Buttons erstellen
-        cols = st.columns(4)
+    # Jahre speichern
+    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  # ← unverändert, nur korrekt platziert
+
+    st.divider()
     
-        # 4. Die Schleife
-        for i, q in enumerate(quartal_werte):
-            # Prüfung: Existiert cols[i] und quartal_labels[i]?
-            button_label = quartal_labels[i]
-        
-            # Button-Logik
-            if cols[i].button(button_label, key=f"btn_q_{q}"):
-                if q in st.session_state['selected_quartale']:
-                    st.session_state['selected_quartale'].remove(q)
-                else:
-                    st.session_state['selected_quartale'].append(q)
-                st.rerun() # Seite neu laden, um Filter anzuwenden
+    # Bereich-Filter
+    bereich_filter = st.selectbox(
+        "Bereich auswählen:", 
+        ["Alle"] + sorted(df['bereich'].unique())
+    )
 
-        # Jahre speichern
-        st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1]+1))
-
-        st.divider()
-    
-        # Bereich-Filter
-        bereich_filter = st.selectbox(
-            "Bereich auswählen:", 
-            ["Alle"] + sorted(df['bereich'].unique())
-        )
-
-        # Zugang-Filter
-        zugang_filter = st.selectbox(
-            "Zugang auswählen:", 
-            ["Alle"] + sorted(df['zugang'].unique())
-        )
+    # Zugang-Filter
+    zugang_filter = st.selectbox(
+        "Zugang auswählen:", 
+        ["Alle"] + sorted(df['zugang'].unique())
+    )
 
 
 # -------------------- Daten filtern --------------------
-# --- Datentypen angleichen (WICHTIG) ---
-# Wir stellen sicher, dass alles im Session State das gleiche Format hat wie im DataFrame
+# Datentypen angleichen
 selected_jahre = [int(j) for j in st.session_state.get('selected_jahre', [])]
 selected_quartale = [int(q) for q in st.session_state.get('selected_quartale', [])]
 
-# --- Sicherheitscheck: Wenn Filter leer sind, zeige nichts oder alles ---
+# Sicherheitscheck
 if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
-    df_filtered = pd.DataFrame() # Leerer DataFrame
+    df_filtered = pd.DataFrame()
     df_jahr_filtered = pd.DataFrame()
 else:
     # Haupt-Filterung
