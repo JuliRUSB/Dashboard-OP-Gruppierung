@@ -356,44 +356,55 @@ with col1:
 
 # Graph 2: Quartal
 with col2:
-    # Sicherstellen, dass wir mit Integern vergleichen
-    selected_q = [int(q) for q in st.session_state.get('selected_quartale', [])]
+    # 1. Sicherstellen, dass die Auswahl existiert
+    selected_q = st.session_state.get('selected_quartale', [])
     
-    # Filtern der Daten für diesen speziellen Chart
-    # Wir nehmen df_jahr_filtered als Basis, damit nur die Quartale gefiltert werden
-    chart_df = df_jahr_filtered[df_jahr_filtered['quartal_opdatum'].astype(int).isin(selected_q)].copy()
+    if not df_jahr_filtered.empty and selected_q:
+        # 2. Daten kopieren und ungültige Quartale entfernen/umwandeln
+        chart_df = df_jahr_filtered.copy()
+        
+        # Umwandlung zu numerisch, Fehler werden zu NaN, dann NaN entfernen
+        chart_df['quartal_opdatum'] = pd.to_numeric(chart_df['quartal_opdatum'], errors='coerce')
+        chart_df = chart_df.dropna(subset=['quartal_opdatum'])
+        
+        # 3. Filtern nach den ausgewählten Quartalen
+        chart_df = chart_df[chart_df['quartal_opdatum'].astype(int).isin(selected_q)]
 
-    if not chart_df.empty:
-        # Gruppieren
-        quartal_counts_df = chart_df.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
-        quartal_counts_df.columns = ['jahr', 'quartal', 'count']
-        
-        # Eindeutige Beschriftung (z.B. "2024 Q1")
-        quartal_counts_df['display_name'] = (
-            quartal_counts_df['jahr'].astype(str) + " Q" + quartal_counts_df['quartal'].astype(str)
-        )
-        
-        fig_quartal = px.bar(
-            quartal_counts_df, 
-            x='display_name', 
-            y='count', 
-            text='count',
-            color='jahr', # Nutzt das Jahr für die Farbe (für Konsistenz)
-            color_discrete_sequence=px.colors.qualitative.Safe,
-            title="Fallzahlen pro Quartal"
-        )
-        
-        fig_quartal.update_traces(textposition='inside', textfont_size=16)
-        fig_quartal.update_layout(
-            xaxis_title=None, 
-            yaxis_title=None, 
-            showlegend=False, 
-            height=400,
-            xaxis={'categoryorder':'category ascending'}
-        )
-        st.plotly_chart(fig_quartal, use_container_width=True)
+        if not chart_df.empty:
+            # Gruppieren
+            quartal_counts_df = chart_df.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
+            quartal_counts_df.columns = ['jahr', 'quartal', 'count']
+            
+            # Anzeige-Name (z.B. "2024 Q1")
+            quartal_counts_df['display_name'] = (
+                quartal_counts_df['jahr'].astype(int).astype(str) + 
+                " Q" + 
+                quartal_counts_df['quartal'].astype(int).astype(str)
+            )
+            
+            fig_quartal = px.bar(
+                quartal_counts_df, 
+                x='display_name', 
+                y='count', 
+                text='count',
+                color='jahr',
+                color_discrete_sequence=px.colors.qualitative.Safe,
+                title="Fallzahlen pro Quartal"
+            )
+            
+            fig_quartal.update_traces(textposition='inside', textfont_size=16)
+            fig_quartal.update_layout(
+                xaxis_title=None, 
+                yaxis_title=None, 
+                showlegend=False, 
+                height=400,
+                xaxis={'type': 'category', 'categoryorder':'category ascending'}
+            )
+            st.plotly_chart(fig_quartal, use_container_width=True)
+        else:
+            st.info("Keine Daten für die gewählten Quartale.")
     else:
-        st.warning(f"Keine Daten für Quartale {selected_q} gefunden.")
+        st.warning("Bitte wählen Sie mindestens ein Quartal aus.")
 
 st.divider()
 
