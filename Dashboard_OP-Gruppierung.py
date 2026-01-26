@@ -266,6 +266,7 @@ if zugang_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['zugang'] == zugang_filter]
     df_filtered = df_filtered[df_filtered['zugang'] == zugang_filter]
 
+# -------- Kennzahlen --------
 st.header("Kennzahlen")
 col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 
