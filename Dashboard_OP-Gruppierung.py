@@ -266,11 +266,24 @@ with st.sidebar:
 
 
 # -------------------- Daten filtern --------------------
-df_jahr_filtered = df[df['jahr_opdatum'].isin(st.session_state['selected_jahre'])].copy()
-df_filtered = df[
-    (df['jahr_opdatum'].isin(st.session_state['selected_jahre'])) &
-    (df['quartal_opdatum'].isin(st.session_state['selected_quartale']))
-].copy()
+# --- Datentypen angleichen (WICHTIG) ---
+# Wir stellen sicher, dass alles im Session State das gleiche Format hat wie im DataFrame
+selected_jahre = [int(j) for j in st.session_state.get('selected_jahre', [])]
+selected_quartale = [int(q) for q in st.session_state.get('selected_quartale', [])]
+
+# --- Sicherheitscheck: Wenn Filter leer sind, zeige nichts oder alles ---
+if not selected_jahre or not selected_quartale:
+    st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
+    df_filtered = pd.DataFrame() # Leerer DataFrame
+    df_jahr_filtered = pd.DataFrame()
+else:
+    # Haupt-Filterung
+    df_jahr_filtered = df[df['jahr_opdatum'].isin(selected_jahre)].copy()
+    
+    df_filtered = df[
+        (df['jahr_opdatum'].isin(selected_jahre)) & 
+        (df['quartal_opdatum'].isin(selected_quartale))
+    ].copy()
 
 # Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
