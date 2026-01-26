@@ -320,23 +320,38 @@ col1, col2 = st.columns(2)  # Zwei Spalten für Graphen
 
 # Graph 1: Jahr
 with col1:
-    if len(df_jahr_filtered) > 0:
+    if not df_jahr_filtered.empty:
+        # Daten gruppieren
         jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
+        
+        # Jahr als String für die Achse
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
-        
-        jahr_farben = get_color_map(jahr_counts_df['jahr_str'])
-        marker_colors = [jahr_farben[str(jahr)] for jahr in jahr_counts_df['jahr_opdatum']]
-        
+
+        # Diagramm erstellen mit deiner COLOR_PALETTE
         fig_jahr = px.bar(
             jahr_counts_df, 
-            x='jahr_opdatum', 
+            x='jahr_str', 
             y='count', 
             text='count', 
+            color='jahr_str',  # Farbe basierend auf dem Jahr
+            color_discrete_sequence=px.colors.qualitative.Safe,
             title="Fallzahlen pro Jahr"
         )
-        fig_jahr.update_traces(marker_color=marker_colors, textfont_size=16, textposition='inside')
-        fig_jahr.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False, height=400)
+        
+        fig_jahr.update_traces(
+            textfont_size=16, 
+            textposition='inside'
+        )
+        
+        fig_jahr.update_layout(
+            xaxis_title=None, 
+            yaxis_title=None, 
+            showlegend=False, 
+            height=400,
+            xaxis={'type': 'category'} # Verhindert Zahlensalat auf der X-Achse
+        )
+        
         st.plotly_chart(fig_jahr, use_container_width=True)
 
 # Graph 2: Quartal
