@@ -221,65 +221,65 @@ with st.sidebar:
     )
     
     # 1. Sicherstellen, dass die Liste im Session State existiert
-if 'selected_quartale' not in st.session_state:
-    st.session_state['selected_quartale'] = [1, 2, 3, 4]
+    if 'selected_quartale' not in st.session_state:
+        st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-# 2. Definition der Variablen
-st.write("Quartal(e) auswählen:") # Korrigiert: st.write hinzugefügt
-quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
-quartal_werte = [1, 2, 3, 4]
+    # 2. Definition der Variablen
+    st.write("Quartal(e) auswählen:") # Korrigiert: st.write hinzugefügt
+    quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
+    quartal_werte = [1, 2, 3, 4]
 
-# Anzeige der aktuell gewählten Quartale als Text
-st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
-
-# 3. Spalten für die Buttons erstellen
-cols = st.columns(4)
-
-# 4. Die Buttons erstellen (Logik zum An/Abwählen)
-for i, q in enumerate(quartal_werte):
-    is_active = q in st.session_state['selected_quartale']
-    # Button-Label fett markieren, wenn aktiv
-    label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
-    
-    if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
-        if q in st.session_state['selected_quartale']:
-            st.session_state['selected_quartale'].remove(q)
-        else:
-            st.session_state['selected_quartale'].append(q)
-        st.rerun() # Seite neu laden, um Filter sofort anzuwenden
+    # Anzeige der aktuell gewählten Quartale als Text
+    st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
 
     # 3. Spalten für die Buttons erstellen
     cols = st.columns(4)
-    
-    # 4. Die Schleife
+
+    # 4. Die Buttons erstellen (Logik zum An/Abwählen)
     for i, q in enumerate(quartal_werte):
-        # Prüfung: Existiert cols[i] und quartal_labels[i]?
-        button_label = quartal_labels[i]
-        
-        # Button-Logik
-        if cols[i].button(button_label, key=f"btn_q_{q}"):
+        is_active = q in st.session_state['selected_quartale']
+        # Button-Label fett markieren, wenn aktiv
+        label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
+    
+        if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
             if q in st.session_state['selected_quartale']:
                 st.session_state['selected_quartale'].remove(q)
             else:
                 st.session_state['selected_quartale'].append(q)
-            st.rerun() # Seite neu laden, um Filter anzuwenden
+            st.rerun() # Seite neu laden, um Filter sofort anzuwenden
 
-    # Jahre speichern
-    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1]+1))
-
-    st.divider()
+        # 3. Spalten für die Buttons erstellen
+        cols = st.columns(4)
     
-    # Bereich-Filter
-    bereich_filter = st.selectbox(
-        "Bereich auswählen:", 
-        ["Alle"] + sorted(df['bereich'].unique())
-    )
+        # 4. Die Schleife
+        for i, q in enumerate(quartal_werte):
+            # Prüfung: Existiert cols[i] und quartal_labels[i]?
+            button_label = quartal_labels[i]
+        
+            # Button-Logik
+            if cols[i].button(button_label, key=f"btn_q_{q}"):
+                if q in st.session_state['selected_quartale']:
+                    st.session_state['selected_quartale'].remove(q)
+                else:
+                    st.session_state['selected_quartale'].append(q)
+                st.rerun() # Seite neu laden, um Filter anzuwenden
 
-    # Zugang-Filter
-    zugang_filter = st.selectbox(
-        "Zugang auswählen:", 
-        ["Alle"] + sorted(df['zugang'].unique())
-    )
+        # Jahre speichern
+        st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1]+1))
+
+        st.divider()
+    
+        # Bereich-Filter
+        bereich_filter = st.selectbox(
+            "Bereich auswählen:", 
+            ["Alle"] + sorted(df['bereich'].unique())
+        )
+
+        # Zugang-Filter
+        zugang_filter = st.selectbox(
+            "Zugang auswählen:", 
+            ["Alle"] + sorted(df['zugang'].unique())
+        )
 
 
 # -------------------- Daten filtern --------------------
