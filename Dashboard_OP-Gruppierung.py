@@ -188,7 +188,7 @@ alle_quartale = sorted(df['quartal_opdatum'].dropna().unique().tolist())
 if 'selected_jahre' not in st.session_state:
     st.session_state.selected_jahre = alle_jahre
 if 'selected_quartale' not in st.session_state:
-    st.session_state.selected_quartale = alle_quartale
+    st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
 # -------- Sidebar für Filter --------
 # Breite der Sidebar anpassen
