@@ -204,7 +204,7 @@ st.markdown(
 )
 
 # ==================================================
-# Sidebar: Jahr-Range-Slider + Quartal-Buttons
+# Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang
 # ==================================================
 with st.sidebar:
     st.header("Filter")
@@ -234,18 +234,20 @@ with st.sidebar:
     
     st.session_state['selected_quartale'] = sorted(quartal_filter)
 
-# -------------------- Bereich & Zugang --------------------
-bereich_filter = st.selectbox(
-    "Bereich auswählen:", 
-    ["Alle"] + sorted(df['bereich'].unique())
-)
+    # Bereich-Filter
+    bereich_filter = st.selectbox(
+        "Bereich auswählen:", 
+        ["Alle"] + sorted(df['bereich'].unique())
+    )
 
-zugang_filter = st.selectbox(
-    "Zugang auswählen:", 
-    ["Alle"] + sorted(df['zugang'].unique())
-)
+    # Zugang-Filter
+    zugang_filter = st.selectbox(
+        "Zugang auswählen:", 
+        ["Alle"] + sorted(df['zugang'].unique())
+    )
 
-st.divider()
+    st.divider()
+
 
 # -------------------- Daten filtern --------------------
 df_jahr_filtered = df[df['jahr_opdatum'].between(*jahr_range)].copy()
