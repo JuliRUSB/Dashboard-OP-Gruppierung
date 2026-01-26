@@ -266,7 +266,6 @@ if zugang_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['zugang'] == zugang_filter]
     df_filtered = df_filtered[df_filtered['zugang'] == zugang_filter]
 
-# -------- Kennzahlen --------
 st.header("Kennzahlen")
 col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
 
@@ -277,7 +276,7 @@ with col2:
     st.metric("Bereiche", df_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
     
 with col3:
-    st.metric("Zeitraum", f"{len(jahr_filter)} Jahre, {len(quartal_filter)} Quartale")  # Zeitraum anzeigen
+    st.metric("Zeitraum", f"{len(st.session_state['selected_jahre'])} Jahre, {len(st.session_state['selected_quartale'])} Quartale")  # Zeitraum anzeigen
 
 st.divider()
 
