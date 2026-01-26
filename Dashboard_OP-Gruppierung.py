@@ -312,7 +312,7 @@ st.divider()
 # -------- Visualisierungen --------
 st.header("Fallzahlen Übersicht")
 
-if len(df_filtered) == 0:
+if len(df_jahr_filtered) == 0:
     st.warning("Keine Daten für die gewählten Filter verfügbar.")
     st.stop()
 
