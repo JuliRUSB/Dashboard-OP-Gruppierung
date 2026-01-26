@@ -220,9 +220,11 @@ with st.sidebar:
         value=(min_jahr, max_jahr)
     )
     
-    # Quartal-Buttons (Q1-Q4)
-    "Quartal(e) auswählen:",
-    quartal_filter = st.session_state.get('selected_quartale', [1, 2, 3, 4])
+     # Quartal-Buttons (Q1-Q4)
+    if 'selected_quartale' not in st.session_state or not isinstance(st.session_state['selected_quartale'], list):
+        st.session_state['selected_quartale'] = [1,2,3,4]
+
+    quartal_filter = st.session_state['selected_quartale']
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
     
     cols = st.columns(4)
@@ -233,7 +235,12 @@ with st.sidebar:
             else:
                 quartal_filter.append(q)
     
+    # Sortieren und sicherstellen, dass nur Zahlen drin sind
+    quartal_filter = [int(q) for q in quartal_filter if isinstance(q, (int, float))]
     st.session_state['selected_quartale'] = sorted(quartal_filter)
+
+    # Jahre speichern
+    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1]+1))
 
     st.divider()
     
