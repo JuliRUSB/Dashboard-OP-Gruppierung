@@ -143,6 +143,8 @@ def prepare_data(df):
 
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
+    # Quartal erstellen: 1, 2, 3 oder 4
+    df['quartal_opdatum'] = df['opdatum'].dt.quarter
     # Quartal als "Q1-2026"-Format
     df['diag_quartal_opdatum'] = df['opdatum'].dt.to_period('Q').astype(str).str.replace(
         r'(\d{4})Q(\d)', r'Q\2-\1', regex=True)
