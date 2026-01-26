@@ -251,10 +251,10 @@ with st.sidebar:
 
 
 # -------------------- Daten filtern --------------------
-df_jahr_filtered = df[df['jahr_opdatum'].between(*jahr_range)].copy()
+df_jahr_filtered = df[df['jahr_opdatum'].isin(st.session_state['selected_jahre'])].copy()
 df_filtered = df[
-    (df['jahr_opdatum'].between(*jahr_range)) &
-    (df['quartal_opdatum'].isin(quartal_filter))
+    (df['jahr_opdatum'].isin(st.session_state['selected_jahre'])) &
+    (df['quartal_opdatum'].isin(st.session_state['selected_quartale']))
 ].copy()
 
 # Weitere Filter anwenden (Bereich, Zugang)
