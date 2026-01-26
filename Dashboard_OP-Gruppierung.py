@@ -206,16 +206,18 @@ st.markdown(
 with st.sidebar:
     st.header("Filter")
     
-    # Session-State initialisieren
+# -------------------- Session-State --------------------
 if 'selected_jahre' not in st.session_state:
-    st.session_state.selected_jahre = [df['jahr_opdatum'].min(), df['jahr_opdatum'].max()]
+    st.session_state.selected_jahre = [int(df['jahr_opdatum'].min()), int(df['jahr_opdatum'].max())]
+
 if 'selected_quartale' not in st.session_state:
     st.session_state.selected_quartale = sorted(df['quartal_opdatum'].unique())
 
-# -------- Filter: Jahr (Slider) --------
+# -------------------- Jahr-Filter (Slider) --------------------
 min_jahr = int(df['jahr_opdatum'].min())
 max_jahr = int(df['jahr_opdatum'].max())
 
+# Slider – immer sicherstellen, dass es 2 Werte sind
 jahr_range = st.slider(
     "Operationsjahr wählen:",
     min_value=min_jahr,
@@ -225,45 +227,47 @@ jahr_range = st.slider(
 
 # Änderungen erkennen und Quartale anpassen
 if list(jahr_range) != st.session_state.selected_jahre:
-    hinzugefuegt = set(range(jahr_range[0], jahr_range[1]+1)) - set(st.session_state.selected_jahre)
-    entfernt = set(st.session_state.selected_jahre) - set(range(jahr_range[0], jahr_range[1]+1))
+    # Hinzugefügte und entfernte Jahre
+    neue_jahre_set = set(range(jahr_range[0], jahr_range[1]+1))
+    alte_jahre_set = set(st.session_state.selected_jahre)
     
+    hinzugefuegt = neue_jahre_set - alte_jahre_set
+    entfernt = alte_jahre_set - neue_jahre_set
+
     neue_quartale = set(st.session_state.selected_quartale)
-    
-    # Neue Jahre -> Quartale hinzufügen
+
     if hinzugefuegt:
-        jahr_quartale = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
-        neue_quartale.update(jahr_quartale)
-    
-    # Entfernte Jahre -> Quartale entfernen
+        quartale_hinzu = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
+        neue_quartale.update(quartale_hinzu)
     if entfernt:
-        jahr_quartale = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
-        neue_quartale -= set(jahr_quartale)
-    
+        quartale_entf = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
+        neue_quartale -= set(quartale_entf)
+
     st.session_state.selected_quartale = sorted(neue_quartale)
     st.session_state.selected_jahre = list(jahr_range)
 
-# -------- Filter: Quartal (Buttons) --------
+# -------------------- Quartal-Filter (Toggle Buttons) --------------------
 verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
 quartal_filter = []
 
 cols = st.columns(len(verfuegbare_quartale))
 for i, q in enumerate(verfuegbare_quartale):
+    active = q in st.session_state.selected_quartale
     if cols[i].button(f"Q{q}", key=f"quartal_{q}"):
-        if q in st.session_state.selected_quartale:
+        if active:
             st.session_state.selected_quartale.remove(q)
         else:
             st.session_state.selected_quartale.append(q)
+    # Aktuelle Auswahl für Anzeige
+    if q in st.session_state.selected_quartale:
+        quartal_filter.append(q)
 
-quartal_filter = [q for q in st.session_state.selected_quartale if q in verfuegbare_quartale]
-
-# -------- Bereich-Filter (Dropdown) --------
+# -------------------- Bereich & Zugang --------------------
 bereich_filter = st.selectbox(
     "Bereich auswählen:", 
     ["Alle"] + sorted(df['bereich'].unique())
 )
 
-# -------- Zugang-Filter (Dropdown) --------
 zugang_filter = st.selectbox(
     "Zugang auswählen:", 
     ["Alle"] + sorted(df['zugang'].unique())
@@ -271,12 +275,13 @@ zugang_filter = st.selectbox(
 
 st.divider()
 
-# -------- Daten filtern --------
+# -------------------- Daten filtern --------------------
 df_jahr_filtered = df[df['jahr_opdatum'].between(*jahr_range)].copy()
 df_filtered = df[
     (df['jahr_opdatum'].between(*jahr_range)) &
     (df['quartal_opdatum'].isin(quartal_filter))
 ].copy()
+
 # Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['bereich'] == bereich_filter]
