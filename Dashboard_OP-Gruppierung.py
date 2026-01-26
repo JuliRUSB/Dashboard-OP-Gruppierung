@@ -234,6 +234,8 @@ with st.sidebar:
     
     st.session_state['selected_quartale'] = sorted(quartal_filter)
 
+    st.divider()
+    
     # Bereich-Filter
     bereich_filter = st.selectbox(
         "Bereich auswählen:", 
@@ -245,8 +247,6 @@ with st.sidebar:
         "Zugang auswählen:", 
         ["Alle"] + sorted(df['zugang'].unique())
     )
-
-    st.divider()
 
 
 # -------------------- Daten filtern --------------------
