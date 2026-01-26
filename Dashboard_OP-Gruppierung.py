@@ -203,9 +203,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.sidebar:
-    st.header("Filter")
-    
 # ==================================================
 # Sidebar: Jahr-Range-Slider + Quartal-Buttons
 # ==================================================
@@ -223,21 +220,19 @@ with st.sidebar:
         value=(min_jahr, max_jahr)
     )
     
-    # Quartal-Buttons
-    verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
-    quartal_filter = []
-    if verfuegbare_quartale:
-        cols = st.columns(len(verfuegbare_quartale))
-        for i, q in enumerate(verfuegbare_quartale):
-            active = q in st.session_state.get('selected_quartale', verfuegbare_quartale)
-            if cols[i].button(f"{q}", key=f"quartal_{q}"):
-                if active:
-                    st.session_state['selected_quartale'].remove(q)
-                else:
-                    st.session_state['selected_quartale'].append(q)
-            if q in st.session_state.get('selected_quartale', []):
+    # Quartal-Buttons (Q1-Q4)
+    quartal_filter = st.session_state.get('selected_quartale', [1, 2, 3, 4])
+    quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
+    
+    cols = st.columns(4)
+    for i, q in enumerate([1, 2, 3, 4]):
+        if cols[i].button(quartal_labels[i], key=f"quartal_{q}"):
+            if q in quartal_filter:
+                quartal_filter.remove(q)
+            else:
                 quartal_filter.append(q)
-
+    
+    st.session_state['selected_quartale'] = sorted(quartal_filter)
 
 # -------------------- Bereich & Zugang --------------------
 bereich_filter = st.selectbox(
