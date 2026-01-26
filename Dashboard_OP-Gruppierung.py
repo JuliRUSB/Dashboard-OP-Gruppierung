@@ -206,63 +206,38 @@ st.markdown(
 with st.sidebar:
     st.header("Filter")
     
-# -------------------- Session-State initialisieren --------------------
-min_jahr = int(df['jahr_opdatum'].min())
-max_jahr = int(df['jahr_opdatum'].max())
-
-# selected_jahre sicher initialisieren
-if 'selected_jahre' not in st.session_state or len(st.session_state.selected_jahre) != 2:
-    st.session_state.selected_jahre = [min_jahr, max_jahr]
-else:
-    st.session_state.selected_jahre = sorted(st.session_state.selected_jahre)
-
-# selected_quartale sicher initialisieren
-if 'selected_quartale' not in st.session_state:
-    st.session_state.selected_quartale = sorted(df['quartal_opdatum'].unique())
-
-# -------------------- Jahr-Filter (Range-Slider) --------------------
-jahr_range = st.slider(
-    "Operationsjahr wählen:",
-    min_value=min_jahr,
-    max_value=max_jahr,
-    value=tuple(st.session_state.selected_jahre)
-)
-
-# Änderungen erkennen und Quartale anpassen
-if list(jahr_range) != st.session_state.selected_jahre:
-    neue_jahre_set = set(range(jahr_range[0], jahr_range[1]+1))
-    alte_jahre_set = set(st.session_state.selected_jahre)
+# ==================================================
+# Sidebar: Jahr-Range-Slider + Quartal-Buttons
+# ==================================================
+with st.sidebar:
+    st.header("Filter")
     
-    hinzugefuegt = neue_jahre_set - alte_jahre_set
-    entfernt = alte_jahre_set - neue_jahre_set
+    # Jahr-Range-Slider
+    min_jahr = int(df['jahr_opdatum'].min())
+    max_jahr = int(df['jahr_opdatum'].max())
+    
+    jahr_range = st.slider(
+        "Operationsjahr wählen:",
+        min_value=min_jahr,
+        max_value=max_jahr,
+        value=(min_jahr, max_jahr)
+    )
+    
+    # Quartal-Buttons
+    verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
+    quartal_filter = []
+    if verfuegbare_quartale:
+        cols = st.columns(len(verfuegbare_quartale))
+        for i, q in enumerate(verfuegbare_quartale):
+            active = q in st.session_state.get('selected_quartale', verfuegbare_quartale)
+            if cols[i].button(f"{q}", key=f"quartal_{q}"):
+                if active:
+                    st.session_state['selected_quartale'].remove(q)
+                else:
+                    st.session_state['selected_quartale'].append(q)
+            if q in st.session_state.get('selected_quartale', []):
+                quartal_filter.append(q)
 
-    neue_quartale = set(st.session_state.selected_quartale)
-
-    if hinzugefuegt:
-        quartale_hinzu = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
-        neue_quartale.update(quartale_hinzu)
-    if entfernt:
-        quartale_entf = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
-        neue_quartale -= set(quartale_entf)
-
-    st.session_state.selected_quartale = sorted(neue_quartale)
-    st.session_state.selected_jahre = list(jahr_range)
-
-# -------------------- Quartal-Filter (Toggle Buttons) --------------------
-verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
-quartal_filter = []
-
-if verfuegbare_quartale:
-    cols = st.columns(len(verfuegbare_quartale))
-    for i, q in enumerate(verfuegbare_quartale):
-        active = q in st.session_state.selected_quartale
-        if cols[i].button(f"Q{q}", key=f"quartal_{q}"):
-            if active:
-                st.session_state.selected_quartale.remove(q)
-            else:
-                st.session_state.selected_quartale.append(q)
-        if q in st.session_state.selected_quartale:
-            quartal_filter.append(q)
 
 # -------------------- Bereich & Zugang --------------------
 bereich_filter = st.selectbox(
