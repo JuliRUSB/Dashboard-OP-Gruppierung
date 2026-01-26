@@ -265,9 +265,8 @@ with st.sidebar:
 
 
 # -------------------- Daten filtern --------------------
-# Datentypen angleichen
-selected_jahre = [int(j) for j in st.session_state.get('selected_jahre', [])]
-selected_quartale = [int(q) for q in st.session_state.get('selected_quartale', [])]
+selected_jahre = st.session_state['selected_jahre']
+selected_quartale = st.session_state['selected_quartale']
 
 # Sicherheitscheck
 if not selected_jahre or not selected_quartale:
