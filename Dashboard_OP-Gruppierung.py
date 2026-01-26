@@ -206,18 +206,21 @@ st.markdown(
 with st.sidebar:
     st.header("Filter")
     
-# -------------------- Session-State --------------------
-if 'selected_jahre' not in st.session_state:
-    st.session_state.selected_jahre = [int(df['jahr_opdatum'].min()), int(df['jahr_opdatum'].max())]
-
-if 'selected_quartale' not in st.session_state:
-    st.session_state.selected_quartale = sorted(df['quartal_opdatum'].unique())
-
-# -------------------- Jahr-Filter (Slider) --------------------
+# -------------------- Session-State initialisieren --------------------
 min_jahr = int(df['jahr_opdatum'].min())
 max_jahr = int(df['jahr_opdatum'].max())
 
-# Slider – immer sicherstellen, dass es 2 Werte sind
+# selected_jahre sicher initialisieren
+if 'selected_jahre' not in st.session_state or len(st.session_state.selected_jahre) != 2:
+    st.session_state.selected_jahre = [min_jahr, max_jahr]
+else:
+    st.session_state.selected_jahre = sorted(st.session_state.selected_jahre)
+
+# selected_quartale sicher initialisieren
+if 'selected_quartale' not in st.session_state:
+    st.session_state.selected_quartale = sorted(df['quartal_opdatum'].unique())
+
+# -------------------- Jahr-Filter (Range-Slider) --------------------
 jahr_range = st.slider(
     "Operationsjahr wählen:",
     min_value=min_jahr,
@@ -227,7 +230,6 @@ jahr_range = st.slider(
 
 # Änderungen erkennen und Quartale anpassen
 if list(jahr_range) != st.session_state.selected_jahre:
-    # Hinzugefügte und entfernte Jahre
     neue_jahre_set = set(range(jahr_range[0], jahr_range[1]+1))
     alte_jahre_set = set(st.session_state.selected_jahre)
     
@@ -250,17 +252,17 @@ if list(jahr_range) != st.session_state.selected_jahre:
 verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
 quartal_filter = []
 
-cols = st.columns(len(verfuegbare_quartale))
-for i, q in enumerate(verfuegbare_quartale):
-    active = q in st.session_state.selected_quartale
-    if cols[i].button(f"Q{q}", key=f"quartal_{q}"):
-        if active:
-            st.session_state.selected_quartale.remove(q)
-        else:
-            st.session_state.selected_quartale.append(q)
-    # Aktuelle Auswahl für Anzeige
-    if q in st.session_state.selected_quartale:
-        quartal_filter.append(q)
+if verfuegbare_quartale:
+    cols = st.columns(len(verfuegbare_quartale))
+    for i, q in enumerate(verfuegbare_quartale):
+        active = q in st.session_state.selected_quartale
+        if cols[i].button(f"Q{q}", key=f"quartal_{q}"):
+            if active:
+                st.session_state.selected_quartale.remove(q)
+            else:
+                st.session_state.selected_quartale.append(q)
+        if q in st.session_state.selected_quartale:
+            quartal_filter.append(q)
 
 # -------------------- Bereich & Zugang --------------------
 bereich_filter = st.selectbox(
@@ -281,6 +283,10 @@ df_filtered = df[
     (df['jahr_opdatum'].between(*jahr_range)) &
     (df['quartal_opdatum'].isin(quartal_filter))
 ].copy()
+
+# Optional: gefilterte Daten anzeigen
+st.write("Gefilterte Daten nach Jahr und Quartal:")
+st.dataframe(df_filtered)
 
 # Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
