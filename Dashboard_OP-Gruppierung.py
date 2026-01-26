@@ -220,25 +220,31 @@ with st.sidebar:
         value=(min_jahr, max_jahr)
     )
     
-     # Quartal-Buttons (Q1-Q4)
-    if 'selected_quartale' not in st.session_state or not isinstance(st.session_state['selected_quartale'], list):
-        st.session_state['selected_quartale'] = [1,2,3,4]
+    # 1. Sicherstellen, dass die Liste im Session State existiert
+    if 'selected_quartale' not in st.session_state:
+        st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-    quartal_filter = st.session_state['selected_quartale']
+    # 2. Definition der Variablen (Sicherstellen, dass sie existieren)
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
+    quartal_werte = [1, 2, 3, 4]
     
-    for i, q in enumerate([1, 2, 3, 4]):
-        # Ein Klick invertiert den Status im Session State
-        if cols[i].button(quartal_labels[i], key=f"btn_q_{q}"):
-            if q in st.session_state.selected_quartale:
-                st.session_state.selected_quartale.remove(q)
+    st.write("Ausgewählte Quartale:", ", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
+
+    # 3. Spalten für die Buttons erstellen
+    cols = st.columns(4)
+    
+    # 4. Die Schleife
+    for i, q in enumerate(quartal_werte):
+        # Prüfung: Existiert cols[i] und quartal_labels[i]?
+        button_label = quartal_labels[i]
+        
+        # Button-Logik
+        if cols[i].button(button_label, key=f"btn_q_{q}"):
+            if q in st.session_state['selected_quartale']:
+                st.session_state['selected_quartale'].remove(q)
             else:
-                st.session_state.selected_quartale.append(q)
-            st.rerun() # Seite neu laden, um Filter sofort anzuwenden
-    
-    # Sortieren und sicherstellen, dass nur Zahlen drin sind
-    quartal_filter = [int(q) for q in quartal_filter if isinstance(q, (int, float))]
-    st.session_state['selected_quartale'] = sorted(quartal_filter)
+                st.session_state['selected_quartale'].append(q)
+            st.rerun() # Seite neu laden, um Filter anzuwenden
 
     # Jahre speichern
     st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1]+1))
