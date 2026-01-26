@@ -355,14 +355,14 @@ with col1:
         st.plotly_chart(fig_jahr, use_container_width=True)
 
 # Graph 2: Quartal
-# 4. Der Quartals-Graph (Graph 2)
 with col2:
     if not df_filtered.empty:
-        # Gruppierung
-        q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum']).size().reset_index(name='count')
+        # Gruppierung nach Jahr und Quartal
+        q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
+        q_counts.columns = ['jahr_opdatum', 'quartal_opdatum', 'count']
         
         # Erstellung der X-Achsen-Beschriftung (z.B. "2026 Q1")
-        # Wir wandeln erst in int um, um ".0" zu vermeiden, dann in str
+        # Umwandlung in int entfernt das ".0", falls vorhanden
         q_counts['x_label'] = (
             q_counts['jahr_opdatum'].astype(int).astype(str) + 
             " Q" + 
@@ -372,23 +372,24 @@ with col2:
         fig_quartal = px.bar(
             q_counts, 
             x='x_label', 
-            y='count',
+            y='count', 
             text='count',
             color=q_counts['jahr_opdatum'].astype(str),
             color_discrete_sequence=px.colors.qualitative.Safe,
             title="Fallzahlen pro Quartal"
         )
         
+        fig_quartal.update_traces(textfont_size=16, textposition='inside')
         fig_quartal.update_layout(
             xaxis_title=None, 
             yaxis_title=None, 
-            showlegend=False,
-            xaxis={'categoryorder':'category ascending'}
+            showlegend=False, 
+            height=400,
+            xaxis={'categoryorder': 'category ascending'}
         )
         st.plotly_chart(fig_quartal, use_container_width=True)
     else:
-        st.info("Keine Daten für die gewählte Filterkombination vorhanden.")
-
+        st.warning("Keine Daten für die gewählte Filterkombination vorhanden.")
 st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
