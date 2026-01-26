@@ -261,33 +261,7 @@ with st.sidebar:
         st.session_state.selected_quartale = quartal_filter
 
     st.divider()
-
-    # Beispiel-Daten
-df = pd.DataFrame({
-    "opdatum": pd.to_datetime(["2022-03-15", "2023-06-20", "2024-01-10"])
-})
-
-# Jahr extrahieren
-df['op_jahr'] = df['opdatum'].dt.year
-
-# Min/Max Jahr bestimmen
-min_jahr = int(df['op_jahr'].min())
-max_jahr = int(df['op_jahr'].max())
-
-# Range-Slider für Jahre
-jahr_range = st.slider(
-    "Operationsjahr wählen",
-    min_value=min_jahr,
-    max_value=max_jahr,
-    value=(min_jahr, max_jahr)
-)
-
-st.write("Gewählter Bereich:", jahr_range)
-
-# Filter auf DataFrame anwenden
-df_filtered = df[(df['op_jahr'] >= jahr_range[0]) & (df['op_jahr'] <= jahr_range[1])]
-st.dataframe(df_filtered)
-    
+   
     # Bereich-Filter (Dropdown)
     bereich_filter = st.selectbox(
         "Bereich auswählen:", 
