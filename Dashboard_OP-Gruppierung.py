@@ -356,24 +356,46 @@ with col1:
 
 # Graph 2: Quartal
 with col2:
-    if len(df_filtered) > 0:
-        quartal_counts_df = df_filtered.groupby('quartal_opdatum', as_index=False).size()
-        quartal_counts_df.columns = ['quartal_opdatum', 'count']
+    if not df_filtered.empty:
+        # 1. Gruppieren nach Jahr und Quartal für korrekte Sortierung und Beschriftung
+        quartal_counts_df = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
+        quartal_counts_df.columns = ['jahr', 'quartal', 'count']
         
-        quartal_counts_df['jahr'] = quartal_counts_df['quartal_opdatum'].str.split('-').str[1]
-        quartal_farben = get_color_map(quartal_counts_df['jahr'])
-        marker_colors_quartal = [quartal_farben[jahr] for jahr in quartal_counts_df['jahr']]
+        # 2. Anzeige-Namen erstellen (z.B. "2024 Q1")
+        quartal_counts_df['display_name'] = (
+            quartal_counts_df['jahr'].astype(str) + " Q" + quartal_counts_df['quartal'].astype(str)
+        )
+        
+        # 3. Jahr als String für die Farblogik (damit es zur Safe-Palette passt)
+        quartal_counts_df['jahr_str'] = quartal_counts_df['jahr'].astype(str)
         
         fig_quartal = px.bar(
             quartal_counts_df, 
-            x='quartal_opdatum', 
+            x='display_name', 
             y='count', 
-            text='count', 
+            text='count',
+            color='jahr_str', # Färbung basierend auf dem Jahr
+            color_discrete_sequence=px.colors.qualitative.Safe,
             title="Fallzahlen pro Quartal"
         )
-        fig_quartal.update_traces(marker_color=marker_colors_quartal, textfont_size=16, textposition='inside')
-        fig_quartal.update_layout(xaxis_title=None, yaxis_title=None, showlegend=False, height=400)
+        
+        fig_quartal.update_traces(
+            textfont_size=16, 
+            textposition='inside'
+        )
+        
+        fig_quartal.update_layout(
+            xaxis_title=None, 
+            yaxis_title=None, 
+            showlegend=False, 
+            height=400,
+            # Sorgt dafür, dass die Quartale chronologisch sortiert bleiben
+            xaxis={'categoryorder':'category ascending'}
+        )
+        
         st.plotly_chart(fig_quartal, use_container_width=True)
+    else:
+        st.info("Keine Quartalsdaten verfügbar.")
 
 st.divider()
 
