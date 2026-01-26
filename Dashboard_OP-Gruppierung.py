@@ -262,18 +262,31 @@ with st.sidebar:
 
     st.divider()
 
-    widgets.IntRangeSlider(
-    value=[5, 7],
-    min=0,
-    max=10,
-    step=1,
-    description='Test:',
-    disabled=False,
-    continuous_update=False,
-    orientation='horizontal',
-    readout=True,
-    readout_format='d',
+    # Beispiel-Daten
+df = pd.DataFrame({
+    "opdatum": pd.to_datetime(["2022-03-15", "2023-06-20", "2024-01-10"])
+})
+
+# Jahr extrahieren
+df['op_jahr'] = df['opdatum'].dt.year
+
+# Min/Max Jahr bestimmen
+min_jahr = int(df['op_jahr'].min())
+max_jahr = int(df['op_jahr'].max())
+
+# Range-Slider für Jahre
+jahr_range = st.slider(
+    "Operationsjahr wählen",
+    min_value=min_jahr,
+    max_value=max_jahr,
+    value=(min_jahr, max_jahr)
 )
+
+st.write("Gewählter Bereich:", jahr_range)
+
+# Filter auf DataFrame anwenden
+df_filtered = df[(df['op_jahr'] >= jahr_range[0]) & (df['op_jahr'] <= jahr_range[1])]
+st.dataframe(df_filtered)
     
     # Bereich-Filter (Dropdown)
     bereich_filter = st.selectbox(
