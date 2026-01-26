@@ -284,10 +284,6 @@ df_filtered = df[
     (df['quartal_opdatum'].isin(quartal_filter))
 ].copy()
 
-# Optional: gefilterte Daten anzeigen
-st.write("Gefilterte Daten nach Jahr und Quartal:")
-st.dataframe(df_filtered)
-
 # Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['bereich'] == bereich_filter]
