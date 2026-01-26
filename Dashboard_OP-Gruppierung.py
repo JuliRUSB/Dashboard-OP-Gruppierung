@@ -206,84 +206,77 @@ st.markdown(
 with st.sidebar:
     st.header("Filter")
     
-    # Filter: Jahr (Multi-Select)
-    jahr_filter = st.multiselect(
-        "Jahr auswählen:",
-        options=alle_jahre,
-        default=st.session_state.selected_jahre,
-        key='jahr_select'
-    )
+    # Session-State initialisieren
+if 'selected_jahre' not in st.session_state:
+    st.session_state.selected_jahre = [df['jahr_opdatum'].min(), df['jahr_opdatum'].max()]
+if 'selected_quartale' not in st.session_state:
+    st.session_state.selected_quartale = sorted(df['quartal_opdatum'].unique())
 
-    # Änderungen in Jahr-Auswahl erkennen und Quartale anpassen
-    if jahr_filter != st.session_state.selected_jahre:
-        hinzugefuegt = set(jahr_filter) - set(st.session_state.selected_jahre)
-        entfernt = set(st.session_state.selected_jahre) - set(jahr_filter)
-        
-        neue_quartale = set(st.session_state.selected_quartale)
-        
-        # Neue Jahre -> Quartale hinzufügen
-        if hinzugefuegt:
-            jahr_quartale = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
-            neue_quartale.update(jahr_quartale)
-        
-        # Entfernte Jahre -> Quartale entfernen
-        if entfernt:
-            jahr_quartale = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
-            neue_quartale -= set(jahr_quartale)
-        
-        st.session_state.selected_quartale = sorted(neue_quartale)
-        st.session_state.selected_jahre = jahr_filter
+# -------- Filter: Jahr (Slider) --------
+min_jahr = int(df['jahr_opdatum'].min())
+max_jahr = int(df['jahr_opdatum'].max())
 
-    # Filter: Quartal
-    verfuegbare_quartale = sorted(df[df['jahr_opdatum'].isin(jahr_filter)]['quartal_opdatum'].unique()) if jahr_filter else []
-    gueltige_quartale = [q for q in st.session_state.selected_quartale if q in verfuegbare_quartale]
+jahr_range = st.slider(
+    "Operationsjahr wählen:",
+    min_value=min_jahr,
+    max_value=max_jahr,
+    value=tuple(st.session_state.selected_jahre)
+)
 
-    quartal_filter = st.multiselect(
-        "Quartal auswählen:",
-        options=verfuegbare_quartale,
-        default=gueltige_quartale,
-        key='quartal_select'
-    )
+# Änderungen erkennen und Quartale anpassen
+if list(jahr_range) != st.session_state.selected_jahre:
+    hinzugefuegt = set(range(jahr_range[0], jahr_range[1]+1)) - set(st.session_state.selected_jahre)
+    entfernt = set(st.session_state.selected_jahre) - set(range(jahr_range[0], jahr_range[1]+1))
+    
+    neue_quartale = set(st.session_state.selected_quartale)
+    
+    # Neue Jahre -> Quartale hinzufügen
+    if hinzugefuegt:
+        jahr_quartale = df[df['jahr_opdatum'].isin(hinzugefuegt)]['quartal_opdatum'].unique()
+        neue_quartale.update(jahr_quartale)
+    
+    # Entfernte Jahre -> Quartale entfernen
+    if entfernt:
+        jahr_quartale = df[df['jahr_opdatum'].isin(entfernt)]['quartal_opdatum'].unique()
+        neue_quartale -= set(jahr_quartale)
+    
+    st.session_state.selected_quartale = sorted(neue_quartale)
+    st.session_state.selected_jahre = list(jahr_range)
 
-    # Änderungen in Quartal-Auswahl erkennen und Jahre anpassen
-    if quartal_filter != gueltige_quartale:
-        neue_jahre = []
-        for jahr in jahr_filter:
-            jahr_quartale = df[df['jahr_opdatum'] == jahr]['quartal_opdatum'].unique()
-            if any(q in quartal_filter for q in jahr_quartale):
-                neue_jahre.append(jahr)
-        
-        if neue_jahre != jahr_filter:
-            st.session_state.selected_jahre = neue_jahre
-            st.session_state.selected_quartale = quartal_filter
-            st.rerun()
-        
-        st.session_state.selected_quartale = quartal_filter
+# -------- Filter: Quartal (Buttons) --------
+verfuegbare_quartale = sorted(df[df['jahr_opdatum'].between(*jahr_range)]['quartal_opdatum'].unique())
+quartal_filter = []
 
-    st.divider()
-   
-    # Bereich-Filter (Dropdown)
-    bereich_filter = st.selectbox(
-        "Bereich auswählen:", 
-        ["Alle"] + sorted(df['bereich'].unique())
-    )
+cols = st.columns(len(verfuegbare_quartale))
+for i, q in enumerate(verfuegbare_quartale):
+    if cols[i].button(f"Q{q}", key=f"quartal_{q}"):
+        if q in st.session_state.selected_quartale:
+            st.session_state.selected_quartale.remove(q)
+        else:
+            st.session_state.selected_quartale.append(q)
 
-    # Zugang-Filter (Dropdown)
-    zugang_filter = st.selectbox(
-        "Zugang auswählen:", 
-        ["Alle"] + sorted(df['zugang'].unique())
-    )
+quartal_filter = [q for q in st.session_state.selected_quartale if q in verfuegbare_quartale]
+
+# -------- Bereich-Filter (Dropdown) --------
+bereich_filter = st.selectbox(
+    "Bereich auswählen:", 
+    ["Alle"] + sorted(df['bereich'].unique())
+)
+
+# -------- Zugang-Filter (Dropdown) --------
+zugang_filter = st.selectbox(
+    "Zugang auswählen:", 
+    ["Alle"] + sorted(df['zugang'].unique())
+)
+
+st.divider()
 
 # -------- Daten filtern --------
-# Nach Jahren filtern für Jahresgraph
-df_jahr_filtered = df[df['jahr_opdatum'].isin(jahr_filter)].copy()
-
-# Nach Jahren und Quartalen filtern für Quartalgraph & Details
+df_jahr_filtered = df[df['jahr_opdatum'].between(*jahr_range)].copy()
 df_filtered = df[
-    (df['jahr_opdatum'].isin(jahr_filter)) &
+    (df['jahr_opdatum'].between(*jahr_range)) &
     (df['quartal_opdatum'].isin(quartal_filter))
 ].copy()
-
 # Weitere Filter anwenden (Bereich, Zugang)
 if bereich_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['bereich'] == bereich_filter]
