@@ -225,10 +225,11 @@ with st.sidebar:
         st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
     # 2. Definition der Variablen (Sicherstellen, dass sie existieren)
+    "Quartal(e) auswählen:",
     quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
     quartal_werte = [1, 2, 3, 4]
     
-    st.write("Ausgewählte Quartale:", ", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
+    st.write(.join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
 
     # 3. Spalten für die Buttons erstellen
     cols = st.columns(4)
