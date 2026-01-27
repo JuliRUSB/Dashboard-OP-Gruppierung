@@ -481,7 +481,7 @@ with tab1:
             textfont=dict(size=16)
         )
 
-        fig.update_xaxes(title="Jahr")
+        fig.update_xaxes(title=None)
         fig.update_yaxes(title="Anzahl OPs")
         
         st.plotly_chart(fig, use_container_width=True)
