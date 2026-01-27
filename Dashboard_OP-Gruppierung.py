@@ -574,30 +574,43 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
-fig_dindo = px.bar(
-    dindo_counts,
-    x='jahr_opdatum',
-    y='count',
-    color='max_dindo_calc',
-    barmode='group', # Balken nebeneinander statt übereinander
-    title="Dindo-Grade im Vergleich der Jahre",
-    color_discrete_sequence=COLOR_PALETTE,
-    text_auto=True
-)
-st.plotly_chart(fig_dindo, use_container_width=True)
-# HSM-Balkendiagramm
-with tab5:
-    if df_filtered['hsm'].notna().any():
-        hsm_counts = (
+with tab4:
+    if df_filtered['max_dindo_calc'].notna().any():
+        # 1. Daten aggregieren (wie in deinem Code)
+        dindo_counts = (
             df_filtered
-            .dropna(subset=['hsm', 'jahr_opdatum'])
-            .assign(
-                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
-            )
-            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
+            .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
+            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
         )
-        hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
+        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
+        
+        # 2. Pivot-Tabelle erstellen (Matrix: Jahre oben, Dindo-Grade links)
+        # fillna(0) ist wichtig, damit keine Lücken in der Heatmap entstehen
+        dindo_matrix = dindo_counts.pivot(index='dindo', columns='jahr_opdatum', values='count').fillna(0)
+        
+        # Sortierung der Grade (V oben, I unten oder umgekehrt)
+        dindo_matrix = dindo_matrix.sort_index(ascending=False)
+
+        # 3. Heatmap erstellen
+        fig_heat = px.imshow(
+            dindo_matrix,
+            labels=dict(x="Jahr", y="Clavien-Dindo Grad", color="Anzahl"),
+            x=dindo_matrix.columns.astype(str), # Jahre als Text für die Achse
+            y=dindo_matrix.index,
+            color_continuous_scale="Reds", # Farbskala von Weiß nach Rot
+            text_auto=True,                # Schreibt die Zahlen direkt in die Quadrate
+            title="Komplikations-Frequenz (Matrix-Ansicht)"
+        )
+
+        fig_heat.update_layout(
+            plot_bgcolor="rgba(0,0,0,0)",
+            height=400
+        )
+
+        st.plotly_chart(fig_heat, use_container_width=True)
+    else:
+        st.info("Keine Komplikationsdaten verfügbar")
 
         fig_hsm = px.bar(
             hsm_counts,
