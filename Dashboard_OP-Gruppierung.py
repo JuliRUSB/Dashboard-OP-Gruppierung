@@ -440,6 +440,9 @@ with tab1:
         # 1. Daten aggregieren
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
 
+        # WICHTIG: Umwandlung in String löst den TypeError bei px.bar (Plotly Bug 2026)
+        df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
+
         # 2. Spalten erstellen
         col1, col2 = st.columns(2)
 
@@ -454,7 +457,7 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
-            fig_abs.update_xaxes(type='category', title="Jahr")
+            fig_abs.update_xaxes(title="Jahr")
             fig_abs.update_layout(showlegend=False) 
             st.plotly_chart(fig_abs, use_container_width=True)
 
@@ -470,7 +473,7 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
-            fig_rel.update_xaxes(type='category', title="Jahr")
+            fig_rel.update_xaxes(title="Jahr")
             fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
             st.plotly_chart(fig_rel, use_container_width=True)
             
