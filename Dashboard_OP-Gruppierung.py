@@ -600,7 +600,7 @@ with tab4:
             labels=dict(x="Jahr", y="Clavien-Dindo Grad", color="Anzahl"),
             x=[str(c) for c in dindo_matrix.columns], 
             y=dindo_matrix.index,
-            color_continuous_scale="Reds", 
+            color_continuous_scale="Greens", 
             text_auto=True,                
             title="Komplikations-Matrix (Häufigkeit)"
         )
