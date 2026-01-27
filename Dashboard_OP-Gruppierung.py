@@ -240,7 +240,7 @@ with st.sidebar:
     selected = st.pills(
         label="Zeitraum wählen", # Label kann mit label_visibility="collapsed" versteckt werden
         options=quartal_werte,
-        format_func=lambda x: quartal_labels.get[x],
+        format_func=lambda x: quartal_labels[x],
         selection_mode="multi",
         default=st.session_state['selected_quartale'],
         key="pills_selection"
