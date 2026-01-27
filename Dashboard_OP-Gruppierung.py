@@ -608,7 +608,13 @@ with tab4:
         fig_heat.update_layout(
             height=700,
             xaxis_title=None,
-            yaxis_title="Dindo Grad"
+            yaxis_title="Dindo Grad",
+            font=dict(size=20), # 1. Schriftgröße der ZAHLEN IN DER MATRIX (Annotations)
+            yaxis=dict(showgrid=True, gridcolor="white", gridwidth=3)
+
+            # 2. Schriftgröße der ACHSEN-BESCHRIFTUNG (optional)
+            xaxis=dict(tickfont=dict(size=18)),
+            yaxis=dict(tickfont=dict(size=18))
         )
         
         st.plotly_chart(fig_heat, use_container_width=True)
