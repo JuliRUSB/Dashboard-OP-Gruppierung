@@ -616,24 +616,26 @@ with tab4:
     else:
         st.info("Keine Komplikationsdaten (Clavien-Dindo) für die aktuelle Auswahl verfügbar.")
         
-# HSM-Balkendiagramm        
-        fig_hsm = px.bar(
-            hsm_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='hsm',
-            barmode='group',
-            text='count',
-            title="HSM nach Jahr",
-            labels={'hsm': 'HSM'},
-            color_discrete_sequence=COLOR_PALETTE
-        )
-        fig_hsm.update_traces(textposition='inside', textfont_size=18)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
-        st.plotly_chart(fig_hsm, use_container_width=True)
+# HSM-Balkendiagramm
+with tab5:
+if not hsm_counts.empty:
+    fig_hsm = px.bar(
+        hsm_counts,
+        x='jahr_opdatum',
+        y='count',
+        color='hsm',
+        barmode='group',
+        text='count',
+        title="HSM nach Jahr",
+        labels={'hsm': 'HSM'},
+        color_discrete_sequence=COLOR_PALETTE
+    )
+    fig_hsm.update_traces(textposition='inside', textfont_size=18)
+    fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+    st.plotly_chart(fig_hsm, use_container_width=True)
         
-    else:
-        st.info("Keine HSM-Informationen verfügbar")
+else:
+    st.info("Keine HSM-Informationen verfügbar")
 
 # LOS (Length of Stay)
 with tab6:
