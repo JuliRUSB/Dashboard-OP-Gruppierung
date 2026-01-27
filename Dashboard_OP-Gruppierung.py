@@ -469,6 +469,7 @@ with tab1:
             y='count',
             color='bereich',
             text='display_text', 
+            textfont_size=16,
             title="Fallzahlen: Absolut (Anteil %)",
             barmode='stack',
             color_discrete_sequence=COLOR_PALETTE
