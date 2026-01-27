@@ -464,6 +464,7 @@ with tab1:
         # 4. Das Diagramm erstellen
         fig = px.bar(
             df_trend,
+            height=700,
             x='jahr_opdatum',
             y='count',
             color='bereich',
