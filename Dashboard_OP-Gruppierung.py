@@ -436,43 +436,27 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 
 # Bereich-Piechart
 with tab1:
-    if not df_filtered.empty:
-        col1, col2 = st.columns([1, 1.5]) # Rechts etwas breiter für die Zeitachse
+    # 2. Aggregieren für das Balkendiagramm
+    # Wir zählen die Fälle pro Jahr und Bereich
+    df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
 
-        with col1:
-            # 1. Bestehendes Pie-Chart für den Gesamtüberblick
-            fig_pie = px.pie(
-                df_filtered, 
-                names='bereich', 
-                title="Gesamtverteilung", 
-                hole=0.3,
-                color_discrete_sequence=COLOR_PALETTE
-            )
-            fig_pie.update_layout(showlegend=False) # Legende aus, da im Bar-Chart sichtbar
-            st.plotly_chart(fig_pie, use_container_width=True)
-
-        with col2:
-            # 2. Aggregieren für das Balkendiagramm
-            # Wir zählen die Fälle pro Jahr und Bereich
-            df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
-
-            fig_bar = px.bar(
-                df_trend,
-                x='jahr_opdatum',
-                y='count',
-                color='bereich',
-                title="Entwicklung über die Jahre",
-                barmode='stack', # Stapelt die Bereiche übereinander
-                color_discrete_sequence=COLOR_PALETTE,
-                text_auto=True # Zeigt die Zahlen direkt auf den Balken an
-            )
+    fig_bar = px.bar(
+        df_trend,
+        x='jahr_opdatum',
+        y='count',
+        color='bereich',
+        title="Entwicklung über die Jahre",
+        barmode='stack', # Stapelt die Bereiche übereinander
+        color_discrete_sequence=COLOR_PALETTE,
+        text_auto=True # Zeigt die Zahlen direkt auf den Balken an
+    )
             
-            # X-Achse sauber formatieren (keine halben Jahre wie 2022.5)
-            fig_bar.update_xaxes(type='category') 
+    # X-Achse sauber formatieren (keine halben Jahre wie 2022.5)
+    fig_bar.update_xaxes(type='category') 
             
-            st.plotly_chart(fig_bar, use_container_width=True)
-    else:
-        st.info("Keine Daten für die gewählten Filter vorhanden.")
+    st.plotly_chart(fig_bar, use_container_width=True)
+else:
+    st.info("Keine Daten für die gewählten Filter vorhanden.")
 
 #with tab1:
 #    if df_filtered['bereich'].nunique() > 0:
