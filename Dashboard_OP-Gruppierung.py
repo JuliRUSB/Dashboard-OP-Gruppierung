@@ -437,31 +437,36 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 # Bereich-Analyse
 with tab1:
     if not df_filtered.empty:
-        # 1. Daten aggregieren
+        # 1. Absolute Zahlen pro Jahr und Bereich berechnen
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
+        
+        # 2. Gesamtsumme pro Jahr berechnen
+        df_jahr_sum = df_filtered.groupby('jahr_opdatum').size().reset_index(name='total_jahr')
+        
+        # 3. Zusammenführen und Prozent exakt berechnen
+        df_trend = df_trend.merge(df_jahr_sum, on='jahr_opdatum')
+        df_trend['prozent'] = (df_trend['count'] / df_trend['total_jahr']) * 100
+        
+        # Jahr als String für die Achse
         df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
 
-        # 2. Prozente für die Klammer-Anzeige berechnen
-        df_trend['prozent'] = df_trend.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
-
-        # 3. Das Diagramm erstellen
+        # 4. Das Diagramm erstellen
         fig = px.bar(
             df_trend,
             x='jahr_opdatum',
             y='count',
             color='bereich',
-            title="OP-Aufkommen: Absolut (und Anteil in %)",
+            title="OP-Aufkommen: Absolut (Anteil % pro Jahr)",
             barmode='stack',
             color_discrete_sequence=COLOR_PALETTE
         )
 
-        # 4. Der entscheidende Teil: Text-Kombination (Zahl und % in Klammern)
+        # Beschriftung in einer Zeile: Zahl (%)
         fig.update_traces(
-            # %{y} ist die absolute Zahl, %{customdata:.1f} ist der Prozentwert aus der Spalte
             texttemplate='%{y} (%{customdata:.1f}%)', 
             textposition='inside',
             insidetextanchor='middle',
-            customdata=df_trend['prozent'] # Hier übergeben wir die Prozent-Spalte an Plotly
+            customdata=df_trend['prozent'] # Hier liegen jetzt die korrekt gematchten Prozente
         )
 
         fig.update_xaxes(title="Jahr")
@@ -470,7 +475,7 @@ with tab1:
         st.plotly_chart(fig, use_container_width=True)
         
     else:
-        st.info("Keine Daten für die gewählten Filter vorhanden.")
+        st.info("Keine Daten vorhanden.")
 
 #with tab1:
 #    if not df_filtered.empty:
