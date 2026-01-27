@@ -575,46 +575,58 @@ with tab3:
 # Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
-        # 1. Daten aggregieren
+        # Aggregation nach Jahr und Clavien-Dindo-Grad
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
-            .groupby(['jahr_opdatum', 'max_dindo_calc'])
+            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
-            .reset_index(name='count')
         )
-        
-        # Jahr als String für die X-Achse
+        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
-        # Dindo-Grade sortieren
-        dindo_order = sorted(dindo_counts['max_dindo_calc'].unique())
 
-        # 2. Gestapeltes Balkendiagramm (X = Jahr, Stapel = Dindo-Grad)
+        # Reihenfolge der Dindo-Kategorien (von oben nach unten: V bis I)
+        dindo_order = sorted(dindo_counts['dindo'].unique(), reverse=True)
+
+        # Balkendiagramm erstellen
         fig_dindo = px.bar(
             dindo_counts,
-            x='jahr_opdatum',         # Jahr auf der X-Achse
-            y='count',                # Anzahl auf der Y-Achse
-            color='max_dindo_calc',   # Stapelung nach Dindo-Graden
-            title="Clavien-Dindo Komplikationen pro Jahr",
-            barmode='stack',          # Stapeln
+            x='count',
+            y='dindo',
+            color='jahr_opdatum', # Stapelung nach Jahr
+            orientation='h',
+            barmode='stack',     # GEÄNDERT auf stack
+            title="Clavien-Dindo Komplikationen (gestapelt)",
             color_discrete_sequence=COLOR_PALETTE,
-            text='count',             # Nur absolute Zahlen
-            category_orders={"max_dindo_calc": dindo_order}
+            text='count'
         )
 
-        # 3. Balken-Einstellungen
+        # Balken-Einstellungen
         fig_dindo.update_traces(
-            textposition='inside',
-            insidetextanchor='middle'
+            marker_line_width=1,
+            textposition='inside', # Bei Stack besser 'inside'
+            texttemplate='%{text}'
         )
 
-        # 4. Layout
+        n_dindo = len(dindo_order)
+
         fig_dindo.update_layout(
-            xaxis_title="Jahr",
-            yaxis_title="Anzahl Komplikationen",
-            legend_title_text="Dindo Grad",
+            height=100 * n_dindo, # Höhe leicht angepasst für Stack
+            bargap=0.3,           # Abstand zwischen den Dindo-Blöcken
+            margin=dict(r=120),
             plot_bgcolor="rgba(0,0,0,0)",
-            height=500
+            xaxis=dict(
+                title="Anzahl OPs",
+                showgrid=True,
+                gridcolor="rgba(0,0,0,0.1)"
+            ),
+            yaxis=dict(
+                title="Höchster Clavien-Dindo Grad",
+                type="category",
+                categoryorder="array",
+                categoryarray=dindo_order
+            ),
+            legend_title_text="Jahr"
         )
 
         st.plotly_chart(fig_dindo, use_container_width=True)
