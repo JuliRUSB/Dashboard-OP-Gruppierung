@@ -458,8 +458,8 @@ with tab1:
 
             fig_bar = px.bar(
                 df_trend,
-                x='jahr',
-                y='Anzahl',
+                x='jahr_opdatum',
+                y='count',
                 color='bereich',
                 title="Entwicklung über die Jahre",
                 barmode='stack', # Stapelt die Bereiche übereinander
