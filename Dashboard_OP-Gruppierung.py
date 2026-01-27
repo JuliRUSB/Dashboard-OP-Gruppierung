@@ -1,7 +1,7 @@
 # ==================================================
 # Imports – Bibliotheken laden
 # ==================================================
-import plotly.graph_objects as go
+
 import os                          # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
 import requests                    # HTTP-Requests (hier für REDCap API)
 import pandas as pd                # Datenverarbeitung mit DataFrames
