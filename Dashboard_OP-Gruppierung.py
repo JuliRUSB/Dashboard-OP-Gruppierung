@@ -457,9 +457,9 @@ with tab1:
             fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
             fig_rel.update_xaxes(type='category', title="Jahr")
             fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
-            st.plotly_chart(fig_rel, use_container_width=True)
-        else:
-            st.info("Keine Daten für die gewählten Filter vorhanden.")
+        st.plotly_chart(fig_rel, use_container_width=True)
+    else:
+        st.info("Keine Daten für die gewählten Filter vorhanden.")
         
         with col2:
             # Relative Anteile
