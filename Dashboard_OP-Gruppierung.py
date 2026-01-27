@@ -439,47 +439,36 @@ with tab1:
     if not df_filtered.empty:
         # 1. Daten aggregieren
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
-        
-        # Jahr für die Anzeige als String (verhindert Achsen-Fehler)
         df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
 
-        # 2. Prozente manuell berechnen (statt barnorm='percent')
-        # Wir teilen die Anzahl durch die Summe der OPs pro Jahr
+        # 2. Prozente für die Klammer-Anzeige berechnen
         df_trend['prozent'] = df_trend.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
 
-        # 3. Spalten erstellen
-        col1, col2 = st.columns(2)
+        # 3. Das Diagramm erstellen
+        fig = px.bar(
+            df_trend,
+            x='jahr_opdatum',
+            y='count',
+            color='bereich',
+            title="OP-Aufkommen: Absolut (und Anteil in %)",
+            barmode='stack',
+            color_discrete_sequence=COLOR_PALETTE
+        )
 
-        with col1:
-            # Absolute Zahlen
-            fig_abs = px.bar(
-                df_trend,
-                x='jahr_opdatum',
-                y='count',
-                color='bereich',
-                title="OP-Aufkommen (Absolut)",
-                barmode='stack',
-                color_discrete_sequence=COLOR_PALETTE
-            )
-            fig_abs.update_traces(texttemplate='%{y}', textposition='inside')
-            fig_abs.update_layout(showlegend=False) 
-            st.plotly_chart(fig_abs, use_container_width=True)
+        # 4. Der entscheidende Teil: Text-Kombination (Zahl und % in Klammern)
+        fig.update_traces(
+            # %{y} ist die absolute Zahl, %{customdata:.1f} ist der Prozentwert aus der Spalte
+            texttemplate='%{y}<br>(%{customdata:.1f}%)', 
+            textposition='inside',
+            insidetextanchor='middle',
+            customdata=df_trend['prozent'] # Hier übergeben wir die Prozent-Spalte an Plotly
+        )
 
-        with col2:
-            # Relative Anteile (JETZT OHNE BARNORM)
-            fig_rel = px.bar(
-                df_trend,
-                x='jahr_opdatum',
-                y='prozent',  # Wir nutzen unsere berechnete Spalte
-                color='bereich',
-                title="Struktur-Verteilung (Prozentual)",
-                barmode='stack',
-                color_discrete_sequence=COLOR_PALETTE
-            )
-            fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
-            fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
-            st.plotly_chart(fig_rel, use_container_width=True)
-            
+        fig.update_xaxes(title="Jahr")
+        fig.update_yaxes(title="Anzahl OPs")
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
     else:
         st.info("Keine Daten für die gewählten Filter vorhanden.")
 
