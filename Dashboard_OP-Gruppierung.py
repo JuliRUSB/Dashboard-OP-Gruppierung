@@ -439,11 +439,15 @@ with tab1:
     if not df_filtered.empty:
         # 1. Daten aggregieren
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
-
-        # WICHTIG: Umwandlung in String löst den TypeError bei px.bar (Plotly Bug 2026)
+        
+        # Jahr für die Anzeige als String (verhindert Achsen-Fehler)
         df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
 
-        # 2. Spalten erstellen
+        # 2. Prozente manuell berechnen (statt barnorm='percent')
+        # Wir teilen die Anzahl durch die Summe der OPs pro Jahr
+        df_trend['prozent'] = df_trend.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+
+        # 3. Spalten erstellen
         col1, col2 = st.columns(2)
 
         with col1:
@@ -457,23 +461,20 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
-            fig_abs.update_xaxes(title="Jahr")
             fig_abs.update_layout(showlegend=False) 
             st.plotly_chart(fig_abs, use_container_width=True)
 
         with col2:
-            # Relative Anteile
+            # Relative Anteile (JETZT OHNE BARNORM)
             fig_rel = px.bar(
                 df_trend,
                 x='jahr_opdatum',
-                y='count',
+                y='prozent',  # Wir nutzen unsere berechnete Spalte
                 color='bereich',
                 title="Struktur-Verteilung (Prozentual)",
-                barnorm='percent', 
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
-            fig_rel.update_xaxes(title="Jahr")
             fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
             st.plotly_chart(fig_rel, use_container_width=True)
             
