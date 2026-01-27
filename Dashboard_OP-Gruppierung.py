@@ -437,15 +437,20 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 # Bereich-Analyse
 with tab1:
     if not df_filtered.empty:
-        # 1. Absolute Zahlen pro Jahr und Bereich berechnen
+        # 1. Daten aggregieren
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
         
-        # 2. Gesamtsumme pro Jahr berechnen
-        df_jahr_sum = df_filtered.groupby('jahr_opdatum').size().reset_index(name='total_jahr')
+        # 2. Prozente absolut sicher berechnen (pro Jahr)
+        df_trend['prozent'] = df_trend.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
         
-        # 3. Zusammenführen und Prozent exakt berechnen
-        df_trend = df_trend.merge(df_jahr_sum, on='jahr_opdatum')
-        df_trend['prozent'] = (df_trend['count'] / df_trend['total_jahr']) * 100
+        # 3. Den fertigen Text-String direkt im DataFrame erstellen
+        # Beispiel: "150 (12.5%)"
+        df_trend['display_text'] = (
+            df_trend['count'].astype(str) + 
+            " (" + 
+            df_trend['prozent'].round(1).astype(str) + 
+            "%)"
+        )
         
         # Jahr als String für die Achse
         df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
@@ -456,17 +461,17 @@ with tab1:
             x='jahr_opdatum',
             y='count',
             color='bereich',
-            title="OP-Aufkommen: Absolut (Anteil % pro Jahr)",
+            # Wir nutzen die fertige Text-Spalte für die Beschriftung
+            text='display_text', 
+            title="OP-Aufkommen: Absolut (Anteil %)",
             barmode='stack',
             color_discrete_sequence=COLOR_PALETTE
         )
 
-        # Beschriftung in einer Zeile: Zahl (%)
+        # 5. Styling der Beschriftung
         fig.update_traces(
-            texttemplate='%{y} (%{customdata:.1f}%)', 
             textposition='inside',
-            insidetextanchor='middle',
-            customdata=df_trend['prozent'] # Hier liegen jetzt die korrekt gematchten Prozente
+            insidetextanchor='middle'
         )
 
         fig.update_xaxes(title="Jahr")
