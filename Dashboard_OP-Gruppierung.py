@@ -192,13 +192,26 @@ if 'selected_jahre' not in st.session_state:
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-# -------- Sidebar für Filter --------
-# Breite der Sidebar anpassen
+# CSS
 st.markdown(
     """
     <style>
-    section[data-testid="stSidebar"] {
-        width: 300px !important; 
+    /* 1. Sidebar Breite stabil anpassen */
+    [data-testid="stSidebar"] {
+        min-width: 350px !important;
+        max-width: 350px !important;
+    }
+
+    /* 2. Slider Label Styling */
+    /* Wir zielen auf das Label-Element innerhalb des Sliders */
+    div[data-testid="stSlider"] label {
+        font-size: 20px !important; 
+        margin-bottom: 25px !important; /* Erzeugt den gewünschten Abstand */
+    }
+    
+    /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
+    div[data-testid="stSlider"] label p {
+        font-size: 20px !important;
     }
     </style>
     """,
