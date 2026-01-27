@@ -573,45 +573,48 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
+# Komplikationen-Matrix (Clavien-Dindo)
 with tab4:
-    if df_filtered['max_dindo_calc'].notna().any():
-        # 1. Daten aggregieren (wie in deinem Code)
+    # 1. Prüfen, ob die Spalte existiert und Daten enthält
+    if 'max_dindo_calc' in df_filtered.columns and df_filtered['max_dindo_calc'].notna().any():
+        
+        # 2. Aggregation (Erstellung von dindo_counts)
+        # Wir filtern direkt hier, um den NameError zu vermeiden
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
             .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
         )
+        # Spaltennamen setzen
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
-        
-        # 2. Pivot-Tabelle erstellen (Matrix: Jahre oben, Dindo-Grade links)
-        # fillna(0) ist wichtig, damit keine Lücken in der Heatmap entstehen
+
+        # 3. Matrix für die Heatmap vorbereiten
+        # Jahre oben (Columns), Dindo-Grade links (Index)
         dindo_matrix = dindo_counts.pivot(index='dindo', columns='jahr_opdatum', values='count').fillna(0)
         
-        # Sortierung der Grade (V oben, I unten oder umgekehrt)
+        # Sortierung: Höchste Komplikationsgrade (V, IV...) nach oben
         dindo_matrix = dindo_matrix.sort_index(ascending=False)
 
-        # 3. Heatmap erstellen
+        # 4. Heatmap erstellen
         fig_heat = px.imshow(
             dindo_matrix,
             labels=dict(x="Jahr", y="Clavien-Dindo Grad", color="Anzahl"),
-            x=dindo_matrix.columns.astype(str), # Jahre als Text für die Achse
+            x=[str(c) for c in dindo_matrix.columns], # Jahre sicher als String
             y=dindo_matrix.index,
-            color_continuous_scale="Reds", # Farbskala von Weiß nach Rot
-            text_auto=True,                # Schreibt die Zahlen direkt in die Quadrate
-            title="Komplikations-Frequenz (Matrix-Ansicht)"
+            color_continuous_scale="Reds", 
+            text_auto=True,                # Schreibt die Zahlen in die Felder
+            title="Komplikations-Matrix (Häufigkeit)"
         )
 
-        fig_heat.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)",
-            height=400
-        )
-
+        fig_heat.update_layout(height=450)
+        
         st.plotly_chart(fig_heat, use_container_width=True)
+        
     else:
-        st.info("Keine Komplikationsdaten verfügbar")
+        st.info("Keine Komplikationsdaten (Clavien-Dindo) für die aktuelle Auswahl verfügbar.")
 
+# HSM-Balkendiagramm        
         fig_hsm = px.bar(
             hsm_counts,
             x='jahr_opdatum',
