@@ -573,6 +573,7 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo)
+# Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
         # 1. Daten aggregieren
@@ -584,19 +585,23 @@ with tab4:
             .reset_index(name='count')
         )
         
-        # Jahr als String für die X-Achse
+        # Jahr als String für die Legende/Farben
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
+        # Dindo-Grad als Kategorie für die Sortierung
+        dindo_order = sorted(dindo_counts['max_dindo_calc'].unique())
 
-        # 2. Gestapeltes Balkendiagramm erstellen
+        # 2. Horizontales gestapeltes Balkendiagramm
         fig_dindo = px.bar(
             dindo_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='max_dindo_calc',
+            x='count',                # Absolute Zahlen auf der X-Achse
+            y='max_dindo_calc',       # Dindo-Grade auf der Y-Achse
+            color='jahr_opdatum',     # Stapelung nach Jahren
+            orientation='h',          # Horizontal ausrichten
+            barmode='stack',          # Stapeln statt gruppieren
             title="Clavien-Dindo Komplikationen (Absolut)",
-            barmode='stack', # Stapelt die Grade übereinander
             color_discrete_sequence=COLOR_PALETTE,
-            text='count'     # Nur die absolute Zahl anzeigen
+            text='count',             # Nur absolute Zahlen anzeigen
+            category_orders={"max_dindo_calc": dindo_order}
         )
 
         # 3. Balken-Einstellungen
@@ -607,20 +612,19 @@ with tab4:
             marker_line_color="white"
         )
 
+        # 4. Layout-Anpassungen
         fig_dindo.update_layout(
-            xaxis_title="Jahr",
-            yaxis_title="Anzahl Komplikationen",
-            legend_title_text="Dindo Grad",
+            xaxis_title="Anzahl OPs",
+            yaxis_title="Clavien-Dindo Grad",
+            legend_title_text="Jahr",
             plot_bgcolor="rgba(0,0,0,0)",
-            height=500,
-            # Sortierung der Grade (I, II, III...) im Stack sicherstellen
-            yaxis={'categoryorder':'total ascending'}
+            height=400 + (len(dindo_order) * 30), # Dynamische Höhe
+            xaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)")
         )
 
         st.plotly_chart(fig_dindo, use_container_width=True)
     else:
         st.info("Keine Komplikationsdaten verfügbar")
-
 
 # HSM-Balkendiagramm
 with tab5:
