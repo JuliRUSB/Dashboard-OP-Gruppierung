@@ -226,19 +226,19 @@ with st.sidebar:
     if 'selected_quartale' not in st.session_state:
         st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-    st.write("Quartal(e) auswählen:")
+    #st.write("Quartal(e) auswählen:")
     quartal_labels = {1: "Q1", 2: "Q2", 3: "Q3", 4: "Q4"}
     quartal_werte = [1, 2, 3, 4]
 
     # Anzeige der aktuell gewählten Quartale
-    st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
+    #st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
 
     # Spalten für die Buttons erstellen
     cols = st.columns(4)
 
     # 3. Pills-Widget
     selected = st.pills(
-        label="Zeitraum wählen", # Label kann mit label_visibility="collapsed" versteckt werden
+        label="Quartal(e) wählen", # Label kann mit label_visibility="collapsed" versteckt werden
         options=quartal_werte,
         format_func=lambda x: quartal_labels[x],
         selection_mode="multi",
