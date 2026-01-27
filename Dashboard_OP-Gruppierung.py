@@ -317,8 +317,7 @@ selected_quartale = st.session_state['selected_quartale']
 # Sicherheitscheck
 if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
-    df_filtered = pd.DataFrame()
-    df_jahr_filtered = pd.DataFrame()
+    st.stop() # Beendet die Ausführung der App an dieser Stelle
 else:
     # Haupt-Filterung
     df_jahr_filtered = df[df['jahr_opdatum'].isin(selected_jahre)].copy()
