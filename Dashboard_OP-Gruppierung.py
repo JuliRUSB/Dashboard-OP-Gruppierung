@@ -602,13 +602,12 @@ with tab4:
             y=dindo_matrix.index,
             color_continuous_scale="Greens", 
             text_auto=True, 
-            aspect="auto",
             title="Komplikations-Matrix (Häufigkeit)"
         )
 
         fig_heat.update_layout(
-            height=450,
-            xaxis_title="Jahr",
+            height=700,
+            xaxis_title=None,
             yaxis_title="Dindo Grad"
         )
         
