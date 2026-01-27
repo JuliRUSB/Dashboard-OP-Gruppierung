@@ -207,15 +207,20 @@ st.markdown(
         font-size: 18px !important; 
         margin-bottom: 25px !important; /* Erzeugt Abstand zwischen Überschrift und Slider*/
     }
+  
+    /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
+    div[data-testid="stSlider"] label p {
+        font-size: 18px !important;
+    }
 
-    /* 2. Buttons Label Styling */
+    /* 3. Buttons Label Styling */
     div[data-testid="stPills"] label {
         font-size: 18px !important; 
         margin-bottom: 25px !important; /* Erzeugt Abstand zwischen Überschrift und Buttonsr*/
     }
-    
+
     /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
-    div[data-testid="stSlider"] label p {
+    div[data-testid="stPills"] label p {
         font-size: 18px !important;
     }
     </style>
