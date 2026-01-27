@@ -227,7 +227,7 @@ with st.sidebar:
         st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
     st.write("Quartal(e) auswählen:")
-    quartal_labels = ["Q1", "Q2", "Q3", "Q4"]
+    quartal_labels = [1: "Q1", 2: "Q2", 3: "Q3", 4: "Q4"]
     quartal_werte = [1, 2, 3, 4]
 
     # Anzeige der aktuell gewählten Quartale
