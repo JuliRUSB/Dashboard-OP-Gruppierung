@@ -601,7 +601,8 @@ with tab4:
             x=[str(c) for c in dindo_matrix.columns], 
             y=dindo_matrix.index,
             color_continuous_scale="Greens", 
-            text_auto=True,                
+            text_auto=True, 
+            aspect="auto"
             title="Komplikations-Matrix (Häufigkeit)"
         )
 
