@@ -452,10 +452,8 @@ with tab1:
                 color='bereich',
                 title="OP-Aufkommen (Absolut)",
                 barmode='stack',
-                color_discrete_sequence=COLOR_PALETTE,
+                color_discrete_sequence=COLOR_PALETTE
             )
-            # Korrekte Zuweisung zu fig_abs
-            fig_abs.update_traces(texttemplate='%{y}', textposition='inside')
             fig_abs.update_xaxes(type='category', title="Jahr")
             fig_abs.update_layout(showlegend=False) 
             st.plotly_chart(fig_abs, use_container_width=True)
@@ -472,14 +470,11 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
-            # Prozentzeichen zur Beschriftung hinzufügen
-            fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
             fig_rel.update_xaxes(type='category', title="Jahr")
             fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
             st.plotly_chart(fig_rel, use_container_width=True)
             
     else:
-        # Dieser Block wird ausgeführt, wenn df_filtered leer ist
         st.info("Keine Daten für die gewählten Filter vorhanden.")
 
 #with tab1:
