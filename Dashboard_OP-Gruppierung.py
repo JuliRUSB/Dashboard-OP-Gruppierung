@@ -461,6 +461,7 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
+            fig_abs.update_traces(texttemplate='%{y}', textposition='inside')
             fig_abs.update_layout(showlegend=False) 
             st.plotly_chart(fig_abs, use_container_width=True)
 
@@ -475,6 +476,7 @@ with tab1:
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE
             )
+            fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
             fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
             st.plotly_chart(fig_rel, use_container_width=True)
             
