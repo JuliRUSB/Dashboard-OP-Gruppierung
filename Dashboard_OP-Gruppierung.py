@@ -437,16 +437,46 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 # Bereich-Piechart
 with tab1:
     if df_filtered['bereich'].nunique() > 0:
-        fig_bereich = px.pie(
-            df_filtered, 
-            names='bereich', 
-            title="Verteilung nach Bereich", 
-            hole=0.3,
-            color_discrete_sequence=COLOR_PALETTE
-        )
-        st.plotly_chart(fig_bereich, use_container_width=True)
+        # Wir erstellen zwei Spalten für 2026er Layout-Standards
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Dein bestehendes Pie-Chart
+            fig_bereich = px.pie(
+                df_filtered, 
+                names='bereich', 
+                title="Verteilung nach Bereich (Gesamt)", 
+                hole=0.3,
+                color_discrete_sequence=COLOR_PALETTE
+            )
+            st.plotly_chart(fig_bereich, use_container_width=True)
+
+        with col2:
+            # Das neue Sunburst-Chart für die Zeit-Ebene
+            # Wichtig: 'jahr' muss in deinen Spalten von df_filtered existieren
+            fig_sunburst = px.sunburst(
+                df_filtered, 
+                path=['bereich', 'jahr'], 
+                title="Bereiche im Zeitverlauf (Details)",
+                color_discrete_sequence=COLOR_PALETTE
+            )
+            st.plotly_chart(fig_sunburst, use_container_width=True)
+            
     else:
         st.info("Keine Bereichsdaten verfügbar")
+
+#with tab1:
+#    if df_filtered['bereich'].nunique() > 0:
+#        fig_bereich = px.pie(
+#            df_filtered, 
+#            names='bereich', 
+#            title="Verteilung nach Bereich", 
+#            hole=0.3,
+#            color_discrete_sequence=COLOR_PALETTE
+#        )
+#        st.plotly_chart(fig_bereich, use_container_width=True)
+#    else:
+#        st.info("Keine Bereichsdaten verfügbar")
 
 # Leber-Gruppen-Balkendiagramm
 with tab2:
