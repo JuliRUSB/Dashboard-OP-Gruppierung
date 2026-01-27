@@ -610,7 +610,7 @@ with tab4:
             xaxis_title=None,
             yaxis_title="Dindo Grad",
             font=dict(size=20), # 1. Schriftgröße der ZAHLEN IN DER MATRIX (Annotations)
-            yaxis=dict(showgrid=True, gridcolor="white", gridwidth=3)
+            yaxis=dict(showgrid=True, gridcolor="white", gridwidth=3),
 
             # 2. Schriftgröße der ACHSEN-BESCHRIFTUNG (optional)
             xaxis=dict(tickfont=dict(size=18)),
