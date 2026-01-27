@@ -249,7 +249,7 @@ with st.sidebar:
             st.rerun()
 
     # Jahre speichern
-    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  # ← unverändert, nur korrekt platziert
+    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  
 
     st.divider()
     
@@ -358,7 +358,7 @@ with col2:
     if not df_filtered.empty:
         # Gruppierung nach Jahr und Quartal
         q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
-        q_counts.columns = ['quartal_opdatum', 'count', 'jahr_opdatum']
+        q_counts.columns = ['jahr_opdatum', 'quartal_opdatum', 'count']
         
         # Erstellung der X-Achsen-Beschriftung (z.B. "2026 Q1")
         # Umwandlung in int entfernt das ".0", falls vorhanden
