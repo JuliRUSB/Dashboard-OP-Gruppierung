@@ -437,14 +437,14 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 # Bereich-Analyse
 with tab1:
     if not df_filtered.empty:
-        # 1. Daten aggregieren (für beide Diagramme identisch)
+        # 1. Daten aggregieren
         df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
 
         # 2. Spalten erstellen
         col1, col2 = st.columns(2)
 
         with col1:
-            # Absolute Zahlen (Dein ursprüngliches Diagramm)
+            # Absolute Zahlen
             fig_abs = px.bar(
                 df_trend,
                 x='jahr_opdatum',
@@ -453,31 +453,35 @@ with tab1:
                 title="OP-Aufkommen (Absolut)",
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE,
-                text_auto='.0f'
+                text_auto=True  # Stabilste Einstellung
             )
+            fig_abs.update_traces(texttemplate='%{y}', textposition='inside')
             fig_abs.update_xaxes(type='category', title="Jahr")
-            fig_abs.update_layout(showlegend=False) # Legende links aus, um Platz zu sparen
+            fig_abs.update_layout(showlegend=False) 
             st.plotly_chart(fig_abs, use_container_width=True)
 
         with col2:
-            # Relative Anteile (Die neue Analyse)
+            # Relative Anteile
             fig_rel = px.bar(
                 df_trend,
                 x='jahr_opdatum',
                 y='count',
                 color='bereich',
                 title="Struktur-Verteilung (Prozentual)",
-                barnorm='percent', # Macht die Balken zu 100%
+                barnorm='percent', 
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE,
-                text_auto='.1f'
+                text_auto=True  # Stabilste Einstellung
             )
+            # Prozentzeichen zur Beschriftung hinzufügen
+            fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
             fig_rel.update_xaxes(type='category', title="Jahr")
             fig_rel.update_yaxes(title="Anteil in %")
             st.plotly_chart(fig_rel, use_container_width=True)
             
     else:
         st.info("Keine Daten für die gewählten Filter vorhanden.")
+
 #with tab1:
 #    if not df_filtered.empty:
 #        # 2. Aggregieren für das Balkendiagramm
