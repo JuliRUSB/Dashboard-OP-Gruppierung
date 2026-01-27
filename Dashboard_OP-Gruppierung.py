@@ -436,34 +436,43 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugan
 
 # Bereich-Piechart
 with tab1:
-    if df_filtered['bereich'].nunique() > 0:
-        # Wir erstellen zwei Spalten für 2026er Layout-Standards
-        col1, col2 = st.columns(2)
+    if not df_filtered.empty:
+        col1, col2 = st.columns([1, 1.5]) # Rechts etwas breiter für die Zeitachse
 
         with col1:
-            # Dein bestehendes Pie-Chart
-            fig_bereich = px.pie(
+            # 1. Bestehendes Pie-Chart für den Gesamtüberblick
+            fig_pie = px.pie(
                 df_filtered, 
                 names='bereich', 
-                title="Verteilung nach Bereich (Gesamt)", 
+                title="Gesamtverteilung", 
                 hole=0.3,
                 color_discrete_sequence=COLOR_PALETTE
             )
-            st.plotly_chart(fig_bereich, use_container_width=True)
+            fig_pie.update_layout(showlegend=False) # Legende aus, da im Bar-Chart sichtbar
+            st.plotly_chart(fig_pie, use_container_width=True)
 
         with col2:
-            # Das neue Sunburst-Chart für die Zeit-Ebene
-            # Wichtig: 'jahr' muss in deinen Spalten von df_filtered existieren
-            fig_sunburst = px.sunburst(
-                df_filtered, 
-                path=['bereich', 'jahr'], 
-                title="Bereiche im Zeitverlauf (Details)",
-                color_discrete_sequence=COLOR_PALETTE
+            # 2. Aggregieren für das Balkendiagramm
+            # Wir zählen die Fälle pro Jahr und Bereich
+            df_trend = df_filtered.groupby(['jahr', 'bereich']).size().reset_index(name='Anzahl')
+
+            fig_bar = px.bar(
+                df_trend,
+                x='jahr',
+                y='Anzahl',
+                color='bereich',
+                title="Entwicklung über die Jahre",
+                barmode='stack', # Stapelt die Bereiche übereinander
+                color_discrete_sequence=COLOR_PALETTE,
+                text_auto=True # Zeigt die Zahlen direkt auf den Balken an
             )
-            st.plotly_chart(fig_sunburst, use_container_width=True)
             
+            # X-Achse sauber formatieren (keine halben Jahre wie 2022.5)
+            fig_bar.update_xaxes(type='category') 
+            
+            st.plotly_chart(fig_bar, use_container_width=True)
     else:
-        st.info("Keine Bereichsdaten verfügbar")
+        st.info("Keine Daten für die gewählten Filter vorhanden.")
 
 #with tab1:
 #    if df_filtered['bereich'].nunique() > 0:
