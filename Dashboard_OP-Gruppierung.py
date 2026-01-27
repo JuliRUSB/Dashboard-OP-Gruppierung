@@ -631,6 +631,7 @@ with tab4:
         fig_hsm.update_traces(textposition='inside', textfont_size=18)
         fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
         st.plotly_chart(fig_hsm, use_container_width=True)
+        
     else:
         st.info("Keine HSM-Informationen verfügbar")
 
