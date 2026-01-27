@@ -236,12 +236,11 @@ with st.sidebar:
     # Spalten für die Buttons erstellen
     cols = st.columns(4)
 
-    # 3. Das Pills-Widget (ersetzt die manuelle Button-Schleife)
-    # Es übernimmt automatisch das Styling (Farbe bei Auswahl)
+    # 3. Pills-Widget
     selected = st.pills(
         label="Zeitraum wählen", # Label kann mit label_visibility="collapsed" versteckt werden
         options=quartal_werte,
-        format_func=lambda x: quartal_labels[x],
+        format_func=lambda x: quartal_labels.get[x],
         selection_mode="multi",
         default=st.session_state['selected_quartale'],
         key="pills_selection"
