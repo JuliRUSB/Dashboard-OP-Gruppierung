@@ -454,7 +454,7 @@ with tab1:
         with col2:
             # 2. Aggregieren für das Balkendiagramm
             # Wir zählen die Fälle pro Jahr und Bereich
-            df_trend = df_filtered.groupby(['jahr', 'bereich']).size().reset_index(name='Anzahl')
+            df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='Anzahl')
 
             fig_bar = px.bar(
                 df_trend,
