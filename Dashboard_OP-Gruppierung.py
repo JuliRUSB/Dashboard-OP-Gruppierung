@@ -469,7 +469,6 @@ with tab1:
             y='count',
             color='bereich',
             text='display_text', 
-            textfont_size=16,
             title="Fallzahlen: Absolut (Anteil %)",
             barmode='stack',
             color_discrete_sequence=COLOR_PALETTE
@@ -478,7 +477,8 @@ with tab1:
         # 5. Styling der Beschriftung
         fig.update_traces(
             textposition='inside',
-            insidetextanchor='middle'
+            insidetextanchor='middle',
+            textfont=dict(size=16)
         )
 
         fig.update_xaxes(title="Jahr")
