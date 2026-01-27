@@ -618,24 +618,34 @@ with tab4:
         
 # HSM-Balkendiagramm
 with tab5:
-if not hsm_counts.empty:
-    fig_hsm = px.bar(
-        hsm_counts,
-        x='jahr_opdatum',
-        y='count',
-        color='hsm',
-        barmode='group',
-        text='count',
-        title="HSM nach Jahr",
-        labels={'hsm': 'HSM'},
-        color_discrete_sequence=COLOR_PALETTE
-    )
-    fig_hsm.update_traces(textposition='inside', textfont_size=18)
-    fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
-    st.plotly_chart(fig_hsm, use_container_width=True)
-        
-else:
-    st.info("Keine HSM-Informationen verfügbar")
+    if df_filtered['hsm'].notna().any():
+        hsm_counts = (
+            df_filtered
+            .dropna(subset=['hsm', 'jahr_opdatum'])
+            .assign(
+                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
+            )
+            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
+            .size()
+        )
+        hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
+
+        fig_hsm = px.bar(
+            hsm_counts,
+            x='jahr_opdatum',
+            y='count',
+            color='hsm',
+            barmode='group',
+            text='count',
+            title="HSM nach Jahr",
+            labels={'hsm': 'HSM'}
+        )
+        fig_hsm.update_traces(textposition='inside', textfont_size=18)
+        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
+        st.plotly_chart(fig_hsm, use_container_width=True)
+    else:
+        st.info("Keine HSM-Informationen verfügbar")
+
 
 # LOS (Length of Stay)
 with tab6:
