@@ -236,17 +236,25 @@ with st.sidebar:
     # Spalten für die Buttons erstellen
     cols = st.columns(4)
 
-    # Buttons erstellen (Logik zum An/Abwählen)
-    for i, q in enumerate(quartal_werte):
-        is_active = q in st.session_state['selected_quartale']
-        label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
+    st.session_state["selected_quartale"] = st.pills(
+        "Zeitraum wählen",
+        options=quartal_labels,
+        format_func=lambda x: quartal_werte[quartal_labels.index(x)],
+        selection_mode="multi",
+        default=st.session_state.get("selected_quartale", [])
+    )
 
-        if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
-            if q in st.session_state['selected_quartale']:
-                st.session_state['selected_quartale'].remove(q)
-            else:
-                st.session_state['selected_quartale'].append(q)
-            st.rerun()
+    # Buttons erstellen (Logik zum An/Abwählen)
+    # for i, q in enumerate(quartal_werte):
+    #     is_active = q in st.session_state['selected_quartale']
+    #     label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
+
+    #     if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
+    #         if q in st.session_state['selected_quartale']:
+    #             st.session_state['selected_quartale'].remove(q)
+    #         else:
+    #             st.session_state['selected_quartale'].append(q)
+    #         st.rerun()
 
     # Jahre speichern
     st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  
