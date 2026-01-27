@@ -252,7 +252,7 @@ with st.sidebar:
     # Anzeige der aktuell gewählten Quartale
     if st.session_state['selected_quartale']:
         anzeige_liste = [f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]
-        st.write(f"Aktuell gewählt: {', '.join(anzeige_liste)}")
+        # st.write(f"Aktuell gewählt: {', '.join(anzeige_liste)}")
     else:
         st.write("Kein Quartal ausgewählt.")
 
