@@ -317,7 +317,7 @@ if len(df_jahr_filtered) == 0:
 
 col1, col2 = st.columns(2)  # Zwei Spalten für Graphen
 
-# Graph 1: Jahr
+# Graph 1: Falzahlen pro Jahr
 with col1:
     if not df_jahr_filtered.empty:
         # Daten gruppieren
@@ -327,7 +327,7 @@ with col1:
         # Jahr als String für die Achse
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
 
-        # Diagramm erstellen mit deiner COLOR_PALETTE
+        # Diagramm erstellen mit COLOR_PALETTE
         fig_jahr = px.bar(
             jahr_counts_df, 
             x='jahr_str', 
@@ -353,12 +353,12 @@ with col1:
         
         st.plotly_chart(fig_jahr, use_container_width=True)
 
-# Graph 2: Quartal
+# Graph 2: Fallzahlen pro Quartal
 with col2:
     if not df_filtered.empty:
         # Gruppierung nach Jahr und Quartal
         q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
-        q_counts.columns = ['jahr_opdatum', 'quartal_opdatum', 'count']
+        q_counts.columns = ['quartal_opdatum', 'count', "-", 'jahr_opdatum']
         
         # Erstellung der X-Achsen-Beschriftung (z.B. "2026 Q1")
         # Umwandlung in int entfernt das ".0", falls vorhanden
