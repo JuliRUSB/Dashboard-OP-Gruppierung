@@ -214,13 +214,13 @@ st.markdown(
     }
 
     /* 3. Buttons Label Styling */
-    div[data-testid="stPills"] label {
+    div[data-testid="stButtonGroup"] label {
         font-size: 18px !important; 
         margin-bottom: 25px !important; /* Erzeugt Abstand zwischen Überschrift und Buttonsr*/
     }
 
     /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
-    div[data-testid="stPills"] label p {
+    div[data-testid="stButtonGroup"] label p {
         font-size: 18px !important;
     }
     </style>
