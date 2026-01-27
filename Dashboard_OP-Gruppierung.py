@@ -216,7 +216,7 @@ with st.sidebar:
     max_jahr = int(df['jahr_opdatum'].max())
     
     jahr_range = st.slider(
-        "Operationsjahr durch Verschieben auswählen:",
+        "Zeitraum auswählen",
         min_value=min_jahr,
         max_value=max_jahr,
         value=(min_jahr, max_jahr)
@@ -238,7 +238,7 @@ with st.sidebar:
 
     # 3. Pills-Widget
     selected = st.pills(
-        label="Quartal(e) wählen", # Label kann mit label_visibility="collapsed" versteckt werden
+        label="Quartal(e) ab-/auswählen", # Label kann mit label_visibility="collapsed" versteckt werden
         options=quartal_werte,
         format_func=lambda x: quartal_labels[x],
         selection_mode="multi",
