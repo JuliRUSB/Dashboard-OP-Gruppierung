@@ -572,7 +572,6 @@ with tab3:
     else:
         st.info("Keine Zugangsdaten verfügbar")
 
-# Komplikationen-Balkendiagramm (Clavien-Dindo)
 # Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
 with tab4:
     if df_filtered['max_dindo_calc'].notna().any():
@@ -585,41 +584,37 @@ with tab4:
             .reset_index(name='count')
         )
         
-        # Jahr als String für die Legende/Farben
+        # Jahr als String für die X-Achse
         dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
-        # Dindo-Grad als Kategorie für die Sortierung
+        # Dindo-Grade sortieren
         dindo_order = sorted(dindo_counts['max_dindo_calc'].unique())
 
-        # 2. Horizontales gestapeltes Balkendiagramm
+        # 2. Gestapeltes Balkendiagramm (X = Jahr, Stapel = Dindo-Grad)
         fig_dindo = px.bar(
             dindo_counts,
-            x='count',                # Absolute Zahlen auf der X-Achse
-            y='max_dindo_calc',       # Dindo-Grade auf der Y-Achse
-            color='jahr_opdatum',     # Stapelung nach Jahren
-            orientation='h',          # Horizontal ausrichten
-            barmode='stack',          # Stapeln statt gruppieren
-            title="Clavien-Dindo Komplikationen (Absolut)",
+            x='jahr_opdatum',         # Jahr auf der X-Achse
+            y='count',                # Anzahl auf der Y-Achse
+            color='max_dindo_calc',   # Stapelung nach Dindo-Graden
+            title="Clavien-Dindo Komplikationen pro Jahr",
+            barmode='stack',          # Stapeln
             color_discrete_sequence=COLOR_PALETTE,
-            text='count',             # Nur absolute Zahlen anzeigen
+            text='count',             # Nur absolute Zahlen
             category_orders={"max_dindo_calc": dindo_order}
         )
 
         # 3. Balken-Einstellungen
         fig_dindo.update_traces(
             textposition='inside',
-            insidetextanchor='middle',
-            marker_line_width=0.5,
-            marker_line_color="white"
+            insidetextanchor='middle'
         )
 
-        # 4. Layout-Anpassungen
+        # 4. Layout
         fig_dindo.update_layout(
-            xaxis_title="Anzahl OPs",
-            yaxis_title="Clavien-Dindo Grad",
-            legend_title_text="Jahr",
+            xaxis_title="Jahr",
+            yaxis_title="Anzahl Komplikationen",
+            legend_title_text="Dindo Grad",
             plot_bgcolor="rgba(0,0,0,0)",
-            height=400 + (len(dindo_order) * 30), # Dynamische Höhe
-            xaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)")
+            height=500
         )
 
         st.plotly_chart(fig_dindo, use_container_width=True)
