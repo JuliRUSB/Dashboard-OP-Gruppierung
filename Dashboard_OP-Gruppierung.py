@@ -458,7 +458,7 @@ with tab1:
         # 4. Der entscheidende Teil: Text-Kombination (Zahl und % in Klammern)
         fig.update_traces(
             # %{y} ist die absolute Zahl, %{customdata:.1f} ist der Prozentwert aus der Spalte
-            texttemplate='%{y}<br>(%{customdata:.1f}%)', 
+            texttemplate='%{y} (%{customdata:.1f}%)', 
             textposition='inside',
             insidetextanchor='middle',
             customdata=df_trend['prozent'] # Hier übergeben wir die Prozent-Spalte an Plotly
