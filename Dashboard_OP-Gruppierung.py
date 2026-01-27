@@ -453,13 +453,14 @@ with tab1:
                 title="OP-Aufkommen (Absolut)",
                 barmode='stack',
                 color_discrete_sequence=COLOR_PALETTE,
-                text_auto=True  # Stabilste Einstellung
             )
-            fig_abs.update_traces(texttemplate='%{y}', textposition='inside')
-            fig_abs.update_xaxes(type='category', title="Jahr")
-            fig_abs.update_layout(showlegend=False) 
-            st.plotly_chart(fig_abs, use_container_width=True)
-
+            fig_rel.update_traces(texttemplate='%{y:.1f}%', textposition='inside')
+            fig_rel.update_xaxes(type='category', title="Jahr")
+            fig_rel.update_yaxes(title="Anteil in %", range=[0, 100])
+            st.plotly_chart(fig_rel, use_container_width=True)
+        else:
+            st.info("Keine Daten für die gewählten Filter vorhanden.")
+        
         with col2:
             # Relative Anteile
             fig_rel = px.bar(
