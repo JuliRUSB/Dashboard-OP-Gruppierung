@@ -404,7 +404,7 @@ with col2:
         q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
         q_counts.columns = ['jahr_opdatum', 'quartal_opdatum', 'count']
         
-        # Erstellung der X-Achsen-Beschriftung (z.B. "2026 Q1")
+        # Erstellung der X-Achsen-Beschriftung (Format "Q1-2026")
         # Umwandlung in int entfernt das ".0", falls vorhanden
         q_counts['x_label'] = ("Q" + q_counts['quartal_opdatum'].astype(int).astype(str) + "- " + q_counts['jahr_opdatum'].astype(int).astype(str))
         
@@ -629,33 +629,52 @@ with tab4:
 # HSM-Balkendiagramm
 with tab5:
     if df_filtered['hsm'].notna().any():
-        hsm_counts = (
-            df_filtered
-            .dropna(subset=['hsm', 'jahr_opdatum'])
-            .assign(
-                hsm=lambda d: d['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja'})
+        # Gemeinsame Datenbereinigung
+        df_hsm = df_filtered.dropna(subset=['hsm', 'jahr_opdatum']).copy()
+        df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
+        
+        # Spalten definieren
+        col1, col2 = st.columns(2)
+    with col1:
+            hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
+            fig_hsm = px.bar(
+                hsm_jahr,
+                x='jahr_opdatum',
+                y='count',
+                color='hsm_label',
+                barmode='group',
+                text='count',
+                title="HSM Status pro Jahr",
+                color_discrete_sequence=COLOR_PALETTE
             )
-            .groupby(['jahr_opdatum', 'hsm'], as_index=False)
-            .size()
-        )
-        hsm_counts.columns = ['jahr_opdatum', 'hsm', 'count']
-
-        fig_hsm = px.bar(
-            hsm_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='hsm',
-            barmode='group',
-            text='count',
-            title="HSM nach Jahr",
-            labels={'hsm': 'HSM'}
-        )
-        fig_hsm.update_traces(textposition='inside', textfont_size=18)
-        fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle")
-        st.plotly_chart(fig_hsm, use_container_width=True)
+            fig_hsm.update_traces(textposition='inside', textfont_size=16)
+            fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", legend_title="HSM")
+            st.plotly_chart(fig_hsm, use_container_width=True)
+    with col2:
+            # Aggregation nach Bereich und HSM-Status
+            hsm_bereich = df_hsm.groupby(['bereich', 'hsm_label']).size().reset_index(name='count')
+            
+            fig_bereich = px.bar(
+                hsm_bereich,
+                x='bereich',
+                y='count',
+                color='hsm_label',
+                barmode='stack', # Stapelung für besseren Vergleich der Anteile
+                text='count',
+                title="HSM Status nach Fachbereich",
+                color_discrete_sequence=COLOR_PALETTE
+            )
+            fig_bereich.update_traces(textposition='inside', textfont_size=16)
+            fig_bereich.update_layout(
+                xaxis_title=None, 
+                yaxis_title="Anzahl Fälle", 
+                legend_title="HSM",
+                showlegend=True # Legende explizit aktiviert
+            )
+            st.plotly_chart(fig_bereich, use_container_width=True)
+            
     else:
         st.info("Keine HSM-Informationen verfügbar")
-
 
 # LOS (Length of Stay)
 with tab6:
