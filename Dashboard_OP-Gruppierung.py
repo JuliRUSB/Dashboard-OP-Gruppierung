@@ -578,20 +578,17 @@ with tab4:
     # 1. Prüfen, ob die Spalte existiert und Daten enthält
     if 'max_dindo_calc' in df_filtered.columns and df_filtered['max_dindo_calc'].notna().any():
         
-        # 2. Aggregation (Erstellung von dindo_counts)
+        # 2. Aggregation
         dindo_counts = (
             df_filtered
             .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
             .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
             .size()
         )
-        # Spaltennamen setzen
         dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
 
-        # 3. Matrix für die Heatmap vorbereiten
+        # 3. Matrix vorbereiten
         dindo_matrix = dindo_counts.pivot(index='dindo', columns='jahr_opdatum', values='count').fillna(0)
-        
-        # Sortierung: Höchste Komplikationsgrade (V, IV...) nach oben
         dindo_matrix = dindo_matrix.sort_index(ascending=False)
 
         # 4. Heatmap erstellen
@@ -602,18 +599,26 @@ with tab4:
             y=dindo_matrix.index,
             color_continuous_scale="Greens", 
             text_auto=True, 
+            aspect="auto", # Erlaubt das Strecken der Zeilenhöhe
             title="Komplikations-Matrix (Häufigkeit)"
         )
 
+        # Schriftgröße der Zahlen IN den Feldern (Traces)
+        fig_heat.update_traces(textfont_size=24)
+
+        # Layout-Anpassungen (Achsen und globale Schrift)
         fig_heat.update_layout(
-            height=700,
+            height=700, # Vertikale Größe der Matrix
             xaxis_title=None,
             yaxis_title="Dindo Grad",
-            font=dict(size=20), # 1. Schriftgröße der ZAHLEN IN DER MATRIX (Annotations)
-
-            # 2. Schriftgröße der ACHSEN-BESCHRIFTUNG (optional)
-            xaxis=dict(tickfont=dict(size=18)),
-            yaxis=dict(tickfont=dict(size=18))
+            font=dict(size=20),
+            xaxis=dict(
+                type='category', 
+                tickfont=dict(size=18)
+            ),
+            yaxis=dict(
+                tickfont=dict(size=18)
+            )
         )
         
         st.plotly_chart(fig_heat, use_container_width=True)
