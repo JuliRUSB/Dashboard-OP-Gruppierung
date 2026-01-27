@@ -635,7 +635,8 @@ with tab5:
         
         # Spalten definieren
         col1, col2 = st.columns(2)
-    with col1:
+
+        with col1:
             hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
             fig_hsm = px.bar(
                 hsm_jahr,
@@ -650,7 +651,8 @@ with tab5:
             fig_hsm.update_traces(textposition='inside', textfont_size=16)
             fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", legend_title="HSM")
             st.plotly_chart(fig_hsm, use_container_width=True)
-    with col2:
+
+        with col2:
             # Aggregation nach Bereich und HSM-Status
             hsm_bereich = df_hsm.groupby(['bereich', 'hsm_label']).size().reset_index(name='count')
             
@@ -669,11 +671,12 @@ with tab5:
                 xaxis_title=None, 
                 yaxis_title="Anzahl Fälle", 
                 legend_title="HSM",
-                showlegend=True # Legende explizit aktiviert
+                showlegend=True 
             )
             st.plotly_chart(fig_bereich, use_container_width=True)
             
     else:
+        # Das else steht auf derselben Ebene wie das erste 'if'
         st.info("Keine HSM-Informationen verfügbar")
 
 # LOS (Length of Stay)
