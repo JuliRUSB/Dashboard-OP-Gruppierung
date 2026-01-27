@@ -454,9 +454,9 @@ with tab1:
     # X-Achse sauber formatieren (keine halben Jahre wie 2022.5)
     fig_bar.update_xaxes(type='category') 
             
-    st.plotly_chart(fig_bar, use_container_width=True)
-else:
-    st.info("Keine Daten für die gewählten Filter vorhanden.")
+        st.plotly_chart(fig_bar, use_container_width=True)
+    else:
+        st.info("Keine Daten für die gewählten Filter vorhanden.")
 
 #with tab1:
 #    if df_filtered['bereich'].nunique() > 0:
