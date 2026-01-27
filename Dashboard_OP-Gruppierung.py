@@ -18,8 +18,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 
+# ==================================================
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
+# ==================================================
 
 # ==================================================
 # Datenexport aus REDCap
@@ -172,7 +174,9 @@ def get_color_map(items):
 st.set_page_config(page_title="OP-Gruppierung Dashboard", layout="wide")  # Layout festlegen
 st.title("Dashboard OP-Gruppierung")
 
+# ==================================================
 # Daten laden
+# ==================================================
 with st.spinner('Lade Daten...'):
     df_raw = export_redcap_data(API_URL)  # Daten aus REDCap exportieren
     df = prepare_data(df_raw)             # Daten aufbereiten
@@ -193,7 +197,9 @@ if 'selected_jahre' not in st.session_state:
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
+# ==================================================
 # CSS
+# ==================================================
 st.markdown(
     """
     <style>
