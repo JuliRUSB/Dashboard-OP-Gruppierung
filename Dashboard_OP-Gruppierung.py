@@ -461,9 +461,8 @@ with tab1:
             x='jahr_opdatum',
             y='count',
             color='bereich',
-            # Wir nutzen die fertige Text-Spalte für die Beschriftung
             text='display_text', 
-            title="OP-Aufkommen: Absolut (Anteil %)",
+            title="Fallzahlen: Absolut (Anteil %)",
             barmode='stack',
             color_discrete_sequence=COLOR_PALETTE
         )
