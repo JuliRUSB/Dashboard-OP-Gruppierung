@@ -434,26 +434,28 @@ st.divider()
 st.header("Detailanalysen")
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugang", "Komplikationen", "HSM", "Aufenthaltsdauer", "Trends"])
 
-# Bereich-Piechart
+# Bereich-Analyse
 with tab1:
-    # 2. Aggregieren für das Balkendiagramm
-    # Wir zählen die Fälle pro Jahr und Bereich
-    df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
+    if not df_filtered.empty:
+        # 2. Aggregieren für das Balkendiagramm
+        # Fälle pro Jahr und Bereich
+        df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
 
-    fig_bar = px.bar(
-        df_trend,
-        x='jahr_opdatum',
-        y='count',
-        color='bereich',
-        title="Entwicklung über die Jahre",
-        barmode='stack', # Stapelt die Bereiche übereinander
-        color_discrete_sequence=COLOR_PALETTE,
-        text_auto=True # Zeigt die Zahlen direkt auf den Balken an
-    )
-            
-    # X-Achse sauber formatieren (keine halben Jahre wie 2022.5)
-    fig_bar.update_xaxes(type='category') 
-            
+        fig_bar = px.bar(
+            df_trend,
+            x='jahr_opdatum',
+            y='count',
+            color='bereich',
+            title="Entwicklung über die Jahre",
+            barmode='stack', # Stapelt die Bereiche übereinander
+            color_discrete_sequence=COLOR_PALETTE,
+            text_auto='.0f' # Zeigt saubere Ganzzahlen direkt auf den Balken an
+        )
+                
+        # X-Achse formatieren (keine halben Jahre wie 2022.5)
+        fig_bar.update_xaxes(type='category', title="Jahr")  
+        
+        # Das Chart anzeigen 
         st.plotly_chart(fig_bar, use_container_width=True)
     else:
         st.info("Keine Daten für die gewählten Filter vorhanden.")
