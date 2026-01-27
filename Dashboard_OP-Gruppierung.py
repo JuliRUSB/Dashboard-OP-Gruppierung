@@ -602,7 +602,7 @@ with tab4:
             y=dindo_matrix.index,
             color_continuous_scale="Greens", 
             text_auto=True, 
-            aspect="auto"
+            aspect="auto",
             title="Komplikations-Matrix (Häufigkeit)"
         )
 
