@@ -8,6 +8,7 @@ import pandas as pd                # Datenverarbeitung mit DataFrames
 import plotly.express as px        # Plotly Express für Diagramme
 import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
+import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -573,66 +574,17 @@ with tab3:
         st.info("Keine Zugangsdaten verfügbar")
 
 # Komplikationen-Balkendiagramm (Clavien-Dindo) - Horizontal Gestapelt
-with tab4:
-    if df_filtered['max_dindo_calc'].notna().any():
-        # Aggregation nach Jahr und Clavien-Dindo-Grad
-        dindo_counts = (
-            df_filtered
-            .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
-            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
-            .size()
-        )
-        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
-        dindo_counts['jahr_opdatum'] = dindo_counts['jahr_opdatum'].astype(str)
-
-        # Reihenfolge der Dindo-Kategorien (von oben nach unten: V bis I)
-        dindo_order = sorted(dindo_counts['dindo'].unique(), reverse=True)
-
-        # Balkendiagramm erstellen
-        fig_dindo = px.bar(
-            dindo_counts,
-            x='count',
-            y='dindo',
-            color='jahr_opdatum', # Stapelung nach Jahr
-            orientation='h',
-            barmode='stack',     # GEÄNDERT auf stack
-            title="Clavien-Dindo Komplikationen (gestapelt)",
-            color_discrete_sequence=COLOR_PALETTE,
-            text='count'
-        )
-
-        # Balken-Einstellungen
-        fig_dindo.update_traces(
-            marker_line_width=1,
-            textposition='inside', # Bei Stack besser 'inside'
-            texttemplate='%{text}'
-        )
-
-        n_dindo = len(dindo_order)
-
-        fig_dindo.update_layout(
-            height=100 * n_dindo, # Höhe leicht angepasst für Stack
-            bargap=0.3,           # Abstand zwischen den Dindo-Blöcken
-            margin=dict(r=120),
-            plot_bgcolor="rgba(0,0,0,0)",
-            xaxis=dict(
-                title="Anzahl OPs",
-                showgrid=True,
-                gridcolor="rgba(0,0,0,0.1)"
-            ),
-            yaxis=dict(
-                title="Höchster Clavien-Dindo Grad",
-                type="category",
-                categoryorder="array",
-                categoryarray=dindo_order
-            ),
-            legend_title_text="Jahr"
-        )
-
-        st.plotly_chart(fig_dindo, use_container_width=True)
-    else:
-        st.info("Keine Komplikationsdaten verfügbar")
-
+fig_dindo = px.bar(
+    dindo_counts,
+    x='jahr_opdatum',
+    y='count',
+    color='max_dindo_calc',
+    barmode='group', # Balken nebeneinander statt übereinander
+    title="Dindo-Grade im Vergleich der Jahre",
+    color_discrete_sequence=COLOR_PALETTE,
+    text_auto=True
+)
+st.plotly_chart(fig_dindo, use_container_width=True)
 # HSM-Balkendiagramm
 with tab5:
     if df_filtered['hsm'].notna().any():
