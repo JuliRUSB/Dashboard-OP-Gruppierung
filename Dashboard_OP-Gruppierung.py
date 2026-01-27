@@ -362,11 +362,7 @@ with col2:
         
         # Erstellung der X-Achsen-Beschriftung (z.B. "2026 Q1")
         # Umwandlung in int entfernt das ".0", falls vorhanden
-        q_counts['x_label'] = (
-            q_counts['jahr_opdatum'].astype(int).astype(str) + 
-            " Q" + 
-            q_counts['quartal_opdatum'].astype(int).astype(str)
-        )
+        q_counts['x_label'] = ("Q" + q_counts['quartal_opdatum'].astype(int).astype(str) + "- " + q_counts['jahr_opdatum'].astype(int).astype(str))
         
         fig_quartal = px.bar(
             q_counts, 
