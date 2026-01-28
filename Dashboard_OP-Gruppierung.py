@@ -50,6 +50,12 @@ def export_redcap_data(api_url):
         'fields[5]': 'max_dindo_calc',
         'fields[6]': 'los_opdatum',
         'fields[7]':  'los_eintritt_austritt',
+        'fields[8]':  'type_sark',
+        'fields[9]':  'gruppen_chir_onko_sark',
+        'fields[10]':  'malignit_t_sark',
+        'fields[11]':  'lokalisation_sark',
+        'fields[12]':  'hipec',
+        'fields[13]':  'anastomosen_crs',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -439,13 +445,14 @@ st.divider()
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
 
-# ===== Bereiche definieren =====
+# ===== Bereiche definieren (TABS 1. Ebene) =====
 bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
+# ===== Bereiche definieren (TABS 2. Ebene) =====
 ANALYSEN_PRO_BEREICH = {
     "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    "Chirurgische Onkologie/Sarkome": ["Komplikationen", "LOS", "Trends"],
+    "Chirurgische Onkologie/Sarkome": [Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizient", "Komplikationen", "LOS"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Allgemein": ["Komplikationen", "LOS", "Trends"],
     "BMC": ["Komplikationen", "LOS", "Trends"],
