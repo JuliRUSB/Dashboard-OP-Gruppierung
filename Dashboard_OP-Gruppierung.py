@@ -438,311 +438,119 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Bereich", "Gruppen", "Zugang", "Komplikationen", "HSM", "Aufenthaltsdauer", "Trends"])
+st.header("Detailanalysen")
 
-# Bereich-Analyse
-with tab1:
-    if not df_filtered.empty:
-        # 1. Daten aggregieren
-        df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
-        
-        # 2. Prozente absolut sicher berechnen (pro Jahr)
-        df_trend['prozent'] = df_trend.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
-        
-        # 3. Den fertigen Text-String direkt im DataFrame erstellen
-        # Beispiel: "150 (12.5%)"
-        df_trend['display_text'] = (
-            df_trend['count'].astype(str) + 
-            " (" + 
-            df_trend['prozent'].round(1).astype(str) + 
-            "%)"
-        )
-        
-        # Jahr als String für die Achse
-        df_trend['jahr_opdatum'] = df_trend['jahr_opdatum'].astype(str)
+# ===== Bereiche definieren =====
+bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
-        # 4. Das Diagramm erstellen
-        fig = px.bar(
-            df_trend,
-            height=700,
-            x='jahr_opdatum',
-            y='count',
-            color='bereich',
-            text='display_text', 
-            title="Fallzahlen: Absolut (Anteil %)",
-            barmode='stack',
-            color_discrete_sequence=COLOR_PALETTE
-        )
+ANALYSEN_PRO_BEREICH = {
+    "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
+    "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
+    "Chirurgische Onkologie/Sarkome": ["Komplikationen", "LOS", "Trends"],
+    "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
+    "Allgemein": ["Komplikationen", "LOS", "Trends"],
+    "BMC": ["Komplikationen", "LOS", "Trends"],
+    "Endokrin": ["Zugang", "Komplikationen", "LOS", "Trends"],
+    "Hernien": ["Zugang", "Komplikationen", "LOS", "Trends"],
+    "Pankreas": ["Zugang", "Komplikationen", "LOS", "Trends"],
+}
 
-        # 5. Styling der Beschriftung
-        fig.update_traces(
-            textposition='inside',
-            insidetextanchor='middle',
-            textfont=dict(size=16)
-        )
+bereich_tabs = st.tabs(bereiche)
 
-        fig.update_xaxes(title=None)
-        fig.update_yaxes(title="Anzahl OPs")
-        
-        st.plotly_chart(fig, use_container_width=True)
-        
-    else:
-        st.info("Keine Daten vorhanden.")
+for i, bereich in enumerate(bereiche):
+    with bereich_tabs[i]:
 
-#with tab1:
-#    if not df_filtered.empty:
-#        # 2. Aggregieren für das Balkendiagramm
-#        # Fälle pro Jahr und Bereich
-#        df_trend = df_filtered.groupby(['jahr_opdatum', 'bereich']).size().reset_index(name='count')
+        df_bereich = df_filtered[df_filtered["bereich"] == bereich]
 
-#        fig_bar = px.bar(
-#            df_trend,
-#            x='jahr_opdatum',
-#            y='count',
-#            color='bereich',
-#            title="Entwicklung über die Jahre",
-#            barmode='stack', # Stapelt die Bereiche übereinander
-#            color_discrete_sequence=COLOR_PALETTE,
-#            text_auto='.0f' # Zeigt saubere Ganzzahlen direkt auf den Balken an
-#        )
-#                
-        # X-Achse formatieren (keine halben Jahre wie 2022.5)
-#        fig_bar.update_xaxes(type='category', title="Jahr")  
-        
-        # Das Chart anzeigen 
-#        st.plotly_chart(fig_bar, use_container_width=True)
-#    else:
-#        st.info("Keine Daten für die gewählten Filter vorhanden.")
+        st.subheader(f"Bereich: {bereich}")
 
-#with tab1:
-#    if df_filtered['bereich'].nunique() > 0:
-#        fig_bereich = px.pie(
-#            df_filtered, 
-#            names='bereich', 
-#            title="Verteilung nach Bereich", 
-#            hole=0.3,
-#            color_discrete_sequence=COLOR_PALETTE
-#        )
-#        st.plotly_chart(fig_bereich, use_container_width=True)
-#    else:
-#        st.info("Keine Bereichsdaten verfügbar")
+        analysen = ANALYSEN_PRO_BEREICH.get(bereich, ["Komplikationen", "LOS", "Trends"])
+        tabs = st.tabs(analysen)
 
-# Leber-Gruppen-Balkendiagramm
-with tab2:
-    if df_filtered['leber_gruppen'].nunique() > 0:
-        leber_gruppen_counts = (
-            df_filtered
-            .groupby(['jahr_opdatum', 'leber_gruppen'], as_index=False)
-            .size()
-        )
-        leber_gruppen_counts.columns = ['jahr_opdatum', 'leber_gruppen', 'count']
+        # ================== GRUPPEN ==================
+        if "Gruppen" in analysen:
+            with tabs[analysen.index("Gruppen")]:
+                if "leber_gruppen" in df_bereich.columns and df_bereich["leber_gruppen"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
 
-        fig_leber_gruppen = px.bar(
-            leber_gruppen_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='leber_gruppen',
-            barmode='group',
-            text='count',
-            title="Verteilung nach Gruppen",
-            labels={'leber_gruppen': 'Leber-Gruppen'},
-            color_discrete_sequence=COLOR_PALETTE
-        )
-        fig_leber_gruppen.update_traces(textposition='inside', textfont_size=16)
-        fig_leber_gruppen.update_layout(xaxis_title=None, yaxis_title=None)
-        st.plotly_chart(fig_leber_gruppen, use_container_width=True)
-    else:
-        st.info("Keine Daten verfügbar")
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="leber_gruppen",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Gruppendaten")
 
-# Zugang-Balkendiagramm
-with tab3:
-    if df_filtered['zugang'].nunique() > 0:
-        zugang_counts = (
-            df_filtered
-            .groupby(['jahr_opdatum', 'zugang'], as_index=False)
-            .size()
-        )
-        zugang_counts.columns = ['jahr_opdatum', 'zugang', 'count']
+        # ================== ZUGANG ==================
+        if "Zugang" in analysen:
+            with tabs[analysen.index("Zugang")]:
+                if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
+                    zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                    zug.columns = ["jahr_opdatum", "zugang", "count"]
 
-        fig_zugang = px.bar(
-            zugang_counts,
-            x='jahr_opdatum',
-            y='count',
-            color='zugang',
-            barmode='group',
-            text='count',
-            title="Verteilung nach Zugangsart",
-            color_discrete_sequence=COLOR_PALETTE
-        )
-        fig_zugang.update_traces(textposition='inside', textfont_size=16)
-        fig_zugang.update_layout(xaxis_title=None, yaxis_title=None)
-        st.plotly_chart(fig_zugang, use_container_width=True)
-    else:
-        st.info("Keine Zugangsdaten verfügbar")
+                    fig = px.bar(
+                        zug,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="zugang",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Zugangsdaten")
 
-# Komplikationen-Matrix (Clavien-Dindo)
-with tab4:
-    # 1. Prüfen, ob die Spalte existiert und Daten enthält
-    if 'max_dindo_calc' in df_filtered.columns and df_filtered['max_dindo_calc'].notna().any():
-        
-        # 2. Aggregation
-        dindo_counts = (
-            df_filtered
-            .dropna(subset=['jahr_opdatum', 'max_dindo_calc'])
-            .groupby(['jahr_opdatum', 'max_dindo_calc'], as_index=False)
-            .size()
-        )
-        dindo_counts.columns = ['jahr_opdatum', 'dindo', 'count']
+        # ================== KOMPLIKATIONEN ==================
+        if "Komplikationen" in analysen:
+            with tabs[analysen.index("Komplikationen")]:
+                if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
+                    d = (
+                        df_bereich
+                        .dropna(subset=["jahr_opdatum", "max_dindo_calc"])
+                        .groupby(["jahr_opdatum", "max_dindo_calc"], as_index=False)
+                        .size()
+                    )
+                    d.columns = ["jahr_opdatum", "dindo", "count"]
+                    mat = d.pivot(index="dindo", columns="jahr_opdatum", values="count").fillna(0)
 
-        # 3. Matrix vorbereiten
-        dindo_matrix = dindo_counts.pivot(index='dindo', columns='jahr_opdatum', values='count').fillna(0)
-        dindo_matrix = dindo_matrix.sort_index(ascending=False)
+                    fig = px.imshow(
+                        mat,
+                        text_auto=True,
+                        aspect="auto",
+                        color_continuous_scale="Greens"
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Komplikationsdaten")
 
-        # 4. Heatmap erstellen
-        fig_heat = px.imshow(
-            dindo_matrix,
-            labels=dict(x="Jahr", y="Clavien-Dindo Grad", color="Anzahl"),
-            x=[str(c) for c in dindo_matrix.columns], 
-            y=dindo_matrix.index,
-            color_continuous_scale="Greens", 
-            text_auto=True, 
-            aspect="auto", # Erlaubt das Strecken der Zeilenhöhe
-            title="Komplikations-Matrix (Häufigkeit)"
-        )
+        # ================== LOS ==================
+        if "LOS" in analysen:
+            with tabs[analysen.index("LOS")]:
+                df_los = df_bereich.copy()
+                df_los["los"] = pd.to_numeric(df_los["los_opdatum"], errors="coerce")
+                if df_los["los"].notna().any():
+                    st.write(df_los["los"].describe())
+                else:
+                    st.info("Keine LOS-Daten")
 
-        # Schriftgröße der Zahlen IN den Feldern (Traces)
-        fig_heat.update_traces(textfont_size=24)
+        # ================== TRENDS ==================
+        if "Trends" in analysen:
+            with tabs[analysen.index("Trends")]:
+                t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
+                t.columns = ["jahr_opdatum", "count"]
 
-        # Layout-Anpassungen (Achsen und globale Schrift)
-        fig_heat.update_layout(
-            height=700, # Vertikale Größe der Matrix
-            xaxis_title=None,
-            yaxis_title="Dindo Grad",
-            font=dict(size=20),
-            xaxis=dict(
-                type='category', 
-                tickfont=dict(size=18)
-            ),
-            yaxis=dict(
-                tickfont=dict(size=18)
-            )
-        )
-        
-        st.plotly_chart(fig_heat, use_container_width=True)
-        
-    else:
-        st.info("Keine Komplikationsdaten (Clavien-Dindo) für die aktuelle Auswahl verfügbar.")
-        
-# HSM-Balkendiagramm
-with tab5:
-    if df_filtered['hsm'].notna().any():
-        # Gemeinsame Datenbereinigung
-        df_hsm = df_filtered.dropna(subset=['hsm', 'jahr_opdatum']).copy()
-        df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
-        
-        # Spalten definieren
-        col1, col2 = st.columns(2)
-
-        with col1:
-            hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
-            fig_hsm = px.bar(
-                hsm_jahr,
-                x='jahr_opdatum',
-                y='count',
-                color='hsm_label',
-                barmode='group',
-                text='count',
-                title="HSM Status pro Jahr",
-                color_discrete_sequence=COLOR_PALETTE
-            )
-            fig_hsm.update_traces(textposition='inside', textfont_size=16)
-            fig_hsm.update_layout(xaxis_title=None, yaxis_title="Anzahl Fälle", legend_title="HSM")
-            st.plotly_chart(fig_hsm, use_container_width=True)
-
-        with col2:
-            # Aggregation nach Bereich und HSM-Status
-            hsm_bereich = df_hsm.groupby(['bereich', 'hsm_label']).size().reset_index(name='count')
-            
-            fig_bereich = px.bar(
-                hsm_bereich,
-                x='bereich',
-                y='count',
-                color='hsm_label',
-                barmode='stack', # Stapelung für besseren Vergleich der Anteile
-                text='count',
-                title="HSM Status nach Fachbereich",
-                color_discrete_sequence=COLOR_PALETTE
-            )
-            fig_bereich.update_traces(textposition='inside', textfont_size=16)
-            fig_bereich.update_layout(
-                xaxis_title=None, 
-                yaxis_title="Anzahl Fälle", 
-                legend_title="HSM",
-                showlegend=True 
-            )
-            st.plotly_chart(fig_bereich, use_container_width=True)
-            
-    else:
-        # Das else steht auf derselben Ebene wie das erste 'if'
-        st.info("Keine HSM-Informationen verfügbar")
-
-# LOS (Length of Stay)
-with tab6:
-    df_los = df_filtered.copy()
-
-    if len(df_los) == 0:
-        st.info("Keine LOS-Daten verfügbar")
-    else:
-        # --- Berechnung 1: Eintritt/Austritt ---
-        df_los['los_ea'] = pd.to_numeric(df_los['los_eintritt_austritt'], errors='coerce')
-        valid_ea = df_los.dropna(subset=['los_ea'])
-        
-        # --- Berechnung 2: OP-Datum ---
-        df_los['los_op'] = pd.to_numeric(df_los['los_opdatum'], errors='coerce')
-        valid_op = df_los.dropna(subset=['los_op'])
-
-        if valid_ea.empty and valid_op.empty:
-            st.info("Keine gültigen LOS-Daten vorhanden")
-        else:
-            # Daten für Zeile 1 sammeln
-            count_ea = valid_ea['los_ea'].count()
-            mean_ea = valid_ea['los_ea'].mean() if count_ea > 0 else 0
-            median_ea = valid_ea['los_ea'].median() if count_ea > 0 else 0
-
-            # Daten für Zeile 2 sammeln
-            count_op = valid_op['los_op'].count()
-            mean_op = valid_op['los_op'].mean() if count_op > 0 else 0
-            median_op = valid_op['los_op'].median() if count_op > 0 else 0
-
-            # Zusammenführen in das DataFrame
-            los_summary = pd.DataFrame({
-                "Kategorie": [
-                    "LOS (Eintrittsdatum/Austrittsdatum)", 
-                    "LOS (OP-Datum/Austrittsdatum)"
-                ],
-                "Count": [count_ea, count_op],
-                "Mean": [f"{mean_ea:.2f}", f"{mean_op:.2f}"],
-                "Median": [f"{median_ea:.0f}", f"{median_op:.0f}"]
-            })
-
-            # Tabelle anzeigen
-            st.markdown(los_summary.to_html(index=False, escape=False), unsafe_allow_html=True)
-            
-# Trends über Jahre nach Bereich
-with tab7:
-    if len(df_filtered) > 0 and df_filtered['bereich'].nunique() > 1:
-        trend_data = df_filtered.groupby(['jahr_opdatum', 'bereich'], as_index=False).size()
-        trend_data.columns = ['jahr_opdatum', 'bereich', 'count']
-        
-        fig_trend = px.line(
-            trend_data, 
-            x='jahr_opdatum', 
-            y='count', 
-            color='bereich', 
-            title="Trend über Zeit nach Bereich", 
-            markers=True,
-            color_discrete_sequence=COLOR_PALETTE
-        )
-        st.plotly_chart(fig_trend, use_container_width=True)
-    else:
-        st.info("Nicht genügend Daten für Trendanalyse")
+                fig = px.line(
+                    t,
+                    x="jahr_opdatum",
+                    y="count",
+                    markers=True,
+                    color_discrete_sequence=COLOR_PALETTE
+                )
+                st.plotly_chart(fig, use_container_width=True)
