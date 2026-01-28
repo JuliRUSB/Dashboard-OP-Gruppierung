@@ -438,7 +438,6 @@ st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
 st.header("Detailanalysen")
-st.header("Detailanalysen")
 
 # ===== Bereiche definieren =====
 bereiche = sorted(df_filtered["bereich"].dropna().unique())
@@ -531,13 +530,13 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Komplikationsdaten")
 
         # ================== HSM ==================
-if "HSM" in analysen:
-    with tabs[analysen.index("HSM")]:
-        if df_bereich['hsm'].notna().any():
-            df_hsm = df_bereich.dropna(subset=['hsm', 'jahr_opdatum']).copy()
-            df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
+        if "HSM" in analysen:
+            with tabs[analysen.index("HSM")]:
+                if df_bereich['hsm'].notna().any():
+                    df_hsm = df_bereich.dropna(subset=['hsm', 'jahr_opdatum']).copy()
+                    df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
 
-            col1, col2 = st.columns(2)
+                    col1, col2 = st.columns(2)
 
             with col1:
                 hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
