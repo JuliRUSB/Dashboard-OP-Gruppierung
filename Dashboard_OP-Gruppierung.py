@@ -443,7 +443,7 @@ st.header("Detailanalysen")
 bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 ANALYSEN_PRO_BEREICH = {
-    "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
+    #"Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Chirurgische Onkologie/Sarkome": ["Komplikationen", "LOS", "Trends"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
