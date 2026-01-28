@@ -452,7 +452,7 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
 ANALYSEN_PRO_BEREICH = {
     "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    "Chirurgische Onkologie/Sarkome": [Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizient", "Komplikationen", "LOS"],
+    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Allgemein": ["Komplikationen", "LOS", "Trends"],
     "BMC": ["Komplikationen", "LOS", "Trends"],
