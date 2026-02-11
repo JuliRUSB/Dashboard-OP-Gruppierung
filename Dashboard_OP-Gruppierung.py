@@ -535,14 +535,14 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten")
 
         # ================== Reiter Übersicht Sarkome ================== 
-
-        st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
+        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
+        #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
         if "HIPEC bei CRS" in analysen:
             with tabs[analysen.index("HIPEC bei CRS")]:
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
 
                     # Filter auf type_sark = '1'
-                    df_plot = df_bereich[df_bereich["type_sark"] == 1].copy()
+                    df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
 
                     if df_plot.empty:
                         st.info("Keine Daten für type_sark = '1'")
