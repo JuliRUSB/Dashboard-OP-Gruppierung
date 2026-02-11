@@ -504,6 +504,11 @@ for i, bereich in enumerate(bereiche):
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"type_sark": "Sarkomtyp"}
                     )
+                    fig_jahr.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
+                    
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.info("Keine Gruppendaten")
