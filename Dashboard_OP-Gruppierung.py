@@ -517,7 +517,7 @@ for i, bereich in enumerate(bereiche):
                     fig.update_layout(
                         xaxis_title=None, 
                         yaxis_title=None, 
-                        xaxis={'type': 'category', tickfont=dict(size=16)} # Verhindert Zahlensalat auf der X-Achse
+                        xaxis=('type': 'category', tickfont=dict(size=16)) # Verhindert Zahlensalat auf der X-Achse
                     )
                     
                     st.plotly_chart(fig, use_container_width=True)
