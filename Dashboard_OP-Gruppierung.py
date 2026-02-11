@@ -479,7 +479,27 @@ for i, bereich in enumerate(bereiche):
         analysen = ANALYSEN_PRO_BEREICH.get(bereich)
         tabs = st.tabs(analysen)
 
-                         
+        # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
+        if "Übersicht Sarkome" in analysen:
+            with tabs[analysen.index("Übersicht Sarkome")]:
+                if "type_sark" in df_bereich.columns and df_bereich["type_sark"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
+
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="type_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Gruppendaten")
+
+        
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
         if "Gruppen" in analysen:
@@ -596,22 +616,4 @@ for i, bereich in enumerate(bereiche):
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
-         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
-        if "Gruppen" in analysen:
-            with tabs[analysen.index("Gruppen")]:
-                if "type_sark" in df_bereich.columns and df_bereich["type_sark"].nunique() > 0:
-                    grp = df_bereich.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
-
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="type_sark",
-                        barmode="group",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Gruppendaten")
+        
