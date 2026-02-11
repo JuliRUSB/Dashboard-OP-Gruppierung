@@ -437,7 +437,11 @@ with col2:
             title="Fallzahlen pro Quartal"
         )
         
-        fig_quartal.update_traces(textfont_size=16, textposition='inside')
+        fig_quartal.update_traces(
+            textfont_size=16, 
+            textposition='inside'
+        )
+        
         fig_quartal.update_layout(
             xaxis_title=None, 
             yaxis_title=None, 
@@ -504,7 +508,7 @@ for i, bereich in enumerate(bereiche):
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"type_sark": "Sarkomtyp"}
                     )
-                    fig_jahr.update_traces(
+                    fig.update_traces(
                         textfont_size=16, 
                         textposition='inside'
                     )
