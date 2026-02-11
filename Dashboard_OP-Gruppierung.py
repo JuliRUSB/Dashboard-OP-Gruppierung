@@ -605,14 +605,14 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für type_sark = '1'")
                     else:
                         # Gruppieren und count berechnen
-                        grp = df_plot.groupby(["jahr_opdatum"]).size().reset_index(name="count")
+                        grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"]).size().reset_index(name="count")
                         
                         if not grp.empty:
                             fig = px.bar(
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
-                                color="sarkom_gruppen",
+                                color="gruppen_chir_onko_sark",
                                 barmode="group",
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
