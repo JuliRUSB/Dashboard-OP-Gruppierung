@@ -138,6 +138,14 @@ def prepare_data(df):
     df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
     df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
 
+    # HIPEC: numerische Codes in Text umwandeln
+    hipec_mapping = {
+        1: 'Ja',
+        0: 'Nein'
+    }
+    df['hipec'] = pd.to_numeric(df['hipec'], errors='coerce')
+    df['hipec'] = df['hipec'].map(hipec_mapping).fillna('Unbekannt')
+    
     # Clavien-Dindo-Max: numerische Codes in Text umwandeln
     max_dindo_calc_mapping = {
         0: 'Keine Komplikation',
@@ -492,6 +500,7 @@ for i, bereich in enumerate(bereiche):
         tabs = st.tabs(analysen)
 
         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
+        # ================== Reiter Übersicht Sarkome ================== 
         if "Übersicht Sarkome" in analysen:
             with tabs[analysen.index("Übersicht Sarkome")]:
                 if "type_sark" in df_bereich.columns and df_bereich["type_sark"].nunique() > 0:
@@ -523,7 +532,41 @@ for i, bereich in enumerate(bereiche):
                     
                     st.plotly_chart(fig, use_container_width=True)
                 else:
-                    st.info("Keine Gruppendaten")
+                    st.info("Keine Daten")
+
+        # ================== Reiter Übersicht Sarkome ================== 
+        if "HIPEC" in analysen:
+            with tabs[analysen.index("HIPEC")]:
+                if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="hipec",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC"}
+                    )
+                    
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
+
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                        yaxis={"tickfont": {"size": 16}} 
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Daten")
 
         
         # ================== BEREICH LEBER ==================    
