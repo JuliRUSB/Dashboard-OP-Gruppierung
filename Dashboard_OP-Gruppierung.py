@@ -118,6 +118,21 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['leber_gruppen'] = df.apply(get_leber_gruppen, axis=1)
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
+
+    # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
+    sarkom_gruppen_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
+    if sarkom_gruppen_cols:
+        mapping = {
+            'gruppen_chir_onko_sark___1': 'Knochen',
+            'gruppen_chir_onko_sark___2': 'Weichteil',
+            'gruppen_chir_onko_sark___3': 'GIST',
+            'gruppen_chir_onko_sark___4': 'Andere Malignome',
+        }
+        # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+        def get_sarkom_gruppen(row):
+            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+        df['sarkom_gruppen'] = df.apply(get_sarkom_gruppen, axis=1)
+        df = df.drop(columns=sarkom_gruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
@@ -470,7 +485,7 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
 ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC bei CRS", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "Sarkomgruppen", "HIPEC bei CRS", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
@@ -578,6 +593,39 @@ for i, bereich in enumerate(bereiche):
                         else:
                             st.info("Keine Daten")
 
+        # ================== GRUPPEN ==================
+        if "Sarkomgruppen" in analysen:
+            with tabs[analysen.index("Sarkomgruppen")]:
+                if "sarkom_gruppen" in df_bereich.columns and df_bereich["sarkom_gruppen"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "sarkom_gruppen"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "sarkom_gruppen", "count"]
+
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="sarkom_gruppen",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"leber_gruppen": "Sarkomgruppen"}
+                    )
+
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
+
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                        yaxis={"tickfont": {"size": 16}} 
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Gruppendaten")
         
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
