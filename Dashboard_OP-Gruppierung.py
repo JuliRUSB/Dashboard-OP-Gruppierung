@@ -470,7 +470,7 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
 ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "HIPEC bei CRS", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
@@ -535,8 +535,8 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten")
 
         # ================== Reiter Übersicht Sarkome ================== 
-        if "HIPEC" in analysen:
-            with tabs[analysen.index("HIPEC")]:
+        if "HIPEC bei CRS" in analysen:
+            with tabs[analysen.index("HIPEC bei CRS")]:
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
                     grp = df_bereich.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
