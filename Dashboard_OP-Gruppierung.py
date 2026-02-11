@@ -120,8 +120,8 @@ def prepare_data(df):
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
 
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
-    gruppen_chir_onko_sark_gruppen_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
-    if sarkom_gruppen_cols:
+    gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
+    if gruppen_chir_onko_sark_cols:
         mapping = {
             'gruppen_chir_onko_sark___1': 'Knochen',
             'gruppen_chir_onko_sark___2': 'Weichteil',
@@ -131,7 +131,7 @@ def prepare_data(df):
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_gruppen_chir_onko_sark_gruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
-        df['gruppen_chir_onko_sark_gruppen'] = df.apply(get_gruppen_chir_onko_sark_gruppen, axis=1)
+        df['gruppen_chir_onko_sark'] = df.apply(get_gruppen_chir_onko_sark, axis=1)
         df = df.drop(columns=gruppen_chir_onko_sark_cols)  # Ursprüngliche Spalten löschen
     
     # Zugang: numerische Codes in Text umwandeln
