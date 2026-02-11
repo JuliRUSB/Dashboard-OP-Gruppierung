@@ -514,7 +514,7 @@ for i, bereich in enumerate(bereiche):
                         textposition='inside'
                     )
 
-                    fig_jahr.update_layout(
+                    fig.update_layout(
                     xaxis_title=None, 
                     yaxis_title=None, 
                     xaxis={'type': 'category'} # Verhindert Zahlensalat auf der X-Achse
