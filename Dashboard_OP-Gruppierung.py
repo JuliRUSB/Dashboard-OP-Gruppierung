@@ -597,9 +597,17 @@ for i, bereich in enumerate(bereiche):
         if "Sarkomgruppen" in analysen:
             with tabs[analysen.index("Sarkomgruppen")]:
                 if "sarkom_gruppen" in df_bereich.columns and df_bereich["sarkom_gruppen"].nunique() > 0:
-                    grp = df_bereich.groupby(["jahr_opdatum", "sarkom_gruppen"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "sarkom_gruppen", "count"]
+                    
+                    # Filter auf type_sark = '2'
+                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
 
+                    if df_plot.empty:
+                        st.info("Keine Daten für type_sark = '1'")
+                    else:
+                        # Gruppieren und count berechnen
+                        grp = df_plot.groupby(["jahr_opdatum").size().reset_index(name="count")
+                        
+                        if not grp.empty:
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
