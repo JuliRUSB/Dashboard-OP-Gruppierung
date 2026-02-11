@@ -18,7 +18,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 
-# ==================================================
+# ==================================================F
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
 # ==================================================
@@ -535,6 +535,8 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten")
 
         # ================== Reiter Übersicht Sarkome ================== 
+
+        st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
         if "HIPEC bei CRS" in analysen:
             with tabs[analysen.index("HIPEC bei CRS")]:
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
