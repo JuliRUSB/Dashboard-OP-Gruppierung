@@ -129,7 +129,7 @@ def prepare_data(df):
             'gruppen_chir_onko_sark___4': 'Andere Malignome',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
-        def get_gruppen_chir_onko_sark_gruppen(row):
+        def get_gruppen_chir_onko_sark(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['gruppen_chir_onko_sark'] = df.apply(get_gruppen_chir_onko_sark, axis=1)
         df = df.drop(columns=gruppen_chir_onko_sark_cols)  # Ursprüngliche Spalten löschen
