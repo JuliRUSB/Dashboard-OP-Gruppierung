@@ -473,6 +473,27 @@ for i, bereich in enumerate(bereiche):
         analysen = ANALYSEN_PRO_BEREICH.get(bereich, ["Komplikationen", "LOS", "Trends"])
         tabs = st.tabs(analysen)
 
+        # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
+        if "Gruppen" in analysen:
+            with tabs[analysen.index("Gruppen")]:
+                if "type_sark" in df_bereich.columns and df_bereich["type_sark"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
+
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="type_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Gruppendaten")
+                    
+        # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
         if "Gruppen" in analysen:
             with tabs[analysen.index("Gruppen")]:
