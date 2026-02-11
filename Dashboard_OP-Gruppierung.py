@@ -540,7 +540,7 @@ for i, bereich in enumerate(bereiche):
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
 
                     # Filter auf type_sark = '1'
-                    df_plot = df_bereich[df_bereich["type_sark"].astype(str) == '1'].copy()
+                    df_plot = df_bereich[df_bereich["type_sark"] == 1].copy()
 
                     if df_plot.empty:
                         st.info("Keine Daten für type_sark = '1'")
