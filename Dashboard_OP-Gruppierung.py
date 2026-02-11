@@ -461,6 +461,8 @@ ANALYSEN_PRO_BEREICH = {
     "Pankreas": ["Zugang", "Komplikationen", "LOS", "Trends"],
 }
 
+bereiche = list(ANALYSEN_PRO_BEREICH.keys())
+
 bereich_tabs = st.tabs(bereiche)
 
 for i, bereich in enumerate(bereiche):
@@ -470,7 +472,11 @@ for i, bereich in enumerate(bereiche):
 
         st.subheader(f"Bereich: {bereich}")
 
-        analysen = ANALYSEN_PRO_BEREICH.get(bereich, ["Komplikationen", "LOS", "Trends"])
+        if df_bereich.empty:
+            st.warning("Keine Daten für diesen Bereich")
+            continue
+
+        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
         tabs = st.tabs(analysen)
 
                          
