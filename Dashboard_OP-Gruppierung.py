@@ -540,18 +540,15 @@ for i, bereich in enumerate(bereiche):
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
 
                     # Filter auf type_sark = '1'
-                    if "type_sark" in df_bereich.columns:
-                        df_plot = df_bereich[df_bereich["type_sark"] == '1']
-                    else:
-                        df_plot = df_bereich.copy()
+                    df_plot = df_bereich[df_bereich["type_sark"].astype(str) == '1'].copy()
 
                     if df_plot.empty:
                         st.info("Keine Daten für type_sark = '1'")
                     else:
                         # Gruppieren und count berechnen
                         grp = df_plot.groupby(["jahr_opdatum", "hipec"]).size().reset_index(name="count")
-                        grp['count'] = pd.to_numeric(grp['count'], errors='coerce')
                         
+                        if not grp.empty:
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
