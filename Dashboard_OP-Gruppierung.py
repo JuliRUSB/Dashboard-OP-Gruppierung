@@ -508,6 +508,7 @@ for i, bereich in enumerate(bereiche):
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"type_sark": "Sarkomtyp"}
                     )
+                    
                     fig.update_traces(
                         textfont_size=16, 
                         textposition='inside'
@@ -535,6 +536,11 @@ for i, bereich in enumerate(bereiche):
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"leber_gruppen": "Lebergruppen"}
+                    )
+
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
                     )
                     st.plotly_chart(fig, use_container_width=True)
                 else:
