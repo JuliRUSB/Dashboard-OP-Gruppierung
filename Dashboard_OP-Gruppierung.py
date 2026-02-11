@@ -478,7 +478,7 @@ for i, bereich in enumerate(bereiche):
             with tabs[analysen.index("Gruppen")]:
                 if "type_sark" in df_bereich.columns and df_bereich["type_sark"].nunique() > 0:
                     grp = df_bereich.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
+                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
                     fig = px.bar(
                         grp,
