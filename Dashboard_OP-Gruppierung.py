@@ -548,9 +548,8 @@ for i, bereich in enumerate(bereiche):
                     if df_plot.empty:
                         st.info("Keine Daten für type_sark = '1'")
                     else:
-                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "hipec", "count"]
-
+                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).agg(count=('hipec', 'size'))
+                        
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
