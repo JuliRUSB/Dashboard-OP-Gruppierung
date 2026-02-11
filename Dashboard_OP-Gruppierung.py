@@ -131,12 +131,12 @@ def prepare_data(df):
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # Typ Sarkom: numerische Codes in Text umwandeln
-    typ_sark_mapping = {
+    type_sark_mapping = {
         1: 'CRS',
         2: 'Sarkom/Weichteiltumor'
     }
-    df['typ_sark'] = pd.to_numeric(df['typ_sark'], errors='coerce')
-    df['typ_sark'] = df['typ_sark'].map(typ_sark_mapping).fillna('Unbekannt')
+    df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
+    df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
 
     # Clavien-Dindo-Max: numerische Codes in Text umwandeln
     max_dindo_calc_mapping = {
