@@ -549,32 +549,32 @@ for i, bereich in enumerate(bereiche):
                         grp = df_plot.groupby(["jahr_opdatum", "hipec"]).size().reset_index(name="count")
                         
                         if not grp.empty:
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="hipec",
-                        barmode="group",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hipec": "HIPEC"}
-                    )
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="hipec",
+                                barmode="group",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"hipec": "HIPEC"}
+                            )
                     
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='inside'
-                    )
+                            fig.update_traces(
+                                textfont_size=16, 
+                                textposition='inside'
+                            )
 
-                    fig.update_layout(
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                        yaxis={"tickfont": {"size": 16}} 
-                    )
+                            fig.update_layout(
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                                yaxis={"tickfont": {"size": 16}} 
+                            )
                     
-                    st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Daten")
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info("Keine Daten")
 
         
         # ================== BEREICH LEBER ==================    
