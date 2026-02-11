@@ -515,9 +515,9 @@ for i, bereich in enumerate(bereiche):
                     )
 
                     fig.update_layout(
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    xaxis={'type': 'category'} # Verhindert Zahlensalat auf der X-Achse
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={'type': 'category', tickfont=dict(size=16)} # Verhindert Zahlensalat auf der X-Achse
                     )
                     
                     st.plotly_chart(fig, use_container_width=True)
@@ -548,6 +548,13 @@ for i, bereich in enumerate(bereiche):
                         textfont_size=16, 
                         textposition='inside'
                     )
+
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={'type': 'category', tickfont=dict(size=16)} # Verhindert Zahlensalat auf der X-Achse
+                    )
+                    
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.info("Keine Gruppendaten")
