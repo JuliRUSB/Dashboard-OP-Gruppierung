@@ -538,8 +538,18 @@ for i, bereich in enumerate(bereiche):
         if "HIPEC bei CRS" in analysen:
             with tabs[analysen.index("HIPEC bei CRS")]:
                 if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
-                    grp = df_bereich.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+
+                    # Filter auf type_sark = '1'
+                    if "type_sark" in df_bereich.columns:
+                        df_plot = df_bereich[df_bereich["type_sark"] == '1']
+                    else:
+                        df_plot = df_bereich.copy()  # falls die Spalte fehlt, alles drinlassen
+            
+                    if df_plot.empty:
+                        st.info("Keine Daten für type_sark = '1'")
+                    else:
+                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "hipec", "count"]
 
                     fig = px.bar(
                         grp,
