@@ -397,7 +397,7 @@ with col1:
             y='count', 
             text='count', 
             color='jahr_str',  # Farbe basierend auf dem Jahr
-            color_discrete_sequence=px.colors.qualitative.Safe,
+            color_discrete_sequence=COLOR_PALETTE,
             title="Fallzahlen pro Jahr"
         )
         
