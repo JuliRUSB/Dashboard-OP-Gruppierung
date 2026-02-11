@@ -120,7 +120,7 @@ def prepare_data(df):
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
 
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
-    sarkom_gruppen_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
+    gruppen_chir_onko_sark_gruppen_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
     if sarkom_gruppen_cols:
         mapping = {
             'gruppen_chir_onko_sark___1': 'Knochen',
@@ -129,10 +129,10 @@ def prepare_data(df):
             'gruppen_chir_onko_sark___4': 'Andere Malignome',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
-        def get_sarkom_gruppen(row):
+        def get_gruppen_chir_onko_sark_gruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
-        df['sarkom_gruppen'] = df.apply(get_sarkom_gruppen, axis=1)
-        df = df.drop(columns=sarkom_gruppen_cols)  # Ursprüngliche Spalten löschen
+        df['gruppen_chir_onko_sark_gruppen'] = df.apply(get_gruppen_chir_onko_sark_gruppen, axis=1)
+        df = df.drop(columns=gruppen_chir_onko_sark_cols)  # Ursprüngliche Spalten löschen
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
@@ -596,13 +596,13 @@ for i, bereich in enumerate(bereiche):
         # ================== GRUPPEN ==================
         if "Sarkomgruppen" in analysen:
             with tabs[analysen.index("Sarkomgruppen")]:
-                if "sarkom_gruppen" in df_bereich.columns and df_bereich["sarkom_gruppen"].nunique() > 0:
+                if "gruppen_chir_onko_sark" in df_bereich.columns and df_bereich["gruppen_chir_onko_sark"].nunique() > 0:
                     
                     # Filter auf type_sark = '2'
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
 
                     if df_plot.empty:
-                        st.info("Keine Daten für type_sark = '1'")
+                        st.info("Keine Daten für type_sark = '2'")
                     else:
                         # Gruppieren und count berechnen
                         grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"]).size().reset_index(name="count")
@@ -616,7 +616,7 @@ for i, bereich in enumerate(bereiche):
                                 barmode="group",
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
-                                labels={"sarkom_gruppen": "Sarkomgruppen"}
+                                labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
                             )
 
                             fig.update_traces(
