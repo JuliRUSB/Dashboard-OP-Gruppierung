@@ -501,7 +501,7 @@ for i, bereich in enumerate(bereiche):
                         color="type_sark",
                         barmode="group",
                         text="count",
-                        color_discrete_sequence=COLOR_PALETTE
+                        color_discrete_sequence=COLOR_PALETTE,
                         labels={"type_sark": "Sarkomtyp"}
                     )
                     st.plotly_chart(fig, use_container_width=True)
@@ -524,7 +524,7 @@ for i, bereich in enumerate(bereiche):
                         color="leber_gruppen",
                         barmode="group",
                         text="count",
-                        color_discrete_sequence=COLOR_PALETTE
+                        color_discrete_sequence=COLOR_PALETTE,
                         labels={"leber_gruppen": "Lebergruppen"}
                     )
                     st.plotly_chart(fig, use_container_width=True)
