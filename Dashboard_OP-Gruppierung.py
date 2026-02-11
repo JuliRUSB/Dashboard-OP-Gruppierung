@@ -485,7 +485,7 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
 ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "Sarkomgruppen", "HIPEC bei CRS", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
@@ -594,8 +594,8 @@ for i, bereich in enumerate(bereiche):
                             st.info("Keine Daten")
 
         # ================== GRUPPEN ==================
-        if "Sarkomgruppen" in analysen:
-            with tabs[analysen.index("Sarkomgruppen")]:
+        if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
+            with tabs[analysen.index("Gruppen (Sarkome/Weichteiltumoren)")]:
                 if "gruppen_chir_onko_sark" in df_bereich.columns and df_bereich["gruppen_chir_onko_sark"].nunique() > 0:
                     
                     # Filter auf type_sark = '2'
