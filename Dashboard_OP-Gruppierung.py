@@ -130,7 +130,8 @@ def prepare_data(df):
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
-     typ_sark_mapping = {
+    # Typ Sarkom: numerische Codes in Text umwandeln
+    typ_sark_mapping = {
         1: 'CRS',
         2: 'Sarkom/Weichteiltumor'
     }
