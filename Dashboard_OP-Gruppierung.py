@@ -608,7 +608,7 @@ for i, bereich in enumerate(bereiche):
                         barmode="group",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"leber_gruppen": "Sarkomgruppen"}
+                        labels={"sarkom_gruppen": "Sarkomgruppen"}
                     )
 
                     fig.update_traces(
