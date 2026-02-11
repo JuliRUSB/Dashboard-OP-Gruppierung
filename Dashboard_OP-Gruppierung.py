@@ -433,7 +433,7 @@ with col2:
             y='count', 
             text='count',
             color=q_counts['jahr_opdatum'].astype(str),
-            color_discrete_sequence=px.colors.qualitative.Safe,
+            color_discrete_sequence=COLOR_PALETTE,
             title="Fallzahlen pro Quartal"
         )
         
