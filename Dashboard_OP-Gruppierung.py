@@ -522,9 +522,16 @@ for i, bereich in enumerate(bereiche):
         # ================== Reiter Übersicht Sarkome ================== 
         if "Gesamtzahl Operationen" in analysen:
             with tabs[analysen.index("Gesamtzahl Operationen")]:
-                if "bereich___4" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
-                    grp = df_bereich.groupby(["jahr_opdatum", "bereich"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "bereich", "count"]
+                if "bereich" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
+
+                    # Filter auf bereich = '4'
+                    df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+
+                    if df_plot.empty:
+                        st.info("Keine Daten für Chirurgische Onkologie/Sarkome")
+                    else:
+                        # Gruppieren und count berechnen
+                        grp = df_plot.groupby(["jahr_opdatum", "bereich"]).size().reset_index(name="count")
 
                     fig = px.bar(
                         grp,
