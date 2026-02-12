@@ -470,8 +470,10 @@ with col2:
             yaxis_title=None, 
             showlegend=False, 
             height=400,
-            xaxis={'categoryorder': 'category ascending'}
+            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+            yaxis={"tickfont": {"size": 16}} 
         )
+        
         st.plotly_chart(fig_quartal, use_container_width=True)
     else:
         st.warning("Keine Daten für die gewählte Filterkombination vorhanden.")
@@ -746,6 +748,14 @@ for i, bereich in enumerate(bereiche):
                             text='count',
                             color_discrete_sequence=COLOR_PALETTE
                         )
+                        
+                        fig.update_layout(
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                            yaxis={"tickfont": {"size": 16}} 
+                        )
+                        
                         st.plotly_chart(fig_hsm, use_container_width=True)
 
                     with col2:
@@ -775,6 +785,14 @@ for i, bereich in enumerate(bereiche):
                     y="count",
                     markers=True,
                     color_discrete_sequence=COLOR_PALETTE
+                )
+
+                
+                fig.update_layout(
+                    xaxis_title=None, 
+                    yaxis_title=None, 
+                    xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                    yaxis={"tickfont": {"size": 16}} 
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
