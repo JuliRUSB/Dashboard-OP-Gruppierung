@@ -688,6 +688,7 @@ for i, bereich in enumerate(bereiche):
                         barmode="group",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE
+                        labels={"zugang": "Zugang"}
                     )
 
                     fig.update_traces(
@@ -748,6 +749,7 @@ for i, bereich in enumerate(bereiche):
                             barmode='group',
                             text='count',
                             color_discrete_sequence=COLOR_PALETTE
+                            labels={"hsm_label": "HSM"}
                         )
                         
                         fig.update_layout(
@@ -769,6 +771,7 @@ for i, bereich in enumerate(bereiche):
                             barmode='stack',
                             text='count',
                             color_discrete_sequence=COLOR_PALETTE
+                            labels={"hsm_label": "HSM"}
                         )
                         st.plotly_chart(fig_bereich, use_container_width=True)
                 else:
