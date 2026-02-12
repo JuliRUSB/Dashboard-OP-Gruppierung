@@ -686,6 +686,19 @@ for i, bereich in enumerate(bereiche):
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE
                     )
+
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
+
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                        yaxis={"tickfont": {"size": 16}} 
+                    )
+                    
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.info("Keine Zugangsdaten")
