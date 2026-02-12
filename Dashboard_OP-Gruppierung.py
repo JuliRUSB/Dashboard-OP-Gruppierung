@@ -519,38 +519,38 @@ for i, bereich in enumerate(bereiche):
 
         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
-     # ================== Reiter Übersicht Sarkome ================== 
-            if "Gesamtzahl Operationen" in analysen:
-                with tabs[analysen.index("Gesamtzahl Operationen")]:
-                    if "bereich__4" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
-                        grp = df_bereich.groupby(["jahr_opdatum", "bereich"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "bereich", "count"]
+        # ================== Reiter Übersicht Sarkome ================== 
+        if "Gesamtzahl Operationen" in analysen:
+            with tabs[analysen.index("Gesamtzahl Operationen")]:
+                if "bereich__4" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
+                    grp = df_bereich.groupby(["jahr_opdatum", "bereich"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "bereich", "count"]
 
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="bereich",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="bereich",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
                     
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='inside'
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
 
-                        fig.update_layout(
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                            yaxis={"tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                        yaxis={"tickfont": {"size": 16}} 
+                    )
                     
-                        st.plotly_chart(fig, use_container_width=True)
-                    else:
-                        st.info("Keine Daten")
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Daten")
         
         # ================== Reiter Übersicht Sarkome ================== 
         if "Übersicht Sarkome" in analysen:
