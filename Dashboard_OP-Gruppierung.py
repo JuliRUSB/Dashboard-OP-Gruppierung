@@ -687,7 +687,7 @@ for i, bereich in enumerate(bereiche):
                         color="zugang",
                         barmode="group",
                         text="count",
-                        color_discrete_sequence=COLOR_PALETTE
+                        color_discrete_sequence=COLOR_PALETTE,
                         labels={"zugang": "Zugang"}
                     )
 
@@ -748,7 +748,7 @@ for i, bereich in enumerate(bereiche):
                             color='hsm_label',
                             barmode='group',
                             text='count',
-                            color_discrete_sequence=COLOR_PALETTE
+                            color_discrete_sequence=COLOR_PALETTE,
                             labels={"hsm_label": "HSM"}
                         )
                         
@@ -770,7 +770,7 @@ for i, bereich in enumerate(bereiche):
                             color='hsm_label',
                             barmode='stack',
                             text='count',
-                            color_discrete_sequence=COLOR_PALETTE
+                            color_discrete_sequence=COLOR_PALETTE,
                             labels={"hsm_label": "HSM"}
                         )
                         st.plotly_chart(fig_bereich, use_container_width=True)
@@ -788,7 +788,7 @@ for i, bereich in enumerate(bereiche):
                     x="jahr_opdatum",
                     y="count",
                     markers=True,
-                    color_discrete_sequence=COLOR_PALETTE
+                    color_discrete_sequence=COLOR_PALETTE,
                 )
 
                 
