@@ -522,7 +522,7 @@ for i, bereich in enumerate(bereiche):
         # ================== Reiter Übersicht Sarkome ================== 
         if "Gesamtzahl Operationen" in analysen:
             with tabs[analysen.index("Gesamtzahl Operationen")]:
-                if "bereich__4" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
+                if "bereich___4" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
                     grp = df_bereich.groupby(["jahr_opdatum", "bereich"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "bereich", "count"]
 
