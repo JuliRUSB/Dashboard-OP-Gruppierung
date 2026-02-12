@@ -90,10 +90,10 @@ def prepare_data(df):
         mapping = {
             #'bereich___1': 'Allgemein',
             'bereich___2': 'BMC',
-            'bereich___3': 'Endokrin',
+            #'bereich___3': 'Endokrin',
             'bereich___4': 'Chirurgische Onkologie/Sarkome',
-            'bereich___5': 'Hernien',
-            'bereich___6': 'Kolorektal',
+            #'bereich___5': 'Hernien',
+            #'bereich___6': 'Kolorektal',
             'bereich___7': 'Leber',
             'bereich___8': 'Pankreas',
             'bereich___9': 'Upper-GI'
