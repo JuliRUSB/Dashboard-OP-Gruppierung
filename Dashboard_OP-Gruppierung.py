@@ -551,6 +551,7 @@ for i, bereich in enumerate(bereiche):
                     fig.update_layout(
                         xaxis_title=None, 
                         yaxis_title=None, 
+                        showlegend=False,
                         xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
                         yaxis={"tickfont": {"size": 16}} 
                     )
