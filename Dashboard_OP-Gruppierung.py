@@ -88,7 +88,7 @@ def prepare_data(df):
     bereich_cols = [c for c in df.columns if c.startswith('bereich___')]
     if bereich_cols:
         mapping = {
-            'bereich___1': 'Allgemein',
+            #'bereich___1': 'Allgemein',
             'bereich___2': 'BMC',
             'bereich___3': 'Endokrin',
             'bereich___4': 'Chirurgische Onkologie/Sarkome',
