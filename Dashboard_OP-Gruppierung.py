@@ -434,7 +434,8 @@ with col1:
             yaxis_title=None, 
             showlegend=False, 
             height=400,
-            xaxis={'type': 'category'} # Verhindert Zahlensalat auf der X-Achse
+            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+            yaxis={"tickfont": {"size": 16}} 
         )
         
         st.plotly_chart(fig_jahr, use_container_width=True)
