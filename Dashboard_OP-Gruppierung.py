@@ -545,7 +545,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
 
-        # Drei Spalten/Kacheln definieren
+        # Drei Spalten/Kacheln definieren (1. Reihe)
         col1, col2, col3 = st.columns(3)
 
         # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
@@ -708,54 +708,11 @@ for i, bereich in enumerate(bereiche):
                         st.error("Spalten fehlen")
                 else:
                     st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
+
+        # Drei Spalten/Kacheln definieren (2. Reihe)
+        col4, col5, col6 = st.columns(3)
         
-        
-
-       
-        
-        # ================== GRUPPEN ==================
-        if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
-            with tabs[analysen.index("Gruppen (Sarkome/Weichteiltumoren)")]:
-                if "gruppen_chir_onko_sark" in df_bereich.columns and df_bereich["gruppen_chir_onko_sark"].nunique() > 0:
-                    
-                    # Filter auf type_sark = '2'
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-
-                    if df_plot.empty:
-                        st.info("Keine Daten für type_sark = '2'")
-                    else:
-                        # Gruppieren und count berechnen
-                        grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"]).size().reset_index(name="count")
-                        
-                        if not grp.empty:
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="count",
-                                color="gruppen_chir_onko_sark",
-                                barmode="group",
-                                text="count",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
-                            )
-
-                            fig.update_traces(
-                                textfont_size=16, 
-                                textposition='inside'
-                            )
-
-                            fig.update_layout(
-                                xaxis_title=None, 
-                                yaxis_title=None, 
-                                xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                                yaxis={"tickfont": {"size": 16}} 
-                            )
-                    
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info("Keine Gruppendaten")
-
-        # ================== Reiter Übersicht Sarkome ================== 
+        # ================== Kachel 4 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
         if "HIPEC bei CRS" in analysen:
