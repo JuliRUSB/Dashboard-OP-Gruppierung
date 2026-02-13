@@ -768,47 +768,61 @@ for i, bereich in enumerate(bereiche):
                     st.error("Spalten fehlen")
             else:
                 st.metric(label="HIPEC bei CRS", value="-")
-        # ================== GRUPPEN ==================
-        if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-            with tabs[analysen.index("Lokalisation (Sarkome/Weichteiltumoren)")]:
-                if "lokalisation_sark" in df_bereich.columns and df_bereich["lokalisation_sark"].nunique() > 0:
-                    
-                    # Filter auf typ_sark = '2'
+        
+        # ================== Kachel 5 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
+        with col5.container(border=True):
+            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-
-                    if df_plot.empty:
-                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    total_lokalisation = len(df_plot)
+            
+                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lokalisation)
+                    st.divider()
+            
+                    if total_lokalisation > 0:
+                        # Gruppierung nach Jahr und Lokalisation
+                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="lokalisation_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"lokalisation_sark": "Lokalisation"}
+                        )
+                
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+                
+                        fig.update_layout(
+                            #height=450, 
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lokalisation_sark_chart", config={'displayModeBar': False})
                     else:
-                        # Gruppieren und count berechnen
-                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"]).size().reset_index(name="count")
-                        
-                        if not grp.empty:
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="count",
-                                color="lokalisation_sark",
-                                barmode="group",
-                                text="count",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"lokalisation_sark": "Lokalisation"}
-                            )
-
-                            fig.update_traces(
-                                textfont_size=16, 
-                                textposition='inside'
-                            )
-
-                            fig.update_layout(
-                                xaxis_title=None, 
-                                yaxis_title=None, 
-                                xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                                yaxis={"tickfont": {"size": 16}} 
-                            )
-                    
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info("Keine Daten")
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
         
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
