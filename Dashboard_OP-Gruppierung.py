@@ -622,7 +622,8 @@ for i, bereich in enumerate(bereiche):
             
                             fig.update_traces(
                                 textfont_size=16, 
-                                textposition='auto', # Deine gewünschte Einstellung
+                                textposition='auto',
+                                name="",
                                 marker_line_width=0
                             )
         
