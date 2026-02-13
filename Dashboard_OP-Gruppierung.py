@@ -577,8 +577,8 @@ for i, bereich in enumerate(bereiche):
                             xaxis_title=None, 
                             yaxis_title=None, 
                             showlegend=False,
-                            xaxis={"type": "category", "tickfont": {"size": 14}},
-                            yaxis={"showticklabels": False, "showgrid": False} # Cleanere Optik da Text auf Balken
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": False} # Cleanere Optik da Text auf Balken
                         )
             
                         st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
