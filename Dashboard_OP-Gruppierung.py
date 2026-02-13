@@ -9,7 +9,6 @@ import plotly.express as px        # Plotly Express für Diagramme
 import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
-import streamlit-elements          # Drag & Drop Kacheln  
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
