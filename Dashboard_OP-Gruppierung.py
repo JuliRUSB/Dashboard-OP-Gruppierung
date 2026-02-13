@@ -650,69 +650,63 @@ for i, bereich in enumerate(bereiche):
                 else:
                     st.metric(label="Übersicht Sarkome", value="-")
 
-
-        # ================== Kachel 2 "Gruppen (Sarkome/Weichteiltumoren)" ==================
-with col2.container(border=True):
-    # Vorab-Check der Analyse-Auswahl
-    if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
-        # Sicherstellen, dass notwendige Spalten vorhanden sind
-        required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
-        if required_cols.issubset(df_bereich.columns):
+            # ================== Kachel 3 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+            # ================== Kachel 3 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+            with col3.container(border=True):
+                if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
+                    # Check auf Spalten
+                    required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
+                    if required_cols.issubset(df_bereich.columns):
             
-            # Effiziente Filterung
-            df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-            total_sarkome = len(df_plot)
+                        # Filter für Sarkom/Weichteiltumor
+                        df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                        total_gruppen = len(df_plot)
             
-            st.metric(label="Sarkome/Weichteiltumoren", value=total_sarkome)
-            st.divider()
+                        st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value=total_gruppen)
+                        st.divider()
             
-            if total_sarkome > 0:
-                # Aggregation
-                grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"]).size().reset_index(name="count")
+                        if total_gruppen > 0:
+                            # Gruppierung nach Jahr und Sarkomgruppe
+                            grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
                 
-                fig = px.bar(
-                    grp,
-                    x="jahr_opdatum",
-                    y="count",
-                    color="gruppen_chir_onko_sark",
-                    barmode="group",
-                    text="count",
-                    color_discrete_sequence=COLOR_PALETTE,
-                    labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
-                )
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="gruppen_chir_onko_sark",
+                                barmode="group",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
+                            )
                 
-                fig.update_traces(
-                    textfont_size=16, 
-                    textposition='auto',
-                    marker_line_width=0  # Cleaner Look
-                )
+                            fig.update_traces(
+                                textfont_size=16, 
+                                textposition='auto',
+                                marker_line_width=0
+                            )
                 
-                fig.update_layout(
-                    height=400,  # Feste Höhe für Dashboard-Kacheln
-                    margin=dict(l=10, r=10, t=0, b=10),
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    showlegend=True,
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.02,
-                        xanchor="center",
-                        x=0.5
-                    ),
-                    xaxis={"type": "category", "tickfont": {"size": 16}},
-                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                )
+                            fig.update_layout(
+                                height=450, 
+                                margin=dict(l=10, r=10, t=0, b=10),
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                showlegend=True,
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=1),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            )
                 
-                st.plotly_chart(fig, use_container_width=True, key="chart_sarkome_gruppen", config={'displayModeBar': False})
-            else:
-                st.info("Keine Daten für diesen Bereich gefunden.")
-        else:
-            st.error("Fehlende Spalten im Datensatz.")
-    else:
-        st.metric(label="Sarkome/Weichteiltumoren", value="-")
+                            st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
+                        else:
+                            st.info("Keine Gruppendaten")
+                    else:
+                        st.error("Spalten fehlen")
+                else:
+                    st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
         
-        # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
+        
 
        
         
