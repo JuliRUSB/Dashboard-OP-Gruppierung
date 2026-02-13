@@ -628,11 +628,11 @@ for i, bereich in enumerate(bereiche):
         
                             fig.update_layout(
                                 height=300, 
-                                margin=dict(l=10, r=10, t=60, b=10),
+                                margin=dict(l=10, r=10, t=80, b=10),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", y=0.99, xanchor="right", x=0.99),
+                                legend=dict(orientation="h", yanchor="top", y=1.02, xanchor="right", x=1),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
