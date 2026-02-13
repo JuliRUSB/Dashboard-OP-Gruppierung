@@ -535,14 +535,13 @@ for i, bereich in enumerate(bereiche):
         tabs = st.tabs(analysen)
 
         # ----------- TEST ----------- #
-        st.title("Dashboard Übersicht")
 
         # Drei Spalten/Kacheln erstellen
         col1, col2, col3 = st.columns(3)
 
         # Kachel 1
         with col1.container(border=True):
-            st.metric(label="Umsatz", value="€ 50.000", delta="10%")
+            st.metric(label="Gesamtzahl Operationen")
 
             # Trennlinie für optische Struktur
             st.divider()
