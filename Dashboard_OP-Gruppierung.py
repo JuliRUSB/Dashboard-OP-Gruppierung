@@ -627,7 +627,7 @@ for i, bereich in enumerate(bereiche):
                             )
         
                             fig.update_layout(
-                                height=500, 
+                                height=450, 
                                 margin=dict(l=10, r=10, t=0, b=10),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
