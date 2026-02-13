@@ -590,10 +590,58 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Gesamtzahl Operationen", value="-")
 
+            # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
+            if "Übersicht Sarkome" in analysen:
+                with tabs[analysen.index("Übersicht Sarkome")]:
+                    # Sicherstellen, dass notwendige Spalten vorhanden sind
+                    required_cols = {"type_sark", "jahr_opdatum"}
+                    if required_cols.issubset(df_bereich.columns):
+            
+                        # Filterung (Spezifisch für Sarkome)
+                        df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                        total_sark = len(df_plot)
+            
+                        st.metric(label="Gesamtzahl Sarkome", value=total_sark)
+                        st.divider()
+            
+                        if total_sark > 0:
+                            # Aggregation
+                            grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
-        # Kachel 2
-        with col2.container(border=True):
-            st.metric(label="Neukunden", value="120", delta="-2")
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="type_sark",
+                                barmode="group",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"type_sark": "Sarkomtyp"}
+                            )
+            
+                            fig.update_traces(
+                                textfont_size=16, 
+                                textposition='auto', 
+                                marker_line_width=0
+                            )
+        
+                            fig.update_layout(
+                                height=300, 
+                                margin=dict(l=10, r=10, t=10, b=10),
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                showlegend=True,
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            )
+    
+                            st.plotly_chart(fig, use_container_width=True, key="chart_uebersicht_sarkome", config={'displayModeBar': False})
+                        else:
+                            st.info("Keine Daten für Sarkomtypen gefunden.")
+                    else:
+                        st.error("Fehlende Spalten im Datensatz.")
+
 
         # Kachel 3
         with col3.container(border=True):
