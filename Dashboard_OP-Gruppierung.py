@@ -632,7 +632,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
-                                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+                                legend=dict(orientation="h", yanchor="top", xanchor="right"),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
