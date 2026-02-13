@@ -601,7 +601,7 @@ for i, bereich in enumerate(bereiche):
                         df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
                         total_sark = len(df_plot)
             
-                        st.metric(label="Gesamtzahl Sarkome", value=total_sark)
+                        st.metric(label="Übersicht Sarkome", value="")
                         st.divider()
             
                         if total_sark > 0:
