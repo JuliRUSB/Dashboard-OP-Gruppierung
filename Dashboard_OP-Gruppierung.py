@@ -778,12 +778,12 @@ for i, bereich in enumerate(bereiche):
             
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_lokalisation = len(df_plot)
+                    total_lok = len(df_plot)
             
-                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lokalisation)
+                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
                     st.divider()
             
-                    if total_lokalisation > 0:
+                    if total_lok > 0:
                         # Gruppierung nach Jahr und Lokalisation
                         grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
@@ -816,7 +816,7 @@ for i, bereich in enumerate(bereiche):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lokalisation_sark_chart", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
                     else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
