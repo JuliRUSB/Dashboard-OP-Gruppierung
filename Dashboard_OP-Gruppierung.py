@@ -543,6 +543,46 @@ for i, bereich in enumerate(bereiche):
         # Kachel 1
         with col1.container(border=True):
             st.metric(label="Umsatz", value="€ 50.000", delta="10%")
+             # ================== Reiter Übersicht Sarkome ================== 
+        if "Gesamtzahl Operationen" in analysen:
+            with tabs[analysen.index("Gesamtzahl Operationen")]:
+                if "bereich" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
+
+                    # Filter auf bereich = '4'
+                    df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+
+                    if df_plot.empty:
+                        st.info("Keine Daten für Chirurgische Onkologie/Sarkome")
+                    else:
+                        # Gruppieren und count berechnen
+                        grp = df_plot.groupby(["jahr_opdatum", "bereich"]).size().reset_index(name="count")
+
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="bereich",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                    
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='inside'
+                    )
+
+                    fig.update_layout(
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=False,
+                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+                        yaxis={"tickfont": {"size": 16}} 
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Keine Daten")
 
         # Kachel 2
         with col2.container(border=True):
