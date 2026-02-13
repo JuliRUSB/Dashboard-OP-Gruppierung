@@ -543,6 +543,10 @@ for i, bereich in enumerate(bereiche):
         # Kachel 1
         with col1.container(border=True):
             st.metric(label="Umsatz", value="€ 50.000", delta="10%")
+
+                # Trennlinie für optische Struktur
+                st.divider()
+            
              # ================== Reiter Übersicht Sarkome ================== 
             if "Gesamtzahl Operationen" in analysen:
                 if "bereich" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
