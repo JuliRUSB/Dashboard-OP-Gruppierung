@@ -541,7 +541,7 @@ for i, bereich in enumerate(bereiche):
 
         # Kachel 1
         with col1.container(border=True):
-            st.metric(label="Gesamtzahl Operationen")
+            st.metric(label="Gesamtzahl Operationen", value="")
 
             # Trennlinie für optische Struktur
             st.divider()
