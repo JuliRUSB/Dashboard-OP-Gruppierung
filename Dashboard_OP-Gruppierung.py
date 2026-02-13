@@ -769,8 +769,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="HIPEC bei CRS", value="-")
         
-        # ================== Kachel 5 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
-        with col5.container(border=True):
+        # ================== Kachel 6 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
+        with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
