@@ -541,17 +541,17 @@ for i, bereich in enumerate(bereiche):
 
         # Kachel 1
         with col1.container(border=True):
-            st.metric(label="Gesamtzahl Operationen", value="")
-
-            # Trennlinie für optische Struktur
-            st.divider()
-            
-             # ================== Reiter Übersicht Sarkome ================== 
+            # ================== Reiter Übersicht Sarkome ================== 
             if "Gesamtzahl Operationen" in analysen:
                 if "bereich" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
-
-                    # Filter auf bereich = '4'
+                    # Filter auf bereich = 'Chirurgische Onkologie/Sarkome'
                     df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+            
+                    # Metric mit der Anzahl der gefilterten Operationen
+                    st.metric(label="Gesamtzahl Operationen", value=len(df_plot))
+            
+                    # Trennlinie für optische Struktur
+                    st.divider()
 
                     if df_plot.empty:
                         st.info("Keine Daten für Chirurgische Onkologie/Sarkome")
