@@ -395,6 +395,24 @@ if zugang_filter != "Alle":
     df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['zugang'] == zugang_filter]
     df_filtered = df_filtered[df_filtered['zugang'] == zugang_filter]
 
+# ----------- TEST ----------- #
+st.title("Dashboard Übersicht")
+
+# Drei Spalten/Kacheln erstellen
+col1, col2, col3 = st.columns(3)
+
+# Kachel 1
+with col1.container(border=True):
+    st.metric(label="Umsatz", value="€ 50.000", delta="10%")
+
+# Kachel 2
+with col2.container(border=True):
+    st.metric(label="Neukunden", value="120", delta="-2")
+
+# Kachel 3
+with col3.container(border=True):
+    st.metric(label="Konversionsrate", value="3.2%", delta="0.5%")
+
 # -------- Kennzahlen --------
 st.header("Kennzahlen")
 col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
