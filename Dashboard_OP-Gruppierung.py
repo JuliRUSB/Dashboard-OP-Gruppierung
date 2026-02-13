@@ -715,47 +715,59 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 4 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
-        if "HIPEC bei CRS" in analysen:
-            with tabs[analysen.index("HIPEC bei CRS")]:
-                if "hipec" in df_bereich.columns and df_bereich["hipec"].nunique() > 0:
-
-                    # Filter auf type_sark = '1'
+        with col4.container(border=True):
+            if "HIPEC bei CRS" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum", "hipec"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filter für CRS
                     df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-
-                    if df_plot.empty:
-                        st.info("Keine Daten für type_sark = '1'")
+                    total_crs = len(df_plot)
+            
+                    st.metric(label="HIPEC bei CRS", value=total_crs)
+                    st.divider()
+            
+                    if total_crs > 0:
+                        # Gruppierung nach Jahr und HIPEC
+                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "hipec", "count"]
+                
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="hipec",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"hipec": "HIPEC"}
+                        )
+                
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+                
+                        fig.update_layout(
+                            #height=450, 
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
                     else:
-                        # Gruppieren und count berechnen
-                        grp = df_plot.groupby(["jahr_opdatum", "hipec"]).size().reset_index(name="count")
-                        
-                        if not grp.empty:
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="count",
-                                color="hipec",
-                                barmode="group",
-                                text="count",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"hipec": "HIPEC"}
-                            )
-                    
-                            fig.update_traces(
-                                textfont_size=16, 
-                                textposition='inside'
-                            )
-
-                            fig.update_layout(
-                                xaxis_title=None, 
-                                yaxis_title=None, 
-                                xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                                yaxis={"tickfont": {"size": 16}} 
-                            )
-                    
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info("Keine Daten")
-
+                        st.info("Keine Daten für CRS")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="HIPEC bei CRS", value="-")
         # ================== GRUPPEN ==================
         if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             with tabs[analysen.index("Lokalisation (Sarkome/Weichteiltumoren)")]:
