@@ -637,7 +637,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="left", x=1),
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=1),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
@@ -692,7 +692,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="left", x=1),
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=1),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
