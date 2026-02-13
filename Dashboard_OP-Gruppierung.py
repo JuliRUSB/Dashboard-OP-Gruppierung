@@ -580,8 +580,8 @@ for i, bereich in enumerate(bereiche):
                         )
                     
                         st.plotly_chart(fig, use_container_width=True)
-                    else:
-                        st.info("Keine Daten")
+                else:
+                    st.info("Keine Daten")
 
         # Kachel 2
         with col2.container(border=True):
