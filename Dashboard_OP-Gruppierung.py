@@ -590,7 +590,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Gesamtzahl Operationen", value="-")
 
-            # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
+            # ================== Kachel 2 "èbersicht Sarkome" ==================
             with col2.container(border=True):
                 if "Übersicht Sarkome" in analysen:
                     # Check auf Spalten
@@ -632,6 +632,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
+                                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
