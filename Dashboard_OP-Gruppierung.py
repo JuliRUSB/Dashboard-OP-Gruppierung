@@ -582,7 +582,7 @@ for i, bereich in enumerate(bereiche):
                         )
                 
                         fig.update_layout(
-                            height='auto', # Feste Höhe für Dashboard-Kacheln
+                            #height=450, # Feste Höhe für Dashboard-Kacheln
                             margin=dict(l=10, r=10, t=0, b=10),
                             xaxis_title=None, 
                             yaxis_title=None, 
@@ -636,7 +636,7 @@ for i, bereich in enumerate(bereiche):
                             )
         
                             fig.update_layout(
-                                height=450, 
+                                #height=450, 
                                 margin=dict(l=10, r=10, t=0, b=10),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
@@ -691,7 +691,7 @@ for i, bereich in enumerate(bereiche):
                             )
                 
                             fig.update_layout(
-                                height=450, 
+                                #height=450, 
                                 margin=dict(l=10, r=10, t=0, b=0),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
