@@ -540,54 +540,54 @@ for i, bereich in enumerate(bereiche):
         col1, col2, col3 = st.columns(3)
 
         with col1.container(border=True):
-    # Vorab-Check der Analyse-Auswahl
-    if "Gesamtzahl Operationen" in analysen:
-        # Sicherstellen, dass notwendige Spalten vorhanden sind
-        required_cols = {"bereich", "jahr_opdatum"}
-        if required_cols.issubset(df_bereich.columns):
+            # Vorab-Check der Analyse-Auswahl
+            if "Gesamtzahl Operationen" in analysen:
+                # Sicherstellen, dass notwendige Spalten vorhanden sind
+                required_cols = {"bereich", "jahr_opdatum"}
+                if required_cols.issubset(df_bereich.columns):
             
-            # Effiziente Filterung
-            df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
-            total_ops = len(df_plot)
+                    # Effiziente Filterung
+                    df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+                    total_ops = len(df_plot)
             
-            st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
-            st.divider()
+                    st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
+                    st.divider()
             
-            if total_ops > 0:
-                # Aggregation
-                grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
+                    if total_ops > 0:
+                        # Aggregation
+                        grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
                 
-                fig = px.bar(
-                    grp,
-                    x="jahr_opdatum",
-                    y="count",
-                    text="count",
-                    color_discrete_sequence=COLOR_PALETTE
-                )
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE
+                        )
             
-                fig.update_traces(
-                    textfont_size=14, 
-                    textposition='auto',
-                    marker_line_width=0 # Cleaner Look
-                )
+                        fig.update_traces(
+                            textfont_size=14, 
+                            textposition='auto',
+                            marker_line_width=0 # Cleaner Look
+                        )
                 
-                fig.update_layout(
-                    height=300, # Feste Höhe für Dashboard-Kacheln
-                    margin=dict(l=10, r=10, t=10, b=10),
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    showlegend=False,
-                    xaxis={"type": "category", "tickfont": {"size": 14}},
-                    yaxis={"showticklabels": False, "showgrid": False} # Cleanere Optik da Text auf Balken
-                )
+                        fig.update_layout(
+                            height=300, # Feste Höhe für Dashboard-Kacheln
+                            margin=dict(l=10, r=10, t=10, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=False,
+                            xaxis={"type": "category", "tickfont": {"size": 14}},
+                            yaxis={"showticklabels": False, "showgrid": False} # Cleanere Optik da Text auf Balken
+                        )
             
-                st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
+                    else:
+                        st.info("Keine Daten für diesen Bereich gefunden.")
+                else:
+                    st.error("Fehlende Spalten im Datensatz.")
             else:
-                st.info("Keine Daten für diesen Bereich gefunden.")
-        else:
-            st.error("Fehlende Spalten im Datensatz.")
-    else:
-        st.metric(label="Gesamtzahl Operationen", value="-")
+                st.metric(label="Gesamtzahl Operationen", value="-")
 
 
         # Kachel 2
