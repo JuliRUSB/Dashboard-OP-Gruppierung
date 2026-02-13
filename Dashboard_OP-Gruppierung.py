@@ -284,7 +284,7 @@ st.markdown(
         font-size: 18px !important;
     }
     /* Grösse der Überschriften in den Kacheln */
-    [data-testid="stMetricLabel"] {
+    [data-testid="stMetricLabel"] label {
         font-size: 18px !important;
     }
     </style>
