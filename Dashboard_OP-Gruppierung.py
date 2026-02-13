@@ -539,6 +539,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren
         col1, col2, col3 = st.columns(3)
 
+        # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
         with col1.container(border=True):
             # Vorab-Check der Analyse-Auswahl
             if "Gesamtzahl Operationen" in analysen:
