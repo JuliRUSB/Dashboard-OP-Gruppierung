@@ -544,8 +544,8 @@ for i, bereich in enumerate(bereiche):
         with col1.container(border=True):
             st.metric(label="Umsatz", value="€ 50.000", delta="10%")
 
-                # Trennlinie für optische Struktur
-                st.divider()
+            # Trennlinie für optische Struktur
+            st.divider()
             
              # ================== Reiter Übersicht Sarkome ================== 
             if "Gesamtzahl Operationen" in analysen:
