@@ -283,6 +283,10 @@ st.markdown(
     div[data-testid="stButtonGroup"] label p {
         font-size: 18px !important;
     }
+    /* Grösse der Überschriften in den Kacheln */
+    [data-testid="stMetricLabel"] {
+        font-size: 18px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
