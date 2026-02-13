@@ -623,7 +623,6 @@ for i, bereich in enumerate(bereiche):
                             fig.update_traces(
                                 textfont_size=16, 
                                 textposition='auto',
-                                name="",
                                 marker_line_width=0
                             )
         
@@ -633,7 +632,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=1),
+                                legend=dict(orientation="h", yanchor="bottom", xanchor="right", x=1),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
