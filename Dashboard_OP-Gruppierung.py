@@ -18,7 +18,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 
-# ==================================================F
+# ==================================================
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
 # ==================================================
@@ -582,7 +582,7 @@ for i, bereich in enumerate(bereiche):
                         )
                 
                         fig.update_layout(
-                            height="auto", # Feste Höhe für Dashboard-Kacheln
+                            height='auto', # Feste Höhe für Dashboard-Kacheln
                             margin=dict(l=10, r=10, t=0, b=10),
                             xaxis_title=None, 
                             yaxis_title=None, 
