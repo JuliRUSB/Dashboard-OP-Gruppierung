@@ -539,52 +539,56 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren
         col1, col2, col3 = st.columns(3)
 
-        # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
         with col1.container(border=True):
-             
-            if "Gesamtzahl Operationen" in analysen:
-                if "bereich" in df_bereich.columns and df_bereich["bereich"].nunique() > 0:
-                    # Filter auf bereich = 'Chirurgische Onkologie/Sarkome'
-                    df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+    # Vorab-Check der Analyse-Auswahl
+    if "Gesamtzahl Operationen" in analysen:
+        # Sicherstellen, dass notwendige Spalten vorhanden sind
+        required_cols = {"bereich", "jahr_opdatum"}
+        if required_cols.issubset(df_bereich.columns):
             
-                    # Metric mit der Anzahl der gefilterten Operationen
-                    st.metric(label="Gesamtzahl Operationen", value=len(df_plot))
+            # Effiziente Filterung
+            df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+            total_ops = len(df_plot)
             
-                    # Trennlinie für optische Struktur
-                    st.divider()
+            st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
+            st.divider()
+            
+            if total_ops > 0:
+                # Aggregation
+                grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
+                
+                fig = px.bar(
+                    grp,
+                    x="jahr_opdatum",
+                    y="count",
+                    text="count",
+                    color_discrete_sequence=COLOR_PALETTE
+                )
+            
+                fig.update_traces(
+                    textfont_size=14, 
+                    textposition='auto',
+                    marker_line_width=0 # Cleaner Look
+                )
+                
+                fig.update_layout(
+                    height=300, # Feste Höhe für Dashboard-Kacheln
+                    margin=dict(l=10, r=10, t=10, b=10),
+                    xaxis_title=None, 
+                    yaxis_title=None, 
+                    showlegend=False,
+                    xaxis={"type": "category", "tickfont": {"size": 14}},
+                    yaxis={"showticklabels": False, "showgrid": False} # Cleanere Optik da Text auf Balken
+                )
+            
+                st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
+            else:
+                st.info("Keine Daten für diesen Bereich gefunden.")
+        else:
+            st.error("Fehlende Spalten im Datensatz.")
+    else:
+        st.metric(label="Gesamtzahl Operationen", value="-")
 
-                    if df_plot.empty:
-                        st.info("Keine Daten für Chirurgische Onkologie/Sarkome")
-                    else:
-                        # Gruppieren und count berechnen
-                        grp = df_plot.groupby(["jahr_opdatum", "bereich"]).size().reset_index(name="count")
-
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="bereich",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE
-                        )
-                    
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto'
-                        )
-
-                        fig.update_layout(
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=False,
-                            xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                            yaxis={"tickfont": {"size": 16}} 
-                        )
-                    
-                        st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Daten")
 
         # Kachel 2
         with col2.container(border=True):
