@@ -617,31 +617,31 @@ for i, bereich in enumerate(bereiche):
                                 barmode="group",
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE
-                )
+                            )
             
-                fig.update_traces(
-                    textfont_size=16, 
-                    textposition='auto', # Deine gewünschte Einstellung
-                    marker_line_width=0
-                )
+                            fig.update_traces(
+                                textfont_size=16, 
+                                textposition='auto', # Deine gewünschte Einstellung
+                                marker_line_width=0
+                            )
         
-                fig.update_layout(
-                    height=300, 
-                    margin=dict(l=10, r=10, t=10, b=10),
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    showlegend=True,
-                    xaxis={"type": "category", "tickfont": {"size": 16}},
-                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                )
+                            fig.update_layout(
+                                height=300, 
+                                margin=dict(l=10, r=10, t=10, b=10),
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                showlegend=True,
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            )
     
-                st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
-            else:
-                st.info("Keine Sarkom-Daten")
-        else:
-            st.error("Spalten fehlen")
-    else:
-        st.metric(label="Übersicht Sarkome", value="-")
+                            st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
+                        else:
+                            st.info("Keine Sarkom-Daten")
+                    else:
+                        st.error("Spalten fehlen")
+                else:
+                    st.metric(label="Übersicht Sarkome", value="-")
 
 
         # Kachel 3
