@@ -288,6 +288,10 @@ st.markdown(
     [data-testid="stMetricLabel"] label {
         font-size: 18px !important;
     }
+
+     [data-testid="stMetricValue"] {
+        font-size: 24px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
