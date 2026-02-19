@@ -818,9 +818,6 @@ for i, bereich in enumerate(bereiche):
                         ).size()
                         grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "Dindo_Status", "count"]
 
-                        # Kombinations-Label für Legende
-                        grp["Lokalisation & Dindo"] = grp["lokalisation_sark"] + " – " + grp["Dindo_Status"]
-
                         # Sortierung sicherstellen (chronologisch)
                         grp = grp.sort_values("diag_quartal_opdatum")
                        
@@ -828,11 +825,12 @@ for i, bereich in enumerate(bereiche):
                             grp,
                             x="diag_quartal_opdatum",
                             y="count",
-                            color="Lokalisation & Dindo",
+                            color="lokalisation_sark",
+                            facet_col="Dindo_Status",
                             barmode="stack",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"Lokalisation & Dindo": "Lokalisation & Dindo-Grad"}
+                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
                         )
                
                         fig.update_traces(
@@ -840,15 +838,17 @@ for i, bereich in enumerate(bereiche):
                             textposition='auto',
                             marker_line_width=0
                         )
+
+                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                         fig.update_layout(
-                            margin=dict(l=10, r=10, t=0, b=10),
+                            margin=dict(l=10, r=10, t=30, b=10),
                             xaxis_title=None,
                             yaxis_title=None,
                             showlegend=True,
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                            xaxis={"type": "category", "tickfont": {"size": 14}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                         )
                
                         st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
