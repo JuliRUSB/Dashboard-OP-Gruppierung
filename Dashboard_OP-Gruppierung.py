@@ -733,7 +733,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (2. Reihe)
         col4, col5, col6 = st.columns(3)
         
-        # ================== Kachel 5 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
+        # ================== Kachel 4 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
         with col4.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
@@ -802,7 +802,76 @@ for i, bereich in enumerate(bereiche):
                     st.error("Spalten fehlen")
             else:
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
-                
+
+        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa nach Lokalisation" ==================
+        with col4.container(border=True):
+            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+                if required_cols.issubset(df_bereich.columns):
+                    
+                    # Filter für Sarkom/Weichteiltumor
+                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                    total_lok = len(df_plot)
+
+                    # Werte der Variable ausgeben zum testen, sowie den Datentyp
+                    # st.write(df_plot["statistik_dindo_2"].unique())
+                    # st.write(df_plot["statistik_dindo_2"].dtype)
+
+                    # Filter für Clavien-Dindo-Grad
+                    df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
+                    total_lok = len(df_plot)                    
+                    
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
+                    st.divider()
+           
+                    if total_lok > 0:
+                        # Gruppierung nach Quartal, Lokalisation
+                        grp = df_plot.groupby(
+                            ["diag_quartal_opdatum", "lokalisation_sark"],
+                            as_index=False
+                        ).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("diag_quartal_opdatum")
+                       
+                        fig = px.bar(
+                            grp,
+                            x="diag_quartal_opdatum",
+                            y="count",
+                            color="lokalisation_sark",
+                            barmode="stack",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                        )
+               
+                        fig.update_traces(
+                            textfont_size=16,
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+
+                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+               
+                        fig.update_layout(
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 14}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                        )
+               
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
+                    else:
+                            st.info("Keine Daten für Sarkom/Weichteiltumor")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         # ================== Kachel 6 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
