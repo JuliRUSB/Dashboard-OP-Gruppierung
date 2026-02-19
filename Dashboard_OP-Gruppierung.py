@@ -816,7 +816,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa nach Lokalisation" ==================
+        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
         with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
@@ -888,7 +888,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
-        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa UND Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
+        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa UND Clavien-Dindo-Grad < IIIa" ==================
         with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
@@ -897,12 +897,12 @@ for i, bereich in enumerate(bereiche):
                     
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_lok = len(df_plot)                 
+                    total_cd = len(df_plot)                 
                     
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa UND Clavien-Dindo-Grad < IIIa", value=total_lok)
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa UND Clavien-Dindo-Grad < IIIa", value=total_cd)
                     st.divider()
            
-                    if total_lok > 0:
+                    if total_cd > 0:
                         # Gruppierung nach Quartal, Lokalisation
                         grp = df_plot.groupby(
                             ["diag_quartal_opdatum", "lokalisation_sark"],
@@ -959,17 +959,17 @@ for i, bereich in enumerate(bereiche):
         with col7.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
                 if required_cols.issubset(df_bereich.columns):
             
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["malignit_t_sark"] == 1].copy()
-                    total_lok = len(df_plot)
+                    total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value=total_lok)
+                    st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value=total_malign)
                     st.divider()
             
-                    if total_lok > 0:
+                    if total_malign > 0:
                         # Gruppierung nach Jahr und Malignität
                         grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
