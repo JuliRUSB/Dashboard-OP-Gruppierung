@@ -829,43 +829,43 @@ for i, bereich in enumerate(bereiche):
                     # Sortierung sicherstellen (chronologisch)
                     grp = grp.sort_values("diag_quartal_opdatum")
                        
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            facet_col="Dindo_Status",
-                            barmode="stack",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        facet_col="Dindo_Status",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                    )
                
-                        fig.update_traces(
-                            textfont_size=16,
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
 
-                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
-                        fig.update_layout(
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 14}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
-                        )
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                    )
                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
+                st.error("Spalten fehlen")
+        else:
+            st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
                 
         # ================== Kachel 6 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col6.container(border=True):
