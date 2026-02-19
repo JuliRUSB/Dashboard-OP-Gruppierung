@@ -754,7 +754,7 @@ for i, bereich in enumerate(bereiche):
                     
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_lok = len(df_plot)
+                    total_cd = len(df_plot)
 
                     # Werte der Variable ausgeben zum testen, sowie den Datentyp
                     # st.write(df_plot["statistik_dindo_2"].unique())
@@ -762,12 +762,12 @@ for i, bereich in enumerate(bereiche):
 
                     # Filter für Clavien-Dindo-Grad
                     df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
-                    total_lok = len(df_plot)                    
+                    total_cd = len(df_plot)                    
                     
-                    st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_lok)
+                    st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_cd)
                     st.divider()
            
-                    if total_lok > 0:
+                    if total_cd > 0:
                         # Gruppierung nach Quartal, Lokalisation
                         grp = df_plot.groupby(
                             ["diag_quartal_opdatum", "lokalisation_sark"],
