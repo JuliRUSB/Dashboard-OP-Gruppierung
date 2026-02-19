@@ -800,18 +800,24 @@ for i, bereich in enumerate(bereiche):
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
+
+                     # Label für die X-Achse erstellen (z.B. "2023 Q1")
+                     df_plot["x_label"] = df_plot["jahr_opdatum"].astype(str) + " Q" + df_plot["quartal_opdatum"].astype(str)
             
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
             
                     if total_lok > 0:
                         # Gruppierung nach Jahr und Lokalisation
-                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
-                
+                        grp = df_plot.groupby(["x-label", "lokalisation_sark"], as_index=False).size()
+                        grp.columns = ["x_label", "lokalisation_sark", "count"]
+
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("x_label")
+                        
                         fig = px.bar(
                             grp,
-                            x="jahr_opdatum",
+                            x="x_label",
                             y="count",
                             color="lokalisation_sark",
                             barmode="stack",
