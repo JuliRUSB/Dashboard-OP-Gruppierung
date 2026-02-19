@@ -549,7 +549,7 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
 # ANALYSEN_PRO_BEREICH = {
-    # "Chirurgische Onkologie/Sarkome" # : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    # "Chirurgische Onkologie/Sarkome" : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     # "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
@@ -560,33 +560,35 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
     # "Pankreas" # : ["Zugang", "Komplikationen", "LOS", "Trends"],
 # }
 
-# ===== Bereiche definieren (TABS 2. Ebene) =====
-ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome",
-    "Leber",
-    "Upper-GI",
-    "BMC",
-    "Pankreas",
-}
+# bereiche = list(ANALYSEN_PRO_BEREICH.keys())
 
-bereiche = list(ANALYSEN_PRO_BEREICH.keys())
+# bereich_tabs = st.tabs(bereiche)
 
+# for i, bereich in enumerate(bereiche):
+#     with bereich_tabs[i]:
+
+#         df_bereich = df_filtered[df_filtered["bereich"] == bereich]
+
+#         st.subheader(f"Bereich: {bereich}")
+
+#         if df_bereich.empty:
+#             st.warning("Keine Daten für diesen Bereich")
+#             continue
+
+ #        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
+ #        tabs = st.tabs(analysen)
+
+
+# ===== Bereiche definieren (TABS) =====
+bereiche = sorted(df_filtered["bereich"].dropna().unique())
 bereich_tabs = st.tabs(bereiche)
-
 for i, bereich in enumerate(bereiche):
     with bereich_tabs[i]:
-
         df_bereich = df_filtered[df_filtered["bereich"] == bereich]
-
         st.subheader(f"Bereich: {bereich}")
-
         if df_bereich.empty:
             st.warning("Keine Daten für diesen Bereich")
             continue
-
-        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
-        tabs = st.tabs(analysen)
-
         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
 
         # Drei Spalten/Kacheln definieren (1. Reihe)
