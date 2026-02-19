@@ -790,7 +790,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="HIPEC bei CRS", value="-")
 
-        # ================== Kachel 5 "Clavien-Dindo-Grad nach Lokalisation" ==================
+        # ================== Kachel 5 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
         with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
@@ -806,7 +806,7 @@ for i, bereich in enumerate(bereiche):
                     # st.write(df_plot["statistik_dindo_2"].dtype)
 
                     # Filter für Clavien-Dindo-Grad
-                    df_plot = df_bereich[df_bereich["statistik_dindo_2"] == '0'].copy()
+                    df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
                     total_lok = len(df_plot)
                     
                     # Dindo-Status lesbar machen, da die Variable eine String ausgibt, 0 und 1 in "" setzen
@@ -834,7 +834,6 @@ for i, bereich in enumerate(bereiche):
                             x="diag_quartal_opdatum",
                             y="count",
                             color="lokalisation_sark",
-                            facet_col="Dindo_Status",
                             barmode="stack",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
