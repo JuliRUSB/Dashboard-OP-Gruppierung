@@ -690,7 +690,7 @@ for i, bereich in enumerate(bereiche):
                                 df_plot,
                                 names="type_sark",
                                 color_discrete_sequence=COLOR_PALETTE,
-                                labels={"type_sark": "Sarkomtyp"}
+                                labels={"hipec": "HIPEC"}
                             )
             
                             fig.update_traces(
