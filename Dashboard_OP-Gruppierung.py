@@ -899,7 +899,7 @@ for i, bereich in enumerate(bereiche):
                         grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
+                        quartal_order = sorted(grp["diag_quartal_opdatum"].unique().tolist())
                        
                         fig = px.bar(
                             grp,
