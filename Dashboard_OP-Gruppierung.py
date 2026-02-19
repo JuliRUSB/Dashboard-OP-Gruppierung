@@ -1150,7 +1150,7 @@ for i, bereich in enumerate(bereiche):
                     )
                 
                     st.plotly_chart(fig, use_container_width=True, key="kachel_andere_chart", config={'displayModeBar': False})
-                 else:
+                else:
                     st.info("Keine Daten für Malignität")
             else:
                 st.error("Spalten fehlen")
