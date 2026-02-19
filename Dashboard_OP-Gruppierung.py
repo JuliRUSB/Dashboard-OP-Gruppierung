@@ -217,7 +217,7 @@ def prepare_data(df):
         13: 'Grade V'
     }
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
-    df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc__surv_mapping).fillna('Unbekannt')
+    df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
     
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
