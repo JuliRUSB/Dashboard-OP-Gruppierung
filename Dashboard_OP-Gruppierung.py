@@ -139,9 +139,9 @@ def prepare_data(df):
     malignit_t_sark_cols = [c for c in df.columns if c.startswith('malignit_t_sark___')]
     if malignit_t_sark_cols:
         mapping = {
-    'malignit_t_sark___1': 'maligne'
-    'malignit_t_sark___3': 'intermediate'
-    'malignit_t_sark___2': 'andere'
+    'malignit_t_sark___1': 'maligne',
+    'malignit_t_sark___3': 'intermediate',
+    'malignit_t_sark___2': 'andere',
     }
     
     # Zugang: numerische Codes in Text umwandeln
