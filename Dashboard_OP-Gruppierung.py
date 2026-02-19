@@ -648,88 +648,31 @@ for i, bereich in enumerate(bereiche):
             # ================== Kachel 2 "Übersicht Sarkome" ==================
             with col2.container(border=True):
                 # if "Übersicht Sarkome" in analysen:
-                    # Check auf Spalten
-                    required_cols = {"type_sark", "jahr_opdatum"}
-                    if required_cols.issubset(df_bereich.columns):
-            
-                        # Filter für Sarkome
-                        df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-                        total_sark = len(df_plot)
-            
-                        st.metric(label="Übersicht Sarkome", value=total_sark)
-                        st.divider()
-            
-                        if total_sark > 0:
-                            # Gruppierung nach Jahr und Typ
-                            grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                            grp.columns = ["jahr_opdatum", "type_sark", "count"]
-
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="count",
-                                color="type_sark",
-                                barmode="group",
-                                text="count",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"type_sark": "Sarkomtyp"}
-                            )
-                
-                            fig.update_traces(
-                                textfont_size=16, 
-                                textposition='auto',
-                                marker_line_width=0
-                            )
-                
-                            fig.update_layout(
-                                #height=450, 
-                                margin=dict(l=10, r=10, t=0, b=10),
-                                xaxis_title=None, 
-                                yaxis_title=None, 
-                                showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                                xaxis={"type": "category", "tickfont": {"size": 16}},
-                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                            )
-    
-                            st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
-                        else:
-                            st.info("Keine Sarkom-Daten")
-                    else:
-                        st.error("Spalten fehlen")
-                # else:
-                    # st.metric(label="Übersicht Sarkome", value="-")
-    
-        # ================== Kachel 3 HIPEC bei CRS ================== 
-        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
-        #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
-        with col3.container(border=True):
-            # if "HIPEC bei CRS" in analysen:
                 # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "hipec"}
+                required_cols = {"type_sark", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für CRS
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                    total_crs = len(df_plot)
+                    # Filter für Sarkome
+                    df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                    total_sark = len(df_plot)
             
-                    st.metric(label="HIPEC bei CRS", value=total_crs)
+                    st.metric(label="Übersicht Sarkome", value=total_sark)
                     st.divider()
             
-                    if total_crs > 0:
-                        # Gruppierung nach Jahr und HIPEC
-                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "hipec", "count"]
-                
+                    if total_sark > 0:
+                        # Gruppierung nach Jahr und Typ
+                        grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "type_sark", "count"]
+
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
                             y="count",
-                            color="hipec",
+                            color="type_sark",
                             barmode="group",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"hipec": "HIPEC"}
+                            labels={"type_sark": "Sarkomtyp"}
                         )
                 
                         fig.update_traces(
@@ -748,12 +691,69 @@ for i, bereich in enumerate(bereiche):
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
-                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
+    
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
                     else:
-                        st.info("Keine Daten für CRS")
+                        st.info("Keine Sarkom-Daten")
                 else:
                     st.error("Spalten fehlen")
+                # else:
+                    # st.metric(label="Übersicht Sarkome", value="-")
+    
+        # ================== Kachel 3 HIPEC bei CRS ================== 
+        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
+        #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
+        with col3.container(border=True):
+            # if "HIPEC bei CRS" in analysen:
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum", "hipec"}
+            if required_cols.issubset(df_bereich.columns):
+            
+                # Filter für CRS
+                df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot)
+            
+                st.metric(label="HIPEC bei CRS", value=total_crs)
+                st.divider()
+            
+                if total_crs > 0:
+                    # Gruppierung nach Jahr und HIPEC
+                    grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+                
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="hipec",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC"}
+                    )
+                
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+                
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
+                
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für CRS")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="HIPEC bei CRS", value="-")
             
@@ -764,206 +764,206 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 4 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
         with col4.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+            if required_cols.issubset(df_bereich.columns):
                     
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_cd = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                total_cd = len(df_plot)
 
-                    # Werte der Variable ausgeben zum testen, sowie den Datentyp
-                    # st.write(df_plot["statistik_dindo_2"].unique())
-                    # st.write(df_plot["statistik_dindo_2"].dtype)
+                # Werte der Variable ausgeben zum testen, sowie den Datentyp
+                # st.write(df_plot["statistik_dindo_2"].unique())
+                # st.write(df_plot["statistik_dindo_2"].dtype)
 
-                    # Filter für Clavien-Dindo-Grad
-                    df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
-                    total_cd = len(df_plot)                    
+                # Filter für Clavien-Dindo-Grad
+                df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
+                total_cd = len(df_plot)                    
                     
-                    st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_cd)
-                    st.divider()
+                st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_cd)
+                st.divider()
            
-                    if total_cd > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_cd > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="stack",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                    )
                
-                        fig.update_traces(
-                            textfont_size=16,
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
 
-                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
-                        fig.update_layout(
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 14}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
-                        )
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                    )
                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_<IIIa_chart", config={'displayModeBar': False})
-                    else:
-                            st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_<IIIa_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
         with col5.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+            if required_cols.issubset(df_bereich.columns):
                     
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_lok = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                total_lok = len(df_plot)
 
-                    # Werte der Variable ausgeben zum testen, sowie den Datentyp
-                    # st.write(df_plot["statistik_dindo_2"].unique())
-                    # st.write(df_plot["statistik_dindo_2"].dtype)
+                # Werte der Variable ausgeben zum testen, sowie den Datentyp
+                # st.write(df_plot["statistik_dindo_2"].unique())
+                # st.write(df_plot["statistik_dindo_2"].dtype)
 
-                    # Filter für Clavien-Dindo-Grad
-                    df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
-                    total_lok = len(df_plot)                    
+                # Filter für Clavien-Dindo-Grad
+                df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)                    
                     
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
-                    st.divider()
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
+                st.divider()
            
-                    if total_lok > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_lok > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="stack",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
-                            category_orders={"diag_quartal_opdatum": quartal_order}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        category_orders={"diag_quartal_opdatum": quartal_order}
+                    )
                
-                        fig.update_traces(
-                            textfont_size=16,
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
 
-                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
-                        fig.update_layout(
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 14}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
-                        )
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                    )
                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
-                    else:
-                            st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
         # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa UND Clavien-Dindo-Grad < IIIa" ==================
         with col6.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+            if required_cols.issubset(df_bereich.columns):
                     
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_cd = len(df_plot)                 
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                total_cd = len(df_plot)                 
                     
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa UND Clavien-Dindo-Grad < IIIa", value=total_cd)
-                    st.divider()
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa UND Clavien-Dindo-Grad < IIIa", value=total_cd)
+                st.divider()
            
-                    if total_cd > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_cd > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="stack",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                    )
                
-                        fig.update_traces(
-                            textfont_size=16,
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
 
-                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
-                        fig.update_layout(
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 14}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
-                        )
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                    )
                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_alle_grade_chart", config={'displayModeBar': False})
-                    else:
-                            st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_alle_grade_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")      
         
@@ -974,186 +974,186 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren) - maligne" ==================
         with col7.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
+            if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'maligne'].copy()
-                    total_malign = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'maligne'].copy()
+                total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value=total_malign)
-                    st.divider()
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value=total_malign)
+                st.divider()
 
-                    if total_malign > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_malign > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                         
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
                 
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
                 
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_malign_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Daten für Malignität")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_malign_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Daten für Malignität")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
         # ================== Kachel 8 "Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE" ==================
         with col8.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
+            if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'intermediate'].copy()
-                    total_malign = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'intermediate'].copy()
+                total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value=total_malign)
-                    st.divider()
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value=total_malign)
+                st.divider()
 
-                    if total_malign > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_malign > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                         
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
                 
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
                 
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_interm_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Daten für Malignität")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_interm_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Daten für Malignität")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value="-")
 
         # ================== Kachel 9 "Malignität (Sarkome/Weichteiltumoren) - ANDERE" ==================
         with col9.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
+            if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'andere'].copy()
-                    total_malign = len(df_plot)
+                 # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'andere'].copy()
+                total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - ANDERE", value=total_malign)
-                    st.divider()
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - ANDERE", value=total_malign)
+                st.divider()
 
-                    if total_malign > 0:
-                        # Gruppierung nach Quartal, Lokalisation
-                        grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                if total_malign > 0:
+                    # Gruppierung nach Quartal, Lokalisation
+                    grp = df_plot.groupby(
+                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("diag_quartal_opdatum")
+                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                         
-                        fig = px.bar(
-                            grp,
-                            x="diag_quartal_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="diag_quartal_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
                 
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
                 
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_andere_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Daten für Malignität")
-                else:
-                    st.error("Spalten fehlen")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_andere_chart", config={'displayModeBar': False})
+                 else:
+                    st.info("Keine Daten für Malignität")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - ANDERE", value="-")
         
@@ -1163,110 +1163,110 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col10.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_gruppen = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                total_gruppen = len(df_plot)
             
-                    st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value=total_gruppen)
-                    st.divider()
+                st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value=total_gruppen)
+                st.divider()
             
-                    if total_gruppen > 0:
-                        # Gruppierung nach Jahr und Sarkomgruppe
-                        grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
+                if total_gruppen > 0:
+                    # Gruppierung nach Jahr und Sarkomgruppe
+                    grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
                 
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="gruppen_chir_onko_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="gruppen_chir_onko_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
+                    )
                 
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
                 
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=0),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=0),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Gruppendaten")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Gruppendaten")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
         # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col11.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
-                if required_cols.issubset(df_bereich.columns):
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+            if required_cols.issubset(df_bereich.columns):
             
-                    # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                    total_lok = len(df_plot)
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                total_lok = len(df_plot)
             
-                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
-                    st.divider()
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
+                st.divider()
             
-                    if total_lok > 0:
-                        # Gruppierung nach Jahr und Lokalisation
-                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                if total_lok > 0:
+                    # Gruppierung nach Jahr und Lokalisation
+                    grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
                 
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="lokalisation_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"lokalisation_sark": "Lokalisation"}
-                        )
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
                 
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
                 
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
-                    else:
-                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
         
