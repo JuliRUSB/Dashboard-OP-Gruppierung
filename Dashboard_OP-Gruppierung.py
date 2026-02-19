@@ -12,7 +12,6 @@ import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 # ==================================================
 # Konfiguration
 # ==================================================
@@ -823,7 +822,7 @@ for i, bereich in enumerate(bereiche):
                 
                         fig.update_traces(
                             textfont_size=16, 
-                            textposition='inside',
+                            textposition='auto',
                             marker_line_width=0
                         )
                 
