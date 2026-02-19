@@ -667,13 +667,13 @@ for i, bereich in enumerate(bereiche):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
     
-                            st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
-                        else:
-                            st.info("Keine Sarkom-Daten")
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
                     else:
-                        st.error("Spalten fehlen")
+                        st.info("Keine Sarkom-Daten")
                 else:
-                    st.metric(label="Übersicht Sarkome", value="-")
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Übersicht Sarkome", value="-")
     
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
