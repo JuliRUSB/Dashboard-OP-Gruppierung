@@ -143,6 +143,11 @@ def prepare_data(df):
     'malignit_t_sark___3': 'intermediate',
     'malignit_t_sark___2': 'andere',
     }
+    # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+        def get_malignit_t_sark(row):
+            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+        df['malignit_t_sark'] = df.apply(get_malignit_t_sark, axis=1)
+        df = df.drop(columns=malignit_t_sark_cols)  # Ursprüngliche Spalten löschen    
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
