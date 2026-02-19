@@ -804,7 +804,7 @@ for i, bereich in enumerate(bereiche):
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa nach Lokalisation" ==================
-        with col4.container(border=True):
+        with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
