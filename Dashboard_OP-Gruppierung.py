@@ -876,7 +876,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
-        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa  UND Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
+        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa UND Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
         with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
@@ -887,7 +887,7 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)                 
                     
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa UND Clavien-Dindo-Grad < IIIa", value=total_lok)
                     st.divider()
            
                     if total_lok > 0:
@@ -930,7 +930,7 @@ for i, bereich in enumerate(bereiche):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                         )
                
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_alle_grade_chart", config={'displayModeBar': False})
                     else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
