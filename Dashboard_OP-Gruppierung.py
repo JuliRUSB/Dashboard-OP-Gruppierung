@@ -801,14 +801,15 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
 
-                    # Dindo-Status lesbar machen
+                    # Werte der Variable ausgeben zum testen, sowie den Datentyp
+                    # st.write(df_plot["statistik_dindo_2"].unique())
+                    # st.write(df_plot["statistik_dindo_2"].dtype)
+                    
+                    # Dindo-Status lesbar machen, da die Variable eine String ausgibt, 0 und 1 in "" setzen
                     df_plot["Dindo_Status"] = df_plot["statistik_dindo_2"].map({
-                        0: "Dindo < IIIa",
-                        1: "Dindo ≥ IIIa"
+                        "0": "Dindo < IIIa",
+                        "1": "Dindo ≥ IIIa"
                     }).fillna("Unbekannt")
-                   
-                    st.write(df_plot["statistik_dindo_2"].unique())
-                    st.write(df_plot["statistik_dindo_2"].dtype)
                     
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
