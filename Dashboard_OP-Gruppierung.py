@@ -958,8 +958,8 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (3. Reihe)
         col10, col11, col12 = st.columns(3)
 
-        # ================== Kachel 7 "Gruppen (Sarkome/Weichteiltumoren)" ==================
-        with col7.container(border=True):
+        # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+        with col10.container(border=True):
             if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
@@ -1013,8 +1013,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
-        # ================== Kachel 8 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
-        with col8.container(border=True):
+        # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
+        with col11.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
