@@ -48,14 +48,16 @@ def export_redcap_data(api_url):
         'fields[3]': 'hsm',
         'fields[4]': 'zugang',
         'fields[5]': 'max_dindo_calc',
-        'fields[6]': 'los_opdatum',
-        'fields[7]':  'los_eintritt_austritt',
-        'fields[8]':  'type_sark',
-        'fields[9]':  'gruppen_chir_onko_sark',
-        'fields[10]':  'malignit_t_sark',
-        'fields[11]':  'lokalisation_sark',
-        'fields[12]':  'hipec',
-        'fields[13]':  'anastomosen_crs',
+        'fields[6]': 'max_dindo_calc_surv',
+        'fields[7]': 'los_opdatum',
+        'fields[8]':  'los_eintritt_austritt',
+        'fields[9]':  'type_sark',
+        'fields[10]':  'gruppen_chir_onko_sark',
+        'fields[11]':  'malignit_t_sark',
+        'fields[12]':  'lokalisation_sark',
+        'fields[13]':  'hipec',
+        'fields[14]':  'anastomosen_crs',
+        'fields[15]':  'statistik_dindo_2',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -177,7 +179,7 @@ def prepare_data(df):
         df['lokalisation_sark'] = df.apply(get_lokalisation_sark, axis=1)
         df = df.drop(columns=lokalisation_sark_cols)  # Ursprüngliche Spalten löschen
     
-    # Clavien-Dindo-Max: numerische Codes in Text umwandeln
+    # max_dindo_calc: numerische Codes in Text umwandeln
     max_dindo_calc_mapping = {
         0: 'Keine Komplikation',
         1: 'Grade I',
@@ -197,6 +199,26 @@ def prepare_data(df):
     df['max_dindo_calc'] = pd.to_numeric(df['max_dindo_calc'], errors='coerce')
     df['max_dindo_calc'] = df['max_dindo_calc'].map(max_dindo_calc_mapping).fillna('Unbekannt')
 
+    # max_dindo_calc_surv: numerische Codes in Text umwandeln
+    max_dindo_calc_surv_mapping = {
+        0: 'Keine Komplikation',
+        1: 'Grade I',
+        2: 'Grade Id',
+        3: 'Grade II',
+        4: 'Grade IId',
+        5: 'Grade IIIa',
+        6: 'Grade IIIa d',
+        7: 'Grade IIIb',
+        8: 'Grade IIIb d',
+        9: 'Grade IVa',
+        10: 'Grade IVa d',
+        11: 'Grade IVb',
+        12: 'Grade IVb d',
+        13: 'Grade V'
+    }
+    df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
+    df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc__surv_mapping).fillna('Unbekannt')
+    
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
     # Quartal erstellen: 1, 2, 3 oder 4
@@ -768,7 +790,62 @@ for i, bereich in enumerate(bereiche):
                     st.error("Spalten fehlen")
             else:
                 st.metric(label="HIPEC bei CRS", value="-")
-        
+
+        # ================== Kachel 5 "Lokalisation und Clavien-Dindo-Grad" ==================
+        with col6.container(border=True):
+            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filter für Sarkom/Weichteiltumor
+                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                    total_lok = len(df_plot)
+            
+                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
+                    st.divider()
+            
+                    if total_lok > 0:
+                        # Gruppierung nach Jahr und Lokalisation
+                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="lokalisation_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"lokalisation_sark": "Lokalisation"}
+                        )
+                
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+                
+                        fig.update_layout(
+                            #height=450, 
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
+                    else:
+                        st.info("Keine Daten für Sarkom/Weichteiltumor")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
+                
         # ================== Kachel 6 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
