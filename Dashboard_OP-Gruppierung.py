@@ -560,6 +560,15 @@ bereiche = sorted(df_filtered["bereich"].dropna().unique())
     # "Pankreas" # : ["Zugang", "Komplikationen", "LOS", "Trends"],
 # }
 
+# ===== Bereiche definieren (TABS 2. Ebene) =====
+ANALYSEN_PRO_BEREICH = {
+    "Chirurgische Onkologie/Sarkome",
+    "Leber",
+    "Upper-GI",
+    "BMC",
+    "Pankreas",
+}
+
 bereiche = list(ANALYSEN_PRO_BEREICH.keys())
 
 bereich_tabs = st.tabs(bereiche)
