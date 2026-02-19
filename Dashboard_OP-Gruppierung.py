@@ -688,7 +688,7 @@ for i, bereich in enumerate(bereiche):
                 
                         fig = px.pie(
                                 df_plot,
-                                names="type_sark",
+                                names="hipec",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"hipec": "HIPEC"}
                             )
