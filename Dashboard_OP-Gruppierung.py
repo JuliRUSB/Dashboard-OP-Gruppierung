@@ -801,9 +801,6 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
 
-                    # Dindo-Grad für die Legende schöner benennen (0/1 -> Grad 0 / Grad 1)
-                    df_plot["Dindo_Label"] = "Dindo Grad " + df_plot["statistik_dindo_2"].astype(str)
-
                     # Erstellung der X-Achsen-Beschriftung (Format "Q1-2026")
                     # Umwandlung in int entfernt das ".0", falls vorhanden
                     q_counts['x_label'] = ("Q" + q_counts['quartal_opdatum'].astype(int).astype(str) + "- " + q_counts['jahr_opdatum'].astype(int).astype(str))
