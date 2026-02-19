@@ -973,13 +973,18 @@ for i, bereich in enumerate(bereiche):
             
                     st.metric(label="Malignität (Sarkome/Weichteiltumoren) - Maligne", value=total_malign)
                     st.divider()
-            
+
                     if total_malign > 0:
-                        # Gruppierung nach Jahr und Malignität
-                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                        # Gruppierung nach Quartal, Lokalisation
+                        grp = df_plot.groupby(
+                            ["diag_quartal_opdatum", "lokalisation_sark"],
+                            as_index=False
+                        ).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
-
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("diag_quartal_opdatum")
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                         
                         fig = px.bar(
                             grp,
