@@ -818,10 +818,10 @@ for i, bereich in enumerate(bereiche):
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
            
-                    if total_lok == '0':
+                    if total_lok > 0:
                         # Gruppierung nach Quartal, Lokalisation
                         grp = df_plot.groupby(
-                            ["diag_quartal_opdatum", "lokalisation_sark"],
+                            ["diag_quartal_opdatum", "lokalisation_sark", statistik_dindo_2],
                             as_index=False
                         ).size()
                         grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
