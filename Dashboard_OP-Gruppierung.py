@@ -597,7 +597,7 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
         with col1.container(border=True):
             # Vorab-Check der Analyse-Auswahl
-            if "Gesamtzahl Operationen" in analysen:
+            # if "Gesamtzahl Operationen" in analysen:
                 # Sicherstellen, dass notwendige Spalten vorhanden sind
                 required_cols = {"bereich", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
@@ -641,13 +641,13 @@ for i, bereich in enumerate(bereiche):
                     else:
                         st.info("Keine Daten für diesen Bereich gefunden.")
                 else:
-                    st.error("Fehlende Spalten im Datensatz.")
-            else:
-                st.metric(label="Gesamtzahl Operationen", value="-")
+                    # st.error("Fehlende Spalten im Datensatz.")
+            # else:
+                # st.metric(label="Gesamtzahl Operationen", value="-")
 
             # ================== Kachel 2 "Übersicht Sarkome" ==================
             with col2.container(border=True):
-                if "Übersicht Sarkome" in analysen:
+                # if "Übersicht Sarkome" in analysen:
                     # Check auf Spalten
                     required_cols = {"type_sark", "jahr_opdatum"}
                     if required_cols.issubset(df_bereich.columns):
@@ -697,14 +697,14 @@ for i, bereich in enumerate(bereiche):
                             st.info("Keine Sarkom-Daten")
                     else:
                         st.error("Spalten fehlen")
-                else:
-                    st.metric(label="Übersicht Sarkome", value="-")
+                # else:
+                    # st.metric(label="Übersicht Sarkome", value="-")
     
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
         with col3.container(border=True):
-            if "HIPEC bei CRS" in analysen:
+            # if "HIPEC bei CRS" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "hipec"}
                 if required_cols.issubset(df_bereich.columns):
@@ -754,8 +754,8 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für CRS")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="HIPEC bei CRS", value="-")
+            # else:
+                # st.metric(label="HIPEC bei CRS", value="-")
             
 
         # Drei Spalten/Kacheln definieren (2. Reihe)
@@ -763,7 +763,7 @@ for i, bereich in enumerate(bereiche):
         
         # ================== Kachel 4 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
         with col4.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
@@ -829,12 +829,12 @@ for i, bereich in enumerate(bereiche):
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
         with col5.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
@@ -901,12 +901,12 @@ for i, bereich in enumerate(bereiche):
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
 
         # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa UND Clavien-Dindo-Grad < IIIa" ==================
         with col6.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
@@ -964,8 +964,8 @@ for i, bereich in enumerate(bereiche):
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")      
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")      
         
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
@@ -973,7 +973,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren) - maligne" ==================
         with col7.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
                 if required_cols.issubset(df_bereich.columns):
@@ -1030,12 +1030,12 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Malignität")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
+            # else:
+                # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
         # ================== Kachel 8 "Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE" ==================
         with col8.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
                 if required_cols.issubset(df_bereich.columns):
@@ -1092,12 +1092,12 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Malignität")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value="-")
+            # else:
+                # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value="-")
 
         # ================== Kachel 9 "Malignität (Sarkome/Weichteiltumoren) - ANDERE" ==================
         with col9.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
                 if required_cols.issubset(df_bereich.columns):
@@ -1154,15 +1154,15 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Malignität")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - ANDERE", value="-")
+            # else:
+                # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - ANDERE", value="-")
         
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col10, col11, col12 = st.columns(3)
 
         # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col10.container(border=True):
-            if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
                 if required_cols.issubset(df_bereich.columns):
@@ -1212,12 +1212,12 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Gruppendaten")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
+            # else:
+                # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
         # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col11.container(border=True):
-            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
                 if required_cols.issubset(df_bereich.columns):
@@ -1267,12 +1267,12 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
-            else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
         
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
-        if "Gruppen" in analysen:
+        # if "Gruppen" in analysen:
             with tabs[analysen.index("Gruppen")]:
                 if "leber_gruppen" in df_bereich.columns and df_bereich["leber_gruppen"].nunique() > 0:
                     grp = df_bereich.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
@@ -1302,11 +1302,11 @@ for i, bereich in enumerate(bereiche):
                     )
                     
                     st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Gruppendaten")
+                # else:
+                    # st.info("Keine Gruppendaten")
 
         # ================== ZUGANG ==================
-        if "Zugang" in analysen:
+        # if "Zugang" in analysen:
             with tabs[analysen.index("Zugang")]:
                 if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
                     zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
@@ -1336,11 +1336,11 @@ for i, bereich in enumerate(bereiche):
                     )
                     
                     st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Zugangsdaten")
+                # else:
+                    # st.info("Keine Zugangsdaten")
 
         # ================== KOMPLIKATIONEN ==================
-        if "Komplikationen" in analysen:
+        # if "Komplikationen" in analysen:
             with tabs[analysen.index("Komplikationen")]:
                 if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
                     d = (
@@ -1359,11 +1359,11 @@ for i, bereich in enumerate(bereiche):
                         color_continuous_scale="Greens"
                     )
                     st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info("Keine Komplikationsdaten")
+                # else:
+                    # st.info("Keine Komplikationsdaten")
 
         # ================== HSM ==================
-        if "HSM" in analysen:
+        # if "HSM" in analysen:
             with tabs[analysen.index("HSM")]:
                 if df_bereich['hsm'].notna().any():
                     df_hsm = df_bereich.dropna(subset=['hsm','jahr_opdatum']).copy()
@@ -1406,11 +1406,11 @@ for i, bereich in enumerate(bereiche):
                             labels={"hsm_label": "HSM"}
                         )
                         st.plotly_chart(fig_bereich, use_container_width=True)
-                else:
-                    st.info("Keine HSM-Daten für diesen Bereich")
+                # else:
+                    # st.info("Keine HSM-Daten für diesen Bereich")
 
         # ================== TRENDS ==================
-        if "Trends" in analysen:
+        # if "Trends" in analysen:
             with tabs[analysen.index("Trends")]:
                 t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
                 t.columns = ["jahr_opdatum", "count"]
