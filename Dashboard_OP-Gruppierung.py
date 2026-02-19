@@ -817,7 +817,7 @@ for i, bereich in enumerate(bereiche):
                         grp.columns = ["x_label", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("quartal")
+                        grp = grp.sort_values("x_label")
                         
                         fig = px.bar(
                             grp,
