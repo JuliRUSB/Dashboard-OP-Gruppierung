@@ -793,58 +793,71 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 5 "Clavien-Dindo-Grad nach Lokalisation" ==================
         with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-                required_cols = {"diag_quartal_opdatum", "quartal_sort", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
+                # Check auf Spalten
+                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
-    
+           
+                    # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
 
-                    # Dindo-Status Mapping mit Sonderzeichen ≥
+                    # Dindo-Status lesbar machen
                     df_plot["Dindo_Status"] = df_plot["statistik_dindo_2"].map({
                         0: "Dindo < IIIa",
                         1: "Dindo ≥ IIIa"
-                    })
-            
-                    # Kombinierte Variable für die Farbe, damit beides (Lok + Dindo) im Balken ist
-                    df_plot["Lok_Dindo"] = df_plot["lokalisation_sark"] + " (" + df_plot["Dindo_Status"] + ")"
-
+                    }).fillna("Unbekannt")
+                   
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
-    
+           
                     if total_lok > 0:
-                        # Gruppierung: Quartal auf X, Kombi-Feld als Farbe
-                        grp = df_plot.groupby(["quartal_sort", "diag_quartal_opdatum", "Lok_Dindo"], as_index=False).size()
-                        grp = grp.sort_values("quartal_sort")
-                        # Spaltennamen explizit setzen für px.bar
-                        grp.columns = ["quartal_sort", "diag_quartal_opdatum", "Lok_Dindo", "count"]
+                        # Gruppierung nach Quartal, Lokalisation UND Dindo-Status
+                        grp = df_plot.groupby(
+                            ["diag_quartal_opdatum", "lokalisation_sark", "Dindo_Status"],
+                            as_index=False
+                        ).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "Dindo_Status", "count"]
 
+                        # Kombinations-Label für Legende
+                        grp["Lokalisation & Dindo"] = grp["lokalisation_sark"] + " – " + grp["Dindo_Status"]
+
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("diag_quartal_opdatum")
+                       
                         fig = px.bar(
                             grp,
                             x="diag_quartal_opdatum",
                             y="count",
-                            color="Lok_Dindo",
+                            color="Lokalisation & Dindo",
                             barmode="stack",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"Lok_Dindo": "Lokalisation & Status", "diag_quartal_opdatum": "Quartal"}
+                            labels={"Lokalisation & Dindo": "Lokalisation & Dindo-Grad"}
                         )
-        
-                        fig.update_traces(textfont_size=16, textposition='auto')
+               
+                        fig.update_traces(
+                            textfont_size=16,
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+               
                         fig.update_layout(
                             margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, yaxis_title=None,
-                            legend=dict(orientation="v", yanchor="top", xanchor="left", x=1.02),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                             xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showgrid": True, "tickfont": {"size": 16}} 
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                         )
-        
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_final_fix", config={'displayModeBar': False})
+               
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
                     else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
             else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
                 
         # ================== Kachel 6 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
         with col6.container(border=True):
