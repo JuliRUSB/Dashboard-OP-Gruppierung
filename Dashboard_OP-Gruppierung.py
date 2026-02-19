@@ -968,7 +968,7 @@ for i, bereich in enumerate(bereiche):
                 if required_cols.issubset(df_bereich.columns):
             
                     # Filter für Sarkom/Weichteiltumor
-                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == '1'].copy()
+                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'maligne'].copy()
                     total_malign = len(df_plot)
             
                     st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value=total_malign)
