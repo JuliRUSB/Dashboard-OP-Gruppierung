@@ -791,18 +791,18 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="HIPEC bei CRS", value="-")
 
-        # ================== Kachel 5 "Lokalisation und Clavien-Dindo-Grad" ==================
+        # ================== Kachel 5 "Clavien-Dindo-Grad nach Lokalisation" ==================
         with col6.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+                required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
             
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
             
-                    st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
+                    st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
             
                     if total_lok > 0:
@@ -815,7 +815,7 @@ for i, bereich in enumerate(bereiche):
                             x="jahr_opdatum",
                             y="count",
                             color="lokalisation_sark",
-                            barmode="group",
+                            barmode="stack",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
                             labels={"lokalisation_sark": "Lokalisation"}
@@ -823,7 +823,7 @@ for i, bereich in enumerate(bereiche):
                 
                         fig.update_traces(
                             textfont_size=16, 
-                            textposition='auto',
+                            textposition='inside',
                             marker_line_width=0
                         )
                 
@@ -838,7 +838,7 @@ for i, bereich in enumerate(bereiche):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
                 
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_stack_chart", config={'displayModeBar': False})
                     else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
