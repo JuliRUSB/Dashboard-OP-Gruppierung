@@ -1085,7 +1085,7 @@ for i, bereich in enumerate(bereiche):
                 st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value="-")
 
         # ================== Kachel 9 "Malignität (Sarkome/Weichteiltumoren) - ANDERE" ==================
-        with col8.container(border=True):
+        with col9.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
