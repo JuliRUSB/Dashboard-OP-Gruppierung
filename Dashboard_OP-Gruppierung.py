@@ -809,7 +809,7 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
                     total_lok = len(df_plot)                    
                     
-                    st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
+                    st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_lok)
                     st.divider()
            
                     if total_lok > 0:
