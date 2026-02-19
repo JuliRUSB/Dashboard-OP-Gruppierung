@@ -806,7 +806,8 @@ for i, bereich in enumerate(bereiche):
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        category_orders={"diag_quartal_opdatum": quartal_order}
                     )
                
                     fig.update_traces(
@@ -943,7 +944,8 @@ for i, bereich in enumerate(bereiche):
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        category_orders={"diag_quartal_opdatum": quartal_order}
                     )
                
                     fig.update_traces(
