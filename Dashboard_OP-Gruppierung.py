@@ -637,7 +637,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
             
-                    st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="chart_ops_onkologie", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"chart_ops_onkologie_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
             else:
@@ -692,7 +693,8 @@ for i, bereich in enumerate(bereiche):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
     
-                        st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
+                        # st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_chart_{bereich}", config={'displayModeBar': False})
                     else:
                         st.info("Keine Sarkom-Daten")
                 else:
@@ -749,7 +751,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_crs_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für CRS")
             else:
@@ -824,7 +827,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_<IIIa_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_<IIIa_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_<IIIa_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
@@ -896,7 +900,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_>=IIIa_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
@@ -959,7 +964,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_alle_grade_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_alle_grade_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_alle_grade_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
@@ -1025,7 +1031,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_malign_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_malign_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_malign_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Malignität")
             else:
@@ -1087,7 +1094,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_interm_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_interm_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_interm_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Malignität")
             else:
@@ -1149,7 +1157,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_andere_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_andere_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_andere_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Malignität")
             else:
@@ -1207,7 +1216,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_gruppen_sarkome_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
@@ -1262,7 +1272,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
