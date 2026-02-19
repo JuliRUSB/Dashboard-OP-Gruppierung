@@ -734,7 +734,7 @@ for i, bereich in enumerate(bereiche):
         col4, col5, col6 = st.columns(3)
         
         # ================== Kachel 5 "Clavien-Dindo-Grad < IIIa nach Lokalisation" ==================
-        with col5.container(border=True):
+        with col4.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
