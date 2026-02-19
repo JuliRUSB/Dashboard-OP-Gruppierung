@@ -796,7 +796,7 @@ for i, bereich in enumerate(bereiche):
                 # Check auf Spalten
                 required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
-           
+                    df_plot["statistik_dindo_2"].unique()
                     # Filter für Sarkom/Weichteiltumor
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
