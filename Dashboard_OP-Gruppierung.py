@@ -794,7 +794,7 @@ for i, bereich in enumerate(bereiche):
         with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
-                required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+                required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
                 if required_cols.issubset(df_bereich.columns):
             
                     # Filter für Sarkom/Weichteiltumor
@@ -813,15 +813,15 @@ for i, bereich in enumerate(bereiche):
             
                     if total_lok > 0:
                         # Gruppierung nach Jahr und Lokalisation
-                        grp = df_plot.groupby(["x_label", "lokalisation_sark"], as_index=False).size()
-                        grp.columns = ["x_label", "lokalisation_sark", "count"]
+                        grp = df_plot.groupby(["diag_quartal_opdatum", "lokalisation_sark"], as_index=False).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("x_label")
+                        grp = grp.sort_values("diag_quartal_opdatum")
                         
                         fig = px.bar(
                             grp,
-                            x="x_label",
+                            x="diag_quartal_opdatum",
                             y="count",
                             color="lokalisation_sark",
                             barmode="stack",
