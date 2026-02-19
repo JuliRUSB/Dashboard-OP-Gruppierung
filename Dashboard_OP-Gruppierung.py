@@ -1284,162 +1284,160 @@ for i, bereich in enumerate(bereiche):
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
         # if "Gruppen" in analysen:
-        with st.container():
-            if "leber_gruppen" in df_bereich.columns and df_bereich["leber_gruppen"].nunique() > 0:
-                grp = df_bereich.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
-                grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
+        # with st.container():
+            # if "leber_gruppen" in df_bereich.columns and df_bereich["leber_gruppen"].nunique() > 0:
+                # grp = df_bereich.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
+                # grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
 
-                fig = px.bar(
-                    grp,
-                    x="jahr_opdatum",
-                    y="count",
-                    color="leber_gruppen",
-                    barmode="group",
-                    text="count",
-                    color_discrete_sequence=COLOR_PALETTE,
-                    labels={"leber_gruppen": "Lebergruppen"}
-                )
+                # fig = px.bar(
+                    # grp,
+                    # x="jahr_opdatum",
+                    # y="count",
+                    # color="leber_gruppen",
+                    # barmode="group",
+                    # text="count",
+                    # color_discrete_sequence=COLOR_PALETTE,
+                    # labels={"leber_gruppen": "Lebergruppen"}
+                # )
 
-                fig.update_traces(
-                    textfont_size=16, 
-                    textposition='inside'
-                )
+                # fig.update_traces(
+                    # textfont_size=16, 
+                    # textposition='inside'
+                # )
 
-                fig.update_layout(
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                    yaxis={"tickfont": {"size": 16}} 
-                )
+                # fig.update_layout(
+                    # xaxis_title=None, 
+                    # yaxis_title=None, 
+                    # xaxis={"type": "category", "tickfont": {"size": 16}},
+                    # yaxis={"tickfont": {"size": 16}} 
+                # )
                     
-                st.plotly_chart(fig, use_container_width=True)
-                # else:
-                    # st.info("Keine Gruppendaten")
+                # st.plotly_chart(fig, use_container_width=True)
+                # # else:
+                    # # st.info("Keine Gruppendaten")
 
         # ================== ZUGANG ==================
         # if "Zugang" in analysen:
-        with st.container():
-            if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
-                zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                zug.columns = ["jahr_opdatum", "zugang", "count"]
+        # with st.container():
+            # if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
+                # zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                # zug.columns = ["jahr_opdatum", "zugang", "count"]
 
-                fig = px.bar(
-                    zug,
-                    x="jahr_opdatum",
-                    y="count",
-                    color="zugang",
-                    barmode="group",
-                    text="count",
-                    color_discrete_sequence=COLOR_PALETTE,
-                    labels={"zugang": "Zugang"}
-                )
+                # fig = px.bar(
+                    # zug,
+                    # x="jahr_opdatum",
+                    # y="count",
+                    # color="zugang",
+                    # barmode="group",
+                    # text="count",
+                    # color_discrete_sequence=COLOR_PALETTE,
+                    # labels={"zugang": "Zugang"}
+                # )
 
-                fig.update_traces(
-                    textfont_size=16, 
-                    textposition='inside'
-                )
+                # fig.update_traces(
+                    # textfont_size=16, 
+                    # textposition='inside'
+                # )
 
-                fig.update_layout(
-                    xaxis_title=None, 
-                    yaxis_title=None, 
-                    xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                    yaxis={"tickfont": {"size": 16}} 
-                )
+                # fig.update_layout(
+                    # xaxis_title=None, 
+                    # yaxis_title=None, 
+                    # xaxis={"type": "category", "tickfont": {"size": 16}},
+                    # yaxis={"tickfont": {"size": 16}} 
+                # )
                     
-                st.plotly_chart(fig, use_container_width=True)
-                # else:
-                    # st.info("Keine Zugangsdaten")
+                # st.plotly_chart(fig, use_container_width=True)
+                # # else:
+                    # # st.info("Keine Zugangsdaten")
 
         # ================== KOMPLIKATIONEN ==================
         # if "Komplikationen" in analysen:
-        with st.container():
-            if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
-                d = (
-                    df_bereich
-                    .dropna(subset=["jahr_opdatum", "max_dindo_calc"])
-                    .groupby(["jahr_opdatum", "max_dindo_calc"], as_index=False)
-                    .size()
-                )
-                d.columns = ["jahr_opdatum", "dindo", "count"]
-                mat = d.pivot(index="dindo", columns="jahr_opdatum", values="count").fillna(0)
+        # with st.container():
+            # if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
+                # d = (
+                    # df_bereich
+                    # .dropna(subset=["jahr_opdatum", "max_dindo_calc"])
+                    # .groupby(["jahr_opdatum", "max_dindo_calc"], as_index=False)
+                    # .size()
+                # )
+                # d.columns = ["jahr_opdatum", "dindo", "count"]
+                # mat = d.pivot(index="dindo", columns="jahr_opdatum", values="count").fillna(0)
 
-                fig = px.imshow(
-                    mat,
-                    text_auto=True,
-                    aspect="auto",
-                    color_continuous_scale="Greens"
-                )
-                st.plotly_chart(fig, use_container_width=True)
-                # else:
-                    # st.info("Keine Komplikationsdaten")
+                # fig = px.imshow(
+                    # mat,
+                    # text_auto=True,
+                    # aspect="auto",
+                    # color_continuous_scale="Greens"
+                # )
+                # st.plotly_chart(fig, use_container_width=True)
+                # # else:
+                    # # st.info("Keine Komplikationsdaten")
 
         # ================== HSM ==================
         # if "HSM" in analysen:
-        with st.container():
-            if df_bereich['hsm'].notna().any():
-                df_hsm = df_bereich.dropna(subset=['hsm','jahr_opdatum']).copy()
-                df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0':'Nein','1':'Ja','0.0':'Nein','1.0':'Ja'})
+        # with st.container():
+            # if df_bereich['hsm'].notna().any():
+                # df_hsm = df_bereich.dropna(subset=['hsm','jahr_opdatum']).copy()
+                # df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0':'Nein','1':'Ja','0.0':'Nein','1.0':'Ja'})
 
-                col1, col2 = st.columns(2)
+                # col1, col2 = st.columns(2)
 
-                with col1:
-                    hsm_jahr = df_hsm.groupby(['jahr_opdatum','hsm_label']).size().reset_index(name='count')
-                    fig_hsm = px.bar(
-                        hsm_jahr,
-                        x='jahr_opdatum',
-                        y='count',
-                        color='hsm_label',
-                        barmode='group',
-                        text='count',
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hsm_label": "HSM"}
-                    )
+                # with col1:
+                    # hsm_jahr = df_hsm.groupby(['jahr_opdatum','hsm_label']).size().reset_index(name='count')
+                    # fig_hsm = px.bar(
+                        # hsm_jahr,
+                        # x='jahr_opdatum',
+                        # y='count',
+                        # color='hsm_label',
+                        # barmode='group',
+                        # text='count',
+                        # color_discrete_sequence=COLOR_PALETTE,
+                        # labels={"hsm_label": "HSM"}
+                    # )
                         
-                    fig.update_layout(
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                        yaxis={"tickfont": {"size": 16}} 
-                    )
+                    # fig.update_layout(
+                        # xaxis_title=None, 
+                        # yaxis_title=None, 
+                        # xaxis={"type": "category", "tickfont": {"size": 16}},
+                        # yaxis={"tickfont": {"size": 16}} 
+                    # )
                         
-                    st.plotly_chart(fig_hsm, use_container_width=True)
+                    # st.plotly_chart(fig_hsm, use_container_width=True)
 
-                with col2:
-                    hsm_bereich = df_hsm.groupby(['bereich','hsm_label']).size().reset_index(name='count')
-                    fig_bereich = px.bar(
-                        hsm_bereich,
-                        x='bereich',
-                        y='count',
-                        color='hsm_label',
-                        barmode='stack',
-                        text='count',
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hsm_label": "HSM"}
-                    )
-                    st.plotly_chart(fig_bereich, use_container_width=True)
-                # else:
-                    # st.info("Keine HSM-Daten für diesen Bereich")
+                # with col2:
+                    # hsm_bereich = df_hsm.groupby(['bereich','hsm_label']).size().reset_index(name='count')
+                    # fig_bereich = px.bar(
+                        # hsm_bereich,
+                        # x='bereich',
+                        # y='count',
+                        # color='hsm_label',
+                        # barmode='stack',
+                        # text='count',
+                        # color_discrete_sequence=COLOR_PALETTE,
+                        # labels={"hsm_label": "HSM"}
+                    # )
+                    # st.plotly_chart(fig_bereich, use_container_width=True)
+                # # else:
+                    # # st.info("Keine HSM-Daten für diesen Bereich")
 
         # ================== TRENDS ==================
         # if "Trends" in analysen:
-        with st.container():
-            t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
-            t.columns = ["jahr_opdatum", "count"]
+        # with st.container():
+            # t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
+            # t.columns = ["jahr_opdatum", "count"]
 
-            fig = px.line(
-                t,
-                x="jahr_opdatum",
-                y="count",
-                markers=True,
-                color_discrete_sequence=COLOR_PALETTE,
-            )
+            # fig = px.line(
+                # t,
+                # x="jahr_opdatum",
+                # y="count",
+                # markers=True,
+                # color_discrete_sequence=COLOR_PALETTE,
+            # )
 
-                
-            fig.update_layout(
-                xaxis_title=None, 
-                yaxis_title=None, 
-                xaxis={"type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-                yaxis={"tickfont": {"size": 16}} 
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        
+            # fig.update_layout(
+                # xaxis_title=None, 
+                # yaxis_title=None, 
+                # xaxis={"type": "category", "tickfont": {"size": 16}},
+                # yaxis={"tickfont": {"size": 16}} 
+            # )
+            # st.plotly_chart(fig, use_container_width=True)
