@@ -768,7 +768,7 @@ for i, bereich in enumerate(bereiche):
 
                         # Sortierung sicherstellen (chronologisch)
                         grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()  # NEU
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
                         fig = px.bar(
                             grp,
@@ -839,7 +839,7 @@ for i, bereich in enumerate(bereiche):
 
                         # Sortierung sicherstellen (chronologisch)
                         grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()  # NEU
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
                         fig = px.bar(
                             grp,
@@ -850,6 +850,7 @@ for i, bereich in enumerate(bereiche):
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
                             labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"}
+                            category_orders={"diag_quartal_opdatum": quartal_order}
                         )
                
                         fig.update_traces(
@@ -902,7 +903,7 @@ for i, bereich in enumerate(bereiche):
 
                         # Sortierung sicherstellen (chronologisch)
                         grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()  # NEU
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                        
                         fig = px.bar(
                             grp,
