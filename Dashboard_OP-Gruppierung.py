@@ -807,14 +807,7 @@ for i, bereich in enumerate(bereiche):
 
                     # Filter für Clavien-Dindo-Grad
                     df_plot = df_plot[df_plot["statistik_dindo_2"] == '0'].copy()
-                    total_lok = len(df_plot)
-                    st.write(f"Nach Dindo-Filter: {len(df_plot)} Zeilen")
-                    
-                    # Dindo-Status lesbar machen, da die Variable eine String ausgibt, 0 und 1 in "" setzen
-                    # df_plot["Dindo_Status"] = df_plot["statistik_dindo_2"].map({
-                        # "0": "Dindo < IIIa",
-                        # "1": "Dindo ≥ IIIa"
-                    # }).fillna("Unbekannt")
+                    total_lok = len(df_plot)                    
                     
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
