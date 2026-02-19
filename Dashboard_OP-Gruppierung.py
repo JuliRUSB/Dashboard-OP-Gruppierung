@@ -940,15 +940,14 @@ for i, bereich in enumerate(bereiche):
                 else:
                     st.error("Spalten fehlen")
             else:
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")       
-       
-       
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")      
         
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
         col7, col8, col9 = st.columns(3)
         
-        
+        # Drei Spalten/Kacheln definieren (3. Reihe)
+        col10, col11, col12 = st.columns(3)
 
         # ================== Kachel 7 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col7.container(border=True):
