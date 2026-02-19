@@ -954,8 +954,63 @@ for i, bereich in enumerate(bereiche):
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
         col7, col8, col9 = st.columns(3)
+
+        # ================== Kachel 16 "Malignität (Sarkome/Weichteiltumoren)" ==================
+        with col11.container(border=True):
+            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filter für Sarkom/Weichteiltumor
+                    df_plot = df_bereich[df_bereich["malignit_t_sark"] = 1].copy()
+                    total_lok = len(df_plot)
+            
+                    st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value=total_lok)
+                    st.divider()
+            
+                    if total_lok > 0:
+                        # Gruppierung nach Jahr und Malignität
+                        grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="lokalisation_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"malignit_t_sark": "Malignität"}
+                        )
+                
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+                
+                        fig.update_layout(
+                            #height=450, 
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_malign_chart", config={'displayModeBar': False})
+                    else:
+                        st.info("Keine Daten für Malignität")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value="-")
         
-        # Drei Spalten/Kacheln definieren (3. Reihe)
+        # Drei Spalten/Kacheln definieren (4. Reihe)
         col10, col11, col12 = st.columns(3)
 
         # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
