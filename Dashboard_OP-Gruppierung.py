@@ -971,7 +971,7 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'maligne'].copy()
                     total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value=total_malign)
+                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - Maligne", value=total_malign)
                     st.divider()
             
                     if total_malign > 0:
@@ -987,7 +987,7 @@ for i, bereich in enumerate(bereiche):
                             barmode="group",
                             text="count",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"malignit_t_sark": "Malignität"}
+                            labels={"lokalisation_sark": "Lokalisation"}
                         )
                 
                         fig.update_traces(
