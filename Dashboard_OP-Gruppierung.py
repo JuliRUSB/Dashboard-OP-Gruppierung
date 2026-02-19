@@ -864,7 +864,7 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 7 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
-        with col4.container(border=True):
+        with col7.container(border=True):
             if "HIPEC bei CRS" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "hipec"}
