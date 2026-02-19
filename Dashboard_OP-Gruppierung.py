@@ -134,6 +134,15 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['gruppen_chir_onko_sark'] = df.apply(get_gruppen_chir_onko_sark, axis=1)
         df = df.drop(columns=gruppen_chir_onko_sark_cols)  # Ursprüngliche Spalten löschen
+
+    # Malignität: Spalten mit 'malignit_t_sark' mappen
+    malignit_t_sark_cols = [c for c in df.columns if c.startswith('malignit_t_sark___')]
+    if malignit_t_sark_cols:
+        mapping = {
+    'malignit_t_sark___1': 'maligne'
+    'malignit_t_sark___3': 'intermediate'
+    'malignit_t_sark___2': 'andere'
+    }
     
     # Zugang: numerische Codes in Text umwandeln
     zugang_mapping = {
