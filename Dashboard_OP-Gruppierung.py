@@ -801,8 +801,12 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
 
-                    # Label für die X-Achse erstellen (z.B. "2023 Q1")
-                    df_plot["x_label"] = df_plot["jahr_opdatum"].astype(str) + " Q" + df_plot["quartal_opdatum"].astype(str)
+                    # Dindo-Grad für die Legende schöner benennen (0/1 -> Grad 0 / Grad 1)
+                    df_plot["Dindo_Label"] = "Dindo Grad " + df_plot["statistik_dindo_2"].astype(str)
+
+                    # Erstellung der X-Achsen-Beschriftung (Format "Q1-2026")
+                    # Umwandlung in int entfernt das ".0", falls vorhanden
+                    q_counts['x_label'] = ("Q" + q_counts['quartal_opdatum'].astype(int).astype(str) + "- " + q_counts['jahr_opdatum'].astype(int).astype(str))
             
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
@@ -813,7 +817,7 @@ for i, bereich in enumerate(bereiche):
                         grp.columns = ["x_label", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("x_label")
+                        grp = grp.sort_values("quartal")
                         
                         fig = px.bar(
                             grp,
