@@ -971,7 +971,7 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'maligne'].copy()
                     total_malign = len(df_plot)
             
-                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - Maligne", value=total_malign)
+                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value=total_malign)
                     st.divider()
 
                     if total_malign > 0:
@@ -1020,7 +1020,70 @@ for i, bereich in enumerate(bereiche):
                 else:
                     st.error("Spalten fehlen")
             else:
-                st.metric(label="Malignität (Sarkome/Weichteiltumoren)", value="-")
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
+
+        # ================== Kachel 8 "Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE" ==================
+        with col7.container(border=True):
+            if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filter für Sarkom/Weichteiltumor
+                    df_plot = df_bereich[df_bereich["malignit_t_sark"] == 'intermediate'].copy()
+                    total_malign = len(df_plot)
+            
+                    st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value=total_malign)
+                    st.divider()
+
+                    if total_malign > 0:
+                        # Gruppierung nach Quartal, Lokalisation
+                        grp = df_plot.groupby(
+                            ["diag_quartal_opdatum", "lokalisation_sark"],
+                            as_index=False
+                        ).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("diag_quartal_opdatum")
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                        
+                        fig = px.bar(
+                            grp,
+                            x="diag_quartal_opdatum",
+                            y="count",
+                            color="lokalisation_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"lokalisation_sark": "Lokalisation"}
+                        )
+                
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+                
+                        fig.update_layout(
+                            #height=450, 
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                
+                        st.plotly_chart(fig, use_container_width=True, key="kachel_interm_chart", config={'displayModeBar': False})
+                    else:
+                        st.info("Keine Daten für Malignität")
+                else:
+                    st.error("Spalten fehlen")
+            else:
+                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - INTERMEDIATE", value="-")
+        
         
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col10, col11, col12 = st.columns(3)
