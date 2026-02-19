@@ -1273,7 +1273,7 @@ for i, bereich in enumerate(bereiche):
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
         # if "Gruppen" in analysen:
-        with tabs[analysen.index("Gruppen")]:
+        with st.container():
             if "leber_gruppen" in df_bereich.columns and df_bereich["leber_gruppen"].nunique() > 0:
                 grp = df_bereich.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
                 grp.columns = ["jahr_opdatum", "leber_gruppen", "count"]
@@ -1307,7 +1307,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== ZUGANG ==================
         # if "Zugang" in analysen:
-        with tabs[analysen.index("Zugang")]:
+        with st.container():
             if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
                 zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
                 zug.columns = ["jahr_opdatum", "zugang", "count"]
@@ -1341,7 +1341,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== KOMPLIKATIONEN ==================
         # if "Komplikationen" in analysen:
-        with tabs[analysen.index("Komplikationen")]:
+        with st.container():
             if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
                 d = (
                     df_bereich
@@ -1364,7 +1364,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== HSM ==================
         # if "HSM" in analysen:
-        with tabs[analysen.index("HSM")]:
+        with st.container():
             if df_bereich['hsm'].notna().any():
                 df_hsm = df_bereich.dropna(subset=['hsm','jahr_opdatum']).copy()
                 df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0':'Nein','1':'Ja','0.0':'Nein','1.0':'Ja'})
@@ -1411,7 +1411,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== TRENDS ==================
         # if "Trends" in analysen:
-        with tabs[analysen.index("Trends")]:
+        with st.container():
             t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
             t.columns = ["jahr_opdatum", "count"]
 
