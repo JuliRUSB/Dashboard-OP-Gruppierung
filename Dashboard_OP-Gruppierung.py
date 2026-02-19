@@ -979,9 +979,7 @@ for i, bereich in enumerate(bereiche):
                         grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
 
-                        # Sortierung sicherstellen (chronologisch)
-                        grp = grp.sort_values("diag_quartal_opdatum")
-                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+
                         
                         fig = px.bar(
                             grp,
