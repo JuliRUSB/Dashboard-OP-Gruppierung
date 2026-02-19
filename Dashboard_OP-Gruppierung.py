@@ -988,7 +988,7 @@ for i, bereich in enumerate(bereiche):
                         
                         fig = px.bar(
                             grp,
-                            x="jahr_opdatum",
+                            x="diag_quartal_opdatum",
                             y="count",
                             color="lokalisation_sark",
                             barmode="group",
