@@ -548,17 +548,17 @@ st.header("Detailanalysen")
 bereiche = sorted(df_filtered["bereich"].dropna().unique())
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
-ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome" # : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
-    "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
+# ANALYSEN_PRO_BEREICH = {
+    # "Chirurgische Onkologie/Sarkome" # : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    # "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
+    # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     #"Allgemein": ["Komplikationen", "LOS", "Trends"],
-    "BMC": ["Komplikationen", "LOS", "Trends"],
+    # "BMC": ["Komplikationen", "LOS", "Trends"],
     # "Endokrin": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Hernien": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    "Pankreas" # : ["Zugang", "Komplikationen", "LOS", "Trends"],
-}
+    # "Pankreas" # : ["Zugang", "Komplikationen", "LOS", "Trends"],
+# }
 
 bereiche = list(ANALYSEN_PRO_BEREICH.keys())
 
