@@ -755,14 +755,13 @@ for i, bereich in enumerate(bereiche):
                     st.metric(label="Clavien-Dindo-Grad < IIIa", value=total_lok)
                     st.divider()
            
-                     # Anzahl pro Quartal als separate Metrics nebeneinander
                      if total_lok > 0:
-                         q_summary = df_plot.groupby("diag_quartal_opdatum", as_index=False).size()
-                         q_summary.columns = ["diag_quartal_opdatum", "count"]
-                         q_summary = q_summary.sort_values("diag_quartal_opdatum")
-                         cols_q = st.columns(len(q_summary))
-                         for i, row in q_summary.iterrows():
-                             cols_q[list(q_summary.index).index(i)].metric(label=row["diag_quartal_opdatum"], value=row["count"])
+                        # Gruppierung nach Quartal, Lokalisation
+                        grp = df_plot.groupby(
+                            ["diag_quartal_opdatum", "lokalisation_sark"],
+                            as_index=False
+                        ).size()
+                        grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
                         grp = grp.sort_values("diag_quartal_opdatum")
