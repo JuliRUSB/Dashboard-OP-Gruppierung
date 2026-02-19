@@ -686,33 +686,25 @@ for i, bereich in enumerate(bereiche):
                         grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "hipec", "count"]
                 
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="hipec",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"hipec": "HIPEC"}
-                        )
-                
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='auto',
-                            marker_line_width=0
-                        )
-                
-                        fig.update_layout(
-                            #height=450, 
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
+                        fig = px.pie(
+                                df_plot,
+                                names="type_sark",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"type_sark": "Sarkomtyp"}
+                            )
+            
+                            fig.update_traces(
+                                textfont_size=16,
+                                textinfo='percent+label+value'  # absolute Zahlen + Prozente + Label
+                            )
+        
+                            fig.update_layout(
+                                margin=dict(l=10, r=10, t=0, b=10),
+                                showlegend=True,
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                            )
+    
+                            st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
                 
                         st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
                     else:
