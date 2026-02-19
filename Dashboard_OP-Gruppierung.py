@@ -801,8 +801,8 @@ for i, bereich in enumerate(bereiche):
                     df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                     total_lok = len(df_plot)
 
-                     # Label für die X-Achse erstellen (z.B. "2023 Q1")
-                     df_plot["x_label"] = df_plot["jahr_opdatum"].astype(str) + " Q" + df_plot["quartal_opdatum"].astype(str)
+                    # Label für die X-Achse erstellen (z.B. "2023 Q1")
+                    df_plot["x_label"] = df_plot["jahr_opdatum"].astype(str) + " Q" + df_plot["quartal_opdatum"].astype(str)
             
                     st.metric(label="Clavien-Dindo-Grad nach Lokalisation", value=total_lok)
                     st.divider()
