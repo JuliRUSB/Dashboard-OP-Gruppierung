@@ -792,7 +792,7 @@ for i, bereich in enumerate(bereiche):
                 st.metric(label="HIPEC bei CRS", value="-")
 
         # ================== Kachel 5 "Clavien-Dindo-Grad nach Lokalisation" ==================
-        with col6.container(border=True):
+        with col5.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2"}
