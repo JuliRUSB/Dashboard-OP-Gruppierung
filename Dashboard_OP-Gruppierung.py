@@ -960,11 +960,11 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (3. Reihe)
         col7, col8, col9 = st.columns(3)
 
-        # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren)" ==================
+        # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren) - maligne" ==================
         with col7.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
+                required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
                 if required_cols.issubset(df_bereich.columns):
             
                     # Filter für Sarkom/Weichteiltumor
@@ -978,7 +978,11 @@ for i, bereich in enumerate(bereiche):
                         # Gruppierung nach Jahr und Malignität
                         grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
-                
+
+                        # Sortierung sicherstellen (chronologisch)
+                        grp = grp.sort_values("diag_quartal_opdatum")
+                        quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                        
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
