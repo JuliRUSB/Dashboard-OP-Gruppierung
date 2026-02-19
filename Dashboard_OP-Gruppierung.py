@@ -693,18 +693,16 @@ for i, bereich in enumerate(bereiche):
                                 labels={"hipec": "HIPEC"}
                             )
             
-                            fig.update_traces(
-                                textfont_size=16,
-                                textinfo='percent+label+value'  # absolute Zahlen + Prozente + Label
-                            )
+                        fig.update_traces(
+                            textfont_size=16,
+                            textinfo='percent+label+value'  # absolute Zahlen + Prozente + Label
+                        )
         
-                            fig.update_layout(
-                                margin=dict(l=10, r=10, t=0, b=10),
-                                showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
-                            )
-    
-                            st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
+                        fig.update_layout(
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                        )
                 
                         st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
                     else:
