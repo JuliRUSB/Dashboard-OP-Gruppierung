@@ -809,7 +809,7 @@ for i, bereich in enumerate(bereiche):
             
                     if total_lok > 0:
                         # Gruppierung nach Jahr und Lokalisation
-                        grp = df_plot.groupby(["x-label", "lokalisation_sark"], as_index=False).size()
+                        grp = df_plot.groupby(["x_label", "lokalisation_sark"], as_index=False).size()
                         grp.columns = ["x_label", "lokalisation_sark", "count"]
 
                         # Sortierung sicherstellen (chronologisch)
