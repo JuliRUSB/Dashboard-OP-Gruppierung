@@ -570,7 +570,7 @@ for i, bereich in enumerate(bereiche):
         col1, col2, col3 = st.columns(3)
 
         # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
-        with col1.container(border=True):
+        with col0.container(border=True):
             # Vorab-Check der Analyse-Auswahl
             if "Gesamtzahl Operationen" in analysen:
                 # Sicherstellen, dass notwendige Spalten vorhanden sind
@@ -620,6 +620,63 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.metric(label="Gesamtzahl Operationen", value="-")
 
+            # ================== Kachel 3 HIPEC bei CRS ================== 
+                #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
+                #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
+                with col1.container(border=True):
+                    if "HIPEC bei CRS" in analysen:
+                        # Check auf Spalten
+                        required_cols = {"type_sark", "jahr_opdatum", "hipec"}
+                        if required_cols.issubset(df_bereich.columns):
+            
+                            # Filter für CRS
+                            df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                            total_crs = len(df_plot)
+            
+                            st.metric(label="HIPEC bei CRS", value=total_crs)
+                            st.divider()
+            
+                            if total_crs > 0:
+                                # Gruppierung nach Jahr und HIPEC
+                                grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                                grp.columns = ["jahr_opdatum", "hipec", "count"]
+                
+                                fig = px.bar(
+                                    grp,
+                                    x="jahr_opdatum",
+                                    y="count",
+                                    color="hipec",
+                                    barmode="group",
+                                    text="count",
+                                    color_discrete_sequence=COLOR_PALETTE,
+                                    labels={"hipec": "HIPEC"}
+                                )
+                
+                                fig.update_traces(
+                                    textfont_size=16, 
+                                    textposition='auto',
+                                    marker_line_width=0
+                                )
+                
+                                fig.update_layout(
+                                    #height=450, 
+                                    margin=dict(l=10, r=10, t=0, b=10),
+                                    xaxis_title=None, 
+                                    yaxis_title=None, 
+                                    showlegend=True,
+                                    legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                                    xaxis={"type": "category", "tickfont": {"size": 16}},
+                                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                                )
+                
+                                st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
+                            else:
+                                st.info("Keine Daten für CRS")
+                        else:
+                            st.error("Spalten fehlen")
+                    else:
+                        st.metric(label="HIPEC bei CRS", value="-")
+            
             # ================== Kachel 2 "Übersicht Sarkome" ==================
             with col2.container(border=True):
                 if "Übersicht Sarkome" in analysen:
