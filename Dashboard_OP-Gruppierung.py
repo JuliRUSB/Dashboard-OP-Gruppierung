@@ -955,8 +955,8 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (3. Reihe)
         col7, col8, col9 = st.columns(3)
 
-        # ================== Kachel 16 "Malignität (Sarkome/Weichteiltumoren)" ==================
-        with col11.container(border=True):
+        # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren)" ==================
+        with col17.container(border=True):
             if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
