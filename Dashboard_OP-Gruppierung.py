@@ -674,59 +674,59 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel 2 "Übersicht Sarkome" ==================
         with col2.container(border=True):
-    # if "Übersicht Sarkome" in analysen:
-    # Check auf Spalten
-    required_cols = {"type_sark", "jahr_opdatum"}
-    if required_cols.issubset(df_bereich.columns):
+            # if "Übersicht Sarkome" in analysen:
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum"}
+            if required_cols.issubset(df_bereich.columns):
     
-        # Filter für Sarkome
-        df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-        total_sark = len(df_plot)
+                # Filter für Sarkome
+                df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                total_sark = len(df_plot)
     
-        st.metric(label="Übersicht Sarkome", value=total_sark)
-        st.divider()
+                st.metric(label="Übersicht Sarkome", value=total_sark)
+                st.divider()
     
-        if total_sark > 0:
-            # Gruppierung nach Jahr und Typ
-            grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-            grp.columns = ["jahr_opdatum", "type_sark", "count"]
+                if total_sark > 0:
+                    # Gruppierung nach Jahr und Typ
+                    grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
-            fig = px.bar(
-                grp,
-                x="jahr_opdatum",
-                y="count",
-                color="type_sark",
-                barmode="group",
-                text="count",
-                color_discrete_sequence=COLOR_PALETTE,
-                labels={"type_sark": "Sarkomtyp"}
-            )
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="type_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"type_sark": "Sarkomtyp"}
+                    )
     
-            fig.update_traces(
-                textfont_size=16, 
-                textposition='auto',
-                marker_line_width=0
-            )
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
     
-            fig.update_layout(
-                #height=450, 
-                margin=dict(l=10, r=10, t=0, b=10),
-                xaxis_title=None, 
-                yaxis_title=None, 
-                showlegend=True,
-                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                xaxis={"type": "category", "tickfont": {"size": 16}},
-                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-            )
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
 
-            # st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
-            st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_chart_{bereich}", config={'displayModeBar': False})
-        else:
-            st.info("Keine Sarkom-Daten")
-    else:
-        st.error("Spalten fehlen")
-    # else:
-        # st.metric(label="Übersicht Sarkome", value="-")
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_chart_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Sarkom-Daten")
+            else:
+                st.error("Spalten fehlen")
+            # else:
+                # st.metric(label="Übersicht Sarkome", value="-")
     
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
