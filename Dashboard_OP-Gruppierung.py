@@ -853,11 +853,11 @@ for i, bereich in enumerate(bereiche):
                         fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
                
                 # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
-                st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_j>=IIIa_chart_{bereich}", config={'displayModeBar': False})
-            else:
-                st.info("Keine Daten für Sarkom/Weichteiltumor")
+                st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
         else:
-            st.error("Spalten fehlen")
+            st.info("Keine Daten für Sarkom/Weichteiltumor")
+    else:
+        st.error("Spalten fehlen")
         # else:
             # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         
