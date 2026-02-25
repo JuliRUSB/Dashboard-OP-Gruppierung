@@ -819,7 +819,7 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
-                        bargap=0.5,  
+                        bargap=0.05,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
