@@ -762,9 +762,8 @@ for i, bereich in enumerate(bereiche):
             
 
         # Drei Spalten/Kacheln definieren (2. Reihe)
-        col4, col5 = st.columns(2)
+        col4 = st.columns(1)
         
-
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" ==================
         with col4.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
