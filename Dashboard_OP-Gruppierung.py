@@ -456,7 +456,7 @@ with col3:
 st.divider()
 
 # -------- Visualisierungen --------
-st.header("Fallzahlen Übersicht")
+st.header("Fallzahlen alle Bereiche")
 
 if len(df_jahr_filtered) == 0:
     st.warning("Keine Daten für die gewählten Filter verfügbar.")
