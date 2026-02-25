@@ -819,7 +819,7 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
-                        bargap=0.05,  
+                        # bargap=0.05,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
@@ -828,6 +828,15 @@ for i, bereich in enumerate(bereiche):
                         xaxis={"type": "category", "tickfont": {"size": 14}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
+
+                    # Nach fig.update_layout fügst du das ein:
+                    for i in range(len(quartal_order) - 1):
+                        curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
+                        next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
+    
+                        if curr_q != next_q:
+                            # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
+                            fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
                
                     # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_>=IIIa_chart", config={'displayModeBar': False})
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_>=IIIa_chart_{bereich}", config={'displayModeBar': False})
