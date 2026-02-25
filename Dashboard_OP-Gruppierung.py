@@ -812,54 +812,54 @@ for i, bereich in enumerate(bereiche):
                 st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
                 st.divider()
                        
-                    fig = px.bar(
-                        grp,
-                        x="diag_quartal_opdatum",
-                        y="count",
-                        color="lokalisation_sark",
-                        barmode="stack",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
-                        category_orders={"diag_quartal_opdatum": quartal_order}
-                    )
+                fig = px.bar(
+                    grp,
+                    x="diag_quartal_opdatum",
+                    y="count",
+                    color="lokalisation_sark",
+                    barmode="stack",
+                    text="count",
+                    color_discrete_sequence=COLOR_PALETTE,
+                    labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                    category_orders={"diag_quartal_opdatum": quartal_order}
+                )
                
-                    fig.update_traces(
-                        textfont_size=16,
-                        textposition='auto',
-                        marker_line_width=0
-                    )
+                fig.update_traces(
+                    textfont_size=16,
+                    textposition='auto',
+                    marker_line_width=0
+                )
 
-                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+                fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
-                    fig.update_layout(
-                        bargap=0.1,  
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=True,
-                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                        xaxis={"type": "category", "tickfont": {"size": 14}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
-                    )
+                fig.update_layout(
+                    bargap=0.1,  
+                    margin=dict(l=10, r=10, t=30, b=10),
+                    xaxis_title=None,
+                    yaxis_title=None,
+                    showlegend=True,
+                    # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                    xaxis={"type": "category", "tickfont": {"size": 14}},
+                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                )
 
-                    # Trennlinien zwichenn den Quartalen
-                    for i in range(len(quartal_order) - 1):
-                        curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
-                        next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
+                # Trennlinien zwichenn den Quartalen
+                for i in range(len(quartal_order) - 1):
+                    curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
+                    next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
     
-                        if curr_q != next_q:
-                            # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
-                            fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
+                    if curr_q != next_q:
+                        # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
+                        fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
+                st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
-            else:
-                st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
+        else:
+            st.error("Spalten fehlen")
+        else:
+            # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
         with st.container(border=True):
