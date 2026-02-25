@@ -858,7 +858,7 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
         else:
             st.error("Spalten fehlen")
-        else:
+        # else:
             # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
