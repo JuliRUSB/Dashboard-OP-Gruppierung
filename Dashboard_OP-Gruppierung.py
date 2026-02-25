@@ -535,6 +535,14 @@ with col2:
             xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
             yaxis={"tickfont": {"size": 16}} 
         )
+
+        for i in range(len(quartal_order) - 1):
+            curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
+            next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
+    
+            if curr_q != next_q:
+                # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
+                    fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
         
         st.plotly_chart(fig_quartal, use_container_width=True)
     else:
