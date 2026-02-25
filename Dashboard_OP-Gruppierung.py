@@ -915,6 +915,8 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
+        # Drei Spalten/Kacheln definieren (4. Reihe)
+        col10, col11, col12 = st.columns(3)
         
         # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col10.container(border=True):
