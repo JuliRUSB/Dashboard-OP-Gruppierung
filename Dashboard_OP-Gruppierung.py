@@ -503,54 +503,66 @@ with col1:
 
 # Graph 2: Fallzahlen pro Quartal
 with col2:
-    if not df_filtered.empty:
-        # Gruppierung nach Jahr und Quartal
-        q_counts = df_filtered.groupby(['jahr_opdatum', 'quartal_opdatum'], as_index=False).size()
-        q_counts.columns = ['jahr_opdatum', 'quartal_opdatum', 'count']
-        
-        # Erstellung der X-Achsen-Beschriftung (Format "Q1-2026")
-        # Umwandlung in int entfernt das ".0", falls vorhanden
-        q_counts['x_label'] = ("Q" + q_counts['quartal_opdatum'].astype(int).astype(str) + "- " + q_counts['jahr_opdatum'].astype(int).astype(str))
-        
-        fig_quartal = px.bar(
-            q_counts, 
-            x='x_label', 
-            y='count', 
-            text='count',
-            color=q_counts['jahr_opdatum'].astype(str),
-            color_discrete_sequence=COLOR_PALETTE,
-            title="Fallzahlen pro Quartal"
-        )
-        
-        fig_quartal.update_traces(
-            textfont_size=16, 
-            textposition='inside'
-        )
-        
-        fig_quartal.update_layout(
-            xaxis_title=None, 
-            yaxis_title=None, 
-            showlegend=False, 
-            height=400,
-            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
-            yaxis={"tickfont": {"size": 16}} 
+    # Gruppierung nach Jahr und Quartal
+    q_counts = (
+        df_filtered
+        .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
+        .size()
+    )
+    q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
+
+    # neue echte Quartals-Kategorie wie im funktionierenden Plot
+    q_counts["quartal_label"] = (
+        "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
+        + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
+    )
+
+    # sauber chronologisch sortieren
+    q_counts = q_counts.sort_values(
+        ["jahr_opdatum", "quartal_opdatum"]
+    ).reset_index(drop=True)
+
+    quartal_order = q_counts["quartal_label"].tolist()
+
+fig_quartal = px.bar(
+    q_counts,
+    x="quartal_label",
+    y="count",
+    text="count",
+    color=q_counts["jahr_opdatum"].astype(str),
+    color_discrete_sequence=COLOR_PALETTE,
+    category_orders={"quartal_label": quartal_order},
+    title="Fallzahlen pro Quartal"
+)
+
+fig_quartal.update_traces(
+    textfont_size=16,
+    textposition="inside"
+)
+
+fig_quartal.update_layout(
+    xaxis_title=None,
+    yaxis_title=None,
+    showlegend=False,
+    height=400,
+    xaxis={"type": "category", "tickfont": {"size": 16}},
+    yaxis={"tickfont": {"size": 16}},
+)
+
+# Trennlinien nur bei echtem Quartalswechsel
+for i in range(len(quartal_order) - 1):
+    curr_q = quartal_order[i].split("-")[0]
+    next_q = quartal_order[i + 1].split("-")[0]
+
+    if curr_q != next_q:
+        fig_quartal.add_vline(
+            x=i + 0.5,
+            line_width=2,
+            line_dash="dash",
+            line_color="gray",
         )
 
-        # 1. Die Liste der Labels für die Schleife erstellen
-        quartal_order = q_counts['x_label'].tolist()
-
-        # 2. Trennlinien zwichen den Quartalen   
-        for i in range(len(quartal_order) - 1):
-            curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
-            next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
-    
-            if curr_q != next_q:
-                # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
-                fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
-        
-        st.plotly_chart(fig_quartal, use_container_width=True)
-    else:
-        st.warning("Keine Daten für die gewählte Filterkombination vorhanden.")
+st.plotly_chart(fig_quartal, use_container_width=True)
 st.divider()
 
 # -------- Weitere Analysen (Tabs) --------
