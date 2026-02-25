@@ -856,7 +856,6 @@ for i, bereich in enumerate(bereiche):
             st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
         else:
             st.info("Keine Daten für Sarkom/Weichteiltumor")
-    # das else für fehlende Spalten gehört auf die gleiche Ebene wie das erste if
     else:
         st.error("Spalten fehlen")
         # else:
