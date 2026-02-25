@@ -539,15 +539,14 @@ with col2:
         # 1. Die Liste der Labels für die Schleife erstellen
         quartal_order = q_counts['x_label'].tolist()
 
-        # 2. Die Trennlinien einzeichnen
+        # 2. Trennlinien zwichen den Quartalen   
         for i in range(len(quartal_order) - 1):
-            # Extrahiert den Teil vor dem Bindestrich (z.B. "Q1")
-            curr_q = quartal_order[i].split('-')[0]
-            next_q = quartal_order[i+1].split('-')[0]
+            curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
+            next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
     
             if curr_q != next_q:
-                # Zeichnet die Linie genau zwischen die Balken
-                fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
+                # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
+                fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
         
         st.plotly_chart(fig_quartal, use_container_width=True)
     else:
