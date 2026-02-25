@@ -546,7 +546,7 @@ with col2:
     
             if curr_q != next_q:
                 # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
-                fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
+                fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
         
         st.plotly_chart(fig_quartal, use_container_width=True)
     else:
