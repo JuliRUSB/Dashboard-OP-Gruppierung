@@ -851,8 +851,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_q>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_j>=IIIa_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
