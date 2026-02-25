@@ -519,7 +519,7 @@ with col2:
 
     # sauber chronologisch sortieren
     q_counts = q_counts.sort_values(
-        ["jahr_opdatum", "quartal_opdatum"]
+        ["quartal_opdatum", "jahr_opdatum"]
     ).reset_index(drop=True)
 
     quartal_order = q_counts["quartal_label"].tolist()
