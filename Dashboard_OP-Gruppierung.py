@@ -762,10 +762,10 @@ for i, bereich in enumerate(bereiche):
             
 
         # Drei Spalten/Kacheln definieren (2. Reihe)
-        col4 = st.columns(1)
+        # col4 = st.columns(1)
         
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" ==================
-        with col4.container(border=True):
+        st.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
