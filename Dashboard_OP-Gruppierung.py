@@ -824,12 +824,12 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 14}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
 
-                    # Nach fig.update_layout fügst du das ein:
+                    # Trennlinien zwichenn den Quartalen
                     for i in range(len(quartal_order) - 1):
                         curr_q = quartal_order[i].split('-')[0]  # Das "Q1" extrahieren
                         next_q = quartal_order[i+1].split('-')[0] # Das "Q2" extrahieren
