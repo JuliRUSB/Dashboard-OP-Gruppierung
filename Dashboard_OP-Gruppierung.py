@@ -730,7 +730,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Übersicht Sarkome", value="-")
 
         # Drei Spalten/Kacheln definieren (2. Reihe)
-        col1, col2, col3 = st.columns(3)
+        col1, col23 = st.columns([1, 2])
         
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
