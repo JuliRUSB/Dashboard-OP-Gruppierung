@@ -790,22 +790,22 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (2. Reihe)
         # col4 = st.columns(1)
 
-        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" ==================
+        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen ==================
         with st.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2"}
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                     
-                # Filter für Sarkom/Weichteiltumor
-                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                # Filter für Sarkom/Weichteiltumor ohne Knochen
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_lok = len(df_plot)
 
                 # Filter für Clavien-Dindo-Grad
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen)", value=total_lok)
                 st.divider()
            
                 if total_lok > 0:
