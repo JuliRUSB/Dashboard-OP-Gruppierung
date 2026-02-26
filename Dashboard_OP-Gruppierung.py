@@ -790,7 +790,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="HIPEC bei CRS", value="-")
          
-        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
+        # ================== Kachel 23 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
         with col23.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -809,7 +809,7 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
            
                 if total_lok > 0:
-                    # Gruppierung nach Jahr, Lokalisation
+                    # Gruppierung nach Jahr, HIPEC
                     grp = df_plot.groupby(
                         ["jahr_opdatum", "hipec"],
                         as_index=False
@@ -820,7 +820,7 @@ for i, bereich in enumerate(bereiche):
                         grp,
                         x="jahr_opdatum",
                         y="count",
-                        color="lokalisation_sark",
+                        color="hipec",
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
