@@ -730,7 +730,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Übersicht Sarkome", value="-")
 
         # Drei Spalten/Kacheln definieren (2. Reihe)
-        col1, col23 = st.columns([1, 2])
+        col1, col2 = st.columns(2)
         
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
@@ -790,8 +790,8 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="HIPEC bei CRS", value="-")
          
-        # ================== Kachel 23 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
-        with col23.container(border=True):
+        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
+        with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "hipec"}
