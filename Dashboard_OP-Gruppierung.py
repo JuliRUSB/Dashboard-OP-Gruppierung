@@ -1070,18 +1070,18 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
-        # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ==================
+        # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen==================
         with col11.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", gruppen_chir_onko_sark}
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Sarkom/Weichteiltumor
-                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor' & (df_bereich["gruppen_chir_onko_sark___1"] != "Knochen"].copy()
                 total_lok = len(df_plot)
             
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value=total_lok)
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_lok)
                 st.divider()
             
                 if total_lok > 0:
