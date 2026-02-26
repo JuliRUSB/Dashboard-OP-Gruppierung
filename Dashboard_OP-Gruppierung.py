@@ -1078,7 +1078,7 @@ for i, bereich in enumerate(bereiche):
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Sarkom/Weichteiltumor
-                df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor' & (df_bereich["gruppen_chir_onko_sark___1"] != "Knochen"].copy()
+                df_plot = (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark___1"] != "Knochen")].copy()
                 total_lok = len(df_plot)
             
                 st.metric(label="Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_lok)
