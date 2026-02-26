@@ -789,10 +789,77 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
             # else:
                 # st.metric(label="HIPEC bei CRS", value="-")
-            
+         
+        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
+        with st.container(border=True):
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "hipec"}
+            if required_cols.issubset(df_bereich.columns):
+                    
+                # Filter für CRS
+                df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot)
 
-        # Drei Spalten/Kacheln definieren (2. Reihe)
-        # col4 = st.columns(1)
+                # Filter für Clavien-Dindo-Grad
+                df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)                    
+                    
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (HIPEC)", value=total_lok)
+                st.divider()
+           
+                if total_lok > 0:
+                    # Gruppierung nach Jahr, Lokalisation
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("jahr_opdatum")
+                    quartal_order = grp["jahr_opdatum"].unique().tolist()
+                       
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
+                        # category_orders={"jahr_opdatum": quartal_order}
+                    )
+               
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+               
+                    fig.update_layout(
+                        bargap=0.1,  
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
+                    )
+               
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_j>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                else:
+                        st.info("Keine Daten für HIPEC")
+            else:
+                st.error("Spalten fehlen")
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")     
+
 
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen ==================
         with st.container(border=True):
