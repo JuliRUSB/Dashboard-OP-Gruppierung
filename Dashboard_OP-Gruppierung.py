@@ -13,11 +13,12 @@ import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
+
 # Konfiguration
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
-
 # ==================================================
+
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
 # ==================================================
@@ -618,7 +619,7 @@ for i, bereich in enumerate(bereiche):
         # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
 
         # Drei Spalten/Kacheln definieren (1. Reihe)
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
 
         # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
         with col1.container(border=True):
@@ -727,11 +728,14 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Übersicht Sarkome", value="-")
-    
+
+        # Drei Spalten/Kacheln definieren (2. Reihe)
+        col1, col2, col3 = st.columns(3)
+        
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
-        with col3.container(border=True):
+        with col1.container(border=True):
             # if "HIPEC bei CRS" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "hipec"}
