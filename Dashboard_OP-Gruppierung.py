@@ -791,7 +791,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="HIPEC bei CRS", value="-")
          
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
-        with st.container(border=True):
+        with col23.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "hipec"}
@@ -852,7 +852,7 @@ for i, bereich in enumerate(bereiche):
                     )
                
                     # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_j>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec>=IIIa_chart_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für HIPEC")
             else:
