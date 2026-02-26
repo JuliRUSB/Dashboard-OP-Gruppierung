@@ -1074,7 +1074,7 @@ for i, bereich in enumerate(bereiche):
         with col11.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", gruppen_chir_onko_sark}
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark"}
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Sarkom/Weichteiltumor
