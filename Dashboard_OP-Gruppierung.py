@@ -811,14 +811,10 @@ for i, bereich in enumerate(bereiche):
                 if total_lok > 0:
                     # Gruppierung nach Jahr, Lokalisation
                     grp = df_plot.groupby(
-                        ["jahr_opdatum", "lokalisation_sark"],
+                        ["jahr_opdatum", "hipec"],
                         as_index=False
                     ).size()
-                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
-
-                    # Sortierung sicherstellen (chronologisch)
-                    grp = grp.sort_values("jahr_opdatum")
-                    quartal_order = grp["jahr_opdatum"].unique().tolist()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
                        
                     fig = px.bar(
                         grp,
