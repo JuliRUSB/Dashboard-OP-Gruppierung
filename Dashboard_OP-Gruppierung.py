@@ -890,7 +890,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen)", value=total_lok)
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR", value=total_lok)
                 st.divider()
 
                 if total_lok > 0:
@@ -964,7 +964,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Clavien-Dindo-Grad ≥ IIIa", value=total_lok)
+                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - QUARTAL", value=total_lok)
                 st.divider()
            
                 if total_lok > 0:
