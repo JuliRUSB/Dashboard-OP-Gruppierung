@@ -769,7 +769,7 @@ for i, bereich in enumerate(bereiche):
                         y="count",
                         color="hipec",
                         barmode="group",
-                        text="count",
+                        text="text_label",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hipec": "HIPEC"}
                     )
