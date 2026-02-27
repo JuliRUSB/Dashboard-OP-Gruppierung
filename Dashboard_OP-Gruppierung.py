@@ -759,9 +759,7 @@ for i, bereich in enumerate(bereiche):
 
                     grp = grp.merge(grp_gesamt, on="jahr_opdatum", how="left")
 
-                    last_idx = grp.groupby("jahr_opdatum").tail(1).index
-                    grp["text_label"] = grp["count"].astype(str)
-                    grp.loc[last_idx, "text_label"] = grp.loc[last_idx].apply(
+                    grp["text_label"] = grp.apply(
                         lambda row: f"{row['count']} ({row['count_gesamt']})", axis=1
                     )
                     
