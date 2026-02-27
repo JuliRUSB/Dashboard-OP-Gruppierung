@@ -752,7 +752,19 @@ for i, bereich in enumerate(bereiche):
                     # Gruppierung nach Jahr und HIPEC
                     grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
-                
+
+                    # Gesamtzahl pro Jahr
+                    grp_gesamt = df_plot.groupby("jahr_opdatum", as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "count_gesamt"]
+
+                    grp = grp.merge(grp_gesamt, on="jahr_opdatum", how="left")
+
+                    last_idx = grp.groupby("jahr_opdatum").tail(1).index
+                    grp["text_label"] = grp["count"].astype(str)
+                    grp.loc[last_idx, "text_label"] = grp.loc[last_idx].apply(
+                        lambda row: f"{row['count']} ({row['count_gesamt']})", axis=1
+                    )
+                    
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
