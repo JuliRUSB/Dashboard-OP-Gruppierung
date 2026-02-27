@@ -822,13 +822,23 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
                 
                 if total_lok > 0:
-                    # Gruppierung nach Jahr, HIPEC
+                    # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
                     grp = df_plot.groupby(
                         ["jahr_opdatum", "hipec"],
                         as_index=False
                     ).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
-                       
+
+                    # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+
+                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+
+                    grp["text_label"] = grp.apply(
+                        lambda row: f"{row['count']} ({row['count_gesamt']})", axis=1
+                    )
+                    
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -870,7 +880,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")     
 
 
-        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen ==================
+        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen ==================
         with st.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
