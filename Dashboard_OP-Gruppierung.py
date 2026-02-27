@@ -1031,7 +1031,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (3. Reihe)
         # col7, col8, col9 = st.columns(3)
 
-        # ================== Kachel 7 "Malignität (Sarkome/Weichteiltumoren) - maligne und intermediate" ==================
+        # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate" ==================
         with st.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1042,7 +1042,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["malignit_t_sark"] != 'andere'].copy()
                 total_malign = len(df_plot)
             
-                st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE und INTERMEDIATE", value=total_malign)
+                st.metric(label="Anzahl Sarkome/Weichteiltumore - MALIGNE und INTERMEDIATE", value=total_malign)
                 st.divider()
 
                 if total_malign > 0:
