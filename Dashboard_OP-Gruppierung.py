@@ -808,7 +808,7 @@ for i, bereich in enumerate(bereiche):
             if required_cols.issubset(df_bereich.columns):
                     
                 # Filter für CRS
-                df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                 total_crs = len(df_plot)
 
                 # Filter für Clavien-Dindo-Grad
