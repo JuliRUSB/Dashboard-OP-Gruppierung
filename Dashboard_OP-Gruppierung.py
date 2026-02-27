@@ -806,7 +806,7 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)                    
                     
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC)", value=total_lok
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC)", 
                     value=f"{total_lok} von {total_gesamt}",
                     help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_gesamt} Fällen")
                 st.divider()
