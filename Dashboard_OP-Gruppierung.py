@@ -753,15 +753,7 @@ for i, bereich in enumerate(bereiche):
                     grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
 
-                    # Gesamtzahl pro Jahr
-                    grp_gesamt = df_plot.groupby("jahr_opdatum", as_index=False).size()
-                    grp_gesamt.columns = ["jahr_opdatum", "count_gesamt"]
-
-                    grp = grp.merge(grp_gesamt, on="jahr_opdatum", how="left")
-
-                    grp["text_label"] = grp.apply(
-                        lambda row: f"{row['count']} ({row['count_gesamt']})", axis=1
-                    )
+                    
                     
                     fig = px.bar(
                         grp,
@@ -769,7 +761,7 @@ for i, bereich in enumerate(bereiche):
                         y="count",
                         color="hipec",
                         barmode="group",
-                        text="text_label",
+                        text="count",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hipec": "HIPEC"}
                     )
@@ -845,7 +837,7 @@ for i, bereich in enumerate(bereiche):
                         y="count",
                         color="hipec",
                         barmode="stack",
-                        text="count",
+                        text="text_label",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
                         # category_orders={"jahr_opdatum": quartal_order}
