@@ -729,7 +729,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Übersicht Sarkome", value="-")
 
-        # Drei Spalten/Kacheln definieren (2. Reihe)
+        # Zwei Spalten/Kacheln definieren (2. Reihe)
         col1, col2 = st.columns(2)
         
         # ================== Kachel 3 HIPEC bei CRS ================== 
@@ -872,9 +872,11 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")     
 
-
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen ==================
-        with st.container(border=True):
+        # Zwei Spalten/Kacheln definieren (3. Reihe)
+        col1, col2 = st.columns(2)
+        
+        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        with st.col1(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark"}
@@ -943,8 +945,8 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–") 
 
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" ==================
-        with st.container(border=True):
+        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
+        with st.col2(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
