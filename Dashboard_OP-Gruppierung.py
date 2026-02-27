@@ -820,7 +820,7 @@ for i, bereich in enumerate(bereiche):
                     value=f"{total_lok} von {total_crs}",
                     help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} Fällen")
                 st.divider()
-           
+                
                 if total_lok > 0:
                     # Gruppierung nach Jahr, HIPEC
                     grp = df_plot.groupby(
@@ -887,7 +887,7 @@ for i, bereich in enumerate(bereiche):
                     
                 st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen)", value=total_lok)
                 st.divider()
-           
+
                 if total_lok > 0:
                     # Gruppierung nach Jahr, Lokalisation
                     grp = df_plot.groupby(
