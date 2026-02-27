@@ -810,7 +810,7 @@ for i, bereich in enumerate(bereiche):
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
                     value=f"{total_lok} von {total_crs}",
-                    help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} CRS-Fällen")
+                    # help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} CRS-Fällen")
                 st.divider()
                 
                 if total_crs > 0:
