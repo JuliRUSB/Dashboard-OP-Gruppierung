@@ -1035,7 +1035,7 @@ for i, bereich in enumerate(bereiche):
         with st.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"type_sark", "diag_quartal_opdatum", "lokalisation_sark", "malignit_t_sark"}
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Sarkom/Weichteiltumor
@@ -1051,15 +1051,15 @@ for i, bereich in enumerate(bereiche):
                         ["diag_quartal_opdatum", "lokalisation_sark"],
                         as_index=False
                     ).size()
-                    grp.columns = ["diag_quartal_opdatum", "lokalisation_sark", "count"]
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
 
                     # Sortierung sicherstellen (chronologisch)
-                    grp = grp.sort_values("diag_quartal_opdatum")
-                    quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
+                    # grp = grp.sort_values("diag_quartal_opdatum")
+                    # quartal_order = grp["diag_quartal_opdatum"].unique().tolist()
                         
                     fig = px.bar(
                         grp,
-                        x="diag_quartal_opdatum",
+                        x="jahr_opdatum",
                         y="count",
                         color="lokalisation_sark",
                         barmode="group",
