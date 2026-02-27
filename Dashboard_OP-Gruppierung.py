@@ -1027,14 +1027,13 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
-
         
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
-        # col7, col8, col9 = st.columns(3)
+        # col7, col8 = st.columns(2)
 
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
-        with st.container(border=True):
+        with col7.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
@@ -1096,6 +1095,62 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
+            # ================== Kachel 9 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen==================
+        with col8.container(border=True):
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
+            
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                total_lok = len(df_plot)
+            
+                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_lok)
+                st.divider()
+            
+                if total_lok > 0:
+                    # Gruppierung nach Jahr und Lokalisation
+                    grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
+                
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+                
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
+                
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_chart_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
+            # else:
+                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
+
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col10, col11 = st.columns(2)
         
@@ -1155,61 +1210,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
-        # ================== Kachel 11 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen==================
-        with col11.container(border=True):
-            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-            # Check auf Spalten
-            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
-            if required_cols.issubset(df_bereich.columns):
-            
-                # Filter für Sarkom/Weichteiltumor
-                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
-                total_lok = len(df_plot)
-            
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_lok)
-                st.divider()
-            
-                if total_lok > 0:
-                    # Gruppierung nach Jahr und Lokalisation
-                    grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
-                
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="lokalisation_sark",
-                        barmode="group",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation"}
-                    )
-                
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='auto',
-                        marker_line_width=0
-                    )
-                
-                    fig.update_layout(
-                        #height=450, 
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        showlegend=True,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                    )
-                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_chart_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Daten für Sarkom/Weichteiltumor")
-            else:
-                st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
+        
         
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
