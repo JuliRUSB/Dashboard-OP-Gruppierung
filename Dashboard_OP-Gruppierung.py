@@ -18,7 +18,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 # ==================================================
-
+"Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
 # ==================================================
@@ -876,7 +876,7 @@ for i, bereich in enumerate(bereiche):
         col1, col2 = st.columns(2)
         
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
-        with st.col1(border=True):
+        with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark"}
@@ -946,7 +946,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–") 
 
         # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
-        with st.col2(border=True):
+        with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"diag_quartal_opdatum", "lokalisation_sark", "statistik_dindo_2"}
