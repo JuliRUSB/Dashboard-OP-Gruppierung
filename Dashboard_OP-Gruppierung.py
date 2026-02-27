@@ -792,7 +792,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="HIPEC bei CRS", value="-")
          
-        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein ==================
+        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -808,9 +808,9 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)                    
                     
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC)", 
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
                     value=f"{total_lok} von {total_crs}",
-                    help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} Fällen")
+                    help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} CRS-Fällen")
                 st.divider()
                 
                 if total_crs > 0:
