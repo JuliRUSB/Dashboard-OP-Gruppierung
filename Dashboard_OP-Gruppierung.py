@@ -1030,71 +1030,70 @@ for i, bereich in enumerate(bereiche):
         
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
-        # col7, col8 = st.columns(2)
+        col7, col8 = st.columns(2)
 
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
-with col7.container(border=True):
+        with col7.container(border=True):
 
-    required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
-    if required_cols.issubset(df_bereich.columns):
+            required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
+            if required_cols.issubset(df_bereich.columns):
 
-        # Filter: nur maligne + intermediate (alles außer "andere")
-        df_plot = df_bereich[df_bereich["malignit_t_sark"] != "andere"].copy()
-        total_malign = len(df_plot)
+                # Filter: nur maligne + intermediate (alles außer "andere")
+                df_plot = df_bereich[df_bereich["malignit_t_sark"] != "andere"].copy()
+                total_malign = len(df_plot)
 
-        st.metric(
-            label="Anzahl Sarkome/Weichteiltumore - MALIGNE und INTERMEDIATE, ohne Knochen",
-            value=total_malign
-        )
-        st.divider()
+                st.metric(
+                    label="Anzahl Sarkome/Weichteiltumore - MALIGNE und INTERMEDIATE, ohne Knochen",
+                    value=total_malign
+                )
+                st.divider()
 
-        if total_malign > 0:
-            # Gruppierung nach Jahr und Lokalisation
-            grp = (
-                df_plot
-                .groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)
-                .size()
-            )
-            grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                if total_malign > 0:
+                    # Gruppierung nach Jahr und Lokalisation
+                    grp = (
+                        df_plot
+                        .groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)
+                        .size()
+                    )
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
 
-            fig = px.bar(
-                grp,
-                x="jahr_opdatum",
-                y="count",
-                color="lokalisation_sark",
-                barmode="group",
-                text="count",
-                color_discrete_sequence=COLOR_PALETTE,
-                labels={"lokalisation_sark": "Lokalisation"}
-            )
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation"}
+                    )
 
-            fig.update_traces(
-                textfont_size=16,
-                textposition="auto",
-                marker_line_width=0
-            )
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition="auto",
+                        marker_line_width=0
+                    )
 
-            fig.update_layout(
-                margin=dict(l=10, r=10, t=0, b=10),
-                xaxis_title=None,
-                yaxis_title=None,
-                showlegend=True,
-                xaxis={"type": "category", "tickfont": {"size": 16}},
-                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
-            )
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                    )
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True,
-                key=f"kachel_malign_chart_{bereich}",
-                config={"displayModeBar": False}
-            )
-        else:
-            st.info("Keine Daten für Malignität")
-
-    else:
-        st.error("Spalten fehlen")
+                    st.plotly_chart(
+                        fig,
+                        use_container_width=True,
+                        key=f"kachel_malign_chart_{bereich}",
+                    config={"displayModeBar": False}
+                    )
+                else:
+                    st.info("Keine Daten für Malignität")
+            else:
+                st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
