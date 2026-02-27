@@ -821,7 +821,7 @@ for i, bereich in enumerate(bereiche):
                     help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} Fällen")
                 st.divider()
                 
-                if total_lok > 0:
+                if total_crs > 0:
                     # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
                     grp = df_plot.groupby(
                         ["jahr_opdatum", "hipec"],
