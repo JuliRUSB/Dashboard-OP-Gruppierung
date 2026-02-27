@@ -18,7 +18,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 # ==================================================
-"Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr
+
 # Globale Farbpalette
 COLOR_PALETTE = px.colors.qualitative.Safe
 # ==================================================
