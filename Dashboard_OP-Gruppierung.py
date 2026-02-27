@@ -828,7 +828,7 @@ for i, bereich in enumerate(bereiche):
                     grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
 
                     grp["text_label"] = grp.apply(
-                        lambda row: f"{row['count']} von {row['count_gesamt']}", axis=1
+                        lambda row: f"{row['count']} (von {row['count_gesamt']})", axis=1
                     )
                     
                     fig = px.bar(
