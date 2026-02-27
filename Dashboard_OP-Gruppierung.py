@@ -1046,9 +1046,9 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
 
                 if total_malign > 0:
-                    # Gruppierung nach Quartal, Lokalisation
+                    # Gruppierung nach Jahr, Lokalisation
                     grp = df_plot.groupby(
-                        ["diag_quartal_opdatum", "lokalisation_sark"],
+                        ["jahr_opdatum", "lokalisation_sark"],
                         as_index=False
                     ).size()
                     grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
