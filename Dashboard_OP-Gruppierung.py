@@ -945,8 +945,8 @@ for i, bereich in enumerate(bereiche):
                         uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
                         bargap=0.1,
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        xaxis_title=None,
+                        yaxis_title=None,
                         legend_title_text=None
                     )
         
