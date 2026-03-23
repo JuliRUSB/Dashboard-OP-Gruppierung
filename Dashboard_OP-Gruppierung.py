@@ -471,7 +471,7 @@ with col1:
     if not df_jahr_filtered.empty:
         # Daten gruppieren
         jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
-        jahr_counts_df.columns = ['jahr_opdatum', 'count']
+        jahr_counts_df.columns = ['jahr_opdatum', 'count']F
         
         # Jahr als String für die Achse
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
@@ -873,7 +873,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+       # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
         
@@ -890,27 +890,27 @@ for i, bereich in enumerate(bereiche):
                 }
                 df_plot_all["dindo_final_text"] = df_plot_all["dindo_final_num"].map(dindo_labels_text)
         
-                # 3. Nur Fälle mit Dindo >= IIIa für den Plot (statistik_dindo_2 == '1')
+                # 3. Nur Fälle mit Dindo >= IIIa
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                 
                 total_crs = len(df_plot_all)
                 total_lok = len(df_plot)
                 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (CRS)", 
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
                     value=f"{total_lok} von {total_crs}",
                 )
                 st.divider()
         
                 if not df_plot.empty:
-                    # 4. Gruppierung für die Grafik (Anzahl pro Jahr und Dindo-Grad)
+                    # 4. Gruppierung (dropna=True sorgt dafür, dass keine leeren Segmente den Plot blockieren)
                     grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "Dindo-Grad", "count"]
+                    
+                    # Sortierung für korrekte Stapel-Reihenfolge
+                    grp = grp.sort_values(by=["jahr_opdatum", "Dindo-Grad"])
         
-                    # Sortierung sicherstellen (optional, falls Dindo-Grade sortiert sein sollen)
-                    grp = grp.sort_values(by=["jahr_opdatum", "Dindo-Grad", "count"])
-        
-                    # 5. Plotly Express Bar Chart (Gestapelt)
+                    # 5. Plotly Express Bar Chart
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -919,7 +919,7 @@ for i, bereich in enumerate(bereiche):
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"jahr_opdatum": "Jahr", "Dindo-Grad": "Dindo-Grad", "count": "Anzahl"},
+                        labels={"jahr_opdatum": "Jahr", "Dindo-Grad": "Dindo-Grad", "count": "Anzahl"}
                     )
         
                     fig.update_traces(
@@ -931,16 +931,16 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_layout(
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"title": "Anzahl Komplikationen", "tickfont": {"size": 16}},
+                        yaxis={"title": "Anzahl Komplikationen", "tickfont": {"size": 16}, "showgrid": True},
                         legend_title_text='Dindo-Grad',
                         margin=dict(l=10, r=10, t=30, b=10),
-                        height=450 # Feste Höhe für bessere Optik
+                        height=450 
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"chart_dindo_stack_{bereich}")
+                    st.plotly_chart(fig, use_container_width=True, key=f"chart_dindo_stack_{bereich}", config={'displayModeBar': False})
         
                 else:
-                    st.info("Keine schweren Komplikationen (≥ IIIa) in diesem Zeitraum erfasst.")
+                    st.info("Keine Daten für die gewählten Filter vorhanden.")
             else:
                 st.error(f"Fehlende Spalten: {required_cols - set(df_bereich.columns)}")
 
