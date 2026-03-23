@@ -471,7 +471,7 @@ with col1:
     if not df_jahr_filtered.empty:
         # Daten gruppieren
         jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
-        jahr_counts_df.columns = ['jahr_opdatum', 'count']F
+        jahr_counts_df.columns = ['jahr_opdatum', 'count']
         
         # Jahr als String für die Achse
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
