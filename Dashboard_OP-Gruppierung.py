@@ -907,7 +907,7 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)
 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
                     value=f"{total_lok} von {total_crs}",
                 )
                 st.divider()
