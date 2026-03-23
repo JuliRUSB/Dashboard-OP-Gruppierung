@@ -885,8 +885,12 @@ for i, bereich in enumerate(bereiche):
         
                 # Maximalen Dindo-Grad bestimmen (bereits numerisch gemappt)
                 df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
+
+                # nur Fälle mit Dindo >= IIIa
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)
                 
-                # Optional: für Anzeige als Text in Plotly (Grade IIIa, IVb etc.)
+                # für Anzeige als Text in Plotly (Grade IIIa, IVb etc.)
                 dindo_labels_text = {
                     0: "keine Komplikation",
                     1: "Grade I",
@@ -905,10 +909,6 @@ for i, bereich in enumerate(bereiche):
                 }
                 df_plot_all["dindo_final_text"] = df_plot_all["dindo_final_num"].map(dindo_labels_text)
         
-                # nur Fälle mit Dindo >= IIIa
-                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)
-
                 # Maximalen Dindo-Grad bestimmen
                 df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
 
