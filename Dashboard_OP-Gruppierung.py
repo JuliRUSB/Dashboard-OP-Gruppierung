@@ -885,20 +885,20 @@ for i, bereich in enumerate(bereiche):
                 # Maximalen Dindo-Grad berechnen
                 df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
                 dindo_labels = {
-                    0: "keine Komplikation",
-                    1: "Grade I",
-                    2: "Grade Id",
-                    3: "Grade II",
-                    4: "Grade II d",
-                    5: "Grade III a",
-                    6: "Grade III a d",
-                    7: "Grade III b",
-                    8: "Grade III b d",
-                    9: "Grade IV a",
-                    10: "Grade IV a d",
-                    11: "Grade IV b",
-                    12: "Grade IV b d",
-                    13: "Grade V"
+                    "keine Komplikation": 0,
+                    "Grade I": 1,
+                    "Grade Id": 2,
+                    "Grade II": 3,
+                    "Grade II d": 4,
+                    "Grade III a": 5,
+                    "Grade III a d": 6,
+                    "Grade III b": 7,
+                    "Grade III b d": 8,
+                    "Grade IV a": 9,
+                    "Grade IV a d": 10,
+                    "Grade IV b": 11,
+                    "Grade IV b d": 12,
+                    "Grade V": 13
                 }
                 df_plot_all["dindo_final"] = df_plot_all["dindo_final_num"].map(dindo_labels)
 
