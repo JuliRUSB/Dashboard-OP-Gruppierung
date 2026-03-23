@@ -1029,10 +1029,10 @@ for i, bereich in enumerate(bereiche):
         
 
         # Drei Spalten/Kacheln definieren (3. Reihe)
-        col7, col8 = st.columns(2)
+        # col7, col8 = st.columns(2)
 
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
-        with col7.container(border=True):
+        with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
             if required_cols.issubset(df_bereich.columns):
@@ -1096,7 +1096,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
         # ================== Kachel 8 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
-        with col8.container(border=True):
+        with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
