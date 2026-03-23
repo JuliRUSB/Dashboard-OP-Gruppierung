@@ -1028,8 +1028,8 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         
 
-        # Drei Spalten/Kacheln definieren (3. Reihe)
-        # col7, col8 = st.columns(2)
+        # Drei Spalten/Kacheln definieren (4. Reihe)
+        col1, col2 = st.columns(2)
 
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
         with col1.container(border=True):
@@ -1151,11 +1151,11 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
 
-        # Drei Spalten/Kacheln definieren (4. Reihe)
-        col9, col10 = st.columns(2)
+        # Drei Spalten/Kacheln definieren (5. Reihe)
+        col1, col2 = st.columns(2)
         
         # ================== Kachel 9 "Gruppen (Sarkome/Weichteiltumoren)" ==================
-        with col9.container(border=True):
+        with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
@@ -1211,7 +1211,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
         # ================== Kachel 10 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
-        with col10.container(border=True):
+        with col2.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "los_opdatum", "gruppen_chir_onko_sark"}
