@@ -1221,7 +1221,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_gruppen = len(df_plot)
             
-                st.metric(label="Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen", value=total_gruppen)
+                st.metric(label="Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_gruppen)
                 st.divider()
             
                 if total_gruppen > 0:
