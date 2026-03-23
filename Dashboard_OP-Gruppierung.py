@@ -908,7 +908,7 @@ for i, bereich in enumerate(bereiche):
                     grp.columns = ["jahr_opdatum", "Dindo-Grad", "count"]
         
                     # Sortierung sicherstellen (optional, falls Dindo-Grade sortiert sein sollen)
-                    grp = grp.sort_values(by=["jahr_opdatum", "Dindo-Grad"])
+                    grp = grp.sort_values(by=["jahr_opdatum", "Dindo-Grad", "count"])
         
                     # 5. Plotly Express Bar Chart (Gestapelt)
                     fig = px.bar(
@@ -917,10 +917,9 @@ for i, bereich in enumerate(bereiche):
                         y="count",
                         color="Dindo-Grad",
                         barmode="stack",
-                        text="text_label",
+                        text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
-                        # category_orders={"jahr_opdatum": quartal_order}
+                        labels={"jahr_opdatum": "Jahr", "Dindo-Grad": "Dindo-Grad", "count": "Anzahl"},
                     )
         
                     fig.update_traces(
