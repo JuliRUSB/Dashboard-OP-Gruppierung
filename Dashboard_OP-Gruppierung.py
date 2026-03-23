@@ -1257,8 +1257,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_gruppen_sarkome_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_los_chart_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
