@@ -876,96 +876,75 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
-    
-            if required_cols.issubset(df_bereich.columns):
-
-                # CRS filtern
-                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                total_crs = len(df_plot_all)
         
-                # Maximalen Dindo-Grad bestimmen (bereits numerisch gemappt)
+            if required_cols.issubset(df_bereich.columns):
+                # 1. Daten filtern (nur CRS)
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                
+                # 2. Dindo-Grad berechnen & mappen
                 df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
-               
-                # für Anzeige als Text in Plotly (Grade IIIa, IVb etc.)
+                
                 dindo_labels_text = {
-                    0: "keine Komplikation",
-                    1: "Grade I",
-                    2: "Grade Id",
-                    3: "Grade II",
-                    4: "Grade II d",
-                    5: "Grade III a",
-                    6: "Grade III a d",
-                    7: "Grade III b",
-                    8: "Grade III b d",
-                    9: "Grade IV a",
-                    10: "Grade IV a d",
-                    11: "Grade IV b",
-                    12: "Grade IV b d",
-                    13: "Grade V"
+                    5: "Grade III a", 6: "Grade III a d", 7: "Grade III b", 8: "Grade III b d",
+                    9: "Grade IV a", 10: "Grade IV a d", 11: "Grade IV b", 12: "Grade IV b d", 13: "Grade V"
                 }
                 df_plot_all["dindo_final_text"] = df_plot_all["dindo_final_num"].map(dindo_labels_text)
-
-                # nur Fälle mit Dindo >= IIIa
+        
+                # 3. Nur Fälle mit Dindo >= IIIa für den Plot (statistik_dindo_2 == '1')
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                
+                total_crs = len(df_plot_all)
                 total_lok = len(df_plot)
                 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
+                    label="Clavien-Dindo-Grad ≥ IIIa (CRS)", 
                     value=f"{total_lok} von {total_crs}",
                 )
                 st.divider()
         
-                if total_crs > 0:
-                    # Gruppierung nach Jahr, HIPEC und Dindo-Grad
-                    grp = df_plot.groupby(
-                        ["jahr_opdatum", "hipec", "dindo_final_text"], 
-                        as_index=False
-                    ).size()
-                    grp.columns = ["jahr_opdatum", "hipec", "dindo_final_text", "count"]
+                if not df_plot.empty:
+                    # 4. Gruppierung für die Grafik (Anzahl pro Jahr und Dindo-Grad)
+                    # Wir ignorieren HIPEC in der Gruppierung, damit die Stapelung pro Jahr klar ist
+                    grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
+                    grp.columns = ["Jahr", "Dindo-Grad", "Anzahl"]
         
-                    # Gesamtzahl pro Jahr & HIPEC (alle CRS-Fälle)
-                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+                    # Sortierung sicherstellen (optional, falls Dindo-Grade sortiert sein sollen)
+                    grp = grp.sort_values(by=["Jahr", "Dindo-Grad"])
         
-                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
-                    grp["text_label"] = grp.apply(lambda row: f"{row['count']} (von {row['count_gesamt']})", axis=1)
-        
-                    # Plot
+                    # 5. Plotly Express Bar Chart (Gestapelt)
                     fig = px.bar(
                         grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="dindo_final_text",
+                        x="Jahr",
+                        y="Anzahl",
+                        color="Dindo-Grad",
+                        text="Anzahl", # Zeigt die Zahl im Segment an
                         barmode="stack",
-                        text="text_label",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hipec": "HIPEC", "dindo_final_text": "Dindo-Grad"},
+                        template="simple_white"
                     )
         
                     fig.update_traces(
-                        textfont_size=16,
-                        textposition='auto',
-                        marker_line_width=0
+                        textfont_size=14,
+                        textposition='inside', # 'inside' sorgt dafür, dass Zahlen im Balken stehen
+                        marker_line_width=0.5,
+                        marker_line_color="white"
                     )
         
                     fig.update_layout(
-                        bargap=0.1,
+                        xaxis={"type": "category", "tickfont": {"size": 14}},
+                        yaxis={"title": "Anzahl Komplikationen", "tickfont": {"size": 14}},
+                        legend_title_text='Dindo-Grad',
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=True,
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                        height=450 # Feste Höhe für bessere Optik
                     )
         
-                    # Einzigartiger key für Streamlit, damit keine DuplicateElementKey Fehler auftreten
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_alle_grade_chart_{bereich}_final", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"chart_dindo_stack_{bereich}")
         
                 else:
-                    st.info("Keine Daten für HIPEC")
-        
+                    st.info("Keine schweren Komplikationen (≥ IIIa) in diesem Zeitraum erfasst.")
             else:
-                st.error("Spalten fehlen")
+                st.error(f"Fehlende Spalten: {required_cols - set(df_bereich.columns)}")
+
         
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
