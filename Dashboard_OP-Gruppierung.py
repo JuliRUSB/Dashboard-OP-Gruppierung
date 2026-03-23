@@ -904,7 +904,6 @@ for i, bereich in enumerate(bereiche):
         
                 if not df_plot.empty:
                     # 4. Gruppierung für die Grafik (Anzahl pro Jahr und Dindo-Grad)
-                    # Wir ignorieren HIPEC in der Gruppierung, damit die Stapelung pro Jahr klar ist
                     grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                     grp.columns = ["Jahr", "Dindo-Grad", "Anzahl"]
         
@@ -914,8 +913,8 @@ for i, bereich in enumerate(bereiche):
                     # 5. Plotly Express Bar Chart (Gestapelt)
                     fig = px.bar(
                         grp,
-                        x="Jahr",
-                        y="Anzahl",
+                        x="jahr_opdatum",
+                        y="count",
                         color="Dindo-Grad",
                         text="Anzahl", # Zeigt die Zahl im Segment an
                         barmode="stack",
@@ -924,15 +923,15 @@ for i, bereich in enumerate(bereiche):
                     )
         
                     fig.update_traces(
-                        textfont_size=14,
-                        textposition='inside', # 'inside' sorgt dafür, dass Zahlen im Balken stehen
+                        textfont_size=16,
+                        textposition='auto',
                         marker_line_width=0.5,
                         marker_line_color="white"
                     )
         
                     fig.update_layout(
-                        xaxis={"type": "category", "tickfont": {"size": 14}},
-                        yaxis={"title": "Anzahl Komplikationen", "tickfont": {"size": 14}},
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"title": "Anzahl Komplikationen", "tickfont": {"size": 16}},
                         legend_title_text='Dindo-Grad',
                         margin=dict(l=10, r=10, t=30, b=10),
                         height=450 # Feste Höhe für bessere Optik
