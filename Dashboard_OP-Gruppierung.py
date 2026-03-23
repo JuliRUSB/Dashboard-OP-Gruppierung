@@ -630,7 +630,7 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"bereich", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
             
-                # Effiziente Filterung
+                # Filterung
                 df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
                 total_ops = len(df_plot)
             
@@ -879,8 +879,8 @@ for i, bereich in enumerate(bereiche):
     
             if required_cols.issubset(df_bereich.columns):
 
-                # CRS filtern
-                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                # CRS und HIPEC = ja filtern
+                df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Yes")].copy()
                 total_crs = len(df_plot_all)
         
                 # 1. Wir definieren die Hierarchie (Wichtig für den Vergleich)
