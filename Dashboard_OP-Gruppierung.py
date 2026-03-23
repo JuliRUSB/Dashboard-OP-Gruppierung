@@ -795,7 +795,7 @@ for i, bereich in enumerate(bereiche):
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "hipec"}
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "hipec"}
             if required_cols.issubset(df_bereich.columns):
                     
                 # Filter für CRS
