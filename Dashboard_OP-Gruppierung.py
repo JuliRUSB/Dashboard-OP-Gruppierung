@@ -957,7 +957,7 @@ for i, bereich in enumerate(bereiche):
                     yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                 )
 
-                st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_alle_grade_chart_{bereich}", config={'displayModeBar': False})
 
             else:
                 st.info("Keine Daten für HIPEC")
