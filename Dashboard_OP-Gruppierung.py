@@ -959,7 +959,7 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
 
         # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" HIPEC = nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
-        with col1.container(border=True):
+        with col2.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
             if required_cols.issubset(df_bereich.columns):
