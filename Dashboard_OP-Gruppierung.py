@@ -58,6 +58,7 @@ def export_redcap_data(api_url):
         'fields[13]':  'hipec',
         'fields[14]':  'anastomosen_crs',
         'fields[15]':  'statistik_dindo_2',
+        'fields[15]':  'los_opdatum',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -752,9 +753,7 @@ for i, bereich in enumerate(bereiche):
                     # Gruppierung nach Jahr und HIPEC
                     grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
-
-                    
-                    
+                
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -1096,7 +1095,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
-            # ================== Kachel 9 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen==================
+        # ================== Kachel 8 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
         with col8.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1155,8 +1154,8 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col10, col11 = st.columns(2)
         
-        # ================== Kachel 10 "Gruppen (Sarkome/Weichteiltumoren)" ==================
-        with col10.container(border=True):
+        # ================== Kachel 9 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+        with col9.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
@@ -1211,8 +1210,63 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
-        
-        
+        # ================== Kachel 10 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
+        with col10.container(border=True):
+            # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"type_sark", "jahr_opdatum", "los_opdatum", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
+            
+                # Filter für Sarkom/Weichteiltumor
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                total_gruppen = len(df_plot)
+            
+                st.metric(label="Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen", value=total_gruppen)
+                st.divider()
+            
+                if total_gruppen > 0:
+                    # Gruppierung nach Jahr und Sarkomgruppe
+                    grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
+                
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="gruppen_chir_onko_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
+                    )
+                
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+                
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=0),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
+                
+                    # st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_gruppen_sarkome_chart_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Gruppendaten")
+            else:
+                st.error("Spalten fehlen")
+            # else:
+                # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
+
+
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
         # if "Gruppen" in analysen:
