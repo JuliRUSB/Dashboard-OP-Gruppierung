@@ -1152,7 +1152,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
 
         # Drei Spalten/Kacheln definieren (4. Reihe)
-        col10, col11 = st.columns(2)
+        col9, col10 = st.columns(2)
         
         # ================== Kachel 9 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col9.container(border=True):
