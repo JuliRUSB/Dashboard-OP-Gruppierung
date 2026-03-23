@@ -947,7 +947,9 @@ for i, bereich in enumerate(bereiche):
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
-                        legend_title_text=None
+                        showlegend=True,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_alle_grade_chart_{bereich}_final", config={'displayModeBar': False})
