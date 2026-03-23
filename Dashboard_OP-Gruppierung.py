@@ -883,11 +883,31 @@ for i, bereich in enumerate(bereiche):
                 df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                 total_crs = len(df_plot_all)
         
-                # Finalen Text-Wert bestimmen (bereits gemappt im Vorfeld)
-                df_plot_all["dindo_final_text"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
+                # 1. Wir definieren die Hierarchie (Wichtig für den Vergleich)
+                dindo_order = [
+                    'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+                    'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+                ]
 
-                # nur Fälle mit Dindo >= IIIa laut Filter
+                # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
+                def get_highest_dindo(row):
+                    v1 = row['max_dindo_calc']
+                    v2 = row['max_dindo_calc_surv']
+                    # Nur Werte berücksichtigen, die in unserer Liste oben stehen
+                    valid_values = [v for v in [v1, v2] if v in dindo_order]
+                    if not valid_values:
+                        return "Unbekannt"
+                    # Den Wert mit dem höchsten Index in dindo_order zurückgeben
+                    return max(valid_values, key=lambda x: dindo_order.index(x))
+
+                df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
+
+                # 3. Nur Fälle mit Dindo >= IIIa laut Filter
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                
+                # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
+                df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
+                
                 total_lok = len(df_plot)
                 
                 st.metric(
@@ -897,17 +917,9 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if not df_plot.empty:
-                    # Gruppierung
                     grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
         
-                    # Festgelegte Reihenfolge für die Stapelung (V oben, IIIa unten)
-                    dindo_order = [
-                        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
-                        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
-                    ]
-
-                    # Plot
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -916,36 +928,26 @@ for i, bereich in enumerate(bereiche):
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad", "count": "Anzahl"},
-                        category_orders={"dindo_final_text": dindo_order} # Erzwingt die Reihenfolge
+                        labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
+                        category_orders={"dindo_final_text": dindo_order} 
                     )
         
-                    fig.update_traces(
-                        textfont_size=16,
-                        textposition='auto',
-                        marker_line_width=0
-                    )
-        
+                    fig.update_traces(textfont_size=16, textposition='auto', marker_line_width=0)
                     fig.update_layout(
                         bargap=0.1,
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=True,
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
                         legend_title_text=None
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_alle_grade_chart_{bereich}_final", config={'displayModeBar': False})
-        
                 else:
-                    st.info("Keine Daten für HIPEC (Grad >= IIIa)")
-        
+                    st.info("Keine validen Grade >= IIIa gefunden.")
             else:
                 st.error("Spalten fehlen")
 
-        
+      
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
                 
