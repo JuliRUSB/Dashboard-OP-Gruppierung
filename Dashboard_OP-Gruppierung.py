@@ -916,10 +916,11 @@ for i, bereich in enumerate(bereiche):
                         x="jahr_opdatum",
                         y="count",
                         color="Dindo-Grad",
-                        text="Anzahl", # Zeigt die Zahl im Segment an
+                        text="count", 
                         barmode="stack",
                         color_discrete_sequence=COLOR_PALETTE,
-                        template="simple_white"
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        category_orders={"jahr_opdatum": quartal_order}
                     )
         
                     fig.update_traces(
