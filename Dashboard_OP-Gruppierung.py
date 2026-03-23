@@ -905,10 +905,10 @@ for i, bereich in enumerate(bereiche):
                 if not df_plot.empty:
                     # 4. Gruppierung für die Grafik (Anzahl pro Jahr und Dindo-Grad)
                     grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
-                    grp.columns = ["Jahr", "Dindo-Grad", "Anzahl"]
+                    grp.columns = ["jahr_opdatum", "Dindo-Grad", "count"]
         
                     # Sortierung sicherstellen (optional, falls Dindo-Grade sortiert sein sollen)
-                    grp = grp.sort_values(by=["Jahr", "Dindo-Grad"])
+                    grp = grp.sort_values(by=["jahr_opdatum", "Dindo-Grad"])
         
                     # 5. Plotly Express Bar Chart (Gestapelt)
                     fig = px.bar(
