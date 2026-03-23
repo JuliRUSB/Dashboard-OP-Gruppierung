@@ -936,8 +936,8 @@ for i, bereich in enumerate(bereiche):
                         textfont_size=16, 
                         textposition='auto', 
                         insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                        textangle=90, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                        marker_line_width=0
+                        textangle=-90, # erzwingt, dass die Zahl steht (90 Grad Drehung)
+                        cliponaxis=False
                     )
                     
                     fig.update_layout(
