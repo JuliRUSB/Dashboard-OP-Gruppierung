@@ -58,7 +58,7 @@ def export_redcap_data(api_url):
         'fields[13]':  'hipec',
         'fields[14]':  'anastomosen_crs',
         'fields[15]':  'statistik_dindo_2',
-        'fields[15]':  'los_opdatum',
+        'fields[16]':  'los_opdatum',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
