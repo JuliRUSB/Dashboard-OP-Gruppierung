@@ -873,14 +873,14 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
         
-       # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+       # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC = ja bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
             if required_cols.issubset(df_bereich.columns):
 
                 # CRS und HIPEC = ja filtern
-                df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Yes")].copy()
+                df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
                 total_crs = len(df_plot_all)
         
                 # 1. Wir definieren die Hierarchie (Wichtig für den Vergleich)
