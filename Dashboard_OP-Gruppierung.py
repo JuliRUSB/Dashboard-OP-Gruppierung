@@ -869,11 +869,105 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")     
-
+        
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
+# ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+with col2.container(border=True):
+    required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
+    if required_cols.issubset(df_bereich.columns):
+
+        # CRS filtern
+        df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+        total_crs = len(df_plot_all)
+
+        # Maximalen Dindo-Grad berechnen
+        df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
+        dindo_labels = {
+            0: "keine Komplikation",
+            1: "Grade I",
+            2: "Grade Id",
+            3: "Grade II",
+            4: "Grade II d",
+            5: "Grade III a",
+            6: "Grade III a d",
+            7: "Grade III b",
+            8: "Grade III b d",
+            9: "Grade IV a",
+            10: "Grade IV a d",
+            11: "Grade IV b",
+            12: "Grade IV b d",
+            13: "Grade V"
+        }
+        df_plot_all["dindo_final"] = df_plot_all["dindo_final_num"].map(dindo_labels)
+
+        # nur Fälle mit Dindo >= IIIa
+        df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+        total_lok = len(df_plot)
+
+        st.metric(
+            label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
+            value=f"{total_lok} von {total_crs}",
+        )
+        st.divider()
+
+        if total_crs > 0:
+            # Gruppierung nach Jahr, HIPEC und Dindo-Grad
+            grp = df_plot.groupby(
+                ["jahr_opdatum", "hipec", "dindo_final"], 
+                as_index=False
+            ).size()
+            grp.columns = ["jahr_opdatum", "hipec", "dindo_final", "count"]
+
+            # Gesamtzahl pro Jahr & HIPEC (alle CRS-Fälle)
+            grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+            grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+
+            grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+            grp["text_label"] = grp.apply(
+                lambda row: f"{row['count']} (von {row['count_gesamt']})", axis=1
+            )
+
+            # Plot
+            fig = px.bar(
+                grp,
+                x="jahr_opdatum",
+                y="count",
+                color="dindo_final",
+                barmode="stack",
+                text="text_label",
+                color_discrete_sequence=COLOR_PALETTE,
+                labels={"hipec": "HIPEC", "dindo_final": "Dindo-Grad"},
+            )
+
+            fig.update_traces(
+                textfont_size=16,
+                textposition='auto',
+                marker_line_width=0
+            )
+
+            fig.update_layout(
+                bargap=0.1,
+                margin=dict(l=10, r=10, t=30, b=10),
+                xaxis_title=None,
+                yaxis_title=None,
+                showlegend=True,
+                xaxis={"type": "category", "tickfont": {"size": 16}},
+                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+
+        else:
+            st.info("Keine Daten für HIPEC")
+
+    else:
+        st.error("Spalten fehlen")
         
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        # Zwei Spalten/Kacheln definieren (4. Reihe)
+        col1, col2 = st.columns(2)
+                
+        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -943,7 +1037,7 @@ for i, bereich in enumerate(bereiche):
             # else:
                 # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–") 
 
-        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
+        # ================== Kachel 8 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
