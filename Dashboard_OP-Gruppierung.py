@@ -795,21 +795,20 @@ for i, bereich in enumerate(bereiche):
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"jahr_opdatum", "lokalisation_sark", "hipec"}
+            required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
             if required_cols.issubset(df_bereich.columns):
-                    
-                # Filter für CRS
-                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                total_crs = len(df_plot)
 
-                # Filter für Clavien-Dindo-Grad
-                df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)                    
-                    
+                # CRS filtern
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot_all)
+
+                # Dindo ≥ IIIa
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)
+
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
                     value=f"{total_lok} von {total_crs}",
-                    # help=f"{total_lok} Komplikationen ≥ IIIa bei insgesamt {total_crs} CRS-Fällen"
                 )
                 st.divider()
                 
