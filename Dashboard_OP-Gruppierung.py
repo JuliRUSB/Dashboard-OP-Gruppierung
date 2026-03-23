@@ -874,7 +874,7 @@ for i, bereich in enumerate(bereiche):
         col1, col2 = st.columns(2)
         
     # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
-    with col2.container(border=True):
+    with col1.container(border=True):
         required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
         if required_cols.issubset(df_bereich.columns):
 
