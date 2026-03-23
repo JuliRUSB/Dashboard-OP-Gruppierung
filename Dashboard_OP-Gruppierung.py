@@ -908,7 +908,29 @@ for i, bereich in enumerate(bereiche):
                 # nur Fälle mit Dindo >= IIIa
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)
-        
+
+                # Maximalen Dindo-Grad bestimmen
+                df_plot_all["dindo_final_num"] = df_plot_all[["max_dindo_calc", "max_dindo_calc_surv"]].max(axis=1)
+
+                # Optional: für Anzeige als Text in Plotly (Grade IIIa, IVb etc.)
+                dindo_labels_text = {
+                    0: "keine Komplikation",
+                    1: "Grade I",
+                    2: "Grade Id",
+                    3: "Grade II",
+                    4: "Grade II d",
+                    5: "Grade III a",
+                    6: "Grade III a d",
+                    7: "Grade III b",
+                    8: "Grade III b d",
+                    9: "Grade IV a",
+                    10: "Grade IV a d",
+                    11: "Grade IV b",
+                    12: "Grade IV b d",
+                    13: "Grade V"
+                }
+                df_plot_all["dindo_final_text"] = df_plot_all["dindo_final_num"].map(dindo_labels_text)
+
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
                     value=f"{total_lok} von {total_crs}",
