@@ -932,8 +932,16 @@ for i, bereich in enumerate(bereiche):
                         category_orders={"dindo_final_text": dindo_order} 
                     )
         
-                    fig.update_traces(textfont_size=16, textposition='auto', marker_line_width=0)
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto', 
+                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        marker_line_width=0
+                    )
+                    
                     fig.update_layout(
+                        uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
+                        uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
                         bargap=0.1,
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
