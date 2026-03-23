@@ -1033,14 +1033,13 @@ for i, bereich in enumerate(bereiche):
         col7, col8 = st.columns(2)
 
         # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
-        # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
         with col7.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
             if required_cols.issubset(df_bereich.columns):
 
-                # Filter: nur maligne + intermediate (alles außer "andere")
-                df_plot = df_bereich[df_bereich["malignit_t_sark"] != "andere"].copy()
+                # Filter: nur maligne + intermediate (alles ausser "andere") und ohne Knochen
+                df_plot = df_bereich[df_bereich["malignit_t_sark"] != "andere"].copy() & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_malign = len(df_plot)
 
                 st.metric(
@@ -1289,8 +1288,8 @@ for i, bereich in enumerate(bereiche):
             # if "max_dindo_calc" in df_bereich.columns and df_bereich["max_dindo_calc"].notna().any():
                 # d = (
                     # df_bereich
-                    # .dropna(subset=["jahr_opdatum", "max_dindo_calc"])
-                    # .groupby(["jahr_opdatum", "max_dindo_calc"], as_index=False)
+                    # .dropna(subset=["jahr_opdatum", "max_dindo_calc", "max_dindo_calc_surv"])
+                    # .groupby(["jahr_opdatum", "max_dindo_calc", "max_dindo_calc_surv"], as_index=False)
                     # .size()
                 # )
                 # d.columns = ["jahr_opdatum", "dindo", "count"]
