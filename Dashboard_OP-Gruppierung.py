@@ -1548,59 +1548,64 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel: Length of Stay (LOS) pro Lokalisation ==================
         # ================== Kachel: Durchschnittlicher LOS pro Lokalisation ==================
-        with col1.container(border=True):
-            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
-            if required_cols.issubset(df_bereich.columns):
-        
-                # Filter: Sarkom/Weichteiltumor ohne Knochen
-                df_los = df_bereich[
-                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
-                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
-                ].copy()
-        
-                total_faelle = len(df_los)
-                st.metric(
-                    label="Durchschnittlicher LOS pro Lokalisation – Sarkome/Weichteiltumore ohne Knochen",
-                    value=total_faelle
-                )
-                st.divider()
-        
-                if total_faelle > 0:
-                    # Gruppieren: Mittelwert und Standardabweichung
-                    grp = df_los.groupby("lokalisation_sark")["los_opdatum"].agg(['mean', 'std']).reset_index()
-                    grp = grp.sort_values("mean", ascending=False)
-        
-                    fig = px.bar(
-                        grp,
-                        x="lokalisation_sark",
-                        y="mean",
-                        error_y="std",  # Standardabweichung als Fehlerbalken
-                        text="mean",
-                        color="lokalisation_sark",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)"}
-                    )
-        
-                    fig.update_traces(
-                        texttemplate="%{text:.1f}",  # Anzeige der Mittelwerte auf den Balken
-                        textposition='outside'
-                    )
-        
-                    fig.update_layout(
-                        xaxis_title=None,
-                        yaxis_title="Durchschnittlicher LOS (Tage)",
-                        showlegend=False,
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis={"tickfont": {"size": 14}},
-                        yaxis={"tickfont": {"size": 14}, "showgrid": True}
-                    )
-        
-                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
-        
-                else:
-                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
-            else:
-                st.error("Spalten fehlen")
+with col1.container(border=True):
+    required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark"}
+    if required_cols.issubset(df_bereich.columns):
+
+        # Filter: Sarkome/Weichteiltumore ohne Knochen
+        df_los = df_bereich[
+            (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
+            (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+        ].copy()
+
+        # LOS in numerisch konvertieren (REDCap berechnete Felder kommen als String)
+        df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+        df_los = df_los.dropna(subset=["los_opdatum"])
+
+        total_faelle = len(df_los)
+        st.metric(
+            label="Durchschnittlicher LOS pro Lokalisation – Sarkome/Weichteiltumore ohne Knochen",
+            value=total_faelle
+        )
+        st.divider()
+
+        if total_faelle > 0:
+            # Gruppierung: Mittelwert und Standardabweichung
+            grp = df_los.groupby("lokalisation_sark")["los_opdatum"].agg(['mean', 'std']).reset_index()
+            grp = grp.sort_values("mean", ascending=False)
+
+            # Plotly Balkenplot
+            fig = px.bar(
+                grp,
+                x="lokalisation_sark",
+                y="mean",
+                error_y="std",
+                text="mean",
+                color="lokalisation_sark",
+                color_discrete_sequence=COLOR_PALETTE,
+                labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)"}
+            )
+
+            fig.update_traces(
+                texttemplate="%{text:.1f}",
+                textposition='outside'
+            )
+
+            fig.update_layout(
+                xaxis_title=None,
+                yaxis_title="Durchschnittlicher LOS (Tage)",
+                showlegend=False,
+                margin=dict(l=10, r=10, t=30, b=10),
+                xaxis={"tickfont": {"size": 14}},
+                yaxis={"tickfont": {"size": 14}, "showgrid": True}
+            )
+
+            st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+
+        else:
+            st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+    else:
+        st.error("Spalten fehlen")
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
         
