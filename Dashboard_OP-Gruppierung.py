@@ -1532,7 +1532,7 @@ for i, bereich in enumerate(bereiche):
                         uniformtext_minsize=12,
                         uniformtext_mode='hide'
                     )
-                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
@@ -1541,7 +1541,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel: Length of Stay (LOS) pro Lokalisation ==================
+        # ================== Kachel 15: Length of Stay (LOS) pro Lokalisation ==================
         with col1.container(border=True):
             required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
@@ -1598,7 +1598,7 @@ for i, bereich in enumerate(bereiche):
                         uniformtext_mode='hide'
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
