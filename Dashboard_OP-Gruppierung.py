@@ -1513,7 +1513,7 @@ for i, bereich in enumerate(bereiche):
                         grp,
                         x="jahr_opdatum",
                         y="count",
-                        color="gruppen_chir_onko_sark",
+                        color="lokalisation_sark",
                         barmode="group",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
