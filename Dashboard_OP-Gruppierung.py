@@ -881,7 +881,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
                 total_crs = len(df_plot_all)
         
-                # 1. Wir definieren die Hierarchie (Wichtig für den Vergleich)
+                # 1. Definition der Hierarchie (Wichtig für den Vergleich)
                 dindo_order = [
                     'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
                     'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
@@ -1201,11 +1201,115 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")  
-
-        # Drei Spalten/Kacheln definieren (4. Reihe)
+                
+        # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 9 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
+        # ================== Kachel 9 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr (aufgeteilt nach Clavien-Dindo-Grad) ==================
+        with col1.container(border=True):
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
+        
+                # Filter für Sarkom/Weichteiltumor ohne Knochen
+                df_plot = df_bereich[
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & 
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
+                total_lok = len(df_plot)
+        
+                # 1. Definition der Hierarchie (Wichtig für den Vergleich)
+                dindo_order = [
+                    'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+                    'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+                ]
+        
+                # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
+                def get_highest_dindo(row):
+                    v1 = row['max_dindo_calc']
+                    v2 = row['max_dindo_calc_surv']
+                    # Nur Werte berücksichtigen, die in unserer Liste oben stehen
+                    valid_values = [v for v in [v1, v2] if v in dindo_order]
+                    if not valid_values:
+                        return "Unbekannt"
+                    # Den Wert mit dem höchsten Index in dindo_order zurückgeben
+                    return max(valid_values, key=lambda x: dindo_order.index(x))
+        
+                df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
+        
+                # 3. Nur Fälle mit Dindo >= IIIa laut Filter
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+        
+                # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
+                df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
+        
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, aufgeteilt nach Clavien-Dindo-Grad", 
+                    value=total_lok
+                )
+                st.divider()
+        
+                if total_lok > 0:
+                    # Gruppierung nach Jahr, Lokalisation
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+        
+                    # Sortierung sicherstellen (chronologisch)
+                    grp = grp.sort_values("jahr_opdatum")
+                    quartal_order = grp["jahr_opdatum"].unique().tolist()
+        
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="stack",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        category_orders={"jahr_opdatum": quartal_order}
+                    )
+        
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        textangle=0,  # erzwingt, dass die Zahl steht
+                        marker_line_width=0
+                    )
+        
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+        
+                    fig.update_layout(
+                        bargap=0.1,  
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                    )
+        
+                    st.plotly_chart(
+                        fig, 
+                        use_container_width=True, 
+                        key=f"kachel7_{bereich}", 
+                        config={'displayModeBar': False}
+                    )
+                else:
+                    st.info("Keine Daten für Sarkom/Weichteiltumor")
+            else:
+                st.error("Spalten fehlen")
+        
+        # Drei Spalten/Kacheln definieren (6. Reihe)
+        col1, col2 = st.columns(2)
+
+        # ================== Kachel 11 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
@@ -1260,7 +1364,7 @@ for i, bereich in enumerate(bereiche):
                     st.plotly_chart(
                         fig,
                         use_container_width=True,
-                        key=f"kachel_malign_chart_{bereich}",
+                        key=f"kachel11_{bereich}",
                     config={"displayModeBar": False}
                     )
                 else:
@@ -1268,7 +1372,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 10 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
+        # ================== Kachel 12 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1315,7 +1419,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
@@ -1324,7 +1428,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 11 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+        # ================== Kachel 13 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1389,13 +1493,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel11_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel13_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 12 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
+        # ================== Kachel 14 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
         with col2.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1442,7 +1546,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
