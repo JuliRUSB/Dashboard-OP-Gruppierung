@@ -1492,51 +1492,51 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel 14 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
         with col1.container(border=True):
-    required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
-    if required_cols.issubset(df_bereich.columns):
-        df_los = df_bereich[
-            (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
-            (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
-        ].copy()
-        df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
-        df_los = df_los.dropna(subset=["los_opdatum"])
-        total_faelle = len(df_los)
-        st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
-        st.divider()
-        if total_faelle > 0:
-            grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)["los_opdatum"].agg(mean='mean', std='std')
-            grp = grp.dropna(subset=['mean', 'std'])
-            grp['mean'] = grp['mean'].astype(float)
-            grp['std'] = grp['std'].astype(float)
-            jahre_order = sorted(grp["jahr_opdatum"].unique())
-            fig = px.bar(
-                grp,
-                x="jahr_opdatum",
-                y="mean",
-                error_y="std",
-                text="mean",
-                barmode="group",
-                color="lokalisation_sark",
-                category_orders={"jahr_opdatum": jahre_order},
-                color_discrete_sequence=COLOR_PALETTE,
-                labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)", "jahr_opdatum": "Jahr"}
-            )
-            fig.update_traces(texttemplate="%{text:.1f}", textposition='outside')
-            fig.update_layout(
-                xaxis_title=None,
-                yaxis_title=None,
-                showlegend=True,
-                margin=dict(l=10, r=10, t=30, b=10),
-                xaxis=dict(tickfont={"size": 16}),
-                yaxis=dict(tickfont={"size": 16}, showgrid=True),
-                uniformtext_minsize=12,
-                uniformtext_mode='hide'
-            )
-            st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
-        else:
-            st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
-    else:
-        st.error("Spalten fehlen")
+            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
+            if required_cols.issubset(df_bereich.columns):
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
+                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+                df_los = df_los.dropna(subset=["los_opdatum"])
+                total_faelle = len(df_los)
+                st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
+                st.divider()
+                if total_faelle > 0:
+                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)["los_opdatum"].agg(mean='mean', std='std')
+                    grp = grp.dropna(subset=['mean', 'std'])
+                    grp['mean'] = grp['mean'].astype(float)
+                    grp['std'] = grp['std'].astype(float)
+                    jahre_order = sorted(grp["jahr_opdatum"].unique())
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="mean",
+                        error_y="std",
+                        text="mean",
+                        barmode="group",
+                        color="lokalisation_sark",
+                        category_orders={"jahr_opdatum": jahre_order},
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)", "jahr_opdatum": "Jahr"}
+                    )
+                    fig.update_traces(texttemplate="%{text:.1f}", textposition='outside')
+                    fig.update_layout(
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis=dict(tickfont={"size": 16}),
+                        yaxis=dict(tickfont={"size": 16}, showgrid=True),
+                        uniformtext_minsize=12,
+                        uniformtext_mode='hide'
+                    )
+                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
 
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
