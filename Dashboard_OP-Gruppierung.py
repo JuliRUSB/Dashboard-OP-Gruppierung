@@ -1348,8 +1348,8 @@ for i, bereich in enumerate(bereiche):
                         # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
                         uniformtext_minsize=16,
                         
-                        # WICHTIG: Erhöht das Limit der Y-Achse um 20%, damit die Zahlen ÜBER den Balken Platz haben.
-                        yaxis_range=[0, grp["count"].max() * 1.2], 
+                        # WICHTIG: Erhöht das Limit der Y-Achse, damit die Zahlen ÜBER den Balken Platz haben.
+                        yaxis_range=[0, grp["count"].max() * 1.3], 
                         margin=dict(l=10, r=10, t=30, b=0),
                         xaxis_title=None, 
                         yaxis_title=None, 
