@@ -727,7 +727,7 @@ for i, bereich in enumerate(bereiche):
                 
         st.markdown(
             """
-            <hr style="border: 2px solid #4CAF50; margin: 20px 0;">
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
             """,
             unsafe_allow_html=True
         )  # horizontale Linie
