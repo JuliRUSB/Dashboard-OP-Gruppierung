@@ -1547,7 +1547,6 @@ for i, bereich in enumerate(bereiche):
         col1, col2 = st.columns(2)
 
         # ================== Kachel: Length of Stay (LOS) pro Lokalisation ==================
-        # ================== Kachel: Durchschnittlicher LOS pro Lokalisation und Jahr ==================
         with col1.container(border=True):
             required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
@@ -1574,7 +1573,10 @@ for i, bereich in enumerate(bereiche):
                     grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(['mean', 'std']).reset_index()
                     grp = grp.sort_values(["jahr_opdatum", "mean"], ascending=[True, False])
         
-                    # Plotly Balkenplot
+                    # X-Achse: Jahre in der richtigen Reihenfolge
+                    jahre_order = sorted(grp["jahr_opdatum"].unique())
+        
+                    # Plotly Balkenplot, Balken nebeneinander pro Jahr
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -1583,7 +1585,7 @@ for i, bereich in enumerate(bereiche):
                         text="mean",
                         barmode="group",
                         color="lokalisation_sark",
-                        facet_col="jahr_opdatum",  # pro Jahr separate Spalten
+                        category_orders={"jahr_opdatum": jahre_order},
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)", "jahr_opdatum": "Jahr"}
                     )
@@ -1595,16 +1597,16 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_layout(
                         xaxis_title=None,
-                        yaxis_title=None,
+                        yaxis_title="Durchschnittlicher LOS (Tage)",
                         showlegend=True,
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis={"tickfont": {"size": 16}},
-                        yaxis={"tickfont": {"size": 16}, "showgrid": True},
+                        xaxis=dict(tickfont={"size": 16}),
+                        yaxis=dict(tickfont={"size": 16}, showgrid=True),
                         uniformtext_minsize=12,
                         uniformtext_mode='hide'
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
         
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
