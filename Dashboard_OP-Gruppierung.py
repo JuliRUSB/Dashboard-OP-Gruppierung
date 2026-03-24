@@ -1532,22 +1532,26 @@ for i, bereich in enumerate(bereiche):
                     # )
                     # st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
         
-                    # 2. Die "Lesbarkeit": Eine formatierte Tabelle mit allen Details direkt darunter
+                    # 2. Die "Lesbarkeit": Tabelle mit farblich abgesetzten Jahren
                     st.write("**Detaillierte Kennzahlen (Tage):**")
-                    # Tabelle für die Anzeige aufbereiten
+                    
                     df_table = grp.copy()
+                    # Formatierung der Zahlen
                     df_table["Mittelwert"] = df_table["Mittelwert"].map("{:.1f}".format)
                     df_table["Median"] = df_table["Median"].map("{:.1f}".format)
                     
-                    st.dataframe(
-                        df_table, 
-                        column_config={
-                            "jahr_opdatum": "Jahr",
-                            "lokalisation_sark": "Lokalisation",
-                        },
-                        hide_index=True, 
-                        use_container_width=True
-                    )
+                    # Logik für den Farbwechsel pro Jahr
+                    def color_by_year(row):
+                        # Nutzt das Jahr, um zu entscheiden: gerade Jahre grau, ungerade weiss (oder umgekehrt)
+                        year = int(row["jahr_opdatum"])
+                        color = '#f0f2f6' if year % 2 == 0 else '#ffffff'
+                        return [f'background-color: {color}'] * len(row)
+
+                    # Styler anwenden
+                    styled_df = df_table.style.apply(color_by_year, axis=1)
+                    
+                    # Anzeige als Tabelle (feste Breite, keine Scrollbars innerhalb der Kachel)
+                    st.table(styled_df)
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
