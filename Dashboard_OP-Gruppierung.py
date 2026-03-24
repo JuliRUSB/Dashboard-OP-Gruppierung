@@ -1564,7 +1564,7 @@ for i, bereich in enumerate(bereiche):
         
                 total_faelle = len(df_los)
                 st.metric(
-                    label="Anzahl Fälle für LOS-Berechnung",
+                    label="Length of Stay nach Lokalisation (ohne Knochen)",
                     value=total_faelle
                 )
                 st.divider()
@@ -1577,7 +1577,7 @@ for i, bereich in enumerate(bereiche):
                     # Plotly Balkenplot
                     fig = px.bar(
                         grp,
-                        x="lokalisation_sark",
+                        x="jahr_opdatum",
                         y="mean",
                         error_y="std",
                         text="mean",
@@ -1594,11 +1594,11 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_layout(
                         xaxis_title=None,
-                        yaxis_title="Durchschnittlicher LOS (Tage)",
-                        showlegend=False,
+                        yaxis_title=None,
+                        showlegend=True,
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis={"tickfont": {"size": 14}},
-                        yaxis={"tickfont": {"size": 14}, "showgrid": True},
+                        xaxis={"tickfont": {"size": 16}},
+                        yaxis={"tickfont": {"size": 16}, "showgrid": True},
                         uniformtext_minsize=12,
                         uniformtext_mode='hide'
                     )
