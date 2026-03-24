@@ -1490,7 +1490,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 14 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
+        # ================== Kachel 14 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================
         with col1.container(border=True):
             required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
@@ -1502,12 +1502,13 @@ for i, bereich in enumerate(bereiche):
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
                 st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
-                
                 st.divider()
-                
+        
                 if total_faelle > 0:
-                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(['mean', 'min', 'max']).reset_index()
-                    grp = grp.sort_values(["jahr_opdatum", "mean"], ascending=[True, False])
+                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(
+                        Mittelwert='mean', Minimum='min', Maximum='max', Median='median'
+                    ).reset_index()
+                    grp = grp.sort_values(["jahr_opdatum", "Mittelwert"], ascending=[True, False])
         
                     fig = go.Figure()
                     lokalisationen = grp["lokalisation_sark"].unique()
@@ -1516,19 +1517,23 @@ for i, bereich in enumerate(bereiche):
                         df_loc = grp[grp["lokalisation_sark"] == loc]
                         fig.add_trace(go.Bar(
                             x=df_loc["jahr_opdatum"],
-                            y=df_loc["mean"],
+                            y=df_loc["Mittelwert"],
                             name=loc,
-                            text=df_loc["mean"].round(1),
+                            text=[f"M:{m}\nMed:{med}\nMin:{mn}\nMax:{mx}" for m, med, mn, mx in zip(
+                                df_loc["Mittelwert"].round(1), df_loc["Median"].round(1),
+                                df_loc["Minimum"], df_loc["Maximum"]
+                            )],
                             textposition="outside",
                             error_y=dict(
                                 type='data',
                                 symmetric=False,
-                                array=df_loc["max"] - df_loc["mean"],
-                                arrayminus=df_loc["mean"] - df_loc["min"]
+                                array=df_loc["Maximum"] - df_loc["Mittelwert"],
+                                arrayminus=df_loc["Mittelwert"] - df_loc["Minimum"]
                             ),
                             marker_line_width=0,
-                            marker_color=COLOR_PALETTE[lokalisationen.tolist().index(loc)]
+                            marker_color=[COLOR_PALETTE[lokalisationen.tolist().index(loc)]]*len(df_loc)
                         ))
+        
                     fig.update_layout(
                         xaxis_title=None,
                         yaxis_title=None,
