@@ -1490,73 +1490,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
+       
         # ================== Kachel 14 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================
-        with col1.container(border=True):
-            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
-            if required_cols.issubset(df_bereich.columns):
-                df_los = df_bereich[
-                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
-                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
-                ].copy()
-                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
-                df_los = df_los.dropna(subset=["los_opdatum"])
-                total_faelle = len(df_los)
-                st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
-                st.divider()
-        
-                if total_faelle > 0:
-                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(
-                        Mittelwert='mean', Minimum='min', Maximum='max', Median='median'
-                    ).reset_index()
-                    grp = grp.sort_values(["jahr_opdatum", "Mittelwert"], ascending=[True, False])
-        
-                    fig = go.Figure()
-                    lokalisationen = grp["lokalisation_sark"].unique()
-        
-                    for i, loc in enumerate(lokalisationen):
-                        df_loc = grp[grp["lokalisation_sark"] == loc]
-                        
-                        # Text-Label erstellen, das alle Werte kombiniert
-                        plot_text = [
-                            f"Ø:{m:.1f}<br>M:{med:.1f}<br>↓:{mi}<br>↑:{ma}" 
-                            for m, med, mi, ma in zip(df_loc["Mittelwert"], df_loc["Median"], df_loc["Minimum"], df_loc["Maximum"])
-                        ]
-        
-                        fig.add_trace(go.Bar(
-                            x=df_loc["jahr_opdatum"],
-                            y=df_loc["Mittelwert"],
-                            name=loc,
-                            text=plot_text,
-                            textposition='outside', # Schreibt die Werte über/an den Balken
-                            textfont=dict(size=10),
-                            marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
-                            customdata=df_loc[["Median", "Minimum", "Maximum"]].values,
-                            error_y=dict(
-                                type='data',
-                                symmetric=False,
-                                array=df_loc["Maximum"] - df_loc["Mittelwert"],
-                                arrayminus=df_loc["Mittelwert"] - df_loc["Minimum"]
-                            )
-                        ))
-        
-                    fig.update_layout(
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=True,
-                        barmode='group',
-                        uniformtext_minsize=8, 
-                        uniformtext_mode='hide',
-                        margin=dict(l=10, r=10, t=50, b=10),
-                        xaxis=dict(tickfont={"size": 16}, type='category'),
-                        yaxis=dict(tickfont={"size": 16}, showgrid=True)
-                    )
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
-            else:
-                st.error("Spalten fehlen")
-
-        # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================
         with col2.container(border=True):
             required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
@@ -1577,25 +1512,25 @@ for i, bereich in enumerate(bereiche):
                     ).reset_index()
                     
                     # 1. Grafik: Fokus auf den Mittelwert für den schnellen Vergleich
-                    fig = go.Figure()
-                    lokalisationen = grp["lokalisation_sark"].unique()
-                    for i, loc in enumerate(lokalisationen):
-                        df_loc = grp[grp["lokalisation_sark"] == loc]
-                        fig.add_trace(go.Bar(
-                            x=df_loc["jahr_opdatum"],
-                            y=df_loc["Mittelwert"],
-                            name=loc,
-                            marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
-                            hovertemplate="Mittelwert: %{y:.1f}<extra></extra>"
-                        ))
+                    # fig = go.Figure()
+                    # lokalisationen = grp["lokalisation_sark"].unique()
+                    # for i, loc in enumerate(lokalisationen):
+                        # df_loc = grp[grp["lokalisation_sark"] == loc]
+                        # fig.add_trace(go.Bar(
+                            # x=df_loc["jahr_opdatum"],
+                            # y=df_loc["Mittelwert"],
+                            # name=loc,
+                            # marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
+                            # hovertemplate="Mittelwert: %{y:.1f}<extra></extra>"
+                        # ))
         
-                    fig.update_layout(
-                        barmode='group',
-                        margin=dict(l=10, r=10, t=10, b=10),
-                        xaxis=dict(type='category', tickfont={"size": 14}),
-                        yaxis=dict(title="Tage (Mittelwert)", tickfont={"size": 14})
-                    )
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
+                    # fig.update_layout(
+                        # barmode='group',
+                        # margin=dict(l=10, r=10, t=10, b=10),
+                        # xaxis=dict(type='category', tickfont={"size": 16}),
+                        # yaxis=dict(title="Tage (Mittelwert)", tickfont={"size": 16})
+                    # )
+                    # st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
         
                     # 2. Die "Lesbarkeit": Eine formatierte Tabelle mit allen Details direkt darunter
                     st.write("**Detaillierte Kennzahlen (Tage):**")
