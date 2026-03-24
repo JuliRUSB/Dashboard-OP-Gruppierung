@@ -1052,7 +1052,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
                 
-        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        # ================== Kachel 7 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1067,7 +1067,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR", value=total_lok)
+                st.metric(label="Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR", value=total_lok)
                 st.divider()
 
                 if total_lok > 0:
@@ -1121,7 +1121,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 8 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
+        # ================== Kachel 8 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1140,7 +1140,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - QUARTAL", value=total_lok)
+                st.metric(label="Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - QUARTAL", value=total_lok)
                 st.divider()
            
                 if total_lok > 0:
@@ -1206,7 +1206,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 9: Clavien-Dindo-Grad >= IIIa nach Dindo-Grad ==================
+        # ================== Kachel 9: Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad" ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
@@ -1236,7 +1236,7 @@ for i, bereich in enumerate(bereiche):
         
                 total_lok = len(df_plot)
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, aufgeteilt nach Dindo-Grad",
+                    label="Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad",
                     value=total_lok
                 )
                 st.divider()
