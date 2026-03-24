@@ -725,7 +725,12 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
                 
-        st.markdown("---")  # horizontale Linie
+        st.markdown(
+            """
+            <hr style="border: 2px solid #4CAF50; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )  # horizontale Linie
         
         # Zwei Spalten/Kacheln definieren (2. Reihe)
         col1, col2 = st.columns(2)
