@@ -642,31 +642,31 @@ with col1.container(border=True):
             # Aggregation
             grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
 
-        fig = px.bar(
-            grp,
-            x="jahr_opdatum",
-            y="count",
-            text="count",
-            color_discrete_sequence=COLOR_PALETTE
-        )
+            fig = px.bar(
+                grp,
+                x="jahr_opdatum",
+                y="count",
+                text="count",
+                color_discrete_sequence=COLOR_PALETTE
+            )
+        
+            fig.update_traces(
+                textfont_size=16, 
+                textposition='auto',
+                marker_line_width=0 # Cleaner Look
+            )
+        
+            fig.update_layout(
+                #height=450, # Feste Höhe für Dashboard-Kacheln
+                margin=dict(l=10, r=10, t=0, b=10),
+                xaxis_title=None, 
+                yaxis_title=None, 
+                showlegend=False,
+                xaxis={"type": "category", "tickfont": {"size": 16}},
+                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+            )
     
-        fig.update_traces(
-            textfont_size=16, 
-            textposition='auto',
-            marker_line_width=0 # Cleaner Look
-        )
-    
-        fig.update_layout(
-            #height=450, # Feste Höhe für Dashboard-Kacheln
-            margin=dict(l=10, r=10, t=0, b=10),
-            xaxis_title=None, 
-            yaxis_title=None, 
-            showlegend=False,
-            xaxis={"type": "category", "tickfont": {"size": 16}},
-            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-        )
-
-        st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
+            st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
         else:
             st.info("Keine Daten für diesen Bereich gefunden.")
     else:
