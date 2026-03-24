@@ -1347,7 +1347,7 @@ for i, bereich in enumerate(bereiche):
                         #height=450, 
                         # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
                         uniformtext_minsize=16,
-                        margin=dict(l=10, r=10, t=40, b=0),
+                        margin=dict(l=10, r=10, t=0, b=0),
                         xaxis_title=None, 
                         yaxis_title=None, 
                         showlegend=True,
