@@ -1499,14 +1499,12 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
 
        
-        # ================== Kachel 14 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================
+        # ================== Kachel 14 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
         with col2.container(border=True):
-            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
-                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
-                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
-                ].copy()
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
