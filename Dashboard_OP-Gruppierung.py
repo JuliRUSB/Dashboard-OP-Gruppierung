@@ -1040,7 +1040,8 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
                 st.error("Spalten fehlen")
-                
+        
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
         st.markdown(
             """
             <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
@@ -1209,7 +1210,7 @@ for i, bereich in enumerate(bereiche):
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
-            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark"}
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
         
                 # Filter für Sarkom/Weichteiltumor ohne Knochen
