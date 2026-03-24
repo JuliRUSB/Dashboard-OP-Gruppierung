@@ -1539,7 +1539,6 @@ for i, bereich in enumerate(bereiche):
                     # st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
         
                     # 2. Die "Lesbarkeit": Tabelle mit farblich abgesetzten Jahren
-                    
                     df_table = grp.copy()
                     
                     # Zeilenfarbe wechselt nach Jahr
