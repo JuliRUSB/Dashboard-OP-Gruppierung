@@ -667,10 +667,10 @@ with col1.container(border=True):
         )
 
         st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
+        else:
+            st.info("Keine Daten für diesen Bereich gefunden.")
     else:
-        st.info("Keine Daten für diesen Bereich gefunden.")
-else:
-    st.error("Fehlende Spalten im Datensatz.")
+        st.error("Fehlende Spalten im Datensatz.")
 
         # ================== Kachel 2 "Übersicht Sarkome" ==================
         with col2.container(border=True):
@@ -724,8 +724,6 @@ else:
                     st.info("Keine Sarkom-Daten")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Übersicht Sarkome", value="-")
 
         # Zwei Spalten/Kacheln definieren (2. Reihe)
         col1, col2 = st.columns(2)
@@ -784,8 +782,6 @@ else:
                     st.info("Keine Daten für CRS")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="HIPEC bei CRS", value="-")
          
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS==================
         with col2.container(border=True):
@@ -862,8 +858,6 @@ else:
                         st.info("Keine Daten für HIPEC")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")     
         
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
