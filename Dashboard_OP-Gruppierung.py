@@ -1556,6 +1556,67 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
+        # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================
+        with col2.container(border=True):
+            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
+            if required_cols.issubset(df_bereich.columns):
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
+                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+                df_los = df_los.dropna(subset=["los_opdatum"])
+                total_faelle = len(df_los)
+                st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
+                st.divider()
+        
+                if total_faelle > 0:
+                    # Daten aggregieren
+                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(
+                        Mittelwert='mean', Median='median', Minimum='min', Maximum='max'
+                    ).reset_index()
+                    
+                    # 1. Grafik: Fokus auf den Mittelwert für den schnellen Vergleich
+                    fig = go.Figure()
+                    lokalisationen = grp["lokalisation_sark"].unique()
+                    for i, loc in enumerate(lokalisationen):
+                        df_loc = grp[grp["lokalisation_sark"] == loc]
+                        fig.add_trace(go.Bar(
+                            x=df_loc["jahr_opdatum"],
+                            y=df_loc["Mittelwert"],
+                            name=loc,
+                            marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
+                            hovertemplate="Mittelwert: %{y:.1f}<extra></extra>"
+                        ))
+        
+                    fig.update_layout(
+                        barmode='group',
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis=dict(type='category', tickfont={"size": 14}),
+                        yaxis=dict(title="Tage (Mittelwert)", tickfont={"size": 14})
+                    )
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
+        
+                    # 2. Die "Lesbarkeit": Eine formatierte Tabelle mit allen Details direkt darunter
+                    st.write("**Detaillierte Kennzahlen (Tage):**")
+                    # Tabelle für die Anzeige aufbereiten
+                    df_table = grp.copy()
+                    df_table["Mittelwert"] = df_table["Mittelwert"].map("{:.1f}".format)
+                    df_table["Median"] = df_table["Median"].map("{:.1f}".format)
+                    
+                    st.dataframe(
+                        df_table, 
+                        column_config={
+                            "jahr_opdatum": "Jahr",
+                            "lokalisation_sark": "Lokalisation",
+                        },
+                        hide_index=True, 
+                        use_container_width=True
+                    )
+                else:
+                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
 
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
