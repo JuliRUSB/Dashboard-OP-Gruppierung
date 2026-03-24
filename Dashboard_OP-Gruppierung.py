@@ -1491,7 +1491,7 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
 
         # ================== Kachel 14 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
-        with col2.container(border=True):
+        with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "los_opdatum", "gruppen_chir_onko_sark"}
