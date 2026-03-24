@@ -1551,13 +1551,11 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
         
-                # Filter: Sarkome/Weichteiltumore ohne Knochen
                 df_los = df_bereich[
                     (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
                     (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
                 ].copy()
         
-                # LOS in numerisch konvertieren
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
         
@@ -1569,14 +1567,13 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if total_faelle > 0:
-                    # Gruppierung nach Jahr und Lokalisation: Mittelwert und Standardabweichung
                     grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(['mean', 'std']).reset_index()
+                    grp = grp.dropna(subset=['mean', 'std'])
+                    grp['mean'] = grp['mean'].astype(float)
+                    grp['std'] = grp['std'].astype(float)
                     grp = grp.sort_values(["jahr_opdatum", "mean"], ascending=[True, False])
-        
-                    # X-Achse: Jahre in der richtigen Reihenfolge
                     jahre_order = sorted(grp["jahr_opdatum"].unique())
         
-                    # Plotly Balkenplot, Balken nebeneinander pro Jahr
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -1597,7 +1594,7 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_layout(
                         xaxis_title=None,
-                        yaxis_title="Durchschnittlicher LOS (Tage)",
+                        yaxis_title=None,
                         showlegend=True,
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis=dict(tickfont={"size": 16}),
@@ -1607,7 +1604,6 @@ for i, bereich in enumerate(bereiche):
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
-        
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
