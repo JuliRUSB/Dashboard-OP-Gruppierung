@@ -1349,6 +1349,11 @@ for i, bereich in enumerate(bereiche):
                         # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
                         uniformtext_minsize=16,
                         uniformtext_mode='show',
+                        # Verringert den Abstand ZWISCHEN den Gruppen und den EINZELNEN Balken,
+                        # damit die Balken BREITER werden. 
+                        # Breitere Balken = Plotly lässt die 16px-Zahl eher nach draussen.
+                        bargap=0.1, 
+                        bargroupgap=0.05,
                         margin=dict(l=10, r=10, t=0, b=0),
                         xaxis_title=None, 
                         yaxis_title=None, 
