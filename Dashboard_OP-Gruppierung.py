@@ -1604,7 +1604,7 @@ for i, bereich in enumerate(bereiche):
                         uniformtext_mode='hide'
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
         
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
