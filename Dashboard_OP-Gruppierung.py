@@ -1040,7 +1040,14 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
                 st.error("Spalten fehlen")
-      
+                
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )  # horizontale Linie
+        
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
                 
