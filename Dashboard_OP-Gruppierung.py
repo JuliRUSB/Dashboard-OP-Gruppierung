@@ -1502,35 +1502,42 @@ for i, bereich in enumerate(bereiche):
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
                 st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
+                
                 st.divider()
+                
                 if total_faelle > 0:
                     grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)["los_opdatum"].agg(mean='mean', std='std')
                     grp = grp.dropna(subset=['mean', 'std'])
                     grp['mean'] = grp['mean'].astype(float)
                     grp['std'] = grp['std'].astype(float)
                     jahre_order = sorted(grp["jahr_opdatum"].unique())
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="mean",
-                        error_y="std",
-                        text="mean",
-                        barmode="group",
-                        color="lokalisation_sark",
-                        category_orders={"jahr_opdatum": jahre_order},
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "mean": "Durchschnittlicher LOS (Tage)", "jahr_opdatum": "Jahr"}
-                    )
-                    fig.update_traces(texttemplate="%{text:.1f}", textposition='outside')
+                    fig = go.Figure()
+                    lokalisationen = grp["lokalisation_sark"].unique()
+        
+                    for loc in lokalisationen:
+                        df_loc = grp[grp["lokalisation_sark"] == loc]
+                        fig.add_trace(go.Bar(
+                            x=df_loc["jahr_opdatum"],
+                            y=df_loc["mean"],
+                            name=loc,
+                            text=df_loc["mean"].round(1),
+                            textposition="outside",
+                            error_y=dict(
+                                type='data',
+                                symmetric=False,
+                                array=df_loc["max"] - df_loc["mean"],
+                                arrayminus=df_loc["mean"] - df_loc["min"]
+                            ),
+                            marker_line_width=0,
+                            marker_color=COLOR_PALETTE[lokalisationen.tolist().index(loc)]
+                        ))
                     fig.update_layout(
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis=dict(tickfont={"size": 16}),
-                        yaxis=dict(tickfont={"size": 16}, showgrid=True),
-                        uniformtext_minsize=12,
-                        uniformtext_mode='hide'
+                        yaxis=dict(tickfont={"size": 16}, showgrid=True)
                     )
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
