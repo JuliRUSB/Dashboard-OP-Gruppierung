@@ -617,61 +617,60 @@ for i, bereich in enumerate(bereiche):
         if df_bereich.empty:
             st.warning("Keine Daten für diesen Bereich")
             continue
-        # ================== BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
+        
+# ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
 
-        # Drei Spalten/Kacheln definieren (1. Reihe)
-        col1, col2 = st.columns(2)
+# Drei Spalten/Kacheln definieren (1. Reihe)
+col1, col2 = st.columns(2)
 
-        # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
-        with col1.container(border=True):
-            # Vorab-Check der Analyse-Auswahl
-            # if "Gesamtzahl Operationen" in analysen:
-            # Sicherstellen, dass notwendige Spalten vorhanden sind
-            required_cols = {"bereich", "jahr_opdatum"}
-            if required_cols.issubset(df_bereich.columns):
-            
-                # Filterung
-                df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
-                total_ops = len(df_plot)
-            
-                st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
-                st.divider()
-            
-                if total_ops > 0:
-                    # Aggregation
-                    grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
-                
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE
-                    )
-            
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='auto',
-                        marker_line_width=0 # Cleaner Look
-                    )
-                
-                    fig.update_layout(
-                        #height=450, # Feste Höhe für Dashboard-Kacheln
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        showlegend=False,
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                    )
-            
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Daten für diesen Bereich gefunden.")
-            else:
-                st.error("Fehlende Spalten im Datensatz.")
-            # else:
-                # st.metric(label="Gesamtzahl Operationen", value="-")
+# ================== Kachel 1 "Gesamtanzahl Operationen" ==================
+with col1.container(border=True):
+# Vorab-Check der Analyse-Auswahl
+# if "Gesamtzahl Operationen" in analysen:
+# Sicherstellen, dass notwendige Spalten vorhanden sind
+required_cols = {"bereich", "jahr_opdatum"}
+if required_cols.issubset(df_bereich.columns):
+
+# Filterung
+df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+total_ops = len(df_plot)
+
+st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
+st.divider()
+
+if total_ops > 0:
+    # Aggregation
+    grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
+
+    fig = px.bar(
+        grp,
+        x="jahr_opdatum",
+        y="count",
+        text="count",
+        color_discrete_sequence=COLOR_PALETTE
+    )
+
+    fig.update_traces(
+        textfont_size=16, 
+        textposition='auto',
+        marker_line_width=0 # Cleaner Look
+    )
+
+    fig.update_layout(
+        #height=450, # Feste Höhe für Dashboard-Kacheln
+        margin=dict(l=10, r=10, t=0, b=10),
+        xaxis_title=None, 
+        yaxis_title=None, 
+        showlegend=False,
+        xaxis={"type": "category", "tickfont": {"size": 16}},
+        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+    )
+
+    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
+else:
+    st.info("Keine Daten für diesen Bereich gefunden.")
+else:
+st.error("Fehlende Spalten im Datensatz.")
 
         # ================== Kachel 2 "Übersicht Sarkome" ==================
         with col2.container(border=True):
@@ -720,8 +719,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
 
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_sarkome_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Sarkom-Daten")
             else:
@@ -781,8 +779,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_hipec_crs_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec_crs_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für CRS")
             else:
@@ -860,8 +857,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipec>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für HIPEC")
             else:
@@ -951,7 +947,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipecja_alle_grade_chart_{bereich}_final", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}_final", config={'displayModeBar': False})
                 else:
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
@@ -1036,7 +1032,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_hipecnein_alle_grade_chart_{bereich}_final", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
                 else:
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
@@ -1045,7 +1041,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
                 
-        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1106,16 +1102,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_j>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_j>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–") 
 
-        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
+        # ================== Kachel 8 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1189,20 +1182,17 @@ for i, bereich in enumerate(bereiche):
                             # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
                             fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
                
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_q>=IIIa_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_q>=IIIa_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="–")
         
 
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 7 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
+        # ================== Kachel 9 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "malignit_t_sark"}
@@ -1263,10 +1253,8 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für Malignität")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Malignität (Sarkome/Weichteiltumoren) - MALIGNE", value="-")
 
-        # ================== Kachel 8 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
+        # ================== Kachel 10 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1313,19 +1301,16 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_lok_sark_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_lok_sark_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Lokalisation (Sarkome/Weichteiltumoren)", value="-")
 
         # Drei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 9 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+        # ================== Kachel 11 "Gruppen (Sarkome/Weichteiltumoren)" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1372,16 +1357,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    # st.plotly_chart(fig, use_container_width=True, key="kachel_gruppen_sarkome_chart", config={'displayModeBar': False})
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_gruppen_sarkome_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel11_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
-        # ================== Kachel 10 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
+        # ================== Kachel 12 "Aufenthaltsdauer "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen" ==================
         with col2.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1428,14 +1410,15 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_los_chart_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
                 st.error("Spalten fehlen")
-            # else:
-                # st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value="-")
 
+        # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
+
+        
 
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
