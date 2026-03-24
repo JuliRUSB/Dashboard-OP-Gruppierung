@@ -1427,7 +1427,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 13 "Gruppen (Sarkome/Weichteiltumoren)" ==================
+        # ================== Kachel 13 "Gruppe Sarkome/Weichteiltumoren (mit Knochen)" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1438,7 +1438,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                 total_gruppen = len(df_plot)
             
-                st.metric(label="Gruppen (Sarkome/Weichteiltumoren)", value=total_gruppen)
+                st.metric(label="Gruppe Sarkome/Weichteiltumoren (mit Knochen)", value=total_gruppen)
                 st.divider()
             
                 if total_gruppen > 0:
