@@ -1328,7 +1328,10 @@ for i, bereich in enumerate(bereiche):
                     # Gruppierung nach Jahr und Sarkomgruppe
                     grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
-                
+
+                    # Schwellenwert: ab welcher Balkenhöhe die Zahl reinpasst
+                    threshold = grp["count"].max() * 0.15
+
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
@@ -1349,6 +1352,16 @@ for i, bereich in enumerate(bereiche):
                         outsidetextfont=dict(size=16),
                         insidetextfont=dict(size=16),
                     )
+
+                    # Pro Balken: textposition basierend auf Wert setzen
+                    for trace in fig.data:
+                        positions = []
+                        for val in trace.y:
+                            if val >= threshold:
+                                positions.append('inside')
+                            else:
+                                positions.append('outside')
+                        trace.textposition = positions
                 
                     fig.update_layout(
                         #height=450, 
