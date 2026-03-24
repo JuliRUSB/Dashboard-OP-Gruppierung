@@ -1219,7 +1219,7 @@ for i, bereich in enumerate(bereiche):
                     (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
                 ].copy()
                 
-                total_crs = len(df_plot_all)
+                total_lok = len(df_plot_all)
         
                 # 1. Definition der Hierarchie (Wichtig für den Vergleich)
                 dindo_order = [
@@ -1246,11 +1246,11 @@ for i, bereich in enumerate(bereiche):
                 # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
                 df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
 
-                total_lok = len(df_plot)
+                total_dindo = len(df_plot)
                 
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, aufgeteilt nach Clavien-Dindo-Grad", 
-                    value=f"{total_lok} von {total_crs}",
+                    value=f"{total_dindo} von {total_crs}",
                 )
                 st.divider()
         
