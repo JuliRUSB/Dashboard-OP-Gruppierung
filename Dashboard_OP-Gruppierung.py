@@ -1581,6 +1581,7 @@ for i, bereich in enumerate(bereiche):
                         y="mean",
                         error_y="std",
                         text="mean",
+                        barmode="group",
                         color="lokalisation_sark",
                         facet_col="jahr_opdatum",  # pro Jahr separate Spalten
                         color_discrete_sequence=COLOR_PALETTE,
