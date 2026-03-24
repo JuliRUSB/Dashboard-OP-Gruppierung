@@ -1506,11 +1506,9 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
                 
                 if total_faelle > 0:
-                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False)["los_opdatum"].agg(mean='mean', std='std')
-                    grp = grp.dropna(subset=['mean', 'std'])
-                    grp['mean'] = grp['mean'].astype(float)
-                    grp['std'] = grp['std'].astype(float)
-                    jahre_order = sorted(grp["jahr_opdatum"].unique())
+                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(['mean', 'min', 'max']).reset_index()
+                    grp = grp.sort_values(["jahr_opdatum", "mean"], ascending=[True, False])
+        
                     fig = go.Figure()
                     lokalisationen = grp["lokalisation_sark"].unique()
         
