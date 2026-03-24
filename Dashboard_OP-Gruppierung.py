@@ -1556,7 +1556,8 @@ for i, bereich in enumerate(bereiche):
                             "lokalisation_sark": "Lokalisation",
                         },
                         hide_index=True,
-                        use_container_width=True
+                        use_container_width=True,
+                        height=450
                     )
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
