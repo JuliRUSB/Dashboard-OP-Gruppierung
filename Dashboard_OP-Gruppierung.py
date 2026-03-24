@@ -1202,14 +1202,6 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")  
-
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
         
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
