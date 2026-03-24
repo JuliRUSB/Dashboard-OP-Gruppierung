@@ -1345,14 +1345,14 @@ for i, bereich in enumerate(bereiche):
                         textposition='auto',
                         cliponaxis=False,
                         textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                        marker_line_width=0
+                        marker_line_width=0,
+                        outsidetextfont=dict(size=16),
+                        insidetextfont=dict(size=16),
                     )
                 
                     fig.update_layout(
                         #height=450, 
                         # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
-                        uniformtext_minsize=16,
-                        uniformtext_mode='hide',
                         margin=dict(l=10, r=10, t=0, b=0),
                         xaxis_title=None, 
                         yaxis_title=None, 
