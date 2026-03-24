@@ -1500,9 +1500,7 @@ for i, bereich in enumerate(bereiche):
                 ].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
-                
                 total_faelle = len(df_los)
-                # Original Label beibehalten
                 st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
                 st.divider()
         
@@ -1517,20 +1515,21 @@ for i, bereich in enumerate(bereiche):
         
                     for i, loc in enumerate(lokalisationen):
                         df_loc = grp[grp["lokalisation_sark"] == loc]
+                        
+                        # Text-Label erstellen, das alle Werte kombiniert
+                        plot_text = [
+                            f"Ø:{m:.1f}<br>M:{med:.1f}<br>↓:{mi}<br>↑:{ma}" 
+                            for m, med, mi, ma in zip(df_loc["Mittelwert"], df_loc["Median"], df_loc["Minimum"], df_loc["Maximum"])
+                        ]
+        
                         fig.add_trace(go.Bar(
                             x=df_loc["jahr_opdatum"],
                             y=df_loc["Mittelwert"],
                             name=loc,
+                            text=plot_text,
+                            textposition='outside', # Schreibt die Werte über/an den Balken
+                            textfont=dict(size=10),
                             marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
-                            # Alle Werte im Hover-Fenster untereinander
-                            hovertemplate=(
-                                "<b>%{fullData.name}</b><br>" +
-                                "Mittelwert: %{y:.1f}<br>" +
-                                "Median: %{customdata[0]:.1f}<br>" +
-                                "Minimum: %{customdata[1]}<br>" +
-                                "Maximum: %{customdata[2]}" +
-                                "<extra></extra>"
-                            ),
                             customdata=df_loc[["Median", "Minimum", "Maximum"]].values,
                             error_y=dict(
                                 type='data',
@@ -1545,17 +1544,18 @@ for i, bereich in enumerate(bereiche):
                         yaxis_title=None,
                         showlegend=True,
                         barmode='group',
-                        margin=dict(l=10, r=10, t=30, b=10),
+                        uniformtext_minsize=8, 
+                        uniformtext_mode='hide',
+                        margin=dict(l=10, r=10, t=50, b=10),
                         xaxis=dict(tickfont={"size": 16}, type='category'),
                         yaxis=dict(tickfont={"size": 16}, showgrid=True)
                     )
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
-                    # Original Label beibehalten
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
-                # Original Label beibehalten
                 st.error("Spalten fehlen")
+
 
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
