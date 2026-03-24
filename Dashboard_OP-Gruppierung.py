@@ -1168,7 +1168,7 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
-                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 14}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 14}}
                     )
@@ -1186,8 +1186,7 @@ for i, bereich in enumerate(bereiche):
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
-                st.error("Spalten fehlen")
-        
+                st.error("Spalten fehlen")  
 
         # Drei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
@@ -1297,7 +1296,7 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None, 
                         yaxis_title=None, 
                         showlegend=True,
-                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
