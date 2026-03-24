@@ -1519,19 +1519,21 @@ for i, bereich in enumerate(bereiche):
                             x=df_loc["jahr_opdatum"],
                             y=df_loc["Mittelwert"],
                             name=loc,
-                            text=[f"M:{m}\nMed:{med}\nMin:{mn}\nMax:{mx}" for m, med, mn, mx in zip(
-                                df_loc["Mittelwert"].round(1), df_loc["Median"].round(1),
-                                df_loc["Minimum"], df_loc["Maximum"]
-                            )],
-                            textposition="outside",
+                            marker_line_width=0,
+                            marker_color=[COLOR_PALETTE[lokalisationen.tolist().index(loc)]]*len(df_loc),
+                            hovertemplate=(
+                                "Mittelwert: %{y:.1f}<br>"
+                                "Median: %{customdata[0]:.1f}<br>"
+                                "Min: %{customdata[1]}<br>"
+                                "Max: %{customdata[2]}"
+                            ),
+                            customdata=df_loc[["Median", "Minimum", "Maximum"]].values,
                             error_y=dict(
                                 type='data',
                                 symmetric=False,
                                 array=df_loc["Maximum"] - df_loc["Mittelwert"],
                                 arrayminus=df_loc["Mittelwert"] - df_loc["Minimum"]
-                            ),
-                            marker_line_width=0,
-                            marker_color=[COLOR_PALETTE[lokalisationen.tolist().index(loc)]]*len(df_loc)
+                            )
                         ))
         
                     fig.update_layout(
@@ -1547,7 +1549,6 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
                 st.error("Spalten fehlen")
-
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
