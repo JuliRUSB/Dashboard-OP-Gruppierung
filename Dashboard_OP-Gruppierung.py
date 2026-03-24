@@ -724,7 +724,9 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Sarkom-Daten")
             else:
                 st.error("Spalten fehlen")
-
+                
+        st.markdown("---")  # horizontale Linie
+        
         # Zwei Spalten/Kacheln definieren (2. Reihe)
         col1, col2 = st.columns(2)
         
