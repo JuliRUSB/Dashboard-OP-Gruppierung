@@ -1298,7 +1298,7 @@ for i, bereich in enumerate(bereiche):
                     st.plotly_chart(
                         fig, 
                         use_container_width=True, 
-                        key=f"kachel7_{bereich}", 
+                        key=f"kachel9_{bereich}", 
                         config={'displayModeBar': False}
                     )
                 else:
