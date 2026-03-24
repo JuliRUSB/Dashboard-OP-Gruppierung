@@ -1206,90 +1206,73 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 9 "Clavien-Dindo-Grad >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr (aufgeteilt nach Clavien-Dindo-Grad) ==================
+        # ================== Kachel 9: Clavien-Dindo-Grad >= IIIa nach Dindo-Grad ==================
         with col1.container(border=True):
-            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-            # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
         
-                # Filter für Sarkom/Weichteiltumor ohne Knochen
+                # Fälle ohne Knochen
                 df_plot = df_bereich[
-                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & 
-                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen") &
+                    (df_bereich["statistik_dindo_2"] == '1')  # nur Dindo >= IIIa
                 ].copy()
-                
-                total_lok = len(df_plot_all)
         
-                # 1. Definition der Hierarchie (Wichtig für den Vergleich)
+                # Dindo-Hierarchie
                 dindo_order = [
-                    'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+                    'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d',
                     'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
                 ]
         
-                # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
+                # höchsten Dindo-Grad pro Fall bestimmen
                 def get_highest_dindo(row):
                     v1 = row['max_dindo_calc']
                     v2 = row['max_dindo_calc_surv']
-                    # Nur Werte berücksichtigen, die in unserer Liste oben stehen
                     valid_values = [v for v in [v1, v2] if v in dindo_order]
-                    if not valid_values:
-                        return "Unbekannt"
-                    # Den Wert mit dem höchsten Index in dindo_order zurückgeben
-                    return max(valid_values, key=lambda x: dindo_order.index(x))
+                    return max(valid_values, key=lambda x: dindo_order.index(x)) if valid_values else "Unbekannt"
         
-                df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
+                df_plot["dindo_final_text"] = df_plot.apply(get_highest_dindo, axis=1)
+                df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]  # Sicherheit
         
-                # 3. Nur Fälle mit Dindo >= IIIa laut Filter
-                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-        
-                # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
-                df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
-
-                total_dindo = len(df_plot)
-                
+                total_lok = len(df_plot)
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, aufgeteilt nach Clavien-Dindo-Grad", 
-                    value=f"{total_dindo} von {total_crs}",
+                    label="Clavien-Dindo-Grad ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, aufgeteilt nach Dindo-Grad",
+                    value=total_lok
                 )
                 st.divider()
         
                 if total_lok > 0:
-                    # Gruppierung nach Jahr, Lokalisation
-                    grp = df_plot.groupby(
-                        ["jahr_opdatum", "lokalisation_sark"],
-                        as_index=False
-                    ).size()
-                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+                    # Gruppieren nach Jahr und Dindo-Grad
+                    grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
         
-                    # Sortierung sicherstellen (chronologisch)
                     grp = grp.sort_values("jahr_opdatum")
-                    quartal_order = grp["jahr_opdatum"].unique().tolist()
+                    jahr_order = grp["jahr_opdatum"].unique().tolist()
         
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
                         y="count",
-                        color="lokalisation_sark",
+                        color="dindo_final_text",
                         barmode="stack",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
-                        category_orders={"jahr_opdatum": quartal_order}
+                        labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
+                        category_orders={"dindo_final_text": dindo_order, "jahr_opdatum": jahr_order}
                     )
         
                     fig.update_traces(
                         textfont_size=16,
                         textposition='auto',
-                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                        textangle=0,  # erzwingt, dass die Zahl steht
+                        insidetextanchor='middle',
+                        textangle=0,
                         marker_line_width=0
                     )
         
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
         
                     fig.update_layout(
-                        bargap=0.1,  
+                        bargap=0.1,
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
@@ -1299,12 +1282,8 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(
-                        fig, 
-                        use_container_width=True, 
-                        key=f"kachel9_{bereich}", 
-                        config={'displayModeBar': False}
-                    )
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
+        
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
