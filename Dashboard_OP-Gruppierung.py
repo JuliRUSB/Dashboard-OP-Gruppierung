@@ -1416,7 +1416,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # Drei Spalten/Kacheln definieren (5. Reihe)
+        # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
         
         # ================== Kachel 13 "Gruppen (Sarkome/Weichteiltumoren)" ==================
@@ -1543,6 +1543,54 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
+        # Drei Spalten/Kacheln definieren (7. Reihe)
+        col1, col2 = st.columns(2)
+
+        # ================== Kachel: Length of Stay (LOS) pro Lokalisation ==================
+        with col1.container(border=True):
+            required_cols = {"los_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
+        
+                # Filter: Sarkom/Weichteiltumor ohne Knochen
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
+        
+                total_faelle = len(df_los)
+                st.metric(
+                    label="Length of Stay (LOS) pro Lokalisation – Sarkome/Weichteiltumore ohne Knochen",
+                    value=total_faelle
+                )
+                st.divider()
+        
+                if total_faelle > 0:
+                    # Boxplot: LOS pro Lokalisation
+                    fig = px.box(
+                        df_los,
+                        x="lokalisation_sark",
+                        y="los_opdatum",
+                        points="all",  # zeigt einzelne Punkte
+                        color="lokalisation_sark",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "los_opdatum": "LOS (Tage)"}
+                    )
+        
+                    fig.update_layout(
+                        xaxis_title=None,
+                        yaxis_title="LOS (Tage)",
+                        showlegend=False,
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis={"tickfont": {"size": 14}},
+                        yaxis={"tickfont": {"size": 14}, "showgrid": True}
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"los_sark_{bereich}", config={'displayModeBar': False})
+        
+                else:
+                    st.info("Keine Daten für Sarkom/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
         
