@@ -1536,22 +1536,27 @@ for i, bereich in enumerate(bereiche):
                     st.write("**Detaillierte Kennzahlen (Tage):**")
                     
                     df_table = grp.copy()
-                    # Formatierung der Zahlen
-                    df_table["Mittelwert"] = df_table["Mittelwert"].map("{:.1f}".format)
-                    df_table["Median"] = df_table["Median"].map("{:.1f}".format)
                     
-                    # Logik für den Farbwechsel pro Jahr
-                    def color_by_year(row):
-                        # Nutzt das Jahr, um zu entscheiden: gerade Jahre grau, ungerade weiss (oder umgekehrt)
-                        year = int(row["jahr_opdatum"])
-                        color = '#f0f2f6' if year % 2 == 0 else '#ffffff'
+                    # Zeilenfarbe wechselt nach Jahr
+                    def row_style(row):
+                        color = '#f8f9fb' if int(row["jahr_opdatum"]) % 2 == 0 else '#ffffff'
                         return [f'background-color: {color}'] * len(row)
 
-                    # Styler anwenden
-                    styled_df = df_table.style.apply(color_by_year, axis=1)
-                    
-                    # Anzeige als Tabelle (feste Breite, keine Scrollbars innerhalb der Kachel)
-                    st.table(styled_df)
+                    # Formatiert auf 2 Stellen und wendet die Farbe an
+                    styled_df = df_table.style.apply(row_style, axis=1).format({
+                        "Mittelwert": "{:.2f}",
+                        "Median": "{:.2f}"
+                    })
+
+                    st.dataframe(
+                        styled_df,
+                        column_config={
+                            "jahr_opdatum": "Jahr",
+                            "lokalisation_sark": "Lokalisation",
+                        },
+                        hide_index=True,
+                        use_container_width=True
+                    )
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
