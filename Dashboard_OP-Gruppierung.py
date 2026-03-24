@@ -1542,10 +1542,12 @@ for i, bereich in enumerate(bereiche):
                         color = '#f8f9fb' if int(row["jahr_opdatum"]) % 2 == 0 else '#ffffff'
                         return [f'background-color: {color}'] * len(row)
 
-                    # Formatiert auf 2 Stellen und wendet die Farbe an
+                     # Alle numerischen Spalten auf max 2 Nachkommastellen formatieren
                     styled_df = df_table.style.apply(row_style, axis=1).format({
                         "Mittelwert": "{:.2f}",
-                        "Median": "{:.2f}"
+                        "Median": "{:.2f}",
+                        "Minimum": "{:.2f}",
+                        "Maximum": "{:.2f}"
                     })
 
                     st.dataframe(
