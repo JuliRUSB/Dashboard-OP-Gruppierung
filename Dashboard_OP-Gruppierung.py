@@ -59,6 +59,8 @@ def export_redcap_data(api_url):
         'fields[14]':  'anastomosen_crs',
         'fields[15]':  'statistik_dindo_2',
         'fields[16]':  'los_opdatum',
+        'fields[17]':  'crs_details',
+        'fields[18]':  'anastomosen_crs',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -170,6 +172,34 @@ def prepare_data(df):
     df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
     df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
 
+    # CRS Dtetails (Für Anastomosen): numerische Codes in Text umwandeln
+    crs_details_mapping = {
+        'crs_details___10': 'Kolon',
+        'crs_details___11': 'Rektum'
+    }
+    # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+    def get_crs_details(row):
+        return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+    df['crs_details'] = df.apply(get_crs_details, axis=1)
+    df = df.drop(columns=crs_details_cols)  # Ursprüngliche Spalten löschen
+
+    # Anastomosen CRS: numerische Codes in Text umwandeln
+    anastomosen_crs_mapping = {
+        'anastomosen_crs___0': 'keine',
+        'anastomosen_crs___1': 'Dünndarm',
+        'anastomosen_crs___2': '>1Dünndarm',
+        'anastomosen_crs___3': 'ileocolisch',
+        'anastomosen_crs___4': 'rektal',
+        'anastomosen_crs___5': 'Kolon-Kolon',
+        'anastomosen_crs___6': 'Esophago-Jejunum',
+        'anastomosen_crs___7': 'Magen-Jejunum'
+    }
+    # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+    def get_anastomosen_crs(row):
+        return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+    df['anastomosen_crs'] = df.apply(get_anastomosen_crs, axis=1)
+    df = df.drop(columns=anastomosen_crs_cols)  # Ursprüngliche Spalten löschen
+    
     # HIPEC: numerische Codes in Text umwandeln
     hipec_mapping = {
         1: 'Ja',
@@ -1498,9 +1528,66 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-       
-        # ================== Kachel 14 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
+        # ================== Kachel 14 Anastomosen bei CRS (Kolon und Rektum) ================== 
+        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
+        #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         with col2.container(border=True):
+            # if "Anastomosen bei CRS (Kolon und Rektum)" in analysen:
+            # Check auf Spalten
+            required_cols = {"anastomosen_crs", "jahr_opdatum"}
+            if required_cols.issubset(df_bereich.columns):
+            
+                # Filter für Anastomosen
+                df_plot = df_bereich[(df_bereich["anastomosen_crs"] == "Kolon") & (df_bereich["anastomosen_crs"] == "Rektum")].copy()
+                total_crs = len(df_plot)
+            
+                st.metric(label="Anastomosen bei CRS (Kolon und Rektum)", value=total_anastomosen)
+                st.divider()
+            
+                if total_crs > 0:
+                    # Gruppierung nach Jahr und Anastomosen
+                    grp = df_plot.groupby(["jahr_opdatum", "anastomosen_crs"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "anastomosen_crs", "count"]
+                
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="anastomosen_crs",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"anastomosen_crs": "Anastomosen"}
+                    )
+                
+                    fig.update_traces(
+                        textfont_size=16, 
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+                
+                    fig.update_layout(
+                        #height=450, 
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
+                
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für CRS")
+            else:
+                st.error("Spalten fehlen")
+
+        # Drei Spalten/Kacheln definieren (8. Reihe)
+        col1, col2 = st.columns(2)
+        
+        # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
+        with col1.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
