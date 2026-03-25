@@ -1585,7 +1585,7 @@ for i, bereich in enumerate(bereiche):
                         showlegend=True,
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1} # "dtick": 1 -> keine 0.5 Schritte auf der Y-Acshe bei kleinen Werten
                     )
                 
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
