@@ -175,34 +175,41 @@ def prepare_data(df):
     # CRS Dtetails (Für Anastomosen): numerische Codes in Text umwandeln
     crs_details_cols = [c for c in df.columns if c.startswith('crs_details___')]
 
-if crs_details_cols:
-    mapping = {
-        'crs_details___10': 'Kolon',
-        'crs_details___11': 'Rektum'
-    }
-
-    def get_crs_details(row):
-        return ', '.join(label for col, label in mapping.items() if str(row.get(col)) == '1') or 'Nicht angegeben'
-
-    df['crs_details'] = df.apply(get_crs_details, axis=1)
-    df = df.drop(columns=crs_details_cols)  # Ursprüngliche Spalten löschen
+    if crs_details_cols:
+        mapping = {
+            'crs_details___10': 'Kolon',
+            'crs_details___11': 'Rektum'
+        }
+    
+        def get_crs_details(row):
+            return ', '.join(label for col, label in mapping.items() if str(row.get(col)) == '1') or 'Nicht angegeben'
+    
+        df['crs_details'] = df.apply(get_crs_details, axis=1)
+        df = df.drop(columns=crs_details_cols)  # Ursprüngliche Spalten löschen
 
     # Anastomosen CRS: numerische Codes in Text umwandeln
-    anastomosen_crs_mapping = {
-        'anastomosen_crs___0': 'keine',
-        'anastomosen_crs___1': 'Dünndarm',
-        'anastomosen_crs___2': '>1Dünndarm',
-        'anastomosen_crs___3': 'ileocolisch',
-        'anastomosen_crs___4': 'rektal',
-        'anastomosen_crs___5': 'Kolon-Kolon',
-        'anastomosen_crs___6': 'Esophago-Jejunum',
-        'anastomosen_crs___7': 'Magen-Jejunum'
-    }
-    # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
-    def get_anastomosen_crs(row):
-        return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
-    df['anastomosen_crs'] = df.apply(get_anastomosen_crs, axis=1)
-    df = df.drop(columns=anastomosen_crs_cols)  # Ursprüngliche Spalten löschen
+    anastomosen_crs_cols = [c for c in df.columns if c.startswith('anastomosen_crs___')]
+    
+    if anastomosen_crs_cols:
+        anastomosen_crs_mapping = {
+            'anastomosen_crs___0': 'keine',
+            'anastomosen_crs___1': 'Dünndarm',
+            'anastomosen_crs___2': '>1Dünndarm',
+            'anastomosen_crs___3': 'ileocolisch',
+            'anastomosen_crs___4': 'rektal',
+            'anastomosen_crs___5': 'Kolon-Kolon',
+            'anastomosen_crs___6': 'Esophago-Jejunum',
+            'anastomosen_crs___7': 'Magen-Jejunum'
+        }
+    
+        def get_anastomosen_crs(row):
+            return ', '.join(
+                label for col, label in anastomosen_crs_mapping.items()
+                if str(row.get(col)) == '1'
+            ) or 'Nicht angegeben'
+    
+        df['anastomosen_crs'] = df.apply(get_anastomosen_crs, axis=1)
+        df = df.drop(columns=anastomosen_crs_cols)
     
     # HIPEC: numerische Codes in Text umwandeln
     hipec_mapping = {
