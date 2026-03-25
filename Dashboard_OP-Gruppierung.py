@@ -1555,7 +1555,7 @@ for i, bereich in enumerate(bereiche):
                 st.metric(label="Anastomosen bei CRS (Kolon und Rektum)", value=total_anastomosen)
                 st.divider()
             
-                if total_crs > 0:
+                if total_anastomosen > 0:
                     # Gruppierung nach Jahr und Anastomosen
                     grp = df_plot.groupby(["jahr_opdatum", "anastomosen_crs"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "anastomosen_crs", "count"]
@@ -1590,7 +1590,7 @@ for i, bereich in enumerate(bereiche):
                 
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
-                    st.info("Keine Daten für CRS")
+                    st.info("Keine Daten für Anastomosen")
             else:
                 st.error("Spalten fehlen")
 
