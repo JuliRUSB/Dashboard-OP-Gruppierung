@@ -173,13 +173,17 @@ def prepare_data(df):
     df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
 
     # CRS Dtetails (Für Anastomosen): numerische Codes in Text umwandeln
-    crs_details_mapping = {
+    crs_details_cols = [c for c in df.columns if c.startswith('crs_details___')]
+
+if crs_details_cols:
+    mapping = {
         'crs_details___10': 'Kolon',
         'crs_details___11': 'Rektum'
     }
-    # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+
     def get_crs_details(row):
-        return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+        return ', '.join(label for col, label in mapping.items() if str(row.get(col)) == '1') or 'Nicht angegeben'
+
     df['crs_details'] = df.apply(get_crs_details, axis=1)
     df = df.drop(columns=crs_details_cols)  # Ursprüngliche Spalten löschen
 
