@@ -1251,38 +1251,52 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
         with col2:
-            # Container für die Kachel-Optik
-            with st.container(border=True):
-                # Header-Zeile für den Button oben rechts
-                c1, c2 = st.columns([0.8, 0.2])
-                
-                if f"expand_{bereich}" not in st.session_state:
-                    st.session_state[f"expand_{bereich}"] = False
+            # 1. Zustand initialisieren
+            if f"expand_{bereich}" not in st.session_state:
+                st.session_state[f"expand_{bereich}"] = False
 
-                label = "▼ ausblenden" if st.session_state[f"expand_{bereich}"] else "▶ anzeigen"
-                
-                # Button in der kleinen rechten Spalte
-                with c2:
-                    if st.button(label, key=f"btn_{bereich}"):
-                        st.session_state[f"expand_{bereich}"] = not st.session_state[f"expand_{bereich}"]
-                        st.rerun()
+            # 2. Button-Logik mit dynamischem Wortwechsel
+            label = "▼ ausblenden" if st.session_state[f"expand_{bereich}"] else "▶ anzeigen"
+            
+            # CSS: Positioniert den Button absolut oben rechts innerhalb von col2
+            st.markdown(f"""
+                <style>
+                div.stButton > button[kind="secondary"] {{
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+                    z-index: 1000;
+                    padding: 2px 10px;
+                    height: auto;
+                    min-height: 0;
+                }}
+                </style>
+            """, unsafe_allow_html=True)
 
-                # Der restliche Inhalt wird nur bei True eingeblendet
-                if st.session_state[f"expand_{bereich}"]:
+            if st.button(label, key=f"btn_{bereich}"):
+                st.session_state[f"expand_{bereich}"] = not st.session_state[f"expand_{bereich}"]
+                st.rerun()
+
+            # 3. Der Container (wird nur bei True eingeblendet)
+            if st.session_state[f"expand_{bereich}"]:
+                with st.container(border=True):
                     required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
                     if required_cols.issubset(df_bereich.columns):
                 
+                        # Fälle ohne Knochen
                         df_plot = df_bereich[
                             (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
                             (df_bereich["gruppen_chir_onko_sark"] != "Knochen") &
-                            (df_bereich["statistik_dindo_2"] == '1')
+                            (df_bereich["statistik_dindo_2"] == '1')  # nur Dindo >= IIIa
                         ].copy()
                 
+                        # Dindo-Hierarchie
                         dindo_order = [
                             'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d',
                             'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
                         ]
                 
+                        # höchsten Dindo-Grad pro Fall bestimmen
                         def get_highest_dindo(row):
                             v1 = row['max_dindo_calc']
                             v2 = row['max_dindo_calc_surv']
@@ -1300,8 +1314,10 @@ for i, bereich in enumerate(bereiche):
                         st.divider()
                 
                         if total_lok > 0:
+                            # Gruppieren nach Jahr und Dindo-Grad
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
+                
                             grp = grp.sort_values("jahr_opdatum")
                             jahr_order = grp["jahr_opdatum"].unique().tolist()
                 
@@ -1336,10 +1352,15 @@ for i, bereich in enumerate(bereiche):
                             )
                 
                             st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
+                
                         else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                     else:
                         st.error("Spalten fehlen")
+            else:
+                # Damit die Spalte col2 existiert, aber leer bleibt (bündig mit col1)
+                st.empty()
+
 
 
 
