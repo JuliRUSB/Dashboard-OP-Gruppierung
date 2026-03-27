@@ -971,7 +971,7 @@ for i, bereich in enumerate(bereiche):
                         textfont_size=16,
                         textposition='auto',
                         insidetextanchor='middle',
-                        textangle=0,
+                        textangle=-45,
                         marker_line_width=0
                     )
         
