@@ -1180,7 +1180,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
                 
-        # ================== Kachel 8 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        # ================== Kachel 8 "Komplikationen ≥ IIIa (Weichteiltumore)" ohne Knochen pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1195,7 +1195,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR", value=total_lok)
+                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumore)", value=total_lok)
                 st.divider()
 
                 if total_lok > 0:
