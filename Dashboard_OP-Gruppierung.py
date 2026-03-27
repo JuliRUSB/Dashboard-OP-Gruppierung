@@ -999,7 +999,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
         
-       # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" HIPEC = ja bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+       # ================== Kachel 6 "Aufteilung Komplikationen CRS mit HIPEC ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
@@ -1037,7 +1037,7 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)
                 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
+                    label="Aufteilung Komplikationen CRS mit HIPEC", 
                     value=f"{total_lok} von {total_crs}",
                 )
                 st.divider()
@@ -1084,7 +1084,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" HIPEC = nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+        # ================== Kachel 7 "Aufteilung Komplikationen CRS ohne HIPEC ==================
         with col2.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
@@ -1122,7 +1122,7 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)
                 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (kein HIPEC bei CRS) - aufgeteilt nach Clavien-Dindo-Grad", 
+                    label="Aufteilung Komplikationen CRS ohne HIPEC", 
                     value=f"{total_lok} von {total_crs}",
                 )
                 st.divider()
