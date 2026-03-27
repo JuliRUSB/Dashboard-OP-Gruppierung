@@ -1254,7 +1254,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 10: Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad" ==================
+        # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
@@ -1284,7 +1284,7 @@ for i, bereich in enumerate(bereiche):
         
                 total_lok = len(df_plot)
                 st.metric(
-                    label="Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad",
+                    label="Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad",
                     value=total_lok
                 )
                 st.divider()
