@@ -978,6 +978,8 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
+                        uniformtext_minsize=16,
+                        uniformtext_mode='show',
                         bargap=0.1,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
