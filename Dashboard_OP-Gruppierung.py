@@ -911,84 +911,85 @@ for i, bereich in enumerate(bereiche):
                         st.info("Keine Daten für HIPEC")
             else:
                 st.error("Spalten fehlen")
+                
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS in % ==================
         with col2.container(border=True):
-        # Check auf Spalten
-        required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
-        if required_cols.issubset(df_bereich.columns):
-    
-            # CRS filtern
-            df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-            total_crs = len(df_plot_all)
-    
-            # Dindo ≥ IIIa
-            df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-            total_lok = len(df_plot)
-    
-            st.metric(
-                label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
-                value=f"{total_lok} von {total_crs}",
-            )
-            st.divider()
-            
-            if total_crs > 0:
-                # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
-                grp = df_plot.groupby(
-                    ["jahr_opdatum", "hipec"],
-                    as_index=False
-                ).size()
-                grp.columns = ["jahr_opdatum", "hipec", "count"]
-    
-                # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
-                grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
-    
-                grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
-    
-                # Berechnung der Prozentsätze
-                grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
-    
-                # Text Label mit Absolutzahl und Prozent
-                grp["text_label"] = grp.apply(
-                    lambda row: f"{row['prozent']}%<br>({row['count']}/{row['count_gesamt']})", axis=1
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
+            if required_cols.issubset(df_bereich.columns):
+        
+                # CRS filtern
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot_all)
+        
+                # Dindo ≥ IIIa
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)
+        
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
+                    value=f"{total_lok} von {total_crs}",
                 )
+                st.divider()
                 
-                fig = px.bar(
-                    grp,
-                    x="jahr_opdatum",
-                    y="prozent", # Änderung auf Prozent
-                    color="hipec",
-                    barmode="group", # "group" meist besser für Prozentvergleich, "stack" bleibt möglich
-                    text="text_label",
-                    color_discrete_sequence=COLOR_PALETTE,
-                    labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
-                )
-           
-                fig.update_traces(
-                    textfont_size=14,
-                    textposition='auto',
-                    insidetextanchor='middle',
-                    textangle=0,
-                    marker_line_width=0
-                )
-    
-                fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-           
-                fig.update_layout(
-                    bargap=0.1,  
-                    margin=dict(l=10, r=10, t=30, b=10),
-                    xaxis_title=None,
-                    yaxis_title="Prozent (%)",
-                    showlegend=True,
-                    xaxis={"type": "category", "tickfont": {"size": 16}},
-                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105]}
-                )
-           
-                st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={'displayModeBar': False})
+                if total_crs > 0:
+                    # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "hipec"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+        
+                    # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+        
+                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+        
+                    # Berechnung der Prozentsätze
+                    grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
+        
+                    # Text Label mit Absolutzahl und Prozent
+                    grp["text_label"] = grp.apply(
+                        lambda row: f"{row['prozent']}%<br>({row['count']}/{row['count_gesamt']})", axis=1
+                    )
+                    
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="prozent", # Änderung auf Prozent
+                        color="hipec",
+                        barmode="group", # "group" meist besser für Prozentvergleich, "stack" bleibt möglich
+                        text="text_label",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
+                    )
+               
+                    fig.update_traces(
+                        textfont_size=14,
+                        textposition='auto',
+                        insidetextanchor='middle',
+                        textangle=0,
+                        marker_line_width=0
+                    )
+        
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+               
+                    fig.update_layout(
+                        bargap=0.1,  
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title="Prozent (%)",
+                        showlegend=True,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105]}
+                    )
+               
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={'displayModeBar': False})
+                else:
+                        st.info("Keine Daten für HIPEC")
             else:
-                    st.info("Keine Daten für HIPEC")
-        else:
-            st.error("Spalten fehlen")
+                st.error("Spalten fehlen")
 
         
         # Zwei Spalten/Kacheln definieren (3. Reihe)
