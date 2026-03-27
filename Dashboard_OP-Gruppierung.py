@@ -926,9 +926,12 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)
         
+                # Prozentwert für die Metrik berechnen
+                metrik_prozent = (total_lok / total_crs * 100).round(1) if total_crs > 0 else 0
+        
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
-                    value=f"{total_lok} von {total_crs}",
+                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) in %", 
+                    value=f"{metrik_prozent} %",
                 )
                 st.divider()
                 
@@ -944,22 +947,21 @@ for i, bereich in enumerate(bereiche):
                     grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
         
-                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+                    # Sicherstellen, dass alle Kombinationen vorhanden sind (für die Grafik)
+                    grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left").fillna(0)
         
                     # Berechnung der Prozentsätze
                     grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
         
-                    # Text Label mit Absolutzahl und Prozent
-                    grp["text_label"] = grp.apply(
-                        lambda row: f"{row['prozent']}%<br>({row['count']}/{row['count_gesamt']})", axis=1
-                    )
+                    # Text Label nur mit Prozent (keine Absolutzahlen)
+                    grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
                     
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
-                        y="prozent", # Änderung auf Prozent
+                        y="prozent", 
                         color="hipec",
-                        barmode="group", # "group" meist besser für Prozentvergleich, "stack" bleibt möglich
+                        barmode="group", 
                         text="text_label",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
@@ -987,10 +989,9 @@ for i, bereich in enumerate(bereiche):
                
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={'displayModeBar': False})
                 else:
-                        st.info("Keine Daten für HIPEC")
+                    st.info("Keine Daten für HIPEC")
             else:
                 st.error("Spalten fehlen")
-
         
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
