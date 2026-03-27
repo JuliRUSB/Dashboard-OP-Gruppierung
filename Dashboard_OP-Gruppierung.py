@@ -1250,8 +1250,21 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
 
         # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
-        with col2:
-            with st.expander("anzeigen", expanded=False):
+                with col2:
+            # Status speichern
+            if f"expand_{bereich}" not in st.session_state:
+                st.session_state[f"expand_{bereich}"] = False
+
+            # Das Wort ändert sich hier aktiv:
+            label = "▼ ausblenden" if st.session_state[f"expand_{bereich}"] else "▶ anzeigen"
+            
+            # Button, der den Zustand umschaltet
+            if st.button(label, key=f"btn_{bereich}"):
+                st.session_state[f"expand_{bereich}"] = not st.session_state[f"expand_{bereich}"]
+                st.rerun()
+
+            # Inhalt wird nur gezeigt, wenn "anzeigen" geklickt wurde
+            if st.session_state[f"expand_{bereich}"]:
                 with st.container(border=True):
                     required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
                     if required_cols.issubset(df_bereich.columns):
@@ -1260,16 +1273,14 @@ for i, bereich in enumerate(bereiche):
                         df_plot = df_bereich[
                             (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") &
                             (df_bereich["gruppen_chir_onko_sark"] != "Knochen") &
-                            (df_bereich["statistik_dindo_2"] == '1')  # nur Dindo >= IIIa
+                            (df_bereich["statistik_dindo_2"] == '1')
                         ].copy()
                 
-                        # Dindo-Hierarchie
                         dindo_order = [
                             'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d',
                             'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
                         ]
                 
-                        # höchsten Dindo-Grad pro Fall bestimmen
                         def get_highest_dindo(row):
                             v1 = row['max_dindo_calc']
                             v2 = row['max_dindo_calc_surv']
@@ -1277,7 +1288,7 @@ for i, bereich in enumerate(bereiche):
                             return max(valid_values, key=lambda x: dindo_order.index(x)) if valid_values else "Unbekannt"
                 
                         df_plot["dindo_final_text"] = df_plot.apply(get_highest_dindo, axis=1)
-                        df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]  # Sicherheit
+                        df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                 
                         total_lok = len(df_plot)
                         st.metric(
@@ -1287,10 +1298,8 @@ for i, bereich in enumerate(bereiche):
                         st.divider()
                 
                         if total_lok > 0:
-                            # Gruppieren nach Jahr und Dindo-Grad
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
-                
                             grp = grp.sort_values("jahr_opdatum")
                             jahr_order = grp["jahr_opdatum"].unique().tolist()
                 
@@ -1314,25 +1323,22 @@ for i, bereich in enumerate(bereiche):
                                 marker_line_width=0
                             )
                 
-                            fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-                
                             fig.update_layout(
                                 bargap=0.1,
                                 margin=dict(l=10, r=10, t=30, b=10),
                                 xaxis_title=None,
                                 yaxis_title=None,
                                 showlegend=True,
-                                # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
                             st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
-                
                         else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                     else:
                         st.error("Spalten fehlen")
+
 
         # Horizontale Trennlinie zur thematischen Abgrenzung 
         st.markdown(
