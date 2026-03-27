@@ -985,17 +985,17 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105]}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für HIPEC")
             else:
                 st.error("Spalten fehlen")
 
         
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
+        # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
         
-       # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC = ja bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+       # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" HIPEC = ja bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
@@ -1074,13 +1074,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}_final", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
                 else:
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 6 "Clavien-Dindo-Grad >= IIIa" HIPEC = nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
+        # ================== Kachel 7 "Clavien-Dindo-Grad >= IIIa" HIPEC = nein bei CRS (aufgeteilt nach Clavien-Dindo-Grad) ==================
         with col2.container(border=True):
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
     
@@ -1159,7 +1159,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}_final", config={'displayModeBar': False})
                 else:
                     st.info("Keine validen Grade >= IIIa gefunden.")
             else:
@@ -1173,10 +1173,10 @@ for i, bereich in enumerate(bereiche):
             unsafe_allow_html=True
         )
         
-        # Zwei Spalten/Kacheln definieren (4. Reihe)
+        # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
                 
-        # ================== Kachel 7 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
+        # ================== Kachel 8 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1239,13 +1239,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 8 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
+        # ================== Kachel 9 "Komplikationen >= IIIa" "Sarkom/Weichteiltumor" ohne Knochen pro Quartal ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1321,16 +1321,16 @@ for i, bereich in enumerate(bereiche):
                             # Zeichne eine Linie zwischen die Balken, wo sich das Quartal ändert
                             fig.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")  
         
-        # Zwei Spalten/Kacheln definieren (5. Reihe)
+        # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 9: Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad" ==================
+        # ================== Kachel 10: Komplikationen ≥ IIIa (Sarkome/Weichteiltumore ohne Knochen) - JAHR, nach Dindo-Grad" ==================
         with col1.container(border=True):
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
@@ -1406,7 +1406,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
         
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
@@ -1421,7 +1421,7 @@ for i, bereich in enumerate(bereiche):
             unsafe_allow_html=True
         )
         
-        # Drei Spalten/Kacheln definieren (6. Reihe)
+        # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
 
         # ================== Kachel 11 "Anzahl Sarkome/Weichteiltumore - maligne und intermediate ohne Knochen" ==================
