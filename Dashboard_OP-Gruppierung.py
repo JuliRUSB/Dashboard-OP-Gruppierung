@@ -968,7 +968,7 @@ for i, bereich in enumerate(bereiche):
                     )
                
                     fig.update_traces(
-                        textfont_size=14,
+                        textfont_size=16,
                         textposition='auto',
                         insidetextanchor='middle',
                         textangle=0,
@@ -981,7 +981,7 @@ for i, bereich in enumerate(bereiche):
                         bargap=0.1,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
-                        yaxis_title="Prozent (%)",
+                        yaxis_title=None,
                         showlegend=True,
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105]}
