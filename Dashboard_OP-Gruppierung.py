@@ -1250,7 +1250,7 @@ for i, bereich in enumerate(bereiche):
                 st.error("Spalten fehlen")
 
         # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
-                with col2:
+        with col2:
             # Status speichern
             if f"expand_{bereich}" not in st.session_state:
                 st.session_state[f"expand_{bereich}"] = False
