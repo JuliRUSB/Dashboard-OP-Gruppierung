@@ -931,7 +931,7 @@ for i, bereich in enumerate(bereiche):
         
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) in %", 
-                    value=f"{metrik_prozent} %",
+                    value=f"{metrik_prozent} % ({total_lok}/{total_crs})",
                 )
                 st.divider()
                 
