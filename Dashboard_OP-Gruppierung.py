@@ -968,7 +968,7 @@ for i, bereich in enumerate(bereiche):
                     )
                
                     fig.update_traces(
-                        textfont_size=16,
+                        textfont_size=18,
                         textposition='auto',
                         insidetextanchor='middle',
                         textangle=-45,
