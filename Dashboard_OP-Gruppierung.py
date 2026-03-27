@@ -1249,13 +1249,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        
-        
-        # Zwei Spalten/Kacheln definieren (6. Reihe)
-        col1, col2 = st.columns(2)
-
         # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
-        with col1.container(border=True):
+        with col2.container(border=True):
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
             if required_cols.issubset(df_bereich.columns):
         
