@@ -926,8 +926,8 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)
         
-                # Prozentwert für die Metrik berechnen
-                metrik_prozent = (total_lok / total_crs * 100).round(1) if total_crs > 0 else 0
+                # Korrekte Berechnung mit Python-round
+                metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
         
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) in %", 
@@ -947,13 +947,13 @@ for i, bereich in enumerate(bereiche):
                     grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
         
-                    # Sicherstellen, dass alle Kombinationen vorhanden sind (für die Grafik)
+                    # Zusammenführen für korrekte Prozentbasis
                     grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left").fillna(0)
         
-                    # Berechnung der Prozentsätze
+                    # Hier funktioniert .round(1), da es ein Pandas-Objekt ist
                     grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
         
-                    # Text Label nur mit Prozent (keine Absolutzahlen)
+                    # Nur Prozent im Label
                     grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
                     
                     fig = px.bar(
@@ -992,6 +992,7 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für HIPEC")
             else:
                 st.error("Spalten fehlen")
+
         
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
