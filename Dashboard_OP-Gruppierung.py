@@ -968,8 +968,8 @@ for i, bereich in enumerate(bereiche):
                     )
                
                     fig.update_traces(
-                        textfont_size=18,
-                        textposition='auto',
+                        textfont_size=16,
+                        textposition='outside',
                         insidetextanchor='middle',
                         textangle=-45,
                         marker_line_width=0
