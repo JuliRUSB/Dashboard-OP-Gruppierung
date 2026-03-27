@@ -969,9 +969,9 @@ for i, bereich in enumerate(bereiche):
                
                     fig.update_traces(
                         textfont_size=16,
-                        textposition='outside',
+                        textposition='auto',
                         insidetextanchor='middle',
-                        textangle=0,
+                        textangle=-45, # Damit die Zahlen im 45 Grad Winkel dargestellt werden
                         marker_line_width=0
                     )
         
@@ -984,7 +984,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis_title=None,
                         showlegend=True,
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105]}
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105], "tick0": 0, "dtick": 10}
                     )
                
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={'displayModeBar': False})
