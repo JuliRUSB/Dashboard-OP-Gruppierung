@@ -1535,6 +1535,13 @@ for i, bereich in enumerate(bereiche):
                     else:
                         st.error("Spalten fehlen")
 
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )
                 
         # Drei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)
@@ -1687,13 +1694,7 @@ for i, bereich in enumerate(bereiche):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
+        
         
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
