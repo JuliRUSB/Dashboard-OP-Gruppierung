@@ -1553,20 +1553,29 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 14 Anastomosen bei CRS (Kolon und Rektum) ================== 
+        # ================== Kachel 14 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         with col2.container(border=True):
-            # if "Anastomosen bei CRS (Kolon und Rektum)" in analysen:
+            # if "Anastomoseinsuffizienz bei CRS (Kolon und Rektum)" in analysen:
             # Check auf Spalten
             required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
             if required_cols.issubset(df_bereich.columns):
             
-                # Filter für Anastomosen
-                df_plot = df_bereich[(df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) | df_bereich["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False))].copy()
-                total_anastomosen = len(df_plot)
-            
-                st.metric(label="Anastomosen bei CRS (Kolon und Rektum)", value=total_anastomosen)
+                df_anastomosen = df_bereich[
+                (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben")].copy()
+    
+                total_anastomosen = len(df_anastomosen)
+
+                # Davon Fälle mit Anastomoseninsuffizienz
+                df_insuff = df_anastomosen[df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) | df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)].copy()
+                
+                total_insuff = len(df_insuff)
+                
+                st.metric(
+                    label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
+                    value=f"{total_insuff} von {total_anastomosen}"
+                )
                 st.divider()
             
                 if total_anastomosen > 0:
