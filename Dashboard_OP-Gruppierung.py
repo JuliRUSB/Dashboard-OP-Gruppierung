@@ -1645,13 +1645,13 @@ for i, bereich in enumerate(bereiche):
                         x="jahr_opdatum",
                         y="Mittelwert",
                         text="Mittelwert",
-                        color_discrete_sequence=[COLOR_PALETTE[0]],  # eine Farbe für alle
+                        color_discrete_sequence=COLOR_PALETTE,
                         labels={"Mittelwert": "Tage (Mittelwert)", "jahr_opdatum": "Jahr"}
                     )
         
                     fig.update_traces(
                         texttemplate='%{text:.2f}',
-                        textposition='outside',
+                        textposition='auto',
                         marker_line_width=0
                     )
         
