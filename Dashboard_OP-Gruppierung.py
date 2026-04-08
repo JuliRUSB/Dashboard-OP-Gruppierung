@@ -1300,7 +1300,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 9 "Weichteiltumore /GIST - maligne und intermediate" ==================
+        # ================== Kachel 10 "Weichteiltumore /GIST - maligne und intermediate" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "malignit_t_sark"}
@@ -1355,7 +1355,7 @@ for i, bereich in enumerate(bereiche):
                     st.plotly_chart(
                         fig,
                         use_container_width=True,
-                        key=f"kachel9_{bereich}",
+                        key=f"kachel10_{bereich}",
                     config={"displayModeBar": False}
                     )
                 else:
