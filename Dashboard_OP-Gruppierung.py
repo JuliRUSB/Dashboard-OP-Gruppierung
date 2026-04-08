@@ -1362,7 +1362,9 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für Malignität")
             else:
                 st.error("Spalten fehlen")     
-                
+        
+        # Zwei Spalten/Kacheln definieren (5. Reihe)
+        col1, col2 = st.columns(2)        
         # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumore)" pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
