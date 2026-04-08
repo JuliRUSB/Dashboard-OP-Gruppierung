@@ -1418,7 +1418,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 12 "Lokalisation (Sarkome/Weichteiltumoren)" ohne Knochen ==================
+        # ================== Kachel 12 "Lokalisation Weichteiltumoren ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1429,7 +1429,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_lok = len(df_plot)
             
-                st.metric(label="Lokalisation (Sarkome/Weichteiltumoren) ohne Knochen", value=total_lok)
+                st.metric(label="Lokalisation Weichteiltumoren", value=total_lok)
                 st.divider()
             
                 if total_lok > 0:
