@@ -1525,36 +1525,15 @@ for i, bereich in enumerate(bereiche):
                     else:
                         st.error("Spalten fehlen")
 
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
-        
+                
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
-
-        
-        
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
-        
-        # Drei Spalten/Kacheln definieren (7. Reihe)
-        col1, col2 = st.columns(2)
-        
         
 
         # ================== Kachel 14 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
-        with col2.container(border=True):
+        with col1.container(border=True):
             required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
             if required_cols.issubset(df_bereich.columns):
         
@@ -1615,11 +1594,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
         
-        # Drei Spalten/Kacheln definieren (8. Reihe)
-        col1, col2 = st.columns(2)
-        
         # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
-        with col1.container(border=True):
+        with col2.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
@@ -1702,7 +1678,26 @@ for i, bereich in enumerate(bereiche):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )
         
+        # Drei Spalten/Kacheln definieren (7. Reihe)
+        col1, col2 = st.columns(2)
+
+        
+        
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )
 
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
