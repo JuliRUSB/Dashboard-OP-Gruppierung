@@ -914,11 +914,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
         
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
-        col1, col2 = st.columns(2)        
-        
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS in % ==================
-        with col1.container(border=True):
+        with col2.container(border=True):
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
             if required_cols.issubset(df_bereich.columns):
