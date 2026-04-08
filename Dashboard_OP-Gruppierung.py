@@ -61,6 +61,8 @@ def export_redcap_data(api_url):
         'fields[16]':  'los_opdatum',
         'fields[17]':  'crs_details',
         'fields[18]':  'anastomosen_crs',
+        'fields[19]':  'kpl_was',
+        'fields[20]':  'kpl_was_surv',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -1557,11 +1559,11 @@ for i, bereich in enumerate(bereiche):
         with col2.container(border=True):
             # if "Anastomosen bei CRS (Kolon und Rektum)" in analysen:
             # Check auf Spalten
-            required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum"}
+            required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Anastomosen
-                df_plot = df_bereich[(df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben")].copy()
+                df_plot = df_bereich[(df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben") & ((df_bereich["kpl_was_surv"].fillna("") == "insuff") | (df_bereich["kpl_was"].fillna("") == "insuff"))].copy()
                 total_anastomosen = len(df_plot)
             
                 st.metric(label="Anastomosen bei CRS (Kolon und Rektum)", value=total_anastomosen)
