@@ -1571,7 +1571,8 @@ for i, bereich in enumerate(bereiche):
                     df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
                     df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
                 ].copy()
-        
+
+                total_anastomosen = len(df_anastomosen)
                 total_insuff = len(df_insuff)
                 st.metric(
                     label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
