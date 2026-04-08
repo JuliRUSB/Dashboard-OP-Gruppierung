@@ -1366,7 +1366,7 @@ for i, bereich in enumerate(bereiche):
                 total_malign = len(df_plot)
 
                 st.metric(
-                    label="SArkomzentrum Weichteiltumore",
+                    label="Sarkomzentrum Weichteiltumoren",
                     value=total_malign
                 )
                 st.divider()
