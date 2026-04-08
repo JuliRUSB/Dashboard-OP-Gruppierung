@@ -1561,7 +1561,7 @@ for i, bereich in enumerate(bereiche):
             if required_cols.issubset(df_bereich.columns):
             
                 # Filter für Anastomosen
-                df_plot = df_bereich[(df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "keine") & (df_bereich["anastomosen_crs"] != "Nicht angegeben")].copy()
+                df_plot = df_bereich[(df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben")].copy()
                 total_anastomosen = len(df_plot)
             
                 st.metric(label="Anastomosen bei CRS (Kolon und Rektum)", value=total_anastomosen)
