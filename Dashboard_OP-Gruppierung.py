@@ -1557,66 +1557,64 @@ for i, bereich in enumerate(bereiche):
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         with col2.container(border=True):
-            # if "Anastomoseinsuffizienz bei CRS (Kolon und Rektum)" in analysen:
-            # Check auf Spalten
             required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
             if required_cols.issubset(df_bereich.columns):
-            
+        
+                # Filter auf Kolon/Rektum und gültige Anastomosen
                 df_anastomosen = df_bereich[
-                (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) & (df_bereich["anastomosen_crs"] != "Nicht angegeben")].copy()
-    
-                total_anastomosen = len(df_anastomosen)
-
-                # Davon Fälle mit Anastomoseninsuffizienz
-                df_insuff = df_anastomosen[df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) | df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)].copy()
-                
+                    (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
+                    (df_bereich["anastomosen_crs"] != "Nicht angegeben")
+                ].copy()
+        
+                # Nur Fälle mit Anastomoseninsuffizienz
+                df_insuff = df_anastomosen[
+                    df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
+                    df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
+                ].copy()
+        
                 total_insuff = len(df_insuff)
-                
                 st.metric(
                     label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
-                    value=f"{total_insuff} von {total_anastomosen}"
+                    value=f"{total_insuff} Fälle"
                 )
                 st.divider()
-            
-                if total_anastomosen > 0:
-                    # Gruppierung nach Jahr und Anastomosen
-                    grp = df_plot.groupby(["jahr_opdatum", "anastomosen_crs"], as_index=False).size()
+        
+                if total_insuff > 0:
+                    grp = df_insuff.groupby(["jahr_opdatum", "anastomosen_crs"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "anastomosen_crs", "count"]
-                
+        
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
                         y="count",
                         color="anastomosen_crs",
-                        barmode="group",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"anastomosen_crs": "Anastomosen"}
                     )
-                
+        
                     fig.update_traces(
-                        textfont_size=16, 
+                        textfont_size=16,
                         textposition='auto',
                         marker_line_width=0
                     )
-                
+        
                     fig.update_layout(
-                        #height=450, 
                         margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
+                        xaxis_title=None,
+                        yaxis_title=None,
                         showlegend=True,
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1} # "dtick": 1 -> keine 0.5 Schritte auf der Y-Acshe bei kleinen Werten
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
                     )
-                
+        
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
                 else:
-                    st.info("Keine Daten für Anastomosen")
+                    st.info("Keine Anastomoseninsuffizienzen vorhanden")
             else:
                 st.error("Spalten fehlen")
-
+        
         # Drei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)
         
