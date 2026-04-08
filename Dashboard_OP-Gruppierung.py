@@ -790,7 +790,7 @@ for i, bereich in enumerate(bereiche):
                 # Filter für CRS
                 df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                 total_crs = len(df_plot)
-            
+                
                 st.metric(label="HIPEC bei CRS", value=total_crs)
                 st.divider()
             
@@ -849,11 +849,11 @@ for i, bereich in enumerate(bereiche):
 
                 # Dindo ≥ IIIa
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)
+                total_dindo = len(df_plot)
 
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
-                    value=f"{total_lok} von {total_crs}",
+                    value=f"{total_dindo} von {total_crs}",
                 )
                 st.divider()
                 
@@ -880,7 +880,7 @@ for i, bereich in enumerate(bereiche):
                         x="jahr_opdatum",
                         y="count",
                         color="hipec",
-                        barmode="stack",
+                        barmode="group",
                         text="text_label",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
