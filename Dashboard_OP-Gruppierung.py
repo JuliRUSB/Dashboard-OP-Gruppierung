@@ -1642,8 +1642,8 @@ for i, bereich in enumerate(bereiche):
                     # Balkendiagramm
                     fig = px.bar(
                         grp,
-                        x=None,
-                        y=None,
+                        x="jahr_opdatum",
+                        y="count",
                         text="Mittelwert",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"Mittelwert": "Tage (Mittelwert)", "jahr_opdatum": "Jahr"}
