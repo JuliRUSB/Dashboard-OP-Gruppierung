@@ -1355,7 +1355,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 11 "Weichteiltumore - maligne und intermediate" ==================
+        # ================== Kachel 11 "Weichteiltumore /GIST - maligne und intermediate" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "malignit_t_sark"}
@@ -1366,7 +1366,7 @@ for i, bereich in enumerate(bereiche):
                 total_malign = len(df_plot)
 
                 st.metric(
-                    label="Anzahl Weichteiltumore - MALIGNE und INTERMEDIATE",
+                    label="SArkomzentrum Weichteiltumore",
                     value=total_malign
                 )
                 st.divider()
