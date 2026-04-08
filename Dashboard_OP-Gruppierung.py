@@ -1655,7 +1655,7 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_traces(
                         texttemplate='%{text:.2f}',
-                        textposition='auto',
+                        textposition='outside',
                         textfont=dict(size=16),
                         marker_line_width=0
                     )
