@@ -1657,6 +1657,8 @@ for i, bereich in enumerate(bereiche):
         
                     fig.update_layout(
                         margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1},
                         showlegend=False
