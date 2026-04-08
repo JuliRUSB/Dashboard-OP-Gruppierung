@@ -833,7 +833,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # Zwei Spalten/Kacheln definieren (2. Reihe)
+        # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
         
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS==================
@@ -997,7 +997,14 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )  # horizontale Linie
+        
+        # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
 
         # ================== Kachel 6 "Aufteilung Komplikationen CRS mit HIPEC ==================
@@ -1297,7 +1304,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # Zwei Spalten/Kacheln definieren (5. Reihe)
+        # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
         
         # ================== Kachel 10 "Weichteiltumore /GIST - maligne und intermediate" ==================
@@ -1363,8 +1370,9 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")     
         
-        # Zwei Spalten/Kacheln definieren (5. Reihe)
+        # Zwei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)        
+        
         # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumore)" pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
@@ -1528,10 +1536,9 @@ for i, bereich in enumerate(bereiche):
                         st.error("Spalten fehlen")
 
                 
-        # Drei Spalten/Kacheln definieren (7. Reihe)
+        # Drei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)
         
-
         # ================== Kachel 14 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
