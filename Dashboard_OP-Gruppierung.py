@@ -1363,7 +1363,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")     
                 
-        # ================== Kachel 8 "Komplikationen ≥ IIIa (Weichteiltumore)" pro Jahr ==================
+        # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumore)" pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1426,13 +1426,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 10: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
+        # ================== Kachel 12: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}" not in st.session_state:
@@ -1519,7 +1519,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
                         else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                     else:
