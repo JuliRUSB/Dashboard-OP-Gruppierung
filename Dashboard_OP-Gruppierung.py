@@ -1643,7 +1643,7 @@ for i, bereich in enumerate(bereiche):
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
-                        y="count",
+                        y="Mittelwert",
                         text="Mittelwert",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"Mittelwert": "Tage (Mittelwert)", "jahr_opdatum": "Jahr"}
