@@ -833,11 +833,8 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
         
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
-        col1, col2 = st.columns(2) 
-        
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS==================
-        with col1.container(border=True):
+        with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
@@ -914,8 +911,11 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
         
+        # Zwei Spalten/Kacheln definieren (3. Reihe)
+        col1, col2 = st.columns(2)
+        
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS in % ==================
-        with col2.container(border=True):
+        with col1.container(border=True):
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
             if required_cols.issubset(df_bereich.columns):
@@ -997,76 +997,76 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-                # ================== Kachel 6 "Gruppe Sarkome/Weichteiltumoren" ==================
-                with col2.container(border=True):
-                    # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
-                    # Check auf Spalten
-                    required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
-                    if required_cols.issubset(df_bereich.columns):
+            # ================== Kachel 6 "Gruppe Sarkome/Weichteiltumoren" ==================
+            with col2.container(border=True):
+                # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
+                if required_cols.issubset(df_bereich.columns):
+                
+                    # Filter für Sarkom/Weichteiltumor
+                    df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
+                    total_gruppen = len(df_plot)
+                
+                    st.metric(label="Gruppe Sarkome/Weichteiltumoren (mit Knochen)", value=total_gruppen)
+                    st.divider()
+                
+                    if total_gruppen > 0:
+                        # Gruppierung nach Jahr und Sarkomgruppe
+                        grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
+    
+                        # Schwellenwert: ab welcher Balkenhöhe die Zahl reinpasst
+                        threshold = grp["count"].max() * 0.15
+    
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="gruppen_chir_onko_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
+                        )
                     
-                        # Filter für Sarkom/Weichteiltumor
-                        df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                        total_gruppen = len(df_plot)
+                        fig.update_traces(
+                            textfont_size=16, 
+                            # textposition='auto',
+                            cliponaxis=False,
+                            textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
+                            marker_line_width=0,
+                            outsidetextfont=dict(size=16),
+                            insidetextfont=dict(size=16),
+                        )
+    
+                        # Pro Balken: textposition basierend auf Wert setzen
+                        for trace in fig.data:
+                            positions = []
+                            for val in trace.y:
+                                if val >= threshold:
+                                    positions.append('inside')
+                                else:
+                                    positions.append('outside')
+                            trace.textposition = positions
                     
-                        st.metric(label="Gruppe Sarkome/Weichteiltumoren (mit Knochen)", value=total_gruppen)
-                        st.divider()
+                        fig.update_layout(
+                            #height=450, 
+                            # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
+                            margin=dict(l=10, r=10, t=0, b=0),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.96),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
                     
-                        if total_gruppen > 0:
-                            # Gruppierung nach Jahr und Sarkomgruppe
-                            grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
-                            grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
-        
-                            # Schwellenwert: ab welcher Balkenhöhe die Zahl reinpasst
-                            threshold = grp["count"].max() * 0.15
-        
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="count",
-                                color="gruppen_chir_onko_sark",
-                                barmode="group",
-                                text="count",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"gruppen_chir_onko_sark": "Sarkomgruppen"}
-                            )
-                        
-                            fig.update_traces(
-                                textfont_size=16, 
-                                # textposition='auto',
-                                cliponaxis=False,
-                                textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                                marker_line_width=0,
-                                outsidetextfont=dict(size=16),
-                                insidetextfont=dict(size=16),
-                            )
-        
-                            # Pro Balken: textposition basierend auf Wert setzen
-                            for trace in fig.data:
-                                positions = []
-                                for val in trace.y:
-                                    if val >= threshold:
-                                        positions.append('inside')
-                                    else:
-                                        positions.append('outside')
-                                trace.textposition = positions
-                        
-                            fig.update_layout(
-                                #height=450, 
-                                # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
-                                margin=dict(l=10, r=10, t=0, b=0),
-                                xaxis_title=None, 
-                                yaxis_title=None, 
-                                showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.96),
-                                xaxis={"type": "category", "tickfont": {"size": 16}},
-                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                            )
-                        
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}", config={'displayModeBar': False})
-                        else:
-                            st.info("Keine Gruppendaten")
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}", config={'displayModeBar': False})
                     else:
-                        st.error("Spalten fehlen")
+                        st.info("Keine Gruppendaten")
+                else:
+                    st.error("Spalten fehlen")
         
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
