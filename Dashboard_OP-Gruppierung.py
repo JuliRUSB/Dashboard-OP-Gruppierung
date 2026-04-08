@@ -1362,7 +1362,7 @@ for i, bereich in enumerate(bereiche):
             if required_cols.issubset(df_bereich.columns):
 
                 # Filter: nur maligne + intermediate (alles ausser "andere") und ohne Knochen
-                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & & (df_bereich["malignit_t_sark"] != "andere") & ((df_bereich["gruppen_chir_onko_sark"] != "Knochen") & (df_bereich["gruppen_chir_onko_sark"] != "Andere Malignome"))].copy()
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["malignit_t_sark"] != "andere") & ((df_bereich["gruppen_chir_onko_sark"] != "Knochen") & (df_bereich["gruppen_chir_onko_sark"] != "Andere Malignome"))].copy()
                 total_malign = len(df_plot)
 
                 st.metric(
