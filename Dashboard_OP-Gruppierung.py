@@ -1635,18 +1635,22 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if total_faelle > 0:
-                    # Aggregation nur pro Jahr
-                    grp = df_los.groupby("jahr_opdatum", as_index=False)["los_opdatum"].mean()
-                    grp.rename(columns={"los_opdatum": "Mittelwert"}, inplace=True)
+                    # Aggregation pro Jahr
+                    grp = df_los.groupby("jahr_opdatum", as_index=False)["los_opdatum"].agg(
+                        Mittelwert="mean",
+                        Median="median",
+                        Minimum="min",
+                        Maximum="max"
+                    )
         
-                    # Balkendiagramm
+                    # Balkendiagramm für Mittelwert
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
                         y="Mittelwert",
                         text="Mittelwert",
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"Mittelwert": "Tage (Mittelwert)", "jahr_opdatum": "Jahr"}
+                        labels={"Mittelwert": "Tage", "jahr_opdatum": "Jahr"}
                     )
         
                     fig.update_traces(
@@ -1656,13 +1660,37 @@ for i, bereich in enumerate(bereiche):
                         marker_line_width=0
                     )
         
+                    # Linien für Median, Min, Max
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Median"],
+                        mode="lines+markers",
+                        name="Median",
+                        line=dict(color="green", dash="dash"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Minimum"],
+                        mode="lines+markers",
+                        name="Minimum",
+                        line=dict(color="red", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Maximum"],
+                        mode="lines+markers",
+                        name="Maximum",
+                        line=dict(color="blue", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+        
                     fig.update_layout(
                         margin=dict(l=10, r=10, t=10, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1},
-                        showlegend=False
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
