@@ -1373,7 +1373,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)        
         
-        # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumore)" pro Jahr ==================
+        # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumoren)" pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1388,7 +1388,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)                    
                     
-                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumore)", value=total_lok)
+                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumoren)", value=total_lok)
                 st.divider()
 
                 if total_lok > 0:
@@ -1442,7 +1442,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 12: Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad" ==================
+        # ================== Kachel 12: Komplikationen ≥ IIIa (Weichteiltumoren), nach Dindo-Grad" ==================
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}" not in st.session_state:
@@ -1488,7 +1488,7 @@ for i, bereich in enumerate(bereiche):
                 
                         total_lok = len(df_plot)
                         st.metric(
-                            label="Komplikationen ≥ IIIa (Weichteiltumore), nach Dindo-Grad",
+                            label="Komplikationen ≥ IIIa (Weichteiltumoren), nach Dindo-Grad",
                             value=total_lok
                         )
                         st.divider()
