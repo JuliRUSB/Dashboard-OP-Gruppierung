@@ -1622,10 +1622,12 @@ for i, bereich in enumerate(bereiche):
         
         # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
         with col1.container(border=True):
-            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
-                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                    ((df_bereich["type_sark"] == "Sarkom/Weichteiltumor") | (df_bereich["type_sark"] == "CRS")) &
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
@@ -1633,58 +1635,34 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if total_faelle > 0:
-                    # Daten aggregieren
-                    grp = df_los.groupby(["jahr_opdatum", "lokalisation_sark"])["los_opdatum"].agg(
-                        Mittelwert='mean', Median='median', Minimum='min', Maximum='max'
-                    ).reset_index()
-                    
-                    # 1. Grafik: Fokus auf den Mittelwert für den schnellen Vergleich
-                    # fig = go.Figure()
-                    # lokalisationen = grp["lokalisation_sark"].unique()
-                    # for i, loc in enumerate(lokalisationen):
-                        # df_loc = grp[grp["lokalisation_sark"] == loc]
-                        # fig.add_trace(go.Bar(
-                            # x=df_loc["jahr_opdatum"],
-                            # y=df_loc["Mittelwert"],
-                            # name=loc,
-                            # marker_color=COLOR_PALETTE[i % len(COLOR_PALETTE)],
-                            # hovertemplate="Mittelwert: %{y:.1f}<extra></extra>"
-                        # ))
+                    # Aggregation nur pro Jahr
+                    grp = df_los.groupby("jahr_opdatum", as_index=False)["los_opdatum"].mean()
+                    grp.rename(columns={"los_opdatum": "Mittelwert"}, inplace=True)
         
-                    # fig.update_layout(
-                        # barmode='group',
-                        # margin=dict(l=10, r=10, t=10, b=10),
-                        # xaxis=dict(type='category', tickfont={"size": 16}),
-                        # yaxis=dict(title="Tage (Mittelwert)", tickfont={"size": 16})
-                    # )
-                    # st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}")
-        
-                    # 2. Die "Lesbarkeit": Tabelle mit farblich abgesetzten Jahren
-                    df_table = grp.copy()
-                    
-                    # Zeilenfarbe wechselt nach Jahr
-                    def row_style(row):
-                        color = '#f8f9fb' if int(row["jahr_opdatum"]) % 2 == 0 else '#ffffff'
-                        return [f'background-color: {color}'] * len(row)
-
-                     # Alle numerischen Spalten auf max 2 Nachkommastellen formatieren
-                    styled_df = df_table.style.apply(row_style, axis=1).format({
-                        "Mittelwert": "{:.2f}",
-                        "Median": "{:.2f}",
-                        "Minimum": "{:.2f}",
-                        "Maximum": "{:.2f}"
-                    })
-
-                    st.dataframe(
-                        styled_df,
-                        column_config={
-                            "jahr_opdatum": "Jahr",
-                            "lokalisation_sark": "Lokalisation",
-                        },
-                        hide_index=True,
-                        use_container_width=True,
-                        height=450
+                    # Balkendiagramm
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="Mittelwert",
+                        text="Mittelwert",
+                        color_discrete_sequence=[COLOR_PALETTE[0]],  # eine Farbe für alle
+                        labels={"Mittelwert": "Tage (Mittelwert)", "jahr_opdatum": "Jahr"}
                     )
+        
+                    fig.update_traces(
+                        texttemplate='%{text:.2f}',
+                        textposition='outside',
+                        marker_line_width=0
+                    )
+        
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1},
+                        showlegend=False
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
