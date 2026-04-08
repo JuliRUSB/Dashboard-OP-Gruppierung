@@ -1563,7 +1563,7 @@ for i, bereich in enumerate(bereiche):
                 # Filter auf Kolon/Rektum und gültige Anastomosen
                 df_anastomosen = df_bereich[
                     (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
-                    (df_bereich["anastomosen_crs"] != "Nicht angegeben")
+                    ((df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["anastomosen_crs"] != "keine"))
                 ].copy()
         
                 # Nur Fälle mit Anastomoseninsuffizienz
