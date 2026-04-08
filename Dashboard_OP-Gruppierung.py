@@ -1575,7 +1575,7 @@ for i, bereich in enumerate(bereiche):
                 total_insuff = len(df_insuff)
                 st.metric(
                     label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
-                    value=f"{total_insuff} Fälle"
+                    value=f"{total_insuff} von {total_anastomosen}"
                 )
                 st.divider()
         
