@@ -1636,7 +1636,7 @@ for i, bereich in enumerate(bereiche):
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
-                        showlegend=True,
+                        showlegend=false,
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
