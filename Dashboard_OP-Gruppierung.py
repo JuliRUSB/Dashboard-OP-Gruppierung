@@ -1008,7 +1008,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}"):
+                if st.button("▼ anzeigen", key=f"btn_{bereich1}"):
                     st.session_state[f"expand_{bereich}"] = True
                     st.rerun()
             else:
@@ -1017,7 +1017,7 @@ for i, bereich in enumerate(bereiche):
                      # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
-                        if st.button("▲ ausblenden", key=f"btn_{bereich}"):
+                        if st.button("▲ ausblenden", key=f"btn_{bereich1}"):
                             st.session_state[f"expand_{bereich}"] = False
                             st.rerun()
 
@@ -1469,7 +1469,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}"):
+                if st.button("▼ anzeigen", key=f"btn_{bereich2}"):
                     st.session_state[f"expand_{bereich}"] = True
                     st.rerun()
             else:
@@ -1478,7 +1478,7 @@ for i, bereich in enumerate(bereiche):
                     # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
-                        if st.button("▲ ausblenden", key=f"btn_{bereich}"):
+                        if st.button("▲ ausblenden", key=f"btn_{bereich2}"):
                             st.session_state[f"expand_{bereich}"] = False
                             st.rerun()
                     
