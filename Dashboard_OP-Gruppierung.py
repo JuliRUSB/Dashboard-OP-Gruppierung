@@ -1217,8 +1217,75 @@ for i, bereich in enumerate(bereiche):
         
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
-    
-        # ================== Kachel 8 "Gruppe Sarkome/Weichteiltumoren" ==================
+
+        # ================== Kachel 8 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
+        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
+        #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
+        with col1.container(border=True):
+            required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
+            if required_cols.issubset(df_bereich.columns):
+        
+                # Filter auf Kolon/Rektum und gültige Anastomosen
+                df_anastomosen = df_bereich[
+                    (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
+                    ((df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["anastomosen_crs"] != "keine"))
+                ].copy()
+        
+                # Nur Fälle mit Anastomoseninsuffizienz
+                df_insuff = df_anastomosen[
+                    df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
+                    df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
+                ].copy()
+
+                total_anastomosen = len(df_anastomosen)
+                total_insuff = len(df_insuff)
+                st.metric(
+                    label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
+                    value=f"{total_insuff} von {total_anastomosen}"
+                )
+                st.divider()
+        
+                if total_insuff > 0:
+                    grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "count"]
+        
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        # color="anastomosen_crs",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"anastomosen_crs": "Anastomosen"}
+                    )
+        
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        marker_line_width=0
+                    )
+        
+                    fig.update_layout(
+                        barmode="group",
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=False,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Anastomoseninsuffizienzen vorhanden")
+            else:
+                st.error("Spalten fehlen")
+
+        # Zwei Spalten/Kacheln definieren (6. Reihe)
+        col1, col2 = st.columns(2)
+        
+        # ================== Kachel 9 "Gruppe Sarkome/Weichteiltumoren" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1283,13 +1350,13 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Gruppendaten")
             else:
                 st.error("Spalten fehlen")
         
-        # ================== Kachel 9 "Lokalisation Weichteiltumoren ==================
+        # ================== Kachel 10 "Lokalisation Weichteiltumoren ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1336,16 +1403,16 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
 
-        # Zwei Spalten/Kacheln definieren (6. Reihe)
+        # Zwei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 10 "Weichteiltumore /GIST - maligne und intermediate" ==================
+        # ================== Kachel 11 "Weichteiltumore /GIST - maligne und intermediate" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "malignit_t_sark"}
@@ -1400,7 +1467,7 @@ for i, bereich in enumerate(bereiche):
                     st.plotly_chart(
                         fig,
                         use_container_width=True,
-                        key=f"kachel10_{bereich}",
+                        key=f"kachel11_{bereich}",
                     config={"displayModeBar": False}
                     )
                 else:
@@ -1408,10 +1475,10 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")     
         
-        # Zwei Spalten/Kacheln definieren (7. Reihe)
+        # Zwei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)        
         
-        # ================== Kachel 11 "Komplikationen ≥ IIIa (Weichteiltumoren)" pro Jahr ==================
+        # ================== Kachel 12 "Komplikationen ≥ IIIa (Weichteiltumoren)" pro Jahr ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1474,22 +1541,22 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel11_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
                 else:
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 12: Aufteilung Komplikationen Weichteiltumoren" ==================
+        # ================== Kachel 13: Aufteilung Komplikationen Weichteiltumoren" ==================
         with col2:
             # Zustand initialisieren
-            if f"expand_{bereich}_k12" not in st.session_state:
-                st.session_state[f"expand_{bereich}_k12"] = False
+            if f"expand_{bereich}_k13" not in st.session_state:
+                st.session_state[f"expand_{bereich}_k13"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
-            if not st.session_state[f"expand_{bereich}_k12"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k12"):
-                    st.session_state[f"expand_{bereich}_k12"] = True
+            if not st.session_state[f"expand_{bereich}_k13"]:
+                if st.button("▼ anzeigen", key=f"btn_{bereich}_k13"):
+                    st.session_state[f"expand_{bereich}_k13"] = True
                     st.rerun()
             else:
                 # Wenn eingeblendet: Button IM Container oben rechts
@@ -1497,8 +1564,8 @@ for i, bereich in enumerate(bereiche):
                     # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
-                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k12"):
-                            st.session_state[f"expand_{bereich}_k12"] = False
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k13"):
+                            st.session_state[f"expand_{bereich}_k13"] = False
                             st.rerun()
                     
                     required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
@@ -1567,7 +1634,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel13_{bereich}", config={'displayModeBar': False})
                         else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                     else:
@@ -1581,72 +1648,8 @@ for i, bereich in enumerate(bereiche):
             unsafe_allow_html=True
         )
                 
-        # Drei Spalten/Kacheln definieren (8. Reihe)
+        # Drei Spalten/Kacheln definieren (9. Reihe)
         col1, col2 = st.columns(2)
-        
-        # ================== Kachel 14 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
-        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
-        #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
-        with col1.container(border=True):
-            required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
-            if required_cols.issubset(df_bereich.columns):
-        
-                # Filter auf Kolon/Rektum und gültige Anastomosen
-                df_anastomosen = df_bereich[
-                    (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
-                    ((df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["anastomosen_crs"] != "keine"))
-                ].copy()
-        
-                # Nur Fälle mit Anastomoseninsuffizienz
-                df_insuff = df_anastomosen[
-                    df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
-                    df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
-                ].copy()
-
-                total_anastomosen = len(df_anastomosen)
-                total_insuff = len(df_insuff)
-                st.metric(
-                    label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
-                    value=f"{total_insuff} von {total_anastomosen}"
-                )
-                st.divider()
-        
-                if total_insuff > 0:
-                    grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "count"]
-        
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        # color="anastomosen_crs",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"anastomosen_crs": "Anastomosen"}
-                    )
-        
-                    fig.update_traces(
-                        textfont_size=16,
-                        textposition='auto',
-                        marker_line_width=0
-                    )
-        
-                    fig.update_layout(
-                        barmode="group",
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=False,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
-                    )
-        
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel14_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Anastomoseninsuffizienzen vorhanden")
-            else:
-                st.error("Spalten fehlen")
         
         # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
         with col2.container(border=True):
