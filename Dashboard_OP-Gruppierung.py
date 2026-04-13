@@ -1009,7 +1009,7 @@ for i, bereich in enumerate(bereiche):
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich1}"):
-                    st.session_state[f"expand_{bereich}"] = True
+                    st.session_state[f"expand_{bereich1}"] = True
                     st.rerun()
             else:
                 # Wenn eingeblendet: Button IM Container oben rechts
@@ -1018,7 +1018,7 @@ for i, bereich in enumerate(bereiche):
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
                         if st.button("▲ ausblenden", key=f"btn_{bereich1}"):
-                            st.session_state[f"expand_{bereich}"] = False
+                            st.session_state[f"expand_{bereich1}"] = False
                             st.rerun()
 
                 required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
@@ -1470,7 +1470,7 @@ for i, bereich in enumerate(bereiche):
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich2}"):
-                    st.session_state[f"expand_{bereich}"] = True
+                    st.session_state[f"expand_{bereich2}"] = True
                     st.rerun()
             else:
                 # Wenn eingeblendet: Button IM Container oben rechts
@@ -1479,7 +1479,7 @@ for i, bereich in enumerate(bereiche):
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
                         if st.button("▲ ausblenden", key=f"btn_{bereich2}"):
-                            st.session_state[f"expand_{bereich}"] = False
+                            st.session_state[f"expand_{bereich2}"] = False
                             st.rerun()
                     
                     required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
