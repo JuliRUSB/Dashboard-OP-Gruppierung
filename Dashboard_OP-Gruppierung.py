@@ -1670,7 +1670,7 @@ for i, bereich in enumerate(bereiche):
                 # Nutzt total_lok aus Kachel 10 für die Anzeige der Grundgesamtheit
                 st.metric(
                     label="Length of Stay nach Lokalisation (ohne Knochen)", 
-                    value=f"{total_faelle_los} von {total_lok}"
+                    value=f"{total_lok} von {total_faelle_los}"
                 )
                 st.divider()
         
