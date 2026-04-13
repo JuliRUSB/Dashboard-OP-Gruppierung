@@ -1004,10 +1004,10 @@ for i, bereich in enumerate(bereiche):
         with col1:
             # Zustand initialisieren
             if f"expand_{bereich}" not in st.session_state:
-                st.session_state[f"expand_{bereich}"] = False
+                st.session_state[f"expand_{bereich}_k6"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
-            if not st.session_state[f"expand_{bereich}"]:
+            if not st.session_state[f"expand_{bereich}_k6"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich}_k6"):
                     st.session_state[f"expand_{bereich}_k6"] = True
                     st.rerun()
@@ -1465,10 +1465,10 @@ for i, bereich in enumerate(bereiche):
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}" not in st.session_state:
-                st.session_state[f"expand_{bereich}"] = False
+                st.session_state[f"expand_{bereich_k12}"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
-            if not st.session_state[f"expand_{bereich}"]:
+            if not st.session_state[f"expand_{bereich}_k12"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich}_k12"):
                     st.session_state[f"expand_{bereich}_k12"] = True
                     st.rerun()
