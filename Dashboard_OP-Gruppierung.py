@@ -1652,7 +1652,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (9. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
+        # ================== Kachel 15 "Aufenthaltsdauer Weichteiltumoren" ==================       
         with col1.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
@@ -1669,8 +1669,8 @@ for i, bereich in enumerate(bereiche):
                 
                 # Nutzt total_lok aus Kachel 10 für die Anzeige der Grundgesamtheit
                 st.metric(
-                    label="Length of Stay nach Lokalisation (ohne Knochen)", 
-                    value=f"{total_lok} von {total_faelle_los}"
+                    label="Aufenthaltsdauer Weichteiltumoren", 
+                    value=f"{total_faelle_los}"
                 )
                 st.divider()
         
