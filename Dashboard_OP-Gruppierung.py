@@ -1021,88 +1021,88 @@ for i, bereich in enumerate(bereiche):
                             st.session_state[f"expand_{bereich}_k6"] = False
                             st.rerun()
 
-                required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
+                    required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
+            
+                    if required_cols.issubset(df_bereich.columns):
         
-                if required_cols.issubset(df_bereich.columns):
-    
-                    # CRS und HIPEC = ja filtern
-                    df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
-                    total_crs = len(df_plot_all)
-            
-                    # 1. Definition der Hierarchie (Wichtig für den Vergleich)
-                    dindo_order = [
-                        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
-                        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
-                    ]
-    
-                    # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
-                    def get_highest_dindo(row):
-                        v1 = row['max_dindo_calc']
-                        v2 = row['max_dindo_calc_surv']
-                        # Nur Werte berücksichtigen, die in unserer Liste oben stehen
-                        valid_values = [v for v in [v1, v2] if v in dindo_order]
-                        if not valid_values:
-                            return "Unbekannt"
-                        # Den Wert mit dem höchsten Index in dindo_order zurückgeben
-                        return max(valid_values, key=lambda x: dindo_order.index(x))
-    
-                    df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
-    
-                    # 3. Nur Fälle mit Dindo >= IIIa laut Filter
-                    df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                    
-                    # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
-                    df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
-                    
-                    total_lok = len(df_plot)
-                    
-                    st.metric(
-                        label="Aufteilung Komplikationen CRS mit HIPEC", 
-                        value=f"{total_lok} von {total_crs}",
-                    )
-                    st.divider()
-            
-                    if not df_plot.empty:
-                        grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
-            
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="dindo_final_text",
-                            barmode="stack",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
-                            category_orders={"dindo_final_text": dindo_order} 
-                        )
-            
-                        fig.update_traces(
-                            textfont_size=16, 
-                            textposition='inside', 
-                            insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                            textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                            cliponaxis=False
-                        )
+                        # CRS und HIPEC = ja filtern
+                        df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
+                        total_crs = len(df_plot_all)
+                
+                        # 1. Definition der Hierarchie (Wichtig für den Vergleich)
+                        dindo_order = [
+                            'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+                            'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+                        ]
+        
+                        # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
+                        def get_highest_dindo(row):
+                            v1 = row['max_dindo_calc']
+                            v2 = row['max_dindo_calc_surv']
+                            # Nur Werte berücksichtigen, die in unserer Liste oben stehen
+                            valid_values = [v for v in [v1, v2] if v in dindo_order]
+                            if not valid_values:
+                                return "Unbekannt"
+                            # Den Wert mit dem höchsten Index in dindo_order zurückgeben
+                            return max(valid_values, key=lambda x: dindo_order.index(x))
+        
+                        df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
+        
+                        # 3. Nur Fälle mit Dindo >= IIIa laut Filter
+                        df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                         
-                        fig.update_layout(
-                            uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
-                            uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
-                            bargap=0.1,
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                        # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
+                        df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
+                        
+                        total_lok = len(df_plot)
+                        
+                        st.metric(
+                            label="Aufteilung Komplikationen CRS mit HIPEC", 
+                            value=f"{total_lok} von {total_crs}",
                         )
-            
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
+                        st.divider()
+                
+                        if not df_plot.empty:
+                            grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
+                
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="dindo_final_text",
+                                barmode="stack",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
+                                category_orders={"dindo_final_text": dindo_order} 
+                            )
+                
+                            fig.update_traces(
+                                textfont_size=16, 
+                                textposition='inside', 
+                                insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                                textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
+                                cliponaxis=False
+                            )
+                            
+                            fig.update_layout(
+                                uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
+                                uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
+                                bargap=0.1,
+                                margin=dict(l=10, r=10, t=30, b=10),
+                                xaxis_title=None,
+                                yaxis_title=None,
+                                showlegend=True,
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                            )
+                
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
+                        else:
+                            st.info("Keine validen Grade >= IIIa gefunden.")
                     else:
-                        st.info("Keine validen Grade >= IIIa gefunden.")
-                else:
-                    st.error("Spalten fehlen")
+                        st.error("Spalten fehlen")
 
         # ================== Kachel 7 "Aufteilung Komplikationen CRS ohne HIPEC ==================
         with col2.container(border=True):
