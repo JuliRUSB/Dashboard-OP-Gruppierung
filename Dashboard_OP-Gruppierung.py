@@ -1001,7 +1001,7 @@ for i, bereich in enumerate(bereiche):
         col1, col2 = st.columns(2)
 
         # ================== Kachel 6 "Aufteilung Komplikationen CRS mit HIPEC ==================
-        with col2:
+        with col1:
             # Zustand initialisieren
             if f"expand_{bereich}" not in st.session_state:
                 st.session_state[f"expand_{bereich}"] = False
