@@ -1746,7 +1746,7 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
-                    (df_bereich["type_sark"] == "CRS")].copy()
+                    (df_bereich["type_sark"] == "CRS") & df_bereich["hipec"] == "Ja")].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
@@ -1755,7 +1755,7 @@ for i, bereich in enumerate(bereiche):
         
                 if total_faelle > 0:
                     # Aggregation nach Jahr UND hipec
-                    grp = df_los.groupby(["jahr_opdatum", "hipec"], as_index=False)["los_opdatum"].agg(
+                    grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
                         Mittelwert="mean",
                         Median="median",
                         Minimum="min",
