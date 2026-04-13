@@ -1285,7 +1285,168 @@ for i, bereich in enumerate(bereiche):
                 
         # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
+
+        # ================== Kachel 16 "Aufenthaltsdauer CRS mit HIPEC" ==================       
+        with col1.container(border=True):
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
+            if required_cols.issubset(df_bereich.columns):
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
+                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+                df_los = df_los.dropna(subset=["los_opdatum"])
+                total_faelle = len(df_los)
+                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
+                st.divider()
         
+                if total_faelle > 0:
+                    # Aggregation nach Jahr UND hipec
+                    grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
+                        Mittelwert="mean",
+                        Median="median",
+                        Minimum="min",
+                        Maximum="max"
+                    )
+        
+                    # Balkendiagramm für Mittelwert
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="Mittelwert",
+                        text="Mittelwert",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"Mittelwert": "Tage", "jahr_opdatum": "Jahr"}
+                    )
+        
+                    fig.update_traces(
+                        texttemplate='%{text:.2f}',
+                        textposition='outside',
+                        textfont=dict(size=16),
+                        marker_line_width=0
+                    )
+        
+                    # Linien für Median, Min, Max
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Median"],
+                        mode="lines+markers",
+                        name="Median",
+                        line=dict(color="green", dash="dash"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Minimum"],
+                        mode="lines+markers",
+                        name="Minimum",
+                        line=dict(color="red", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Maximum"],
+                        mode="lines+markers",
+                        name="Maximum",
+                        line=dict(color="blue", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+        
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
+
+        # ================== Kachel 16 "Aufenthaltsdauer CRS ohne HIPEC" ==================       
+        with col2.container(border=True):
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
+            if required_cols.issubset(df_bereich.columns):
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Nein")].copy()
+                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+                df_los = df_los.dropna(subset=["los_opdatum"])
+                total_faelle = len(df_los)
+                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
+                st.divider()
+        
+                if total_faelle > 0:
+                    # Aggregation nach Jahr UND hipec
+                    grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
+                        Mittelwert="mean",
+                        Median="median",
+                        Minimum="min",
+                        Maximum="max"
+                    )
+        
+                    # Balkendiagramm für Mittelwert
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="Mittelwert",
+                        text="Mittelwert",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"Mittelwert": "Tage", "jahr_opdatum": "Jahr"}
+                    )
+        
+                    fig.update_traces(
+                        texttemplate='%{text:.2f}',
+                        textposition='outside',
+                        textfont=dict(size=16),
+                        marker_line_width=0
+                    )
+        
+                    # Linien für Median, Min, Max
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Median"],
+                        mode="lines+markers",
+                        name="Median",
+                        line=dict(color="green", dash="dash"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Minimum"],
+                        mode="lines+markers",
+                        name="Minimum",
+                        line=dict(color="red", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Maximum"],
+                        mode="lines+markers",
+                        name="Maximum",
+                        line=dict(color="blue", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+        
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
+
+        # Zwei Spalten/Kacheln definieren (7. Reihe)
+        col1, col2 = st.columns(2)
+
         # ================== Kachel 9 "Gruppe Sarkome/Weichteiltumoren" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
@@ -1741,85 +1902,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 16 "Aufenthaltsdauer HIPEC bei CRS" ==================       
-        with col2.container(border=True):
-            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
-            if required_cols.issubset(df_bereich.columns):
-                df_los = df_bereich[
-                    (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
-                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
-                df_los = df_los.dropna(subset=["los_opdatum"])
-                total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
-                st.divider()
         
-                if total_faelle > 0:
-                    # Aggregation nach Jahr UND hipec
-                    grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
-                        Mittelwert="mean",
-                        Median="median",
-                        Minimum="min",
-                        Maximum="max"
-                    )
-        
-                    # Balkendiagramm für Mittelwert
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="Mittelwert",
-                        text="Mittelwert",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"Mittelwert": "Tage", "jahr_opdatum": "Jahr"}
-                    )
-        
-                    fig.update_traces(
-                        texttemplate='%{text:.2f}',
-                        textposition='outside',
-                        textfont=dict(size=16),
-                        marker_line_width=0
-                    )
-        
-                    # Linien für Median, Min, Max
-                    fig.add_trace(go.Scatter(
-                        x=grp["jahr_opdatum"],
-                        y=grp["Median"],
-                        mode="lines+markers",
-                        name="Median",
-                        line=dict(color="green", dash="dash"),
-                        marker=dict(size=8)
-                    ))
-                    fig.add_trace(go.Scatter(
-                        x=grp["jahr_opdatum"],
-                        y=grp["Minimum"],
-                        mode="lines+markers",
-                        name="Minimum",
-                        line=dict(color="red", dash="dot"),
-                        marker=dict(size=8)
-                    ))
-                    fig.add_trace(go.Scatter(
-                        x=grp["jahr_opdatum"],
-                        y=grp["Maximum"],
-                        mode="lines+markers",
-                        name="Maximum",
-                        line=dict(color="blue", dash="dot"),
-                        marker=dict(size=8)
-                    ))
-        
-                    fig.update_layout(
-                        margin=dict(l=10, r=10, t=10, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
-                    )
-        
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
-            else:
-                st.error("Spalten fehlen")
-
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
