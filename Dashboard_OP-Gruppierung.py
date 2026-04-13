@@ -1275,12 +1275,13 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-                st.markdown(
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
+        st.markdown(
             """
             <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
             """,
             unsafe_allow_html=True
-        )  # horizontale Linie
+        )
                 
         # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
