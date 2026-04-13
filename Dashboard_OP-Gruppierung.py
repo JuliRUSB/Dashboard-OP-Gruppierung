@@ -1003,7 +1003,7 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 6 "Aufteilung Komplikationen CRS mit HIPEC ==================
         with col1:
             # Zustand initialisieren
-            if f"expand_{bereich}" not in st.session_state:
+            if f"expand_{bereich}_k6" not in st.session_state:
                 st.session_state[f"expand_{bereich}_k6"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
@@ -1464,7 +1464,7 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 12: Aufteilung Komplikationen Weichteiltumoren" ==================
         with col2:
             # Zustand initialisieren
-            if f"expand_{bereich}" not in st.session_state:
+            if f"expand_{bereich}_k12" not in st.session_state:
                 st.session_state[f"expand_{bereich_k12}"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
