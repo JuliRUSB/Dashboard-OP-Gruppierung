@@ -1173,6 +1173,10 @@ for i, bereich in enumerate(bereiche):
                         if not df_plot.empty:
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
+                            
+                            # Jahre sortieren
+                            grp = grp.sort_values("jahr_opdatum")
+                            jahr_order = grp["jahr_opdatum"].unique().tolist()
                 
                             fig = px.bar(
                                 grp,
@@ -1183,7 +1187,7 @@ for i, bereich in enumerate(bereiche):
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
-                                category_orders={"dindo_final_text": dindo_order} 
+                                category_orders={"dindo_final_text": dindo_order, "jahr_opdatum": jahr_order} 
                             )
                 
                             fig.update_traces(
