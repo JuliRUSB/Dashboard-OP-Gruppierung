@@ -1465,7 +1465,7 @@ for i, bereich in enumerate(bereiche):
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}_k12" not in st.session_state:
-                st.session_state[f"expand_{bereich_k12}"] = False
+                st.session_state[f"expand_{bereich}_k12"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k12"]:
