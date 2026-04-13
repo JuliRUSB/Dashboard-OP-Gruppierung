@@ -1743,7 +1743,7 @@ for i, bereich in enumerate(bereiche):
 
         # ================== Kachel 16 "Aufenthaltsdauer HIPEC bei CRS" ==================       
         with col2.container(border=True):
-            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
                     (df_bereich["type_sark"] == "CRS")].copy()
@@ -1754,8 +1754,8 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if total_faelle > 0:
-                    # Aggregation pro Jahr
-                    grp = df_los.groupby("jahr_opdatum", as_index=False)["los_opdatum"].agg(
+                    # Aggregation nach Jahr UND hipec
+                    grp = df_los.groupby(["jahr_opdatum", "hipec"], as_index=False)["los_opdatum"].agg(
                         Mittelwert="mean",
                         Median="median",
                         Minimum="min",
