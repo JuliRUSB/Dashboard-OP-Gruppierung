@@ -1741,18 +1741,16 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 16 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
+        # ================== Kachel 16 "Aufenthaltsdauer HIPEC bei CRS" ==================       
         with col2.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
                 df_los = df_bereich[
-                    ((df_bereich["type_sark"] == "Sarkom/Weichteiltumor") | (df_bereich["type_sark"] == "CRS")) &
-                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
-                ].copy()
+                    (df_bereich["type_sark"] == "CRS")].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
-                st.metric(label="Length of Stay nach Lokalisation (ohne Knochen)", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
                 st.divider()
         
                 if total_faelle > 0:
