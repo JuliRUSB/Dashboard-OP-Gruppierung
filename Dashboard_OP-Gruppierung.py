@@ -1365,7 +1365,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 16 "Aufenthaltsdauer CRS ohne HIPEC" ==================       
+        # ================== Kachel 17 "Aufenthaltsdauer CRS ohne HIPEC" ==================       
         with col2.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
@@ -1438,7 +1438,7 @@ for i, bereich in enumerate(bereiche):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel17_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
