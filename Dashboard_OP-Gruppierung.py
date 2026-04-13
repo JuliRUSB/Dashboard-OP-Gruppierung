@@ -1229,7 +1229,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                 total_gruppen = len(df_plot)
             
-                st.metric(label="Gruppe Sarkome/Weichteiltumoren", value=total_gruppen)
+                st.metric(label="Gruppe Sarkome/Weichteiltumoren", value=total_gruppen) 
                 st.divider()
             
                 if total_gruppen > 0:
@@ -1300,7 +1300,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_lok = len(df_plot)
             
-                st.metric(label="Lokalisation Weichteiltumoren", value=total_lok)
+                st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_lok} von {total_gruppen}")
                 st.divider()
             
                 if total_lok > 0:
