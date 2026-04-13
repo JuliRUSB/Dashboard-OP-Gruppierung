@@ -1063,6 +1063,10 @@ for i, bereich in enumerate(bereiche):
                         st.divider()
                 
                         if not df_plot.empty:
+                            grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
+                            
+                            # Jahre sortieren
                             grp = grp.sort_values("jahr_opdatum")
                             jahr_order = grp["jahr_opdatum"].unique().tolist()
                 
