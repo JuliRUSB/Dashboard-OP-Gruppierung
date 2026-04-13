@@ -1612,14 +1612,14 @@ for i, bereich in enumerate(bereiche):
                 st.divider()
         
                 if total_insuff > 0:
-                    grp = df_insuff.groupby(["jahr_opdatum", "anastomosen_crs"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "anastomosen_crs", "count"]
+                    grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "count"]
         
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
                         y="count",
-                        color="anastomosen_crs",
+                        # color="anastomosen_crs",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"anastomosen_crs": "Anastomosen"}
