@@ -1651,8 +1651,97 @@ for i, bereich in enumerate(bereiche):
                 
         # Drei Spalten/Kacheln definieren (9. Reihe)
         col1, col2 = st.columns(2)
-        
+
         # ================== Kachel 15 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
+        with col1.container(border=True):
+            required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
+            if required_cols.issubset(df_bereich.columns):
+                # Filter identisch zu Kachel 10 (nur Weichteiltumoren ohne Knochen)
+                df_los = df_bereich[
+                    (df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & 
+                    (df_bereich["gruppen_chir_onko_sark"] != "Knochen")
+                ].copy()
+                
+                df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
+                df_los = df_los.dropna(subset=["los_opdatum"])
+                
+                total_faelle_los = len(df_los)
+                
+                # Nutzt total_lok aus Kachel 10 für die Anzeige der Grundgesamtheit
+                st.metric(
+                    label="Length of Stay nach Lokalisation (ohne Knochen)", 
+                    value=f"{total_faelle_los} von {total_lok}"
+                )
+                st.divider()
+        
+                if total_faelle_los > 0:
+                    # Aggregation pro Jahr
+                    grp = df_los.groupby("jahr_opdatum", as_index=False)["los_opdatum"].agg(
+                        Mittelwert="mean",
+                        Median="median",
+                        Minimum="min",
+                        Maximum="max"
+                    )
+        
+                    # Balkendiagramm für Mittelwert
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="Mittelwert",
+                        text="Mittelwert",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"Mittelwert": "Tage", "jahr_opdatum": "Jahr"}
+                    )
+        
+                    fig.update_traces(
+                        texttemplate='%{text:.2f}',
+                        textposition='outside',
+                        textfont=dict(size=16),
+                        marker_line_width=0
+                    )
+        
+                    # Linien für Median, Min, Max
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Median"],
+                        mode="lines+markers",
+                        name="Median",
+                        line=dict(color="green", dash="dash"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Minimum"],
+                        mode="lines+markers",
+                        name="Minimum",
+                        line=dict(color="red", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=grp["jahr_opdatum"],
+                        y=grp["Maximum"],
+                        mode="lines+markers",
+                        name="Maximum",
+                        line=dict(color="blue", dash="dot"),
+                        marker=dict(size=8)
+                    ))
+        
+                    fig.update_layout(
+                        margin=dict(l=10, r=10, t=20, b=10), # T etwas erhöht für Text 'outside'
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+        
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
+            else:
+                st.error("Spalten fehlen")
+
+        # ================== Kachel 16 "Aufenthaltsdauer 'Lokalisation (Sarkome/Weichteiltumoren)' ohne Knochen" ==================       
         with col2.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
@@ -1727,7 +1816,7 @@ for i, bereich in enumerate(bereiche):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
