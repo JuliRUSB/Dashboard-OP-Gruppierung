@@ -1295,7 +1295,7 @@ for i, bereich in enumerate(bereiche):
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer CRS mit HIPEC", value=total_faelle)
                 st.divider()
         
                 if total_faelle > 0:
@@ -1374,7 +1374,7 @@ for i, bereich in enumerate(bereiche):
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer HIPEC bei CRS", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer CRS ohne HIPEC", value=total_faelle)
                 st.divider()
         
                 if total_faelle > 0:
