@@ -1870,7 +1870,7 @@ for i, bereich in enumerate(bereiche):
                         showlegend=True,
                         legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105], "tick0": 0, "dtick": 10}
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10} # "range": [0, 105],
                     )
                
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel20_{bereich}", config={'displayModeBar': False})
