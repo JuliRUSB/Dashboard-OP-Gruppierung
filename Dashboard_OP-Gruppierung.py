@@ -699,7 +699,9 @@ for i, bereich in enumerate(bereiche):
                 total_ops = len(df_plot)
         
                 st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if total_ops > 0:
                     # Aggregation
@@ -747,7 +749,9 @@ for i, bereich in enumerate(bereiche):
                 total_sark = len(df_plot)
     
                 st.metric(label="Übersicht Sarkome", value=total_sark)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
     
                 if total_sark > 0:
                     # Gruppierung nach Jahr und Typ
@@ -812,7 +816,9 @@ for i, bereich in enumerate(bereiche):
                 total_crs = len(df_plot)
                 
                 st.metric(label="HIPEC bei CRS", value=total_crs)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                 if total_crs > 0:
                     # Gruppierung nach Jahr und HIPEC
@@ -875,7 +881,9 @@ for i, bereich in enumerate(bereiche):
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
                     value=f"{total_dindo} von {total_crs}",
                 )
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if total_crs > 0:
                     # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
@@ -955,7 +963,9 @@ for i, bereich in enumerate(bereiche):
                     label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) in %", 
                     value=f"{metrik_prozent} % ({total_lok} von {total_crs})",
                 )
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if total_crs > 0:
                     # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
@@ -1082,6 +1092,7 @@ for i, bereich in enumerate(bereiche):
                             value=f"{total_lok} von {total_crs}",
                         )
                         # st.divider()
+                        # verkleinert den Raum oberhalb der Trennlinie
                         st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                         if not df_plot.empty:
@@ -1191,8 +1202,10 @@ for i, bereich in enumerate(bereiche):
                             label="Aufteilung Komplikationen CRS ohne HIPEC", 
                             value=f"{total_lok} von {total_crs}",
                         )
-                        st.divider()
-                
+                        # st.divider()
+                        # verkleinert den Raum oberhalb der Trennlinie
+                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                        
                         if not df_plot.empty:
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
@@ -1268,7 +1281,9 @@ for i, bereich in enumerate(bereiche):
                     label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
                     value=f"{total_insuff} von {total_anastomosen}"
                 )
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_insuff > 0:
                     grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
@@ -1321,7 +1336,9 @@ for i, bereich in enumerate(bereiche):
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
                 st.metric(label="Aufenthaltsdauer CRS mit HIPEC", value=total_faelle)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_faelle > 0:
                     # Aggregation nach Jahr UND hipec
@@ -1400,7 +1417,9 @@ for i, bereich in enumerate(bereiche):
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
                 st.metric(label="Aufenthaltsdauer CRS ohne HIPEC", value=total_faelle)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_faelle > 0:
                     # Aggregation nach Jahr UND hipec
@@ -1492,7 +1511,9 @@ for i, bereich in enumerate(bereiche):
                 total_gruppen = len(df_plot)
             
                 st.metric(label="Gruppe Sarkome/Weichteiltumoren", value=total_gruppen) 
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                 if total_gruppen > 0:
                     # Gruppierung nach Jahr und Sarkomgruppe
@@ -1563,7 +1584,9 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)
             
                 st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_lok} von {total_gruppen}")
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                 if total_lok > 0:
                     # Gruppierung nach Jahr und Lokalisation
@@ -1617,11 +1640,10 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["malignit_t_sark"] != "andere") & ((df_bereich["gruppen_chir_onko_sark"] != "Knochen") & (df_bereich["gruppen_chir_onko_sark"] != "Andere Malignome"))].copy()
                 total_malign = len(df_plot)
 
-                st.metric(
-                    label="Sarkomzentrum Weichteiltumoren",
-                    value=total_malign
-                )
-                st.divider()
+                st.metric(label="Sarkomzentrum Weichteiltumoren", value=total_malign)
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_malign > 0:
                     # Gruppierung nach Jahr und Lokalisation
@@ -1689,7 +1711,9 @@ for i, bereich in enumerate(bereiche):
                 total_lok = len(df_plot)                    
                     
                 st.metric(label="Komplikationen ≥ IIIa (Weichteiltumoren)", value=total_lok)
-                st.divider()
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_lok > 0:
                     # Gruppierung nach Jahr, Lokalisation
@@ -1787,11 +1811,10 @@ for i, bereich in enumerate(bereiche):
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                 
                         total_lok = len(df_plot)
-                        st.metric(
-                            label="Aufteilung Komplikationen Weichteiltumoren",
-                            value=total_lok
-                        )
-                        st.divider()
+                        st.metric(label="Aufteilung Komplikationen Weichteiltumoren", value=total_lok)
+                        # st.divider()
+                        # verkleinert den Raum oberhalb der Trennlinie
+                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                         if total_lok > 0:
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
@@ -1862,12 +1885,10 @@ for i, bereich in enumerate(bereiche):
                 
                 total_faelle_los = len(df_los)
                 
-                # Nutzt total_lok aus Kachel 10 für die Anzeige der Grundgesamtheit
-                st.metric(
-                    label="Aufenthaltsdauer Weichteiltumoren", 
-                    value=f"{total_faelle_los}"
-                )
-                st.divider()
+                st.metric(label="Aufenthaltsdauer Weichteiltumoren", value=f"{total_faelle_los}")
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_faelle_los > 0:
                     # Aggregation pro Jahr
