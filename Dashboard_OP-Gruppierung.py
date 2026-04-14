@@ -1803,19 +1803,19 @@ for i, bereich in enumerate(bereiche):
             if required_cols.issubset(df_bereich.columns):
         
                 # Filter für Sarkom/Weichteiltumor ohne Knochen
-                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
-                total_weichteil = len(df_plot)
+                df_plot_all = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                total_weichteil = len(df_plot_all)
         
                 # Dindo ≥ IIIa
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)
+                total_dindo = len(df_plot)
         
                 # Korrekte Berechnung mit Python-round
-                metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
+                metrik_prozent = round({total_dindo} von {total_weichteil} * 100, 1) if total_weichteil > 0 else 0
         
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa in % - Lokalisation Weichteiltumoren", 
-                    value=f"{metrik_prozent} % ({total_lok} von {total_weichteil})",
+                    value=f"{metrik_prozent} % ({total_dindo} von {total_weichteil})",
                 )
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
