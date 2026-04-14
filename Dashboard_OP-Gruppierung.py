@@ -1823,10 +1823,7 @@ for i, bereich in enumerate(bereiche):
                 
                 if total_dindo > 0:
                     # Gruppierung nach Jahr, Lokalisation (nur Komplikationen >= IIIa)
-                    grp = df_plot.groupby(
-                        ["jahr_opdatum", "lokalisation_sark"],
-                        as_index=False
-                    ).size()
+                    grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
         
                     # Gesamtzahl pro Jahr UND Lokalisation (alle Weichteiltumoren-Fälle)
@@ -1834,7 +1831,7 @@ for i, bereich in enumerate(bereiche):
                     grp_gesamt.columns = ["jahr_opdatum", "lokalisation_sark", "count_gesamt"]
         
                     # Zusammenführen für korrekte Prozentbasis
-                    grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "lokalisation_sark"], how="left").fillna(0)
+                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "lokalisation_sark"], how="left")
         
                     # Hier funktioniert .round(1), da es ein Pandas-Objekt ist
                     grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
