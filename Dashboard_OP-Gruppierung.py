@@ -1352,13 +1352,13 @@ for i, bereich in enumerate(bereiche):
                     (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
-                total_faelle = len(df_los)
+                total_crs_und_hipec = len(df_los)
                 st.metric(label="Aufenthaltsdauer - CRS mit HIPEC", value=total_faelle)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
-                if total_faelle > 0:
+                if total_crs_und_hipec > 0:
                     # Aggregation nach Jahr UND hipec
                     grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
                         Mittelwert="mean",
