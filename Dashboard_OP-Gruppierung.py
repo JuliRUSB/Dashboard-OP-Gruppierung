@@ -1811,7 +1811,7 @@ for i, bereich in enumerate(bereiche):
                 total_dindo = len(df_plot)
         
                 # Korrekte Berechnung mit Python-round
-                metrik_prozent = round(total_dindo von total_weichteil * 100, 1) if total_weichteil > 0 else 0
+                metrik_prozent = round(total_dindo / total_weichteil * 100, 1) if total_weichteil > 0 else 0
         
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa in % - Lokalisation Weichteiltumoren", 
