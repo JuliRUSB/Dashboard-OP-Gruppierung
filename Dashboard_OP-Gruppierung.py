@@ -1433,13 +1433,13 @@ for i, bereich in enumerate(bereiche):
                     (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Nein")].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
-                total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer - CRS ohne HIPEC", value=total_faelle)
+                total_crs_ohne_hipec = len(df_los)
+                st.metric(label="Aufenthaltsdauer - CRS ohne HIPEC", value=total_crs_ohne_hipec)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
-                if total_faelle > 0:
+                if total_crs_ohne_hipec > 0:
                     # Aggregation nach Jahr UND hipec
                     grp = df_los.groupby(["jahr_opdatum"], as_index=False)["los_opdatum"].agg(
                         Mittelwert="mean",
@@ -1524,16 +1524,16 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
             
-                # Filter für Sarkom/Weichteiltumor
+                # Filter für Sarkom/Weichteiltumor mit knochen
                 df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
-                total_gruppen = len(df_plot)
+                total_sark_weichteil = len(df_plot)
             
-                st.metric(label="Gruppe - Sarkome/Weichteiltumoren", value=total_gruppen) 
+                st.metric(label="Gruppe - Sarkome/Weichteiltumoren", value=total_sark_weichteil) 
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
-                if total_gruppen > 0:
+                if total_sark_weichteil > 0:
                     # Gruppierung nach Jahr und Sarkomgruppe
                     grp = df_plot.groupby(["jahr_opdatum", "gruppen_chir_onko_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "gruppen_chir_onko_sark", "count"]
@@ -1597,11 +1597,11 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
             
-                # Filter für Sarkom/Weichteiltumor
+                # Filter für Sarkom/Weichteiltumor ohne Knochen
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
                 total_weichteil = len(df_plot)
             
-                st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_weichteil} von {total_gruppen}")
+                st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_weichteil} von {total_sark_weichteil}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
