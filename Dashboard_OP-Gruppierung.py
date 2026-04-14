@@ -1686,6 +1686,8 @@ for i, bereich in enumerate(bereiche):
                     fig.update_traces(
                         textfont_size=16,
                         textposition="auto",
+                        textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                         marker_line_width=0
                     )
 
