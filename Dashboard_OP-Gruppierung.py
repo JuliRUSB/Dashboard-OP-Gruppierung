@@ -1896,9 +1896,9 @@ for i, bereich in enumerate(bereiche):
 
                 # Filter für Clavien-Dindo-Grad
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)   
+                total_dindo = len(df_plot)   
                     
-                st.metric(label="Komplikationen ≥ IIIa - Weichteiltumoren", value=f"{total_weichteil} von {total_gruppen}")
+                st.metric(label="Komplikationen ≥ IIIa - Weichteiltumoren", value=f"{total_dindo} von {total_weichteil}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1998,8 +1998,8 @@ for i, bereich in enumerate(bereiche):
                         df_plot["dindo_final_text"] = df_plot.apply(get_highest_dindo, axis=1)
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                 
-                        total_lok = len(df_plot)
-                        st.metric(label="Aufteilung Komplikationen - Weichteiltumoren", value=total_lok)
+                        total_dindo = len(df_plot)
+                        st.metric(label="Aufteilung Komplikationen - Weichteiltumoren", value=total_dindo)
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
                         st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
