@@ -1084,11 +1084,11 @@ for i, bereich in enumerate(bereiche):
                         # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                         
-                        total_crs_und_hipec = len(df_plot)
+                        total_kopmp = len(df_plot)
                         
                         st.metric(
                             label="Aufteilung Komplikationen - CRS mit HIPEC", 
-                            value=f"{total_lok} von {total_crs_und_hipec}",
+                            value=f"{total_kompl} von {total_crs_und_hipec}",
                         )
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
@@ -1168,7 +1168,7 @@ for i, bereich in enumerate(bereiche):
         
                         # CRS und HIPEC = ja filtern
                         df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Nein")].copy()
-                        total_crs = len(df_plot_all)
+                        total_crs_ohne_hipec = len(df_plot_all)
                 
                         # 1. Wir definieren die Hierarchie (Wichtig für den Vergleich)
                         dindo_order = [
@@ -1195,11 +1195,11 @@ for i, bereich in enumerate(bereiche):
                         # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                         
-                        total_lok = len(df_plot)
+                        total_kompl = len(df_plot)
                         
                         st.metric(
                             label="Aufteilung Komplikationen - CRS ohne HIPEC", 
-                            value=f"{total_lok} von {total_crs}",
+                            value=f"{total_kompl} von {total_crs_ohne_hipec}",
                         )
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
