@@ -1714,7 +1714,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 19 "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiletumoren" ==================
+        # ================== Kachel 19 "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiltumoren" ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1794,7 +1794,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
                
-        # ================== Kachel 20 "Clavien-Dindo-Grad >= IIIa in % - Lokalisation Weichteiletumoren" ==================
+        # ================== Kachel 20 "Clavien-Dindo-Grad >= IIIa in % - Lokalisation Weichteiltumoren" ==================
         with col2.container(border=True):
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
@@ -1812,7 +1812,7 @@ for i, bereich in enumerate(bereiche):
                 metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
         
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa in % - - Lokalisation Weichteiletumoren", 
+                    label="Clavien-Dindo-Grad ≥ IIIa in % - - Lokalisation Weichteiltumoren", 
                     value=f"{metrik_prozent} % ({total_lok} von {total_weichteil})",
                 )
                 # st.divider()
