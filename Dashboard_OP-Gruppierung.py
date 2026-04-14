@@ -1084,7 +1084,7 @@ for i, bereich in enumerate(bereiche):
                         # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                         
-                        total_kopmp = len(df_plot)
+                        total_kopml = len(df_plot)
                         
                         st.metric(
                             label="Aufteilung Komplikationen - CRS mit HIPEC", 
