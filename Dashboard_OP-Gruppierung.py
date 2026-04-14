@@ -1555,8 +1555,8 @@ for i, bereich in enumerate(bereiche):
                     fig.update_traces(
                         textfont_size=16, 
                         # textposition='auto',
-                        cliponaxis=False,
-                        textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
+                        textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                         marker_line_width=0,
                         outsidetextfont=dict(size=16),
                         insidetextfont=dict(size=16),
@@ -2000,7 +2000,7 @@ for i, bereich in enumerate(bereiche):
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                 
                         total_dindo = len(df_plot)
-                        st.metric(label="Aufteilung Komplikationen - Weichteiltumoren", value=total_dindo)
+                        st.metric(label="Aufteilung Komplikationen - Weichteiltumoren", value=f"{total_dindo} von {total_weichteil}")
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
                         st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
