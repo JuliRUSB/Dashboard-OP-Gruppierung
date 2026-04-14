@@ -1751,7 +1751,7 @@ for i, bereich in enumerate(bereiche):
                         x="jahr_opdatum",
                         y="count",
                         color="lokalisation_sark",
-                        barmode="stack",
+                        barmode="group",
                         text="count",
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
