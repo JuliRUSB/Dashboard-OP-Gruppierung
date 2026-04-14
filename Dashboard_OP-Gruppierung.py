@@ -5,7 +5,7 @@
 import os                          # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
 import requests                    # HTTP-Requests (hier für REDCap API)
 import pandas as pd                # Datenverarbeitung mit DataFrames
-import plotly.express as px        # Plotly Express für Diagramme
+import plotly.express as px        # Plotly Express für DiagrammeÜbersicht Sarkome
 import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
@@ -737,7 +737,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Fehlende Spalten im Datensatz.")
     
-        # ================== Kachel 2 "Übersicht Sarkome" ==================
+        # ================== Kachel 2 "Übersicht Operationen" ==================
         with col2.container(border=True):
             # if "Übersicht Sarkome" in analysen:
             # Check auf Spalten
@@ -748,7 +748,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
                 total_sark = len(df_plot)
     
-                st.metric(label="Übersicht Sarkome", value=total_sark)
+                st.metric(label="Übersicht Operationen", value=total_sark)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
