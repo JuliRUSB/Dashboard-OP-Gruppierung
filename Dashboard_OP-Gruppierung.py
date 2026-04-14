@@ -1722,7 +1722,7 @@ for i, bereich in enumerate(bereiche):
 
                 # Filter für Sarkom/Weichteiltumor ohne Knochen
                 df_plot_all = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
-                total_weichteil = len(df_plot)
+                total_weichteil = len(df_plot_all)
 
                 # Dindo ≥ IIIa
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
