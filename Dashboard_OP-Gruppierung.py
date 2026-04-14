@@ -373,16 +373,24 @@ st.markdown(
         font-size: 24px !important;
     }
 
-    * Verkleinert den Button-Rahmen und den Text darin */
+    /* 1. Den Button selbst flacher machen */
     div[data-testid="stButton"] > button {
-        min-height: 24px !important;
-        height: 24px !important;
-        padding: 0px 12px !important;
-        line-height: 1 !important;
+        height: 1.5rem !important;
+        min-height: 1.5rem !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        line-height: 1.5rem !important;
     }
-    /* Verkleinert explizit die Schriftgrösse */
-    div[data-testid="stButton"] button p {
-        font-size: 12px !important;
+
+    /* 2. Den Text im Button vertikal zentrieren */
+    div[data-testid="stButton"] button div p {
+        margin-bottom: 0px !important;
+        line-height: 1.5rem !important;
+    }
+
+    /* 3. Den Abstand zwischen Buttons/Elementen in der Spalte verringern */
+    [data-testid="stVerticalBlock"] > div:has(div[data-testid="stButton"]) {
+        gap: 0px !important;
     }
     </style>
     """,
