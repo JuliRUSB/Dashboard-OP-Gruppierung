@@ -603,7 +603,7 @@ with col2:
 
     fig_quartal.update_traces(
         textfont_size=16,
-        textposition="inside",
+        textposition="auto", # wenn der Platz im Balken nicht ausreicht, wird die Zahl ausserhalb platziert
         textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
     )
 
