@@ -1353,7 +1353,7 @@ for i, bereich in enumerate(bereiche):
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_crs_und_hipec = len(df_los)
-                st.metric(label="Aufenthaltsdauer - CRS mit HIPEC", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer - CRS mit HIPEC", value=total_crs_und_hipec)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
