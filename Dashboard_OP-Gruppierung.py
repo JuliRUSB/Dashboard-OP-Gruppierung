@@ -552,7 +552,7 @@ with col1:
         
         fig_jahr.update_traces(
             textfont_size=16, 
-            textposition='inside'
+            textposition='inside' # die Zahlen werden immer in den Balken platziert
         )
         
         fig_jahr.update_layout(
@@ -603,7 +603,8 @@ with col2:
 
     fig_quartal.update_traces(
         textfont_size=16,
-        textposition="inside"
+        textposition="inside",
+        textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
     )
 
     fig_quartal.update_layout(
