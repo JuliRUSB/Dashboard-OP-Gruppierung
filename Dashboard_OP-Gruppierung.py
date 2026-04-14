@@ -1607,7 +1607,7 @@ for i, bereich in enumerate(bereiche):
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
-                if total_lok > 0:
+                if total_weichteil > 0:
                     # Gruppierung nach Jahr und Lokalisation
                     grp = df_plot.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
