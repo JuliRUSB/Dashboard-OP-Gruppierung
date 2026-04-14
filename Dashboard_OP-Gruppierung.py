@@ -1812,7 +1812,7 @@ for i, bereich in enumerate(bereiche):
                 metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
         
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa in % - - Lokalisation Weichteiltumoren", 
+                    label="Clavien-Dindo-Grad ≥ IIIa in % - Lokalisation Weichteiltumoren", 
                     value=f"{metrik_prozent} % ({total_lok} von {total_weichteil})",
                 )
                 # st.divider()
