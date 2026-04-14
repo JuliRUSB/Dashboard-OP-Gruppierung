@@ -372,6 +372,14 @@ st.markdown(
      [data-testid="stMetricValue"] {
         font-size: 24px !important;
     }
+
+    # CSS für kleinere Buttons
+    div[data-testid="stButton"] button {
+        padding: 2px 10px;
+        font-size: 12px;
+        min-height: 25px;
+        height: auto;
+    }
     </style>
     """,
     unsafe_allow_html=True,
