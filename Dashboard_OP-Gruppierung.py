@@ -1259,68 +1259,87 @@ for i, bereich in enumerate(bereiche):
         # ================== Kachel 8 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
-        with col1.container(border=True):
-            required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
-            if required_cols.issubset(df_bereich.columns):
-        
-                # Filter auf Kolon/Rektum und gültige Anastomosen
-                df_anastomosen = df_bereich[
-                    (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
-                    ((df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["anastomosen_crs"] != "keine"))
-                ].copy()
-        
-                # Nur Fälle mit Anastomoseninsuffizienz
-                df_insuff = df_anastomosen[
-                    df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
-                    df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
-                ].copy()
+        with col1:
+            # Zustand initialisieren
+            if f"expand_{bereich}_k7" not in st.session_state:
+                st.session_state[f"expand_{bereich}_k7"] = False
 
-                total_anastomosen = len(df_anastomosen)
-                total_insuff = len(df_insuff)
-                st.metric(
-                    label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
-                    value=f"{total_insuff} von {total_anastomosen}"
-                )
-                # st.divider()
-                # verkleinert den Raum oberhalb der Trennlinie
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-        
-                if total_insuff > 0:
-                    grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "count"]
-        
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        # color="anastomosen_crs",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"anastomosen_crs": "Anastomosen"}
-                    )
-        
-                    fig.update_traces(
-                        textfont_size=16,
-                        textposition='auto',
-                        marker_line_width=0
-                    )
-        
-                    fig.update_layout(
-                        barmode="group",
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=False,
-                        # legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
-                    )
-        
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
-                else:
-                    st.info("Keine Anastomoseninsuffizienzen vorhanden")
+            # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
+            if not st.session_state[f"expand_{bereich}_k7"]:
+                if st.button("▼ anzeigen", key=f"btn_{bereich}_k7"):
+                    st.session_state[f"expand_{bereich}_k7"] = True
+                    st.rerun()
             else:
-                st.error("Spalten fehlen")
+                # Wenn eingeblendet: Button IM Container oben rechts
+                with st.container(border=True):
+                     # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
+                    header_col1, header_col2 = st.columns([0.8, 0.2])
+                    with header_col2:
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k7"):
+                            st.session_state[f"expand_{bereich}_k7"] = False
+                            st.rerun()
+
+                    required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
+                    if required_cols.issubset(df_bereich.columns):
+                
+                        # Filter auf Kolon/Rektum und gültige Anastomosen
+                        df_anastomosen = df_bereich[
+                            (df_bereich["crs_details"].str.contains("Kolon|Rektum", na=False)) &
+                            ((df_bereich["anastomosen_crs"] != "Nicht angegeben") & (df_bereich["anastomosen_crs"] != "keine"))
+                        ].copy()
+                
+                        # Nur Fälle mit Anastomoseninsuffizienz
+                        df_insuff = df_anastomosen[
+                            df_anastomosen["kpl_was_surv"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False) |
+                            df_anastomosen["kpl_was"].fillna("").str.contains("Anastomoseninsuffizienz", case=False, na=False)
+                        ].copy()
+        
+                        total_anastomosen = len(df_anastomosen)
+                        total_insuff = len(df_insuff)
+                        st.metric(
+                            label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
+                            value=f"{total_insuff} von {total_anastomosen}"
+                        )
+                        # st.divider()
+                        # verkleinert den Raum oberhalb der Trennlinie
+                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
+                        if total_insuff > 0:
+                            grp = df_insuff.groupby(["jahr_opdatum"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "count"]
+                
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                # color="anastomosen_crs",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"anastomosen_crs": "Anastomosen"}
+                            )
+                
+                            fig.update_traces(
+                                textfont_size=16,
+                                textposition='auto',
+                                marker_line_width=0
+                            )
+                
+                            fig.update_layout(
+                                barmode="group",
+                                margin=dict(l=10, r=10, t=0, b=10),
+                                xaxis_title=None,
+                                yaxis_title=None,
+                                showlegend=False,
+                                # legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
+                            )
+                
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                        else:
+                            st.info("Keine Anastomoseninsuffizienzen vorhanden")
+                    else:
+                        st.error("Spalten fehlen")
 
                         
         # Zwei Spalten/Kacheln definieren (6. Reihe)
