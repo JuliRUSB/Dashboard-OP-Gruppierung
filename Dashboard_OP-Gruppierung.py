@@ -1261,13 +1261,13 @@ for i, bereich in enumerate(bereiche):
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         with col1:
             # Zustand initialisieren
-            if f"expand_{bereich}_k7" not in st.session_state:
-                st.session_state[f"expand_{bereich}_k7"] = False
+            if f"expand_{bereich}_k8" not in st.session_state:
+                st.session_state[f"expand_{bereich}_k8"] = False
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
-            if not st.session_state[f"expand_{bereich}_k7"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k7"):
-                    st.session_state[f"expand_{bereich}_k7"] = True
+            if not st.session_state[f"expand_{bereich}_k8"]:
+                if st.button("▼ anzeigen", key=f"btn_{bereich}_k8"):
+                    st.session_state[f"expand_{bereich}_k8"] = True
                     st.rerun()
             else:
                 # Wenn eingeblendet: Button IM Container oben rechts
@@ -1275,8 +1275,8 @@ for i, bereich in enumerate(bereiche):
                      # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
                     header_col1, header_col2 = st.columns([0.8, 0.2])
                     with header_col2:
-                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k7"):
-                            st.session_state[f"expand_{bereich}_k7"] = False
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k8"):
+                            st.session_state[f"expand_{bereich}_k8"] = False
                             st.rerun()
 
                     required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
