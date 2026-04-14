@@ -1600,9 +1600,9 @@ for i, bereich in enumerate(bereiche):
             
                 # Filter für Sarkom/Weichteiltumor
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
-                total_lok = len(df_plot)
+                total_weichteil = len(df_plot)
             
-                st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_lok} von {total_gruppen}")
+                st.metric(label="Lokalisation Weichteiltumoren", value=f"{total_weichteil} von {total_gruppen}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
