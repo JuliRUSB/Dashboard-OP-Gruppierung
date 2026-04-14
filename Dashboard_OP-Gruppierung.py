@@ -1737,7 +1737,7 @@ for i, bereich in enumerate(bereiche):
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
-                if total_crs > 0:
+                if total_dindo > 0:
                     # Gruppierung nach Jahr, Lokalisation (nur Komplikationen >= IIIa)
                     grp = df_plot.groupby(
                         ["jahr_opdatum", "lokalisation_sark"],
@@ -1819,7 +1819,7 @@ for i, bereich in enumerate(bereiche):
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
-                if total_crs > 0:
+                if total_dindo > 0:
                     # Gruppierung nach Jahr, Lokalisation (nur Komplikationen >= IIIa)
                     grp = df_plot.groupby(
                         ["jahr_opdatum", "lokalisation_sark"],
