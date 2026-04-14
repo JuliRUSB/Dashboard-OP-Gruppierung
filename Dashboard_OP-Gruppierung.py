@@ -1027,24 +1027,6 @@ for i, bereich in enumerate(bereiche):
             if f"expand_{bereich}_k6" not in st.session_state:
                 st.session_state[f"expand_{bereich}_k6"] = False
 
-            # CSS wird durch "display: none" unsichtbar, wirkt aber lokal auf die Keys
-            st.markdown(f"""
-                <style>
-                div[data-testid="stMarkdownContainer"]:has(style) {{ display: none; }}
-                div[data-testid="stVerticalBlock"]:has(button[key="btn_{bereich}_k6"]) button {{
-                    height: 22px !important;
-                    min-height: 22px !important;
-                    padding: 0px 8px !important;
-                    line-height: 1 !important;
-                    font-size: 12px !important;
-                }}
-                div[data-testid="stVerticalBlock"]:has(button[key="btn_{bereich}_k6"]) hr {{
-                    margin-top: -20px !important;
-                    margin-bottom: 0px !important;
-                }}
-                </style>
-            """, unsafe_allow_html=True)
-
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k6"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich}_k6"):
@@ -1099,7 +1081,8 @@ for i, bereich in enumerate(bereiche):
                             label="Aufteilung Komplikationen CRS mit HIPEC", 
                             value=f"{total_lok} von {total_crs}",
                         )
-                        st.divider()
+                        # st.divider()
+                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                         if not df_plot.empty:
                             grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
