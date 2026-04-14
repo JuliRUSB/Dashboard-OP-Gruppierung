@@ -748,7 +748,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
                 total_crs_und_sark = len(df_plot)
     
-                st.metric(label="Übersicht Operationen", value=total_sark)
+                st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
