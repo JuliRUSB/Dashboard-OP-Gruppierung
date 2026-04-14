@@ -1027,19 +1027,20 @@ for i, bereich in enumerate(bereiche):
             if f"expand_{bereich}_k6" not in st.session_state:
                 st.session_state[f"expand_{bereich}_k6"] = False
 
-            # NUR HIER: CSS für diesen Block
+            # CSS wird durch "display: none" unsichtbar, wirkt aber lokal auf die Keys
             st.markdown(f"""
                 <style>
-                /* Wir suchen den Container, der auf dieses Markdown folgt */
-                div[data-testid="stVerticalBlock"]:has(> div [key="btn_{bereich}_k6"]) button {{
-                    height: 24px !important;
-                    min-height: 24px !important;
-                    padding: 0px 10px !important;
+                div[data-testid="stMarkdownContainer"]:has(style) {{ display: none; }}
+                div[data-testid="stVerticalBlock"]:has(button[key="btn_{bereich}_k6"]) button {{
+                    height: 22px !important;
+                    min-height: 22px !important;
+                    padding: 0px 8px !important;
                     line-height: 1 !important;
+                    font-size: 12px !important;
                 }}
-                div[data-testid="stVerticalBlock"]:has(> div [key="btn_{bereich}_k6"]) hr {{
-                    margin-top: -10px !important; /* Zieht den Divider hoch */
-                    margin-bottom: 5px !important;
+                div[data-testid="stVerticalBlock"]:has(button[key="btn_{bereich}_k6"]) hr {{
+                    margin-top: -20px !important;
+                    margin-bottom: 0px !important;
                 }}
                 </style>
             """, unsafe_allow_html=True)
