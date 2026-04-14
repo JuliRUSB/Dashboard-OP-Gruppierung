@@ -1027,6 +1027,23 @@ for i, bereich in enumerate(bereiche):
             if f"expand_{bereich}_k6" not in st.session_state:
                 st.session_state[f"expand_{bereich}_k6"] = False
 
+            # NUR HIER: CSS für diesen Block
+            st.markdown(f"""
+                <style>
+                /* Wir suchen den Container, der auf dieses Markdown folgt */
+                div[data-testid="stVerticalBlock"]:has(> div [key="btn_{bereich}_k6"]) button {{
+                    height: 24px !important;
+                    min-height: 24px !important;
+                    padding: 0px 10px !important;
+                    line-height: 1 !important;
+                }}
+                div[data-testid="stVerticalBlock"]:has(> div [key="btn_{bereich}_k6"]) hr {{
+                    margin-top: -10px !important; /* Zieht den Divider hoch */
+                    margin-bottom: 5px !important;
+                }}
+                </style>
+            """, unsafe_allow_html=True)
+
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k6"]:
                 if st.button("▼ anzeigen", key=f"btn_{bereich}_k6"):
