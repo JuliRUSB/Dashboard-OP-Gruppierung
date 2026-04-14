@@ -1199,7 +1199,7 @@ for i, bereich in enumerate(bereiche):
                         total_lok = len(df_plot)
                         
                         st.metric(
-                            label="Aufteilung Komplikationen CRS ohne HIPEC", 
+                            label="Aufteilung Komplikationen - CRS ohne HIPEC", 
                             value=f"{total_lok} von {total_crs}",
                         )
                         # st.divider()
