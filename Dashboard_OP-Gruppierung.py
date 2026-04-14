@@ -903,7 +903,7 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
-                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
@@ -987,6 +987,7 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105], "tick0": 0, "dtick": 10}
                     )
@@ -1098,6 +1099,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None,
                                 yaxis_title=None,
                                 showlegend=True,
+                                legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
@@ -1206,6 +1208,7 @@ for i, bereich in enumerate(bereiche):
                                 xaxis_title=None,
                                 yaxis_title=None,
                                 showlegend=True,
+                                legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
@@ -1272,7 +1275,7 @@ for i, bereich in enumerate(bereiche):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=False,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        # legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
                     )
@@ -1355,9 +1358,9 @@ for i, bereich in enumerate(bereiche):
                         margin=dict(l=10, r=10, t=10, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
+                        legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99)
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
