@@ -1710,6 +1710,175 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für Malignität")
             else:
                 st.error("Spalten fehlen")     
+
+        # Zwei Spalten/Kacheln definieren (3. Reihe)
+        col1, col2 = st.columns(2)
+        
+        # ================== Kachel 19 "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiletumoren" ==================
+        with col1.container(border=True):
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
+            if required_cols.issubset(df_bereich.columns):
+
+                # Filter für Sarkom/Weichteiltumor ohne Knochen
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                total_weichteil = len(df_plot)
+
+                # Dindo ≥ IIIa
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_dindo = len(df_plot)
+
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa - Lokalisation Weichteiltumoren", 
+                    value=f"{total_dindo} von {total_weichteil}",
+                )
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
+                if total_crs > 0:
+                    # Gruppierung nach Jahr, Lokalisation (nur Komplikationen >= IIIa)
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+
+                    # Gesamtzahl pro Jahr UND Lokalisation (alle Weichteiltumoren-Fälle)
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "lokalisation_sark", "count_gesamt"]
+
+                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "lokalisation_sark"], how="left")
+
+                    grp["text_label"] = grp.apply(
+                        lambda row: f"{row['count']} (von {row['count_gesamt']})", axis=1
+                    )
+                    
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="lokalisation_sark",
+                        barmode="group",
+                        text="text_label",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
+                        # category_orders={"jahr_opdatum": quartal_order}
+                    )
+               
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
+                        marker_line_width=0
+                    )
+
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+               
+                    fig.update_layout(
+                        bargap=0.1,  
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                    )
+               
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel19_{bereich}", config={'displayModeBar': False})
+                else:
+                        st.info("Keine Daten für Weichteiltumoren")
+            else:
+                st.error("Spalten fehlen")
+               
+        # ================== Kachel 20 "Clavien-Dindo-Grad >= IIIa in % - Lokalisation Weichteiletumoren" ==================
+        with col2.container(border=True):
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
+            if required_cols.issubset(df_bereich.columns):
+        
+                # Filter für Sarkom/Weichteiltumor ohne Knochen
+                df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
+                total_weichteil = len(df_plot)
+        
+                # Dindo ≥ IIIa
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_lok = len(df_plot)
+        
+                # Korrekte Berechnung mit Python-round
+                metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
+        
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa in % - - Lokalisation Weichteiletumoren", 
+                    value=f"{metrik_prozent} % ({total_lok} von {total_weichteil})",
+                )
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
+                if total_crs > 0:
+                    # Gruppierung nach Jahr, Lokalisation (nur Komplikationen >= IIIa)
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "lokalisation_sark"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
+        
+                    # Gesamtzahl pro Jahr UND Lokalisation (alle Weichteiltumoren-Fälle)
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "lokalisation_sark"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "lokalisation_sark", "count_gesamt"]
+        
+                    # Zusammenführen für korrekte Prozentbasis
+                    grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "lokalisation_sark"], how="left").fillna(0)
+        
+                    # Hier funktioniert .round(1), da es ein Pandas-Objekt ist
+                    grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
+        
+                    # Nur Prozent im Label
+                    grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
+                    
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="prozent", 
+                        color="lokalisation_sark",
+                        barmode="group", 
+                        text="text_label",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"lokalisation_sark": "Lokalisation", "prozent": "Anteil in %"},
+                    )
+               
+                    fig.update_traces(
+                        textfont_size=16,
+                        textposition='auto',
+                        insidetextanchor='middle',
+                        textangle=-45, # Damit die Zahlen im 45 Grad Winkel dargestellt werden
+                        marker_line_width=0
+                    )
+        
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+               
+                    fig.update_layout(
+                        uniformtext_minsize=16,
+                        uniformtext_mode='show',
+                        bargap=0.1,  
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "range": [0, 105], "tick0": 0, "dtick": 10}
+                    )
+               
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel20_{bereich}", config={'displayModeBar': False})
+                else:
+                    st.info("Keine Daten für Weichteiltumoren")
+            else:
+                st.error("Spalten fehlen")
         
         # Zwei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)        
