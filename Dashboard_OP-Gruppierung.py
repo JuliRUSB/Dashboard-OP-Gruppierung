@@ -373,12 +373,16 @@ st.markdown(
         font-size: 24px !important;
     }
 
-    # CSS für kleinere Buttons
-    div[data-testid="stButton"] button {
-        padding: 2px 10px;
-        font-size: 12px;
-        min-height: 25px;
-        height: auto;
+    * Verkleinert den Button-Rahmen und den Text darin */
+    div[data-testid="stButton"] > button {
+        min-height: 24px !important;
+        height: 24px !important;
+        padding: 0px 12px !important;
+        line-height: 1 !important;
+    }
+    /* Verkleinert explizit die Schriftgrösse */
+    div[data-testid="stButton"] button p {
+        font-size: 12px !important;
     }
     </style>
     """,
