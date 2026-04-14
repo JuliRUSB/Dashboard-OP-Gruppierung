@@ -694,7 +694,7 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"bereich", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
         
-                # Filterung
+                # Filterung Gesamtzahl Operationen "Onkologie/Sarkome"
                 df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
                 total_ops = len(df_plot)
         
@@ -744,16 +744,16 @@ for i, bereich in enumerate(bereiche):
             required_cols = {"type_sark", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
     
-                # Filter für Sarkome
+                # Filter für CRS oder Sarkom
                 df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-                total_sark = len(df_plot)
+                total_crs_und_sark = len(df_plot)
     
                 st.metric(label="Übersicht Operationen", value=total_sark)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
     
-                if total_sark > 0:
+                if total_crs_und_sark > 0:
                     # Gruppierung nach Jahr und Typ
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "type_sark", "count"]
@@ -806,7 +806,6 @@ for i, bereich in enumerate(bereiche):
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
         with col1.container(border=True):
-            # if "HIPEC bei CRS" in analysen:
             # Check auf Spalten
             required_cols = {"type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
@@ -873,7 +872,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                 total_crs = len(df_plot_all)
 
-                # Dindo ≥ IIIa
+                # Dindo ≥ IIIa filtern
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
                 total_dindo = len(df_plot)
 
@@ -952,16 +951,16 @@ for i, bereich in enumerate(bereiche):
                 df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                 total_crs = len(df_plot_all)
         
-                # Dindo ≥ IIIa
+                # Dindo ≥ IIIa filtern
                 df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)
+                total_dindo = len(df_plot)
         
                 # Korrekte Berechnung mit Python-round
-                metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
+                metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
         
                 st.metric(
                     label="Clavien-Dindo-Grad ≥ IIIa in % - HIPEC bei CRS", 
-                    value=f"{metrik_prozent} % ({total_lok} von {total_crs})",
+                    value=f"{metrik_prozent} % ({total_dindo} von {total_crs})",
                 )
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
@@ -1058,7 +1057,7 @@ for i, bereich in enumerate(bereiche):
         
                         # CRS und HIPEC = ja filtern
                         df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
-                        total_crs = len(df_plot_all)
+                        total_crs_und_hipec = len(df_plot_all)
                 
                         # 1. Definition der Hierarchie (Wichtig für den Vergleich)
                         dindo_order = [
@@ -1085,11 +1084,11 @@ for i, bereich in enumerate(bereiche):
                         # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                         
-                        total_lok = len(df_plot)
+                        total_crs_und_hipec = len(df_plot)
                         
                         st.metric(
                             label="Aufteilung Komplikationen - CRS mit HIPEC", 
-                            value=f"{total_lok} von {total_crs}",
+                            value=f"{total_lok} von {total_crs_und_hipec}",
                         )
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
