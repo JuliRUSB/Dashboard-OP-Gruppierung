@@ -686,7 +686,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (1. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 1 "Gesamtanzahl Operationen" ==================
+        # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
         with col1.container(border=True):
             # Vorab-Check der Analyse-Auswahl
             # if "Gesamtzahl Operationen" in analysen:
@@ -698,7 +698,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
                 total_ops = len(df_plot)
         
-                st.metric(label="Gesamtzahl Operationen (Onkologie/Sarkome)", value=total_ops)
+                st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -862,7 +862,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (3. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS==================
+        # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -878,7 +878,7 @@ for i, bereich in enumerate(bereiche):
                 total_dindo = len(df_plot)
 
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS)", 
+                    label="Clavien-Dindo-Grad ≥ IIIa - HIPEC bei CRS", 
                     value=f"{total_dindo} von {total_crs}",
                 )
                 # st.divider()
@@ -942,7 +942,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
                
-        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa" HIPEC ja/nein bei CRS in % ==================
+        # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS  ==================
         with col2.container(border=True):
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
@@ -960,7 +960,7 @@ for i, bereich in enumerate(bereiche):
                 metrik_prozent = round(total_lok / total_crs * 100, 1) if total_crs > 0 else 0
         
                 st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa (HIPEC bei CRS) in %", 
+                    label="Clavien-Dindo-Grad ≥ IIIa in % - HIPEC bei CRS", 
                     value=f"{metrik_prozent} % ({total_lok} von {total_crs})",
                 )
                 # st.divider()
@@ -1031,7 +1031,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (4. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 6 "Aufteilung Komplikationen CRS mit HIPEC ==================
+        # ================== Kachel 6 "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         with col1:
             # Zustand initialisieren
             if f"expand_{bereich}_k6" not in st.session_state:
@@ -1088,7 +1088,7 @@ for i, bereich in enumerate(bereiche):
                         total_lok = len(df_plot)
                         
                         st.metric(
-                            label="Aufteilung Komplikationen CRS mit HIPEC", 
+                            label="Aufteilung Komplikationen - CRS mit HIPEC", 
                             value=f"{total_lok} von {total_crs}",
                         )
                         # st.divider()
@@ -1142,7 +1142,7 @@ for i, bereich in enumerate(bereiche):
                     else:
                         st.error("Spalten fehlen")
 
-        # ================== Kachel 7 "Aufteilung Komplikationen CRS ohne HIPEC ==================
+        # ================== Kachel 7 "Aufteilung Komplikationen - CRS ohne HIPEC" ==================
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}_k7" not in st.session_state:
@@ -1256,7 +1256,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (5. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 8 Anastomoseinsuffizienz bei CRS (Kolon und Rektum) ================== 
+        # ================== Kachel 8 "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         with col1:
@@ -1297,7 +1297,7 @@ for i, bereich in enumerate(bereiche):
                         total_anastomosen = len(df_anastomosen)
                         total_insuff = len(df_insuff)
                         st.metric(
-                            label="Anastomoseninsuffizienzen bei CRS (Kolon und Rektum)",
+                            label="Anastomoseninsuffizienzen - CRS (Kolon und Rektum)",
                             value=f"{total_insuff} von {total_anastomosen}"
                         )
                         # st.divider()
@@ -1345,7 +1345,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (6. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 16 "Aufenthaltsdauer CRS mit HIPEC" ==================       
+        # ================== Kachel 16 "Aufenthaltsdauer - CRS mit HIPEC" ==================       
         with col1.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
@@ -1354,7 +1354,7 @@ for i, bereich in enumerate(bereiche):
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer CRS mit HIPEC", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer - CRS mit HIPEC", value=total_faelle)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1426,7 +1426,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 17 "Aufenthaltsdauer CRS ohne HIPEC" ==================       
+        # ================== Kachel 17 "Aufenthaltsdauer - CRS ohne HIPEC" ==================       
         with col2.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
             if required_cols.issubset(df_bereich.columns):
@@ -1435,7 +1435,7 @@ for i, bereich in enumerate(bereiche):
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_faelle = len(df_los)
-                st.metric(label="Aufenthaltsdauer CRS ohne HIPEC", value=total_faelle)
+                st.metric(label="Aufenthaltsdauer - CRS ohne HIPEC", value=total_faelle)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1518,7 +1518,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 9 "Gruppe Sarkome/Weichteiltumoren" ==================
+        # ================== Kachel 9 "Gruppe - Sarkome/Weichteiltumoren" ==================
         with col1.container(border=True):
             # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1529,7 +1529,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[df_bereich["type_sark"] == 'Sarkom/Weichteiltumor'].copy()
                 total_gruppen = len(df_plot)
             
-                st.metric(label="Gruppe Sarkome/Weichteiltumoren", value=total_gruppen) 
+                st.metric(label="Gruppe - Sarkome/Weichteiltumoren", value=total_gruppen) 
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1591,7 +1591,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
         
-        # ================== Kachel 10 "Lokalisation Weichteiltumoren ==================
+        # ================== Kachel 10 "Lokalisation - Weichteiltumoren" ==================
         with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1649,7 +1649,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (7. Reihe)
         col1, col2 = st.columns(2)
         
-        # ================== Kachel 11 "Weichteiltumore /GIST - maligne und intermediate" ==================
+        # ================== Kachel 11 "Sarkomzentrum Weichteiltumoren /GIST - maligne und intermediate" ==================
         with col1.container(border=True):
 
             required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "malignit_t_sark"}
@@ -1659,7 +1659,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["malignit_t_sark"] != "andere") & ((df_bereich["gruppen_chir_onko_sark"] != "Knochen") & (df_bereich["gruppen_chir_onko_sark"] != "Andere Malignome"))].copy()
                 total_malign = len(df_plot)
 
-                st.metric(label="Sarkomzentrum Weichteiltumoren", value=total_malign)
+                st.metric(label="Sarkomzentrum - Weichteiltumoren", value=total_malign)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1714,7 +1714,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)        
         
-        # ================== Kachel 12 "Komplikationen ≥ IIIa (Weichteiltumoren)" ==================
+        # ================== Kachel 12 "Komplikationen ≥ IIIa - Weichteiltumoren" ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1729,7 +1729,7 @@ for i, bereich in enumerate(bereiche):
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
                 total_lok = len(df_plot)   
                     
-                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumoren)", value=f"{total_lok} von {total_gruppen}")
+                st.metric(label="Komplikationen ≥ IIIa - Weichteiltumoren", value=f"{total_lok} von {total_gruppen}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1785,7 +1785,7 @@ for i, bereich in enumerate(bereiche):
             else:
                 st.error("Spalten fehlen")
 
-        # ================== Kachel 13: Aufteilung Komplikationen Weichteiltumoren" ==================
+        # ================== Kachel 13: "Aufteilung Komplikationen - Weichteiltumoren" ==================
         with col2:
             # Zustand initialisieren
             if f"expand_{bereich}_k13" not in st.session_state:
@@ -1830,7 +1830,7 @@ for i, bereich in enumerate(bereiche):
                         df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
                 
                         total_lok = len(df_plot)
-                        st.metric(label="Aufteilung Komplikationen Weichteiltumoren", value=total_lok)
+                        st.metric(label="Aufteilung Komplikationen - Weichteiltumoren", value=total_lok)
                         # st.divider()
                         # verkleinert den Raum oberhalb der Trennlinie
                         st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -1889,7 +1889,7 @@ for i, bereich in enumerate(bereiche):
         # Drei Spalten/Kacheln definieren (9. Reihe)
         col1, col2 = st.columns(2)
 
-        # ================== Kachel 15 "Aufenthaltsdauer Weichteiltumoren" ==================       
+        # ================== Kachel 15 "Aufenthaltsdauer - Weichteiltumoren" ==================       
         with col1.container(border=True):
             required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "gruppen_chir_onko_sark"}
             if required_cols.issubset(df_bereich.columns):
@@ -1904,7 +1904,7 @@ for i, bereich in enumerate(bereiche):
                 
                 total_faelle_los = len(df_los)
                 
-                st.metric(label="Aufenthaltsdauer Weichteiltumoren", value=f"{total_faelle_los}")
+                st.metric(label="Aufenthaltsdauer - Weichteiltumoren", value=f"{total_faelle_los}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
