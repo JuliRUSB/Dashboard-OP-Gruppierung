@@ -1714,7 +1714,7 @@ for i, bereich in enumerate(bereiche):
         # Zwei Spalten/Kacheln definieren (8. Reihe)
         col1, col2 = st.columns(2)        
         
-        # ================== Kachel 12 "Komplikationen ≥ IIIa (Weichteiltumoren)" pro Jahr ==================
+        # ================== Kachel 12 "Komplikationen ≥ IIIa (Weichteiltumoren)" ==================
         with col1.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
@@ -1727,9 +1727,9 @@ for i, bereich in enumerate(bereiche):
 
                 # Filter für Clavien-Dindo-Grad
                 df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
-                total_lok = len(df_plot)                    
+                total_lok = len(df_plot)   
                     
-                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumoren)", value=total_lok)
+                st.metric(label="Komplikationen ≥ IIIa (Weichteiltumoren)", value=f"{total_lok} von {total_gruppen}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
