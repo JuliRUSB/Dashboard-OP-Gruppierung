@@ -98,7 +98,7 @@ def prepare_data(df):
             #'bereich___1': 'Allgemein',
             #'bereich___2': 'BMC',
             #'bereich___3': 'Endokrin',
-            #'bereich___4': 'Chirurgische Onkologie/Sarkome',
+            'bereich___4': 'Chirurgische Onkologie/Sarkome',
             #'bereich___5': 'Hernien',
             #'bereich___6': 'Kolorektal',
             #'bereich___7': 'Leber',
