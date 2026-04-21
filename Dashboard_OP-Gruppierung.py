@@ -1961,7 +1961,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k13"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k13"):
+                if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗪𝗲𝗶𝗰𝗵𝘁𝗲𝗶𝗹𝘁𝘂𝗺𝗼𝗿𝗲𝗻 ▼ anzeigen", key=f"btn_{bereich}_k13"):
                     st.session_state[f"expand_{bereich}_k13"] = True
                     st.rerun()
             else:
