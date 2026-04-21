@@ -1039,7 +1039,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k6"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k6"):
+                if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6"):
                     st.session_state[f"expand_{bereich}_k6"] = True
                     st.rerun()
             else:
@@ -1150,7 +1150,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k7"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k7"):
+                if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗼𝗵𝗻𝗲 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k7"):
                     st.session_state[f"expand_{bereich}_k7"] = True
                     st.rerun()
             else:
@@ -1266,7 +1266,7 @@ for i, bereich in enumerate(bereiche):
 
             # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
             if not st.session_state[f"expand_{bereich}_k8"]:
-                if st.button("▼ anzeigen", key=f"btn_{bereich}_k8"):
+                if st.button("𝗔𝗻𝗮𝘀𝘁𝗼𝗺𝗼𝘀𝗲𝗻𝗶𝗻𝘀𝘂𝗳𝗳𝗶𝘇𝗶𝗲𝗻𝘇𝗲𝗻 - 𝗖𝗥𝗦 (𝗞𝗼𝗹𝗼𝗻 𝘂𝗻𝗱 𝗥𝗲𝗸𝘁𝘂𝗺) ▼ anzeigen", key=f"btn_{bereich}_k8"):
                     st.session_state[f"expand_{bereich}_k8"] = True
                     st.rerun()
             else:
