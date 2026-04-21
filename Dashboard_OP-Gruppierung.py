@@ -107,7 +107,7 @@ def prepare_data(df):
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_bereich(row):
-            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1')' # or 'Nicht angegeben
+            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') # or 'Nicht angegeben'
         df['bereich'] = df.apply(get_bereich, axis=1)
         df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
     
