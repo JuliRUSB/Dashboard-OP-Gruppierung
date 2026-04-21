@@ -2156,12 +2156,12 @@ for i, bereich in enumerate(bereiche):
         
         
         # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
+        # st.markdown(
+            # """
+            # <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            # """,
+            # unsafe_allow_html=True
+        # )
 
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
