@@ -1900,7 +1900,7 @@ for i, bereich in enumerate(bereiche):
                 # st.metric(label="Komplikationen ≥ IIIa - Weichteiltumoren", value=f"{total_dindo} von {total_weichteil}")
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                # st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 # if total_dindo > 0:
                     # Gruppierung nach Jahr, Lokalisation
