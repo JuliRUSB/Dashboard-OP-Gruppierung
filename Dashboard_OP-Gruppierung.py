@@ -637,7 +637,16 @@ st.divider()
 st.header("Detailanalysen")
 
 # ===== Bereiche definieren (TABS 1. Ebene) =====
-bereiche = sorted(df_filtered["bereich"].dropna().unique())
+# Die funktion bewirkt, dass alle Bereiche in alphabetischer Reihenfolge angezeigt werden. D. h. beim Aufruf werden die DAten für einen Bereich angezeigt, der aktuell auskommentiert, und daher nicht angezeigt wird 
+# bereiche = sorted(df_filtered["bereich"].dropna().unique())
+
+# Speichert der Bereich, der angezeigt werden soll in einer Variable. Dadurch wird beim Aufruf dieser Bereich und die entsprechenden Grafiken angezeigt
+GEWUENSCHTER_BEREICH = "Chirurgische Onkologie/Sarkome"
+alle_bereiche = sorted(df_filtered["bereich"].dropna().unique())
+bereiche = (
+    [GEWUENSCHTER_BEREICH] + [b for b in alle_bereiche if b != GEWUENSCHTER_BEREICH]
+    if GEWUENSCHTER_BEREICH in alle_bereiche else alle_bereiche
+)
 
 # ===== Bereiche definieren (TABS 2. Ebene) =====
 # ANALYSEN_PRO_BEREICH = {
