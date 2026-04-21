@@ -479,21 +479,24 @@ with st.sidebar:
 
 
 # -------------------- Daten filtern --------------------
+# -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
 selected_quartale = st.session_state['selected_quartale']
 
-# Sicherheitscheck
 if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
-    st.stop() # Beendet die Ausführung der App an dieser Stelle
-else:
-    # Haupt-Filterung
-    df_jahr_filtered = df[df['jahr_opdatum'].isin(selected_jahre)].copy()
-    
-    df_filtered = df[
-        (df['jahr_opdatum'].isin(selected_jahre)) & 
-        (df['quartal_opdatum'].isin(selected_quartale))
-    ].copy()
+    st.stop()
+
+# 1. Basis-Filterung nach Zeit (für Graphen UND Tabs)
+df_jahr_filtered = df[df['jahr_opdatum'].isin(selected_jahre)].copy()
+df_filtered = df[
+    (df['jahr_opdatum'].isin(selected_jahre)) & 
+    (df['quartal_opdatum'].isin(selected_quartale))
+].copy()
+
+# 2. Entkoppelung: Zusätzliche Filter (Bereich/Zugang) NUR für die Graphen
+df_plots_jahr = df_jahr_filtered.copy()
+df_plots_filtered = df_filtered.copy()
 
 # --- TEIL 1: Filterlogik (nur für die Grafiken in Teil 2) ---
 
