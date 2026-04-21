@@ -495,201 +495,158 @@ else:
         (df['quartal_opdatum'].isin(selected_quartale))
     ].copy()
 
-# Weitere Filter anwenden (Bereich, Zugang)
+# --- TEIL 1: Filterlogik (nur für die Grafiken in Teil 2) ---
+
+# Wir erstellen Kopien für die Visualisierungen in Teil 2, 
+# damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
+df_plots_jahr = df_jahr_filtered.copy()
+df_plots_filtered = df_filtered.copy()
+
 if bereich_filter != "Alle":
-    df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['bereich'] == bereich_filter]
-    df_filtered = df_filtered[df_filtered['bereich'] == bereich_filter]
+    df_plots_jahr = df_plots_jahr[df_plots_jahr['bereich'] == bereich_filter]
+    df_plots_filtered = df_plots_filtered[df_plots_filtered['bereich'] == bereich_filter]
 
 if zugang_filter != "Alle":
-    df_jahr_filtered = df_jahr_filtered[df_jahr_filtered['zugang'] == zugang_filter]
-    df_filtered = df_filtered[df_filtered['zugang'] == zugang_filter]
+    df_plots_jahr = df_plots_jahr[df_plots_jahr['zugang'] == zugang_filter]
+    df_plots_filtered = df_plots_filtered[df_plots_filtered['zugang'] == zugang_filter]
 
 
-# -------- Kennzahlen --------
+# --- TEIL 2: Kennzahlen & Visualisierungen (nutzt die gefilterten Daten) ---
+
 st.header("Kennzahlen")
-col1, col2, col3, col4 = st.columns(4)  # 4 Spalten für Kennzahlen
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric("Gesamt Fälle", len(df_jahr_filtered))  # Anzahl gefilterter Fälle
+    # Nutzt df_plots_jahr für die gefilterte Anzeige
+    st.metric("Gesamt Fälle", len(df_plots_jahr))
     
 with col2:
-    st.metric("Bereiche", df_jahr_filtered['bereich'].nunique())  # Anzahl verschiedener Bereiche
+    st.metric("Bereiche", df_plots_jahr['bereich'].nunique())
     
 with col3:
-    st.metric("Zeitraum", f"{len(st.session_state['selected_jahre'])} Jahre, {len(st.session_state['selected_quartale'])} Quartale")  # Zeitraum anzeigen
+    st.metric("Zeitraum", f"{len(st.session_state['selected_jahre'])} Jahre, {len(st.session_state['selected_quartale'])} Quartale")
 
 st.divider()
 
-# -------- Visualisierungen --------
 st.header("Fallzahlen alle Bereiche")
 
-if len(df_jahr_filtered) == 0:
+if len(df_plots_jahr) == 0:
     st.warning("Keine Daten für die gewählten Filter verfügbar.")
     st.stop()
 
-col1, col2 = st.columns(2)  # Zwei Spalten für Graphen
+col1, col2 = st.columns(2)
 
-# Graph 1: Falzahlen pro Jahr
 with col1:
-    if not df_jahr_filtered.empty:
-        # Daten gruppieren
-        jahr_counts_df = df_jahr_filtered.groupby('jahr_opdatum', as_index=False).size()
+    if not df_plots_jahr.empty:
+        jahr_counts_df = df_plots_jahr.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
-        
-        # Jahr als String für die Achse
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
 
-        # Diagramm erstellen mit COLOR_PALETTE
         fig_jahr = px.bar(
             jahr_counts_df, 
             x='jahr_str', 
             y='count', 
             text='count', 
-            color='jahr_str',  # Farbe basierend auf dem Jahr
+            color='jahr_str',
             color_discrete_sequence=COLOR_PALETTE,
             title="Fallzahlen pro Jahr"
         )
         
-        fig_jahr.update_traces(
-            textfont_size=16, 
-            textposition='inside' # die Zahlen werden immer in den Balken platziert
-        )
-        
+        fig_jahr.update_traces(textfont_size=16, textposition='inside')
         fig_jahr.update_layout(
             xaxis_title=None, 
             yaxis_title=None, 
             showlegend=False, 
             height=400,
-            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}}, # Verhindert Zahlensalat auf der X-Achse
+            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}},
             yaxis={"tickfont": {"size": 16}} 
         )
-        
         st.plotly_chart(fig_jahr, use_container_width=True)
 
-# Graph 2: Fallzahlen pro Quartal
 with col2:
-    if not df_jahr_filtered.empty:
-        # Gruppierung nach Jahr und Quartal
+    if not df_plots_jahr.empty:
         q_counts = (
-            df_filtered
+            df_plots_filtered
             .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
             .size()
         )
         q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
-
-        # neue echte Quartals-Kategorie wie im funktionierenden Plot
         q_counts["quartal_label"] = (
             "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
             + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
         )
-
-        # sauber chronologisch sortieren
-        q_counts = q_counts.sort_values(
-            ["quartal_opdatum", "jahr_opdatum"]
-        ).reset_index(drop=True)
-
+        q_counts = q_counts.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
         quartal_order = q_counts["quartal_label"].tolist()
 
-    fig_quartal = px.bar(
-        q_counts,
-        x="quartal_label",
-        y="count",
-        text="count",
-        color=q_counts["jahr_opdatum"].astype(str),
-        color_discrete_sequence=COLOR_PALETTE,
-        category_orders={"quartal_label": quartal_order},
-        title="Fallzahlen pro Quartal"
-    )
+        fig_quartal = px.bar(
+            q_counts,
+            x="quartal_label",
+            y="count",
+            text="count",
+            color=q_counts["jahr_opdatum"].astype(str),
+            color_discrete_sequence=COLOR_PALETTE,
+            category_orders={"quartal_label": quartal_order},
+            title="Fallzahlen pro Quartal"
+        )
 
-    fig_quartal.update_traces(
-        textfont_size=16,
-        textposition="auto", # wenn der Platz im Balken nicht ausreicht, wird die Zahl ausserhalb platziert
-        textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-    )
+        fig_quartal.update_traces(textfont_size=16, textposition="auto", textangle=0)
+        fig_quartal.update_layout(
+            xaxis_title=None,
+            yaxis_title=None,
+            showlegend=False,
+            height=400,
+            xaxis={"type": "category", "tickfont": {"size": 16}},
+            yaxis={"tickfont": {"size": 16}},
+        )
 
-    fig_quartal.update_layout(
-        xaxis_title=None,
-        yaxis_title=None,
-        showlegend=False,
-        height=400,
-        xaxis={"type": "category", "tickfont": {"size": 16}},
-        yaxis={"tickfont": {"size": 16}},
-    )
+        for i in range(len(quartal_order) - 1):
+            curr_q = quartal_order[i].split("-")[0]
+            next_q = quartal_order[i + 1].split("-")[0]
+            if curr_q != next_q:
+                fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
-    # Trennlinien nur bei echtem Quartalswechsel
-    for i in range(len(quartal_order) - 1):
-        curr_q = quartal_order[i].split("-")[0]
-        next_q = quartal_order[i + 1].split("-")[0]
-
-        if curr_q != next_q:
-            fig_quartal.add_vline(
-                x=i + 0.5,
-                line_width=2,
-                line_dash="dash",
-                line_color="gray",
-            )
-
-    st.plotly_chart(fig_quartal, use_container_width=True)
+        st.plotly_chart(fig_quartal, use_container_width=True)
 
 st.divider()
 
-# -------- Weitere Analysen (Tabs) --------
+
+# --- TEIL 3: Detailanalysen (Tabs) ---
+
 st.header("Detailanalysen")
 
-# ===== Bereiche definieren (TABS 1. Ebene) =====
-# Die funktion bewirkt, dass alle Bereiche in alphabetischer Reihenfolge angezeigt werden. D. h. beim Aufruf werden die DAten für einen Bereich angezeigt, der aktuell auskommentiert, und daher nicht angezeigt wird 
-# bereiche = sorted(df_filtered["bereich"].dropna().unique())
-
-# Speichert der Bereich, der angezeigt werden soll in einer Variable. Dadurch wird beim Aufruf dieser Bereich und die entsprechenden Grafiken angezeigt
-GEWUENSCHTER_BEREICH = "Chirurgische Onkologie/Sarkome"
-alle_bereiche = sorted(df_filtered["bereich"].dropna().unique())
-bereiche = (
-    [GEWUENSCHTER_BEREICH] + [b for b in alle_bereiche if b != GEWUENSCHTER_BEREICH]
-    if GEWUENSCHTER_BEREICH in alle_bereiche else alle_bereiche
-)
-
-# ===== Bereiche definieren (TABS 2. Ebene) =====
-# ANALYSEN_PRO_BEREICH = {
-    # "Chirurgische Onkologie/Sarkome" : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+# Wir definieren explizit, welche Bereiche als Tabs erscheinen sollen.
+# So verhinderst du, dass "falsche" Bereiche beim Laden aktiv sind.
+# Die auskommentierten Bereiche bleiben in deiner Liste im Code erhalten.
+ANALYSEN_PRO_BEREICH = {
+    "Chirurgische Onkologie/Sarkome" : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     # "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    #"Allgemein": ["Komplikationen", "LOS", "Trends"],
+    # "Allgemein": ["Komplikationen", "LOS", "Trends"],
     # "BMC": ["Komplikationen", "LOS", "Trends"],
     # "Endokrin": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Hernien": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Pankreas" # : ["Zugang", "Komplikationen", "LOS", "Trends"],
-# }
+    # "Pankreas": ["Zugang", "Komplikationen", "LOS", "Trends"],
+}
 
-# bereiche = list(ANALYSEN_PRO_BEREICH.keys())
-
-# bereich_tabs = st.tabs(bereiche)
-
-# for i, bereich in enumerate(bereiche):
-#     with bereich_tabs[i]:
-
-#         df_bereich = df_filtered[df_filtered["bereich"] == bereich]
-
-#         st.subheader(f"Bereich: {bereich}")
-
-#         if df_bereich.empty:
-#             st.warning("Keine Daten für diesen Bereich")
-#             continue
-
- #        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
- #        tabs = st.tabs(analysen)
-
-
-# ===== Bereiche definieren (TABS) =====
-bereiche = sorted(df_filtered["bereich"].dropna().unique())
+bereiche = list(ANALYSEN_PRO_BEREICH.keys())
 bereich_tabs = st.tabs(bereiche)
+
 for i, bereich in enumerate(bereiche):
     with bereich_tabs[i]:
+        # Hier nutzen wir das ORIGINAL df_filtered, damit die Bereichs-Filter von oben NICHT greifen
         df_bereich = df_filtered[df_filtered["bereich"] == bereich]
+        
         st.subheader(f"Bereich: {bereich}")
+        
         if df_bereich.empty:
             st.warning("Keine Daten für diesen Bereich")
             continue
+            
+        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
+        # Hier würdest du deine Unter-Tabs erstellen:
+        # tabs = st.tabs(analysen)
+
         
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
         
