@@ -672,7 +672,6 @@ with col1:
         yaxis_title=None,
         showlegend=False,
         autosize=True,
-        height=400,
         xaxis={'categoryorder': 'category ascending', 'type': 'category'},
     )
 
