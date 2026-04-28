@@ -5,7 +5,7 @@
 import os                          # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
 import requests                    # HTTP-Requests (hier für REDCap API)
 import pandas as pd                # Datenverarbeitung mit DataFrames
-import plotly.express as px        # Plotly Express für DiagrammeÜbersicht Sarkome
+import plotly.express as px        # Plotly Express für Diagramme
 import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
@@ -487,7 +487,7 @@ with st.sidebar:
 
 # -------------------- Button "PDF" + PRINT CSS --------------------
 components.html("""
-<button onclick="printWithPlots()" style="
+<button onclick="printApp()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -499,63 +499,24 @@ components.html("""
     Drucken / PDF
 </button>
 
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
-function printWithPlots() {
-    const plots = document.querySelectorAll('.js-plotly-plot');
+function printApp() {
+    const plots = parent.document.querySelectorAll('.js-plotly-plot');
 
-    Promise.all(Array.from(plots).map(plot => {
-        return Plotly.Plots.resize(plot);
-    })).then(() => {
-        setTimeout(() => {
-            window.print();
-        }, 600);
-    });
+    if (parent.Plotly && plots.length > 0) {
+        Promise.all(Array.from(plots).map(plot => {
+            return parent.Plotly.Plots.resize(plot);
+        })).then(() => {
+            setTimeout(() => {
+                parent.window.print();
+            }, 500);
+        });
+    } else {
+        parent.window.print();
+    }
 }
 </script>
 """, height=80)
-
-
-# -------------------- PRINT CSS --------------------
-st.markdown("""
-<style>
-@media print {
-
-    /* Header + Sidebar weg */
-    header, [data-testid="stHeader"], [data-testid="stSidebar"] {
-        display: none !important;
-    }
-
-    /* Alles verstecken */
-    body * {
-        visibility: hidden;
-    }
-
-    /* Nur print-area anzeigen */
-    .print-area, .print-area * {
-        visibility: visible;
-    }
-
-    /* Layout fix */
-    .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
-
-    /* Plotly Fix */
-    .js-plotly-plot, .plot-container {
-        width: 100% !important;
-    }
-
-    svg {
-        width: 100% !important;
-        height: auto !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
