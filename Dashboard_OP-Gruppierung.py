@@ -483,21 +483,20 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
-# Erstellt einen Download-Button für das Diagramm als sauberes PDF
 components.html("""
 <button onclick="parent.window.print()" style="
-    width: 100%;
-    height: 50px;
+    width: 180px;
+    height: 40px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 5px;
+    font-family: sans-serif;
     cursor: pointer;">
-    Drucken / PDF speichern
+    Drucken / PDF
 </button>
-""", height=70)
+""", height=50)
+
 
 st.markdown("""
 <style>
