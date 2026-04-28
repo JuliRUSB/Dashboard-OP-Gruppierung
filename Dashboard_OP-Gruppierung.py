@@ -590,11 +590,11 @@ st.header("Kennzahlen")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    # Nutzt df_plots_jahr für die gefilterte Anzeige
+    # Nutzt df_plots für die gefilterte Anzeige
     st.metric("Gesamt Fälle", len(df_plots))
     
 with col2:
-    st.metric("Bereiche", df_plots_jahr['bereich'].nunique())
+    st.metric("Bereiche", df_plots['bereich'].nunique())
     
 with col3:
     st.metric("Zeitraum", f"{len(st.session_state['selected_jahre'])} Jahre, {len(st.session_state['selected_quartale'])} Quartale")
@@ -610,8 +610,8 @@ if len(df_plots) == 0:
 col1, col2 = st.columns(2)
 
 with col1:
-    if not df_plots_jahr.empty:
-        jahr_counts_df = df_plots_jahr.groupby('jahr_opdatum', as_index=False).size()
+    if not df_plots.empty:
+        jahr_counts_df = df_plots.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
         jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
 
@@ -639,7 +639,7 @@ with col1:
         st.plotly_chart(fig_jahr, use_container_width=True, config={"displayModeBar": False, "responsive": True})
 
 with col2:
-    if not df_plots_jahr.empty:
+    if not df_plots.empty:
         q_counts = (
             df_plots_filtered
             .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
