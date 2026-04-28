@@ -485,15 +485,6 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-import streamlit as st
-import streamlit.components.v1 as components
-
-# ---------------- CONTENT ----------------
-st.title("Report")
-
-st.write("Hier dein Inhalt")
-st.plotly_chart(...)
-
 # ---------------- PRINT BUTTON ----------------
 components.html("""
 <button onclick="window.print()" style="
