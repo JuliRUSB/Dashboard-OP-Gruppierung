@@ -543,6 +543,14 @@ st.markdown("""
     svg {
         overflow: visible !important;
     }
+
+    /* UI entfernen (NEU, fehlte vorher) */
+    button,
+    header,
+    [data-testid="stToolbar"],
+    [data-testid="stButton"] {
+        display: none !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
