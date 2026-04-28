@@ -502,38 +502,42 @@ components.html("""
 
 st.markdown("""
 <style>
-@page {
-    size: A4 portrait;
-    margin: 10mm;
-}
 @media print {
-    body * {
+    /* 1. Alles ausblenden */
+    header, [data-testid="stHeader"], [data-testid="stSidebar"], .stApp > header {
+        display: none !important;
+    }
+    
+    /* Den Hauptcontainer auf sichtbar setzen, aber den Standard-Inhalt verstecken */
+    [data-testid="stAppViewContainer"] {
         visibility: hidden !important;
-        height: 0 !important;
-        overflow: hidden !important;
     }
+
+    /* 2. Nur die print-area wieder einblenden */
+    .print-area, .print-area * {
+        visibility: visible !important;
+    }
+
+    /* 3. WICHTIG: Die Positionierung korrigieren */
     .print-area {
-        visibility: visible !important;
-        height: auto !important;
-        overflow: visible !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
     }
-    .print-area * {
-        visibility: visible !important;
-        height: auto !important;
-        overflow: visible !important;
+
+    /* 4. Fix für Plotly-Grafiken: Damit diese nicht abgeschnitten werden */
+    .print-area .js-plotly-plot, .print-area .plot-container {
+        width: 100% !important;
     }
+    
     .print-area svg {
-        overflow: visible !important;
+        width: 100% !important;
+        height: auto !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
