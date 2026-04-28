@@ -435,8 +435,8 @@ with st.sidebar:
     # 3. Pills-Widget
     selected = st.pills(
         label="Quartal(e) ab-/auswählen", # Label kann mit label_visibility="collapsed" versteckt werden
-        options=quartal_werte,
-        format_func=lambda x: quartal_labels[x],
+        options=[1,2,3,4],
+        format_func=lambda x: f"Q{x}",
         selection_mode="multi",
         default=st.session_state['selected_quartale'],
         key="pills_selection"
