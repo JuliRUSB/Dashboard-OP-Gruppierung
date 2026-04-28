@@ -510,12 +510,21 @@ st.markdown("""
 
 @media print {
 
-    /* Sidebar komplett entfernen */
+    html, body {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+    .main, .block-container, [data-testid="stAppViewContainer"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+
     section[data-testid="stSidebar"] {
         display: none !important;
     }
 
-    /* Streamlit Layout auf 1 Spalte zwingen */
     div[data-testid="stHorizontalBlock"] {
         display: block !important;
     }
@@ -526,29 +535,15 @@ st.markdown("""
         max-width: 100% !important;
     }
 
-    /* Container volle Breite */
-    .block-container {
-        width: 100% !important;
+    .js-plotly-plot {
         max-width: 100% !important;
-    }
-
-    /* Plotly darf nicht abgeschnitten werden */
-    .js-plotly-plot, .plot-container, svg {
-        max-width: 100% !important;
-        width: 100% !important;
         overflow: visible !important;
     }
 
-    /* verhindert harte Schnitte rechts */
-    body {
+    svg {
         overflow: visible !important;
     }
 }
-
-</style>
-""", unsafe_allow_html=True)
-
-
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
@@ -573,16 +568,19 @@ df_plots_filtered = df_filtered.copy()
 
 # Wir erstellen Kopien für die Visualisierungen in Teil 2, 
 # damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
-df_plots_jahr = df_jahr_filtered.copy()
-df_plots_filtered = df_filtered.copy()
+# df_plots_jahr = df_jahr_filtered.copy()
+# df_plots_filtered = df_filtered.copy()
+df_plots = df_filtered.copy()
 
 if bereich_filter != "Alle":
-    df_plots_jahr = df_plots_jahr[df_plots_jahr['bereich'] == bereich_filter]
-    df_plots_filtered = df_plots_filtered[df_plots_filtered['bereich'] == bereich_filter]
+    df_plots = df_plots[df_plots['bereich'] == bereich_filter]
+    # df_plots_jahr = df_plots_jahr[df_plots_jahr['bereich'] == bereich_filter]
+    # df_plots_filtered = df_plots_filtered[df_plots_filtered['bereich'] == bereich_filter]
 
 if zugang_filter != "Alle":
-    df_plots_jahr = df_plots_jahr[df_plots_jahr['zugang'] == zugang_filter]
-    df_plots_filtered = df_plots_filtered[df_plots_filtered['zugang'] == zugang_filter]
+    df_plots = df_plots[df_plots['zugang'] == zugang_filter]
+    # df_plots_jahr = df_plots_jahr[df_plots_jahr['zugang'] == zugang_filter]
+    # df_plots_filtered = df_plots_filtered[df_plots_filtered['zugang'] == zugang_filter]
 
 
 # --- TEIL 2: Kennzahlen & Visualisierungen (nutzt die gefilterten Daten) ---
