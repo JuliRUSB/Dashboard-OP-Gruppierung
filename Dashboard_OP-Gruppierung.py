@@ -695,11 +695,14 @@ with col2:
 
         q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
-        # exakt ursprüngliche Label-Logik
         q_counts["quartal_label"] = (
-            "Q" + q_counts["quartal_opdatum"].astype(str)
-            + "-" + q_counts["jahr_opdatum"].astype(str)
+            "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
+            + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
         )
+
+        q_counts = q_counts.sort_values(
+            ["quartal_opdatum", "jahr_opdatum"]
+        ).reset_index(drop=True)
 
         quartal_order = q_counts["quartal_label"].tolist()
 
@@ -726,7 +729,20 @@ with col2:
             xaxis_title=None,
             yaxis_title=None,
             showlegend=False,
+            xaxis={"type": "category", "tickfont": {"size": 16}},
+            yaxis={"tickfont": {"size": 16}},
         )
+
+        for i in range(len(quartal_order) - 1):
+            curr_q = quartal_order[i].split("-")[0]
+            next_q = quartal_order[i + 1].split("-")[0]
+            if curr_q != next_q:
+                fig_quartal.add_vline(
+                    x=i + 0.5,
+                    line_width=2,
+                    line_dash="dash",
+                    line_color="gray"
+                )
 
         st.plotly_chart(
             fig_quartal,
