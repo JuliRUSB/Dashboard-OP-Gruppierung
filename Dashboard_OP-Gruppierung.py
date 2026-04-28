@@ -600,77 +600,77 @@ with col1:
     st.subheader("Grafik 1")
     # WICHTIG: use_container_width=True muss bei deinen Charts stehen!
     st.bar_chart([10, 20, 30]) 
-        if not df_plots_jahr.empty:
-            jahr_counts_df = df_plots_jahr.groupby('jahr_opdatum', as_index=False).size()
-            jahr_counts_df.columns = ['jahr_opdatum', 'count']
-            jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
-    
-            fig_jahr = px.bar(
-                jahr_counts_df, 
-                x='jahr_str', 
-                y='count', 
-                text='count', 
-                color='jahr_str',
-                color_discrete_sequence=COLOR_PALETTE,
-                title="Fallzahlen pro Jahr"
-            )
-            
-            fig_jahr.update_traces(textfont_size=16, textposition='inside')
-            fig_jahr.update_layout(
-                xaxis_title=None, 
-                yaxis_title=None, 
-                showlegend=False, 
-                height=400,
-                xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}},
-                yaxis={"tickfont": {"size": 16}} 
-            )
-            st.plotly_chart(fig_jahr, use_container_width=True)
+    if not df_plots_jahr.empty:
+        jahr_counts_df = df_plots_jahr.groupby('jahr_opdatum', as_index=False).size()
+        jahr_counts_df.columns = ['jahr_opdatum', 'count']
+        jahr_counts_df['jahr_str'] = jahr_counts_df['jahr_opdatum'].astype(str)
+
+        fig_jahr = px.bar(
+            jahr_counts_df, 
+            x='jahr_str', 
+            y='count', 
+            text='count', 
+            color='jahr_str',
+            color_discrete_sequence=COLOR_PALETTE,
+            title="Fallzahlen pro Jahr"
+        )
+        
+        fig_jahr.update_traces(textfont_size=16, textposition='inside')
+        fig_jahr.update_layout(
+            xaxis_title=None, 
+            yaxis_title=None, 
+            showlegend=False, 
+            height=400,
+            xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}},
+            yaxis={"tickfont": {"size": 16}} 
+        )
+        st.plotly_chart(fig_jahr, use_container_width=True)
 
 with col2:
     st.subheader("Grafik 2")
     st.bar_chart([30, 20, 10])
-        if not df_plots_jahr.empty:
-            q_counts = (
-                df_plots_filtered
-                .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
-                .size()
-            )
-            q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
-            q_counts["quartal_label"] = (
-                "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
-                + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
-            )
-            q_counts = q_counts.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
-            quartal_order = q_counts["quartal_label"].tolist()
-    
-            fig_quartal = px.bar(
-                q_counts,
-                x="quartal_label",
-                y="count",
-                text="count",
-                color=q_counts["jahr_opdatum"].astype(str),
-                color_discrete_sequence=COLOR_PALETTE,
-                category_orders={"quartal_label": quartal_order},
-                title="Fallzahlen pro Quartal"
-            )
-    
-            fig_quartal.update_traces(textfont_size=16, textposition="auto", textangle=0)
-            fig_quartal.update_layout(
-                xaxis_title=None,
-                yaxis_title=None,
-                showlegend=False,
-                height=400,
-                xaxis={"type": "category", "tickfont": {"size": 16}},
-                yaxis={"tickfont": {"size": 16}},
-            )
-    
-            for i in range(len(quartal_order) - 1):
-                curr_q = quartal_order[i].split("-")[0]
-                next_q = quartal_order[i + 1].split("-")[0]
-                if curr_q != next_q:
-                    fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
-    
-            st.plotly_chart(fig_quartal, use_container_width=True)
+    if not df_plots_jahr.empty:
+        q_counts = (
+            df_plots_filtered
+            .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
+            .size()
+        )
+        q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
+        q_counts["quartal_label"] = (
+            "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
+            + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
+        )
+        q_counts = q_counts.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
+        quartal_order = q_counts["quartal_label"].tolist()
+
+        fig_quartal = px.bar(
+            q_counts,
+            x="quartal_label",
+            y="count",
+            text="count",
+            color=q_counts["jahr_opdatum"].astype(str),
+            color_discrete_sequence=COLOR_PALETTE,
+            category_orders={"quartal_label": quartal_order},
+            title="Fallzahlen pro Quartal"
+        )
+
+        fig_quartal.update_traces(textfont_size=16, textposition="auto", textangle=0)
+        fig_quartal.update_layout(
+            xaxis_title=None,
+            yaxis_title=None,
+            showlegend=False,
+            height=400,
+            xaxis={"type": "category", "tickfont": {"size": 16}},
+            yaxis={"tickfont": {"size": 16}},
+        )
+
+        for i in range(len(quartal_order) - 1):
+            curr_q = quartal_order[i].split("-")[0]
+            next_q = quartal_order[i + 1].split("-")[0]
+            if curr_q != next_q:
+                fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
+
+        st.plotly_chart(fig_quartal, use_container_width=True)
 
 st.divider()
 
