@@ -488,7 +488,6 @@ with st.sidebar:
 
 
 # -------------------- PRINT CSS --------------------
-st.markdown("""
 # -------------------- Button "PDF" --------------------
 st.markdown("""
 <button onclick="window.print()" style="
