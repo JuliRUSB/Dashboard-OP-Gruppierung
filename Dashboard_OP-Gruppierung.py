@@ -541,7 +541,7 @@ if st.session_state.trigger_print:
         """,
         unsafe_allow_html=True
     )
-    st.se
+   
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
