@@ -501,18 +501,39 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* Verhindert das Abschneiden: Dashboard schmaler machen */
+    /* 1. Hauptbereich voll ausnutzen */
     .main .block-container {
-        max-width: 800px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         padding: 10px !important;
+        margin: 0 !important;
     }
-    /* Alles Unnötige (Menü, Sidebar) ausblenden */
-    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"] {
+
+    /* 2. Spalten untereinander stapeln (damit Platz für die Breite ist) */
+    [data-testid="column"] {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    /* 3. JEDE Grafik (Plotly, Vega, Bilder) auf Seitenbreite zwingen */
+    .stPlotlyChart, .element-container, img, svg {
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Verhindert, dass Streamlit-interne Wrapper die Breite blockieren */
+    div[data-testid="stVerticalBlock"] > div {
+        width: 100% !important;
+    }
+
+    /* Sidebar und Header weg */
+    header, [data-testid="stHeader"], section[data-testid="stSidebar"] {
         display: none !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
