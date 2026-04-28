@@ -641,7 +641,7 @@ with col1:
 with col2:
     if not df_plots.empty:
         q_counts = (
-            df_plots_filtered
+            df_plots
             .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
             .size()
         )
