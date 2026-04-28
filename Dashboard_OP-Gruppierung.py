@@ -501,32 +501,31 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* 1. Hauptbereich voll ausnutzen */
+    /* 1. Hauptcontainer auf A4-Breite zwingen */
     .main .block-container {
         max-width: 100% !important;
         width: 100% !important;
-        padding: 10px !important;
-        margin: 0 !important;
     }
 
-    /* 2. Spalten untereinander stapeln (damit Platz für die Breite ist) */
+    /* 2. Spalten untereinander stapeln (WICHTIG für Proportionen) */
     [data-testid="column"] {
         width: 100% !important;
-        min-width: 100% !important;
+        flex: 1 1 100% !important;
     }
 
-    /* 3. JEDE Grafik (Plotly, Vega, Bilder) auf Seitenbreite zwingen */
-    .stPlotlyChart, .element-container, img, svg {
+    /* 3. Jede Grafik zwingen, ihr Seitenverhältnis zu halten */
+    .stPlotlyChart, .element-container {
+        width: 100% !important;
+        height: auto !important; /* Löscht die starre Höhe von 400px */
+    }
+
+    /* 4. Den Plotly-Inhalt selbst skalieren */
+    .js-plotly-plot, .plot-container {
         width: 100% !important;
         height: auto !important;
     }
-    
-    /* Verhindert, dass Streamlit-interne Wrapper die Breite blockieren */
-    div[data-testid="stVerticalBlock"] > div {
-        width: 100% !important;
-    }
 
-    /* Sidebar und Header weg */
+    /* 5. Sidebar & Header weg */
     header, [data-testid="stHeader"], section[data-testid="stSidebar"] {
         display: none !important;
     }
