@@ -501,10 +501,9 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* 1. Hauptcontainer auf A4-Breite zwingen */
-    .main .block-container {
-        max-width: 100% !important;
-        width: 100% !important;
+    /* Streamlit 2-Spalten Layout zu 1-Spalten Layout umbauen */
+    div[data-testid="stHorizontalBlock"] {
+        display: block !important;
     }
 
     /* 2. Spalten untereinander stapeln (WICHTIG für Proportionen) */
