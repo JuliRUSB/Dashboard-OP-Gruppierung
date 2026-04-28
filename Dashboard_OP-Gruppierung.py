@@ -613,6 +613,8 @@ with col1:
         
         fig_jahr.update_traces(textfont_size=16, textposition='inside')
         fig_jahr.update_layout(
+            autosize=True,
+            height=None,
             xaxis_title=None, 
             yaxis_title=None, 
             showlegend=False, 
@@ -650,6 +652,8 @@ with col2:
 
         fig_quartal.update_traces(textfont_size=16, textposition="auto", textangle=0)
         fig_quartal.update_layout(
+            autosize=True,
+            height=None,            
             xaxis_title=None,
             yaxis_title=None,
             showlegend=False,
@@ -870,7 +874,8 @@ for i, bereich in enumerate(bereiche):
                     )
                 
                     fig.update_layout(
-                        #height=450, 
+                        autosize=True,
+                        height=None,
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
@@ -953,6 +958,8 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         bargap=0.1,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
@@ -1037,6 +1044,8 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         uniformtext_minsize=16,
                         uniformtext_mode='show',
                         bargap=0.1,  
@@ -1151,6 +1160,8 @@ for i, bereich in enumerate(bereiche):
                             )
                             
                             fig.update_layout(
+                                autosize=True,
+                                height=None,
                                 uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
                                 uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
                                 bargap=0.1,
@@ -1262,6 +1273,8 @@ for i, bereich in enumerate(bereiche):
                             )
                             
                             fig.update_layout(
+                                autosize=True,
+                                height=None,
                                 uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
                                 uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
                                 bargap=0.1,
@@ -1352,6 +1365,8 @@ for i, bereich in enumerate(bereiche):
                             )
                 
                             fig.update_layout(
+                                autosize=True,
+                                height=None,
                                 barmode="group",
                                 margin=dict(l=10, r=10, t=0, b=10),
                                 xaxis_title=None,
@@ -1439,6 +1454,8 @@ for i, bereich in enumerate(bereiche):
                     ))
         
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         margin=dict(l=10, r=10, t=10, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
@@ -1520,6 +1537,8 @@ for i, bereich in enumerate(bereiche):
                     ))
         
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         margin=dict(l=10, r=10, t=10, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
@@ -1601,7 +1620,8 @@ for i, bereich in enumerate(bereiche):
                         trace.textposition = positions
                 
                     fig.update_layout(
-                        #height=450, 
+                        autosize=True,
+                        height=None, 
                         # ERZWINGT 16px: Wenn 16px nicht in den Balken passen, schiebt Plotly die Zahl automatisch nach draussen.
                         margin=dict(l=10, r=10, t=0, b=0),
                         xaxis_title=None, 
@@ -1657,7 +1677,8 @@ for i, bereich in enumerate(bereiche):
                     )
                 
                     fig.update_layout(
-                        #height=450, 
+                        autosize=True,
+                        height=None, 
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
@@ -1720,6 +1741,8 @@ for i, bereich in enumerate(bereiche):
                     )
 
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None,
                         yaxis_title=None,
@@ -1807,6 +1830,8 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         bargap=0.1,  
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis_title=None,
@@ -1888,6 +1913,8 @@ for i, bereich in enumerate(bereiche):
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
                
                     fig.update_layout(
+                        autosize=True,
+                        height=None,
                         uniformtext_minsize=16,
                         uniformtext_mode='show',
                         bargap=0.1,  
