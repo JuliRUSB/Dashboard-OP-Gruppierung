@@ -672,7 +672,8 @@ with col1:
         yaxis_title=None,
         showlegend=False,
         autosize=True,
-        xaxis={'categoryorder': 'category ascending', 'type': 'category','tickfont': {'size': 16}
+        xaxis={'categoryorder': 'category ascending', 'type': 'category', 'tickfont': {'size': 16}
+    }
     )
 
     st.plotly_chart(
