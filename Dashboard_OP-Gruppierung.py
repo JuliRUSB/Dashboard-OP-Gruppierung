@@ -498,23 +498,34 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* WICHTIG: Die Haupt-Container Breite auf 100% setzen */
+    /* 1. Haupt-Container auf volle PDF-Breite zwingen */
     .main .block-container {
         max-width: 100% !important;
         width: 100% !important;
-        padding: 1cm !important; /* Kleine Ränder für das PDF */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        padding: 0px !important;
+        margin: 0px !important;
     }
-    
-    /* Falls Diagramme in Spalten sind, diese untereinander erzwingen */
+
+    /* 2. Spalten-Layout aufheben, damit Grafiken untereinander stehen (verhindert Abschneiden rechts) */
     [data-testid="column"] {
         width: 100% !important;
         flex: 1 1 100% !important;
+        min-width: 100% !important;
     }
 
-    /* Streamlit-Elemente wie Sidebar und Header komplett entfernen */
-    section[data-testid="stSidebar"], header, [data-testid="stHeader"], [data-testid="stToolbar"] {
+    /* 3. Alle Plotly- oder Diagramm-Container auf PDF-Breite begrenzen */
+    .stPlotlyChart, .element-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+
+    /* 4. Streamlit-UI-Elemente radikal entfernen */
+    section[data-testid="stSidebar"], 
+    header, 
+    [data-testid="stHeader"], 
+    [data-testid="stToolbar"],
+    footer {
         display: none !important;
     }
 }
