@@ -500,35 +500,44 @@ components.html("""
 
 st.markdown("""
 <style>
+
+@page {
+    size: A4 portrait;
+    margin: 10mm;
+}
+
 @media print {
-    /* Streamlit 2-Spalten Layout zu 1-Spalten Layout umbauen */
+
+    /* WICHTIG: Streamlit Layout auf 1 Spalte zwingen */
     div[data-testid="stHorizontalBlock"] {
         display: block !important;
     }
 
-    /* 2. Spalten untereinander stapeln (WICHTIG für Proportionen) */
-    [data-testid="column"] {
+    div[data-testid="column"] {
         width: 100% !important;
-        flex: 1 1 100% !important;
+        flex: none !important;
+        max-width: 100% !important;
     }
 
-    /* 3. Jede Grafik zwingen, ihr Seitenverhältnis zu halten */
-    .stPlotlyChart, .element-container {
+    /* Container volle Breite */
+    .block-container {
         width: 100% !important;
-        height: auto !important; /* Löscht die starre Höhe von 400px */
+        max-width: 100% !important;
     }
 
-    /* 4. Den Plotly-Inhalt selbst skalieren */
-    .js-plotly-plot, .plot-container {
+    /* Plotly darf nicht abgeschnitten werden */
+    .js-plotly-plot, .plot-container, svg {
+        max-width: 100% !important;
         width: 100% !important;
-        height: auto !important;
+        overflow: visible !important;
     }
 
-    /* 5. Sidebar & Header weg */
-    header, [data-testid="stHeader"], section[data-testid="stSidebar"] {
-        display: none !important;
+    /* verhindert harte Schnitte rechts */
+    body {
+        overflow: visible !important;
     }
 }
+
 </style>
 """, unsafe_allow_html=True)
 
