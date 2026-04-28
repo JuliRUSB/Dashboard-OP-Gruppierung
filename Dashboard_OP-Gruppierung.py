@@ -10,7 +10,6 @@ import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
-import plotly.io as pio
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -417,8 +416,11 @@ with st.sidebar:
     )
     
     # Sicherstellen, dass die Liste im Session State existiert
-    if 'selected_quartale' not in st.session_state:
-        st.session_state['selected_quartale'] = [1, 2, 3, 4]
+    #if 'selected_quartale' not in st.session_state:
+        #st.session_state['selected_quartale'] = [1, 2, 3, 4]
+
+    st.session_state.setdefault('selected_quartale', [1, 2, 3, 4])
+    st.session_state.setdefault('selected_jahre', list(range(df['jahr_opdatum'].min(), df['jahr_opdatum'].max() + 1)))
 
     #st.write("Quartal(e) auswählen:")
     quartal_labels = {1: "Q1", 2: "Q2", 3: "Q3", 4: "Q4"}
