@@ -405,8 +405,8 @@ with st.sidebar:
     st.header("Filter")
     
     # Jahr-Range-Slider
-    min_jahr = int(df['jahr_opdatum'].min())
-    max_jahr = int(df['jahr_opdatum'].max())
+    min_jahr = int(df['jahr_opdatum'].dropna().min())
+    max_jahr = int(df['jahr_opdatum'].dropna().max())
     
     jahr_range = st.slider(
         "Zeitraum auswählen",
