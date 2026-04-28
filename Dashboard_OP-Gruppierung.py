@@ -331,78 +331,72 @@ if 'selected_jahre' not in st.session_state:
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
-# -------------------- Button "PDF" + PRINT CSS --------------------
-components.html("""
-<button onclick="printWithPlots()" style="
-    width: 180px;
-    height: 40px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-family: sans-serif;
-    cursor: pointer;">
-    Drucken / PDF
-</button>
-
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script>
-function printWithPlots() {
-    const plots = document.querySelectorAll('.js-plotly-plot');
-
-    Promise.all(Array.from(plots).map(plot => {
-        return Plotly.Plots.resize(plot);
-    })).then(() => {
-        setTimeout(() => {
-            window.print();
-        }, 600);
-    });
-}
-</script>
-""", height=80)
-
-
-# -------------------- PRINT CSS --------------------
-st.markdown("""
-<style>
-@media print {
-
-    /* Header + Sidebar weg */
-    header, [data-testid="stHeader"], [data-testid="stSidebar"] {
-        display: none !important;
+# ==================================================
+# CSS
+# ==================================================
+st.markdown(
+    """
+    <style>
+    /* 1. Sidebar Breite stabil anpassen */
+    [data-testid="stSidebar"] {
+        min-width: 350px !important;
+        max-width: 350px !important;
     }
 
-    /* Alles verstecken */
-    body * {
-        visibility: hidden;
+    /* 2. Slider Label Styling */
+    div[data-testid="stSlider"] label {
+        font-size: 18px !important; 
+        margin-bottom: 25px !important; /* Erzeugt Abstand zwischen Überschrift und Slider*/
+    }
+  
+    /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
+    div[data-testid="stSlider"] label p {
+        font-size: 18px !important;
     }
 
-    /* Nur print-area anzeigen */
-    .print-area, .print-area * {
-        visibility: visible;
+    /* 3. Buttons Label Styling */
+    div[data-testid="stButtonGroup"] label {
+        font-size: 18px !important; 
+        margin-bottom: 25px !important; /* Erzeugt Abstand zwischen Überschrift und Buttonsr*/
     }
 
-    /* Layout fix */
-    .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+    /* Optional: Falls der Text innerhalb des Labels in einem <p> Tag liegt */
+    div[data-testid="stButtonGroup"] label p {
+        font-size: 18px !important;
+    }
+    
+    /* FUNKTIONIERT NICHT Grösse der Überschriften in den Kacheln */
+    [data-testid="stMetricLabel"] label {
+        font-size: 18px !important;
     }
 
-    /* Plotly Fix */
-    .js-plotly-plot, .plot-container {
-        width: 100% !important;
+     [data-testid="stMetricValue"] {
+        font-size: 24px !important;
     }
 
-    svg {
-        width: 100% !important;
-        height: auto !important;
+    /* 1. Den Button selbst flacher machen */
+    div[data-testid="stButton"] > button {
+        height: 1.5rem !important;
+        min-height: 1.5rem !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        line-height: 1.5rem !important;
     }
-}
-</style>
-""", unsafe_allow_html=True)
 
+    /* 2. Den Text im Button vertikal zentrieren */
+    div[data-testid="stButton"] button div p {
+        margin-bottom: 0px !important;
+        line-height: 1.5rem !important;
+    }
+
+    /* 3. Den Abstand zwischen Buttons/Elementen in der Spalte verringern */
+    [data-testid="stVerticalBlock"] > div:has(div[data-testid="stButton"]) {
+        gap: 0px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # =================================================================#
 # Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
@@ -486,12 +480,6 @@ with st.sidebar:
         "Zugang auswählen:", 
         ["Alle"] + sorted(df['zugang'].unique())
     )
-
-# =================================================================#
-#              Druck-Button und Print-CSS                          #
-# =================================================================#
-
-
    
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
