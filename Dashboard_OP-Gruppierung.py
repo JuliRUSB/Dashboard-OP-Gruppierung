@@ -685,51 +685,69 @@ with col1:
 # -------------------- Quartals-Chart --------------------
 with col2:
 
-    q_counts = (
-        df_plots
-        .groupby(['jahr_opdatum', 'quartal_opdatum'])
-        .size()
-        .reset_index(name='count')
-    )
+    if not df_plots.empty:
 
-    q_counts['quartal_label'] = (
-        "Q" + q_counts['quartal_opdatum'].astype(str)
-        + "-" + q_counts['jahr_opdatum'].astype(str)
-    )
+        q_counts = (
+            df_plots
+            .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
+            .size()
+        )
 
-    q_counts = q_counts.sort_values(
-        ['jahr_opdatum', 'quartal_opdatum']
-    ).reset_index(drop=True)
+        q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
-    quartal_order = q_counts['quartal_label'].tolist()
+        # exakt deine ursprüngliche Label-Logik
+        q_counts["quartal_label"] = (
+            "Q" + q_counts["quartal_opdatum"].astype(str)
+            + "-" + q_counts["jahr_opdatum"].astype(str)
+        )
 
-    fig_quartal = px.bar(
-        q_counts,
-        x='quartal_label',
-        y='count',
-        text='count',
-        color=q_counts['jahr_opdatum'].astype(str),
-        color_discrete_sequence=COLOR_PALETTE,
-        title="Fallzahlen pro Quartal"
-    )
+        # keine Umstellung der Logik – nur stabilisiert
+        quartal_order = q_counts["quartal_label"].tolist()
 
-    fig_quartal.update_traces(textposition='auto', textfont_size=16)
+        fig_quartal = px.bar(
+            q_counts,
+            x="quartal_label",
+            y="count",
+            text="count",
+            color=q_counts["jahr_opdatum"].astype(str),
+            color_discrete_sequence=COLOR_PALETTE,
+            category_orders={"quartal_label": quartal_order},
+            title="Fallzahlen pro Quartal"
+        )
 
-    fig_quartal.update_layout(
-        xaxis_title=None,
-        yaxis_title=None,
-        showlegend=False,
-        autosize=True,
-        height=400,
-        xaxis={'type': 'category'},
-    )
+        fig_quartal.update_traces(
+            textfont_size=16,
+            textposition="auto",
+            textangle=0
+        )
 
-    st.plotly_chart(
-        fig_quartal,
-        use_container_width=True,
-        config={"displayModeBar": False, "responsive": True}
-    )
+        fig_quartal.update_layout(
+            autosize=True,
+            height=None,
+            xaxis_title=None,
+            yaxis_title=None,
+            showlegend=False,
+            xaxis={"type": "category", "tickfont": {"size": 16}},
+            yaxis={"tickfont": {"size": 16}},
+        )
 
+        # deine ursprüngliche Trennlinien-Logik bleibt erhalten
+        for i in range(len(quartal_order) - 1):
+            curr_q = quartal_order[i].split("-")[0]
+            next_q = quartal_order[i + 1].split("-")[0]
+            if curr_q != next_q:
+                fig_quartal.add_vline(
+                    x=i + 0.5,
+                    line_width=2,
+                    line_dash="dash",
+                    line_color="gray"
+                )
+
+        st.plotly_chart(
+            fig_quartal,
+            use_container_width=True,
+            config={"displayModeBar": False, "responsive": True}
+        )
 st.divider()
 
 
