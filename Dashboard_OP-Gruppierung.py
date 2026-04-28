@@ -10,6 +10,7 @@ import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
+import plotly.io as pio
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -482,24 +483,9 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
-# Der Button-Code
-show_print_button = """
-<button onclick="parent.window.print()" style="
-    width: 100%;
-    height: 40px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    display: block;">
-    Drucken / PDF speichern
-</button>
-"""
-
-# Vergrößere height auf 60, damit der Klickbereich sicher ist
-components.html(show_print_button, height=60)
+# Erstellt einen Download-Button für das Diagramm als sauberes PDF
+pdf_bytes = pio.to_image(fig, format="pdf")
+st.download_button(label="Diagramm als PDF speichern", data=pdf_bytes, file_name="grafik.pdf")
 
 st.markdown("""
 <style>
