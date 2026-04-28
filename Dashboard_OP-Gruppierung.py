@@ -575,7 +575,7 @@ df_base = df[
 # damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
 # df_plots_jahr = df_jahr_filtered.copy()
 # df_plots_filtered = df_filtered.copy()
-df_plots = df_filtered.copy()
+df_plots = df_base.copy()
 
 if bereich_filter != "Alle":
     df_plots = df_plots[df_plots['bereich'] == bereich_filter]
