@@ -597,9 +597,6 @@ if len(df_plots_jahr) == 0:
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Grafik 1")
-    # WICHTIG: use_container_width=True muss bei deinen Charts stehen!
-    st.bar_chart([10, 20, 30]) 
     if not df_plots_jahr.empty:
         jahr_counts_df = df_plots_jahr.groupby('jahr_opdatum', as_index=False).size()
         jahr_counts_df.columns = ['jahr_opdatum', 'count']
@@ -627,8 +624,6 @@ with col1:
         st.plotly_chart(fig_jahr, use_container_width=True)
 
 with col2:
-    st.subheader("Grafik 2")
-    st.bar_chart([30, 20, 10])
     if not df_plots_jahr.empty:
         q_counts = (
             df_plots_filtered
