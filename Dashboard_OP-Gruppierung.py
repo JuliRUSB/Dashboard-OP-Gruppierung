@@ -498,31 +498,70 @@ components.html("""
     cursor: pointer;">
     Drucken / PDF
 </button>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
 function printWithPlots() {
-    const plots = parent.document.querySelectorAll('.print-area .js-plotly-plot');
+    const plots = document.querySelectorAll('.js-plotly-plot');
+    
+    // Warte auf alle Chart-Renderings
     Promise.all(Array.from(plots).map(plot => {
-        return parent.Plotly.Plots.resize(plot);
+        return new Promise((resolve) => {
+            Plotly.Plots.resize(plot).then(() => {
+                setTimeout(resolve, 500); // Extra Wartezeit
+            });
+        });
     })).then(() => {
-        setTimeout(() => { parent.window.print(); }, 800);
+        setTimeout(() => {
+            window.print();
+        }, 1000); // Längere Verzögerung
     });
 }
 </script>
-""", height=50)
+""", height=80)
 
 st.markdown("""
 <style>
 @media print {
-    body * { visibility: hidden; }
-    .print-area, .print-area * { visibility: visible; }
+    /* Header + Sidebar verstecken */
+    header, [data-testid="stHeader"], [data-testid="stSidebar"], 
+    .stApp, [class*="css-"], [class*="block-container"] {
+        display: none !important;
+    }
+
+    /* Nur print-area sichtbar */
+    .print-area, .print-area * {
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    /* Layout für Druck optimieren */
     .print-area {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        padding: 20px;
+        background: white;
     }
-    .js-plotly-plot, .plot-container { width: 100% !important; }
-    svg { width: 100% !important; height: auto !important; }
+
+    /* Plotly Charts für Druck fixieren */
+    .js-plotly-plot, .plot-container {
+        width: 100% !important;
+        height: auto !important;
+        page-break-inside: avoid;
+    }
+
+    svg {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Metriken sichtbar halten */
+    [data-testid="stMetric"], [data-testid="stMetricValue"], 
+    [data-testid="stMetricLabel"] {
+        visibility: visible !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
