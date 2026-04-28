@@ -485,13 +485,11 @@ with st.sidebar:
 #              Druck-Button und Print-CSS                          #
 # =================================================================#
 
-import streamlit as st
+# 1. Initialisierung des Session-State (muss am Anfang stehen, bevor der Button gerendert wird)
+if 'print_triggered' not in st.session_state:
+    st.session_state.print_triggered = False
 
-# Initialisiere Session-State für Druck-Trigger
-if 'trigger_print' not in st.session_state:
-    st.session_state.trigger_print = False
-
-# CSS für Druck
+# 2. CSS für den Druck (unverändert, aber sicher eingebettet)
 st.markdown("""
 <style>
 @media print {
@@ -522,25 +520,28 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Druck-Button
-if st.button("🖨️ PDF speichern", key="print_button"):
-    st.session_state.trigger_print = True
+# 3. Der Druck-Button
+# Wichtig: Der Button muss VOR dem Check auf 'print_triggered' stehen, sonst wird er nie angezeigt
+if st.button("🖨️ PDF speichern", key="drucken_btn"):
+    st.session_state.print_triggered = True
     st.rerun()
 
-# Wenn Trigger gesetzt ist, Druckfenster öffnen
-if st.session_state.trigger_print:
+# 4. Der Trigger für das Druckfenster (wird nur ausgeführt, wenn der Button geklickt wurde)
+if st.session_state.get('print_triggered', False):
     st.markdown(
         """
         <script>
         window.print();
-        // Reset nach dem Drucken (optional)
+        // Optional: Seite neu laden nach dem Drucken, um den State zu resetten
         setTimeout(() => {
-            window.location.href = window.location.href;
+            window.location.reload();
         }, 1000);
         </script>
         """,
         unsafe_allow_html=True
     )
+    # State zurücksetzen, damit der Button beim nächsten Mal wieder funktioniert
+    st.session_state.print_triggered = False
    
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
