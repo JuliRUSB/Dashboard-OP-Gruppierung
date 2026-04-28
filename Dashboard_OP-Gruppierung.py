@@ -487,7 +487,7 @@ with st.sidebar:
 
 # -------------------- Button "PDF" + PRINT CSS --------------------
 components.html("""
-<button onclick="parent.window.print()" style="
+<button onclick="printWithPlots()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -498,40 +498,58 @@ components.html("""
     cursor: pointer;">
     Drucken / PDF
 </button>
-""", height=50)
 
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+function printWithPlots() {
+    const plots = document.querySelectorAll('.js-plotly-plot');
+
+    Promise.all(Array.from(plots).map(plot => {
+        return Plotly.Plots.resize(plot);
+    })).then(() => {
+        setTimeout(() => {
+            window.print();
+        }, 600);
+    });
+}
+</script>
+""", height=80)
+
+
+# -------------------- PRINT CSS --------------------
 st.markdown("""
 <style>
 @media print {
-    /* 1. Alles ausblenden */
-    header, [data-testid="stHeader"], [data-testid="stSidebar"], .stApp > header {
+
+    /* Header + Sidebar weg */
+    header, [data-testid="stHeader"], [data-testid="stSidebar"] {
         display: none !important;
     }
-    
-    /* Den Hauptcontainer auf sichtbar setzen, aber den Standard-Inhalt verstecken */
-    [data-testid="stAppViewContainer"] {
-        visibility: hidden !important;
+
+    /* Alles verstecken */
+    body * {
+        visibility: hidden;
     }
 
-    /* 2. Nur die print-area wieder einblenden */
+    /* Nur print-area anzeigen */
     .print-area, .print-area * {
-        visibility: visible !important;
+        visibility: visible;
     }
 
-    /* 3. WICHTIG: Die Positionierung korrigieren */
+    /* Layout fix */
     .print-area {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Plotly Fix */
+    .js-plotly-plot, .plot-container {
         width: 100% !important;
     }
 
-    /* 4. Fix für Plotly-Grafiken: Damit diese nicht abgeschnitten werden */
-    .print-area .js-plotly-plot, .print-area .plot-container {
-        width: 100% !important;
-    }
-    
-    .print-area svg {
+    svg {
         width: 100% !important;
         height: auto !important;
     }
