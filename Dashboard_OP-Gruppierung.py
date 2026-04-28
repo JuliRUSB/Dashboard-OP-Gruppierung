@@ -490,7 +490,8 @@ with st.sidebar:
 # -------------------- PRINT CSS --------------------
 st.markdown("""
 # -------------------- Button "PDF" --------------------
-<button onclick="parent.window.print()" style="
+st.markdown("""
+<button onclick="window.print()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -501,30 +502,23 @@ st.markdown("""
     cursor: pointer;">
     Drucken / PDF
 </button>
-""", height=50)
+# -------------------- Ende Button "PDF" --------------------
 <style>
-
 @page {
     size: A4 portrait;
     margin: 10mm;
 }
-
 @media print {
-
-    /* ===== Layout stabilisieren ===== */
     html, body {
         width: 100% !important;
         overflow: visible !important;
     }
-
     .block-container,
     .main,
     [data-testid="stAppViewContainer"] {
         width: 100% !important;
         max-width: 100% !important;
     }
-
-    /* ===== Streamlit UI entfernen ===== */
     header,
     button,
     [data-testid="stSidebar"],
@@ -532,30 +526,23 @@ st.markdown("""
     [data-testid="stButton"] {
         display: none !important;
     }
-
-    /* ===== Layout umbrechen (keine Spalten im Print) ===== */
     [data-testid="stHorizontalBlock"] {
         display: block !important;
     }
-
     [data-testid="column"] {
         width: 100% !important;
         max-width: 100% !important;
         flex: none !important;
     }
-
-    /* ===== Plotly stabil halten ===== */
     .js-plotly-plot {
         width: 100% !important;
         max-width: 100% !important;
         overflow: visible !important;
     }
-
     svg {
         overflow: visible !important;
     }
 }
-
 </style>
 """, unsafe_allow_html=True)
 
