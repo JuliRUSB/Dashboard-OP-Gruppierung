@@ -547,7 +547,6 @@ if bereich_filter != "Alle":
 if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
-
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
 st.header("Kennzahlen")
