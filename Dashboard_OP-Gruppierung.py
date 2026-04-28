@@ -711,8 +711,8 @@ bereich_tabs = st.tabs(bereiche)
 
 for i, bereich in enumerate(bereiche):
     with bereich_tabs[i]:
-        # Hier nutzen wir das ORIGINAL df_filtered, damit die Bereichs-Filter von oben NICHT greifen
-        df_bereich = df_filtered[df_filtered["bereich"] == bereich]
+        # Hier nutzen wir das ORIGINAL df_base, damit die Bereichs-Filter von oben NICHT greifen
+        df_bereich = df_base[df_base["bereich"] == bereich]
         
         st.subheader(f"Bereich: {bereich}")
         
