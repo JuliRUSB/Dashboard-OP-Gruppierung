@@ -616,7 +616,7 @@ with col1:
             xaxis_title=None, 
             yaxis_title=None, 
             showlegend=False, 
-            height=400,
+            # height=400,
             xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}},
             yaxis={"tickfont": {"size": 16}} 
         )
@@ -653,7 +653,7 @@ with col2:
             xaxis_title=None,
             yaxis_title=None,
             showlegend=False,
-            height=400,
+            # height=400,
             xaxis={"type": "category", "tickfont": {"size": 16}},
             yaxis={"tickfont": {"size": 16}},
         )
