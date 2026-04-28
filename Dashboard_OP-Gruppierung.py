@@ -9,6 +9,7 @@ import plotly.express as px        # Plotly Express für DiagrammeÜbersicht Sar
 import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
+import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -481,14 +482,17 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
-st.button("Drucken / Als PDF speichern", on_click=lambda: st.markdown(
-    """
-    <script>
-    window.print();
-    </script>
-    """,
-    unsafe_allow_html=True
-))
+components.html("""
+<button onclick="window.print()" style="
+    padding:10px 14px;
+    border:none;
+    border-radius:6px;
+    background:#4CAF50;
+    color:white;
+    cursor:pointer;">
+    Drucken / PDF
+</button>
+""", height=60)
 
 # -------------------- Seitenleiste im PDF ausblenden --------------------
 st.markdown("""
@@ -496,9 +500,6 @@ st.markdown("""
 @media print {
     section[data-testid="stSidebar"] {
         display: none !important;
-    }
-    .main {
-        margin-left: 0 !important;
     }
 }
 </style>
