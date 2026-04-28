@@ -503,42 +503,37 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* 1. Alles ausblenden */
-    header, [data-testid="stHeader"], [data-testid="stSidebar"], .stApp > header {
+    /* Alles verstecken */
+    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"], footer {
         display: none !important;
     }
     
-    /* Den Hauptcontainer auf sichtbar setzen, aber den Standard-Inhalt verstecken */
-    [data-testid="stAppViewContainer"] {
-        visibility: hidden !important;
-    }
-
-    /* 2. Nur die print-area wieder einblenden */
+    /* Hauptcontainer sichtbar machen, aber Standard-Inhalt ausblenden */
+    [data-testid="stAppViewContainer"] { visibility: hidden !important; }
+    
+    /* NUR die print-area einblenden */
     .print-area, .print-area * {
         visibility: visible !important;
+        display: block !important;
     }
 
-    /* 3. WICHTIG: Die Positionierung korrigieren */
+    /* Breite auf A4 zwingen und Abschneiden verhindern */
     .print-area {
         position: absolute !important;
         left: 0 !important;
         top: 0 !important;
         width: 100% !important;
+        max-width: 650px !important; /* Verhindert das Abschneiden rechts */
     }
 
-    /* 4. Fix für Plotly-Grafiken: Damit diese nicht abgeschnitten werden */
-    .print-area .js-plotly-plot, .print-area .plot-container {
-        width: 100% !important;
-    }
-    
-    .print-area svg {
+    /* Grafiken proportional verkleinern */
+    .js-plotly-plot, .plot-container, svg {
         width: 100% !important;
         height: auto !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
