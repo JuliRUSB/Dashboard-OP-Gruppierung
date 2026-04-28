@@ -503,32 +503,32 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* 1. ALLES ausblenden */
-    div[data-testid="stAppViewContainer"] > section > div {
-        display: none !important;
-    }
-    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"] {
-        display: none !important;
-    }
-
-    /* 2. NUR die print-area anzeigen und auf die Seite zwingen */
-    div.print-area {
-        display: block !important;
+    /* Erzwingt A4-Breite für den gesamten Inhalt */
+    .main .block-container {
+        max-width: 650px !important;
         width: 100% !important;
-        max-width: 650px !important; /* Verhindert Abschneiden */
-        position: absolute;
-        left: 0;
-        top: 0;
+        margin: 0 auto !important;
+        padding: 10px !important;
     }
-
-    /* 3. Grafiken zwingen, in der Breite zu bleiben */
+    /* Stapelt Spalten (Kacheln) untereinander, damit nichts abgeschnitten wird */
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        min-width: 100% !important;
+    }
+    /* Verkleinert Grafiken proportional (Breite & Höhe) */
     .stPlotlyChart, .js-plotly-plot, .plot-container, svg {
         width: 100% !important;
         height: auto !important;
     }
+    /* Blendet Müll aus */
+    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"], footer {
+        display: none !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
@@ -661,8 +661,7 @@ with col1:
 
     st.plotly_chart(
         fig_jahr,
-        use_container_width=True,
-        config={"displayModeBar": False, "responsive": True}
+        use_container_width=True
     )
 
 
