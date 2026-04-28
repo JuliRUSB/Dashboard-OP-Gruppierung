@@ -501,8 +501,8 @@ st.markdown("""
     cursor: pointer;">
     Drucken / PDF
 </button>
-# -------------------- Ende Button "PDF" --------------------
 <style>
+# -------------------- Ende Button "PDF" --------------------
 @page {
     size: A4 portrait;
     margin: 10mm;
