@@ -485,63 +485,7 @@ with st.sidebar:
 #              Druck-Button und Print-CSS                          #
 # =================================================================#
 
-# 1. Initialisierung des Session-State (muss am Anfang stehen, bevor der Button gerendert wird)
-if 'print_triggered' not in st.session_state:
-    st.session_state.print_triggered = False
 
-# 2. CSS für den Druck (unverändert, aber sicher eingebettet)
-st.markdown("""
-<style>
-@media print {
-    body * { visibility: hidden; }
-    .block-container, .stMarkdown, h1, h2, h3, h4, h5, h6, p, span, div,
-    [data-testid="stMetric"], [data-testid="stMetricValue"], [data-testid="stMetricLabel"],
-    [data-testid="stTabs"], [data-testid="stTab"], .stDataFrame, .stTable,
-    .js-plotly-plot, .plot-container, svg {
-        visibility: visible !important;
-    }
-    .js-plotly-plot, .plot-container {
-        width: 100% !important;
-        height: auto !important;
-        page-break-inside: avoid;
-    }
-    [data-testid="stSidebar"], [data-testid="stHeader"], header, button, input, select, textarea,
-    .stButton, .stSlider, .stSelectbox, .stExpander, [class*="sidebar"], [class*="filter"],
-    [class*="button"], .stAlert, .stError, .stWarning, .stInfo {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    .block-container {
-        max-width: 100% !important;
-        padding: 20px !important;
-        margin: 0 !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-# 3. Der Druck-Button
-# Wichtig: Der Button muss VOR dem Check auf 'print_triggered' stehen, sonst wird er nie angezeigt
-if st.button("🖨️ PDF speichern", key="drucken_btn"):
-    st.session_state.print_triggered = True
-    st.rerun()
-
-# 4. Der Trigger für das Druckfenster (wird nur ausgeführt, wenn der Button geklickt wurde)
-if st.session_state.get('print_triggered', False):
-    st.markdown(
-        """
-        <script>
-        window.print();
-        // Optional: Seite neu laden nach dem Drucken, um den State zu resetten
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-        </script>
-        """,
-        unsafe_allow_html=True
-    )
-    # State zurücksetzen, damit der Button beim nächsten Mal wieder funktioniert
-    st.session_state.print_triggered = False
    
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
