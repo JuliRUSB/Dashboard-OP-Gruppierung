@@ -484,7 +484,7 @@ with st.sidebar:
 # =================================================================#
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
-# -------------------- Button "PDF" erstellen --------------------
+# -------------------- Button "PDF" --------------------
 components.html("""
 <button onclick="parent.window.print()" style="
     width: 180px;
@@ -500,6 +500,7 @@ components.html("""
 """, height=50)
 
 
+# -------------------- PRINT CSS --------------------
 st.markdown("""
 <style>
 
@@ -510,32 +511,42 @@ st.markdown("""
 
 @media print {
 
+    /* ===== Layout stabilisieren ===== */
     html, body {
         width: 100% !important;
         overflow: visible !important;
     }
 
-    .main, .block-container, [data-testid="stAppViewContainer"] {
+    .block-container,
+    .main,
+    [data-testid="stAppViewContainer"] {
         width: 100% !important;
         max-width: 100% !important;
-        display: block !important;
     }
 
-    section[data-testid="stSidebar"] {
+    /* ===== Streamlit UI entfernen ===== */
+    header,
+    button,
+    [data-testid="stSidebar"],
+    [data-testid="stToolbar"],
+    [data-testid="stButton"] {
         display: none !important;
     }
 
-    div[data-testid="stHorizontalBlock"] {
+    /* ===== Layout umbrechen (keine Spalten im Print) ===== */
+    [data-testid="stHorizontalBlock"] {
         display: block !important;
     }
 
-    div[data-testid="column"] {
+    [data-testid="column"] {
         width: 100% !important;
-        flex: none !important;
         max-width: 100% !important;
+        flex: none !important;
     }
 
+    /* ===== Plotly stabil halten ===== */
     .js-plotly-plot {
+        width: 100% !important;
         max-width: 100% !important;
         overflow: visible !important;
     }
@@ -543,15 +554,8 @@ st.markdown("""
     svg {
         overflow: visible !important;
     }
-
-    /* UI entfernen (NEU, fehlte vorher) */
-    button,
-    header,
-    [data-testid="stToolbar"],
-    [data-testid="stButton"] {
-        display: none !important;
-    }
 }
+
 </style>
 """, unsafe_allow_html=True)
 
