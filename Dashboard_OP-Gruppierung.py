@@ -498,20 +498,24 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* Seitenleiste und Header ausblenden (wie zuvor) */
-    section[data-testid="stSidebar"], header, [data-testid="stHeader"] {
-        display: none !important;
-    }
-    
-    /* Ganze Seite auf 95% oder weniger skalieren, damit nichts abgeschnitten wird */
+    /* WICHTIG: Die Haupt-Container Breite auf 100% setzen */
     .main .block-container {
-        padding: 1rem !important;
         max-width: 100% !important;
+        width: 100% !important;
+        padding: 1cm !important; /* Kleine Ränder für das PDF */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
     
-    /* Erzwingt, dass Grafiken nicht über die Seite hinausgehen */
-    div[data-testid="stVerticalBlock"] > div {
+    /* Falls Diagramme in Spalten sind, diese untereinander erzwingen */
+    [data-testid="column"] {
         width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    /* Streamlit-Elemente wie Sidebar und Header komplett entfernen */
+    section[data-testid="stSidebar"], header, [data-testid="stHeader"], [data-testid="stToolbar"] {
+        display: none !important;
     }
 }
 </style>
