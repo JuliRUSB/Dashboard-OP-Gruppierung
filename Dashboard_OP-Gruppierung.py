@@ -591,7 +591,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     # Nutzt df_plots_jahr für die gefilterte Anzeige
-    st.metric("Gesamt Fälle", len(df_plots_jahr))
+    st.metric("Gesamt Fälle", len(df_plots))
     
 with col2:
     st.metric("Bereiche", df_plots_jahr['bereich'].nunique())
@@ -603,7 +603,7 @@ st.divider()
 
 st.header("Fallzahlen alle Bereiche")
 
-if len(df_plots_jahr) == 0:
+if len(df_plots) == 0:
     st.warning("Keine Daten für die gewählten Filter verfügbar.")
     st.stop()
 
