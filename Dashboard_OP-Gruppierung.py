@@ -667,6 +667,7 @@ with col1:
     fig_jahr.update_traces(textposition='inside', textfont_size=16)
 
     fig_jahr.update_layout(
+        height=400,
         xaxis_title=None,
         yaxis_title=None,
         showlegend=False,
@@ -724,8 +725,7 @@ with col2:
         )
 
         fig_quartal.update_layout(
-            autosize=True,
-            height=None,
+            height=400,
             xaxis_title=None,
             yaxis_title=None,
             showlegend=False,
