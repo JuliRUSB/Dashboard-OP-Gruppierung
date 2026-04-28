@@ -485,65 +485,29 @@ with st.sidebar:
 #              Druck-Button und Print-CSS                          #
 # =================================================================#
 
-# 1. CSS für den Druck (muss in <style> Tags sein)
+import streamlit.components.v1 as components
+
 st.markdown("""
 <style>
 @media print {
-    /* ALLES standardmäßig verstecken */
-    body * {
-        visibility: hidden;
-    }
-
-    /* Nur spezifische Elemente wieder sichtbar machen */
-    .block-container, 
-    .stMarkdown, 
-    h1, h2, h3, h4, h5, h6, 
-    p, span, div, 
-    [data-testid="stMetric"], 
-    [data-testid="stMetricValue"], 
-    [data-testid="stMetricLabel"],
-    [data-testid="stTabs"],
-    [data-testid="stTab"],
-    .stDataFrame,
-    .stTable,
-    .js-plotly-plot, 
-    .plot-container, 
-    svg {
+    body * { visibility: hidden; }
+    .block-container, .stMarkdown, h1, h2, h3, h4, h5, h6, p, span, div,
+    [data-testid="stMetric"], [data-testid="stMetricValue"], [data-testid="stMetricLabel"],
+    [data-testid="stTabs"], [data-testid="stTab"], .stDataFrame, .stTable,
+    .js-plotly-plot, .plot-container, svg {
         visibility: visible !important;
     }
-
-    /* Plotly Charts formatieren */
-    .js-plotly-plot, 
-    .plot-container {
+    .js-plotly-plot, .plot-container {
         width: 100% !important;
         height: auto !important;
         page-break-inside: avoid;
     }
-
-    /* Alles verstecken, was nicht gedruckt werden soll */
-    [data-testid="stSidebar"],
-    [data-testid="stHeader"],
-    header,
-    button,
-    input,
-    select,
-    textarea,
-    .stButton,
-    .stSlider,
-    .stSelectbox,
-    .stExpander,
-    [class*="sidebar"],
-    [class*="filter"],
-    [class*="button"],
-    .stAlert,
-    .stError,
-    .stWarning,
-    .stInfo {
+    [data-testid="stSidebar"], [data-testid="stHeader"], header, button, input, select, textarea,
+    .stButton, .stSlider, .stSelectbox, .stExpander, [class*="sidebar"], [class*="filter"],
+    [class*="button"], .stAlert, .stError, .stWarning, .stInfo {
         display: none !important;
         visibility: hidden !important;
     }
-
-    /* Layout optimieren */
     .block-container {
         max-width: 100% !important;
         padding: 20px !important;
@@ -553,18 +517,30 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 2. Druck-Button (HTML Link, kein st.button)
-st.markdown(
-    """
-    <a href="#" onclick="window.print(); return false;" 
-       style="background-color: #4CAF50; color: white; padding: 10px 20px; 
-              text-decoration: none; border-radius: 5px; cursor: pointer; 
-              font-size: 16px; display: inline-block; margin: 20px 0;">
-       🖨️ Seite drucken / PDF speichern
-    </a>
-    """,
-    unsafe_allow_html=True
-)
+components.html("""
+<button id="printBtn" style="
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px 0;
+    display: block;
+    width: fit-content;
+    z-index: 9999;
+    position: relative;
+">
+    🖨️ Seite drucken / PDF speichern
+</button>
+<script>
+document.getElementById('printBtn').addEventListener('click', function() {
+    window.print();
+});
+</script>
+""", height=60)
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
