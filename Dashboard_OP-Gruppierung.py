@@ -494,44 +494,18 @@ components.html("""
 </button>
 """, height=60)
 
-# -------------------- Seitenleiste im PDF ausblenden --------------------
 st.markdown("""
 <style>
 @media print {
-    /* 1. Haupt-Container auf volle PDF-Breite zwingen */
+    /* Erzwingt eine schmale Breite, die auf jedes A4-Blatt passt */
     .main .block-container {
-        max-width: 100% !important;
-        width: 100% !important;
-        padding: 0px !important;
-        margin: 0px !important;
+        max-width: 800px !important; 
     }
-
-    /* 2. Spalten-Layout aufheben, damit Grafiken untereinander stehen (verhindert Abschneiden rechts) */
-    [data-testid="column"] {
-        width: 100% !important;
-        flex: 1 1 100% !important;
-        min-width: 100% !important;
-    }
-
-    /* 3. Alle Plotly- oder Diagramm-Container auf PDF-Breite begrenzen */
-    .stPlotlyChart, .element-container {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow: visible !important;
-    }
-
-    /* 4. Streamlit-UI-Elemente radikal entfernen */
-    section[data-testid="stSidebar"], 
-    header, 
-    [data-testid="stHeader"], 
-    [data-testid="stToolbar"],
-    footer {
-        display: none !important;
-    }
+    /* Blendet den Müll aus */
+    section[data-testid="stSidebar"], header { display: none !important; }
 }
 </style>
 """, unsafe_allow_html=True)
-
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
 selected_quartale = st.session_state['selected_quartale']
