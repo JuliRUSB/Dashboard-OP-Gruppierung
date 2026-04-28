@@ -489,8 +489,9 @@ with st.sidebar:
 
 # -------------------- PRINT CSS --------------------
 # -------------------- Button "PDF" --------------------
-st.markdown("""
-<button onclick="window.print()" style="
+# Button
+components.html("""
+<button onclick="parent.window.print()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -501,6 +502,10 @@ st.markdown("""
     cursor: pointer;">
     Drucken / PDF
 </button>
+""", height=50)
+
+# Print CSS
+st.markdown("""
 <style>
 @page {
     size: A4 portrait;
@@ -519,6 +524,7 @@ st.markdown("""
     }
     header,
     button,
+    iframe,
     [data-testid="stSidebar"],
     [data-testid="stToolbar"],
     [data-testid="stButton"] {
@@ -543,7 +549,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
