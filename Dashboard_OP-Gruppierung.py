@@ -622,7 +622,7 @@ with col1:
             xaxis={'categoryorder': 'category ascending', "type": "category", "tickfont": {"size": 16}},
             yaxis={"tickfont": {"size": 16}} 
         )
-        st.plotly_chart(fig_jahr, use_container_width=True)
+        st.plotly_chart(fig_jahr, use_container_width=True, config={"displayModeBar": False, "responsive": True)
 
 with col2:
     if not df_plots_jahr.empty:
@@ -668,7 +668,7 @@ with col2:
             if curr_q != next_q:
                 fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
-        st.plotly_chart(fig_quartal, use_container_width=True)
+        st.plotly_chart(fig_quartal, use_container_width=True, config={"displayModeBar": False, "responsive": True)
 
 st.divider()
 
@@ -762,7 +762,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
             
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
             else:
@@ -818,7 +818,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
     
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Sarkom-Daten")
             else:
@@ -885,7 +885,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für CRS")
             else:
@@ -970,7 +970,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                         st.info("Keine Daten für HIPEC")
             else:
@@ -1058,7 +1058,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10} # "range": [0, 105],
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für HIPEC")
             else:
@@ -1174,7 +1174,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={"displayModeBar": False, "responsive": True)
                         else:
                             st.info("Keine validen Grade >= IIIa gefunden.")
                     else:
@@ -1287,7 +1287,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}_final", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel7_{bereich}_final", config={"displayModeBar": False, "responsive": True)
                         else:
                             st.info("Keine validen Grade >= IIIa gefunden.")
                     else:
@@ -1377,7 +1377,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel8_{bereich}", config={"displayModeBar": False, "responsive": True)
                         else:
                             st.info("Keine Anastomoseninsuffizienzen vorhanden")
                     else:
@@ -1464,7 +1464,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel16_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
@@ -1632,7 +1632,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel9_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Gruppendaten")
             else:
@@ -1688,7 +1688,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                 
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel10_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für Sarkom/Weichteiltumor")
             else:
@@ -1752,12 +1752,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
 
-                    st.plotly_chart(
-                        fig,
-                        use_container_width=True,
-                        key=f"kachel11_{bereich}",
-                    config={"displayModeBar": False}
-                    )
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel11_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für Malignität")
             else:
@@ -1842,7 +1837,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel19_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel19_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                         st.info("Keine Daten für Weichteiltumoren")
             else:
@@ -1927,7 +1922,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10} # "range": [0, 105],
                     )
                
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel20_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel20_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für Weichteiltumoren")
             else:
@@ -2001,7 +1996,7 @@ for i, bereich in enumerate(bereiche):
                         # yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     # )
                
-                    # st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={'displayModeBar': False})
+                    # st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={"displayModeBar": False, "responsive": True)
                 # else:
                         # st.info("Keine Daten für Sarkom/Weichteiltumor")
             # else:
@@ -2094,7 +2089,7 @@ for i, bereich in enumerate(bereiche):
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                             )
                 
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel13_{bereich}", config={'displayModeBar': False})
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel13_{bereich}", config={"displayModeBar": False, "responsive": True)
                         else:
                             st.info("Keine Daten für Sarkom/Weichteiltumor")
                     else:
@@ -2192,7 +2187,7 @@ for i, bereich in enumerate(bereiche):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
         
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={'displayModeBar': False})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel15_{bereich}", config={"displayModeBar": False, "responsive": True)
                 else:
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
@@ -2248,7 +2243,7 @@ for i, bereich in enumerate(bereiche):
                     # yaxis={"tickfont": {"size": 16}} 
                 # )
                     
-                # st.plotly_chart(fig, use_container_width=True)
+                # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True)
                 # # else:
                     # # st.info("Keine Gruppendaten")
 
@@ -2282,7 +2277,7 @@ for i, bereich in enumerate(bereiche):
                     # yaxis={"tickfont": {"size": 16}} 
                 # )
                     
-                # st.plotly_chart(fig, use_container_width=True)
+                # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True)
                 # # else:
                     # # st.info("Keine Zugangsdaten")
 
@@ -2305,7 +2300,7 @@ for i, bereich in enumerate(bereiche):
                     # aspect="auto",
                     # color_continuous_scale="Greens"
                 # )
-                # st.plotly_chart(fig, use_container_width=True)
+                # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True)
                 # # else:
                     # # st.info("Keine Komplikationsdaten")
 
@@ -2338,7 +2333,7 @@ for i, bereich in enumerate(bereiche):
                         # yaxis={"tickfont": {"size": 16}} 
                     # )
                         
-                    # st.plotly_chart(fig_hsm, use_container_width=True)
+                    # st.plotly_chart(fig_hsm, use_container_width=True, config={"displayModeBar": False, "responsive": True)
 
                 # with col2:
                     # hsm_bereich = df_hsm.groupby(['bereich','hsm_label']).size().reset_index(name='count')
@@ -2352,7 +2347,7 @@ for i, bereich in enumerate(bereiche):
                         # color_discrete_sequence=COLOR_PALETTE,
                         # labels={"hsm_label": "HSM"}
                     # )
-                    # st.plotly_chart(fig_bereich, use_container_width=True)
+                    # st.plotly_chart(fig_bereich, use_container_width=True, config={"displayModeBar": False, "responsive": True)
                 # # else:
                     # # st.info("Keine HSM-Daten für diesen Bereich")
 
@@ -2376,4 +2371,4 @@ for i, bereich in enumerate(bereiche):
                 # xaxis={"type": "category", "tickfont": {"size": 16}},
                 # yaxis={"tickfont": {"size": 16}} 
             # )
-            # st.plotly_chart(fig, use_container_width=True)
+            # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True)
