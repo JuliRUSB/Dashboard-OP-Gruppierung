@@ -485,8 +485,7 @@ with st.sidebar:
 #              Druck-Button und Print-CSS                          #
 # =================================================================#
 
-import streamlit.components.v1 as components
-
+# CSS für Druck
 st.markdown("""
 <style>
 @media print {
@@ -517,31 +516,26 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-components.html("""
-<button id="printBtn" style="
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 20px 0;
-    display: block;
-    width: fit-content;
-    z-index: 9999;
-    position: relative;
-">
-    🖨️ Seite drucken / PDF speichern
-</button>
-<script>
-document.getElementById('printBtn').addEventListener('click', function() {
-    window.print();
-});
-</script>
-""", height=60)
-
+# Druck-Button als HTML (kein components.html!)
+st.markdown(
+    """
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;">
+        <button onclick="window.print()" style="
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        ">
+            🖨️ PDF speichern
+        </button>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
