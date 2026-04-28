@@ -484,8 +484,12 @@ with st.sidebar:
 # =================================================================#
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
+
+
+
+# -------------------- PRINT CSS --------------------
+st.markdown("""
 # -------------------- Button "PDF" --------------------
-components.html("""
 <button onclick="parent.window.print()" style="
     width: 180px;
     height: 40px;
@@ -498,10 +502,6 @@ components.html("""
     Drucken / PDF
 </button>
 """, height=50)
-
-
-# -------------------- PRINT CSS --------------------
-st.markdown("""
 <style>
 
 @page {
