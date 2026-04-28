@@ -548,6 +548,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
+
 selected_jahre = st.session_state['selected_jahre']
 selected_quartale = st.session_state['selected_quartale']
 
@@ -556,15 +557,17 @@ if not selected_jahre or not selected_quartale:
     st.stop()
 
 # 1. Basis-Filterung nach Zeit (für Graphen UND Tabs)
-df_jahr_filtered = df[df['jahr_opdatum'].isin(selected_jahre)].copy()
-df_filtered = df[
-    (df['jahr_opdatum'].isin(selected_jahre)) & 
-    (df['quartal_opdatum'].isin(selected_quartale))
-].copy()
+df['jahr_opdatum'] = df['jahr_opdatum'].astype(int)
+df['quartal_opdatum'] = df['quartal_opdatum'].astype(int)
+
+selected_jahre = list(map(int, selected_jahre))
+selected_quartale = list(map(int, selected_quartale))
 
 # 2. Entkoppelung: Zusätzliche Filter (Bereich/Zugang) NUR für die Graphen
-df_plots_jahr = df_jahr_filtered.copy()
-df_plots_filtered = df_filtered.copy()
+df_base = df[
+    df['jahr_opdatum'].isin(selected_jahre) &
+    df['quartal_opdatum'].isin(selected_quartale)
+].copy()
 
 # --- TEIL 1: Filterlogik (nur für die Grafiken in Teil 2) ---
 
@@ -576,13 +579,9 @@ df_plots = df_filtered.copy()
 
 if bereich_filter != "Alle":
     df_plots = df_plots[df_plots['bereich'] == bereich_filter]
-    # df_plots_jahr = df_plots_jahr[df_plots_jahr['bereich'] == bereich_filter]
-    # df_plots_filtered = df_plots_filtered[df_plots_filtered['bereich'] == bereich_filter]
 
 if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
-    # df_plots_jahr = df_plots_jahr[df_plots_jahr['zugang'] == zugang_filter]
-    # df_plots_filtered = df_plots_filtered[df_plots_filtered['zugang'] == zugang_filter]
 
 
 # --- TEIL 2: Kennzahlen & Visualisierungen (nutzt die gefilterten Daten) ---
