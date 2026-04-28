@@ -482,40 +482,24 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
+# Der Button-Code
 show_print_button = """
-<script>
-    function print_page() {
-        // 1. Suche das Hauptfenster (Dashboard)
-        const root = parent.document.querySelector('.main .block-container');
-        
-        // 2. Speichere die alte Breite, um sie später zurückzusetzen
-        const oldWidth = root.style.maxWidth;
-        
-        // 3. Zwinge das Dashboard auf eine Breite, die in ein PDF passt
-        root.style.maxWidth = "700px";
-        
-        // 4. Druckdialog öffnen
-        parent.window.print();
-        
-        // 5. Nach dem Drucken (oder Abbrechen) die Breite wieder normal machen
-        setTimeout(() => {
-            root.style.maxWidth = oldWidth;
-        }, 1000);
-    }
-</script>
-
-<button onclick="print_page()" style="
-    padding: 10px; 
-    background: #4CAF50; 
-    color: white; 
-    border: none; 
-    border-radius: 4px; 
-    cursor: pointer;">
+<button onclick="parent.window.print()" style="
+    width: 100%;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: block;">
     Drucken / PDF speichern
 </button>
 """
 
-components.html(show_print_button, height=50)
+# Vergrößere height auf 60, damit der Klickbereich sicher ist
+components.html(show_print_button, height=60)
 
 st.markdown("""
 <style>
