@@ -486,22 +486,6 @@ with st.sidebar:
 # =================================================================#
 
 # -------------------- Button "PDF" --------------------
-# Button
-components.html("""
-<button onclick="parent.window.print()" style="
-    width: 180px;
-    height: 40px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-family: sans-serif;
-    cursor: pointer;">
-    Drucken / PDF
-</button>
-""", height=50)
-
-# Print CSS
 st.markdown("""
 <style>
 @page {
@@ -509,48 +493,28 @@ st.markdown("""
     margin: 10mm;
 }
 @media print {
-    /* Alles ausblenden */
+    /* Alles verstecken */
     body * {
-        visibility: hidden !important;
+        display: none !important;
     }
-    /* Nur print-area anzeigen */
-    .print-area, .print-area * {
-        visibility: visible !important;
-    }
+    /* Nur print-area und alle Kinder anzeigen */
     .print-area {
-        position: absolute;
+        display: block !important;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
     }
-    .block-container,
-    .main,
-    [data-testid="stAppViewContainer"] {
-        width: 100% !important;
-        max-width: 100% !important;
+    .print-area * {
+        display: revert !important;
     }
-    header,
-    button,
-    iframe,
-    [data-testid="stSidebar"],
-    [data-testid="stToolbar"],
-    [data-testid="stButton"] {
-        display: none !important;
-    }
-    [data-testid="stHorizontalBlock"] {
-        display: block !important;
-    }
-    [data-testid="column"] {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: none !important;
-    }
-    .js-plotly-plot {
-        width: 100% !important;
-        max-width: 100% !important;
+    /* Plotly explizit */
+    .print-area .js-plotly-plot,
+    .print-area .js-plotly-plot * {
+        display: revert !important;
         overflow: visible !important;
     }
-    svg {
+    .print-area svg {
         overflow: visible !important;
     }
 }
