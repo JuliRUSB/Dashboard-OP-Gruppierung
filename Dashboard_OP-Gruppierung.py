@@ -544,6 +544,8 @@ st.markdown("""
         overflow: visible !important;
     }
 }
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
