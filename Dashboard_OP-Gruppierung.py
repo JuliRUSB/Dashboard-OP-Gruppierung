@@ -502,32 +502,37 @@ components.html("""
 
 st.markdown("""
 <style>
+@page {
+    size: A4 portrait;
+    margin: 10mm;
+}
 @media print {
-    /* Erzwingt A4-Breite für den gesamten Inhalt */
-    .main .block-container {
-        max-width: 650px !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-        padding: 10px !important;
+    body * {
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
-    /* Stapelt Spalten (Kacheln) untereinander, damit nichts abgeschnitten wird */
-    [data-testid="column"] {
-        width: 100% !important;
-        flex: 1 1 100% !important;
-        min-width: 100% !important;
-    }
-    /* Verkleinert Grafiken proportional (Breite & Höhe) */
-    .stPlotlyChart, .js-plotly-plot, .plot-container, svg {
-        width: 100% !important;
+    .print-area {
+        visibility: visible !important;
         height: auto !important;
+        overflow: visible !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
     }
-    /* Blendet Müll aus */
-    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"], footer {
-        display: none !important;
+    .print-area * {
+        visibility: visible !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .print-area svg {
+        overflow: visible !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
