@@ -486,6 +486,21 @@ with st.sidebar:
 # =================================================================#
 
 # -------------------- Button "PDF" --------------------
+components.html("""
+<button onclick="parent.window.print()" style="
+    width: 180px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: sans-serif;
+    cursor: pointer;">
+    Drucken / PDF
+</button>
+""", height=50)
+
+# -------------------- PRINT CSS --------------------
 st.markdown("""
 <style>
 @page {
@@ -493,11 +508,9 @@ st.markdown("""
     margin: 10mm;
 }
 @media print {
-    /* Alles verstecken */
     body * {
         display: none !important;
     }
-    /* Nur print-area und alle Kinder anzeigen */
     .print-area {
         display: block !important;
         position: fixed;
@@ -508,7 +521,6 @@ st.markdown("""
     .print-area * {
         display: revert !important;
     }
-    /* Plotly explizit */
     .print-area .js-plotly-plot,
     .print-area .js-plotly-plot * {
         display: revert !important;
@@ -520,7 +532,6 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
