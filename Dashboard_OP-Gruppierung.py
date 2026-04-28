@@ -483,7 +483,7 @@ with st.sidebar:
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
 components.html("""
-<button onclick="window.print()" style="
+<button onclick="parent.window.print()" style="
     padding:10px 14px;
     border:none;
     border-radius:6px;
