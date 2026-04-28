@@ -484,21 +484,38 @@ with st.sidebar:
 # =================================================================#
 # -------------------- Button "PDF" erstellen --------------------
 # Erstellt einen Download-Button für das Diagramm als sauberes PDF
-pdf_bytes = pio.to_image(fig, format="pdf")
-st.download_button(label="Diagramm als PDF speichern", data=pdf_bytes, file_name="grafik.pdf")
+components.html("""
+<button onclick="parent.window.print()" style="
+    width: 100%;
+    height: 50px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;">
+    Drucken / PDF speichern
+</button>
+""", height=70)
 
 st.markdown("""
 <style>
 @media print {
-    /* Erzwingt eine schmale Breite, die auf jedes A4-Blatt passt */
+    /* Verhindert das Abschneiden: Dashboard schmaler machen */
     .main .block-container {
-        max-width: 800px !important; 
+        max-width: 800px !important;
+        padding: 10px !important;
     }
-    /* Blendet den Müll aus */
-    section[data-testid="stSidebar"], header { display: none !important; }
+    /* Alles Unnötige (Menü, Sidebar) ausblenden */
+    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"] {
+        display: none !important;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
+
+
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
 selected_quartale = st.session_state['selected_quartale']
