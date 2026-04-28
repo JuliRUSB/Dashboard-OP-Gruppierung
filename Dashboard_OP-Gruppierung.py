@@ -485,33 +485,18 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-# Einfacher Druck-Button (ganz unten oder wo du ihn willst)
-st.markdown("""
-<style>
-.stButton > button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-if st.button("🖨️ Seite drucken / PDF speichern"):
-    st.markdown(
-        """
-        <script>
-        window.print();
-        </script>
-        """,
-        unsafe_allow_html=True
-    )
-
-st.markdown("""
-<style>
+# Füge dies an die Stelle, wo der Druck-Button sein soll
+st.markdown(
+    """
+    <a href="#" onclick="window.print(); return false;" 
+       style="background-color: #4CAF50; color: white; padding: 10px 20px; 
+              text-decoration: none; border-radius: 5px; cursor: pointer; 
+              font-size: 16px; display: inline-block;">
+       🖨️ Seite drucken / PDF speichern
+    </a>
+    """,
+    unsafe_allow_html=True
+)
 /* Nur für den Druck gelten diese Regeln */
 @media print {
     /* 1. ALLES standardmäßig verstecken, außer dem Hauptinhalt */
