@@ -509,21 +509,22 @@ st.markdown("""
 }
 @media print {
     body * {
-        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
     .print-area {
-        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        overflow: visible !important;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
     }
     .print-area * {
-        display: revert !important;
-    }
-    .print-area .js-plotly-plot,
-    .print-area .js-plotly-plot * {
-        display: revert !important;
+        visibility: visible !important;
+        height: auto !important;
         overflow: visible !important;
     }
     .print-area svg {
