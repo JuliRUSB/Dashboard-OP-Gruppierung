@@ -485,9 +485,6 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-
-
-# -------------------- PRINT CSS --------------------
 # -------------------- Button "PDF" --------------------
 # Button
 components.html("""
@@ -549,6 +546,7 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
@@ -791,7 +789,7 @@ for i, bereich in enumerate(bereiche):
         # Hier würdest du deine Unter-Tabs erstellen:
         # tabs = st.tabs(analysen)
 
-        
+        st.markdown('<div class="print-area">', unsafe_allow_html=True)
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
         
         # Drei Spalten/Kacheln definieren (1. Reihe)
@@ -2273,8 +2271,8 @@ for i, bereich in enumerate(bereiche):
                     st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
             else:
                 st.error("Spalten fehlen")
-
         
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
