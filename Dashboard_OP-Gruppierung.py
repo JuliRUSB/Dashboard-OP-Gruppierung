@@ -498,41 +498,32 @@ components.html("""
     cursor: pointer;">
     Drucken / PDF
 </button>
+<script>
+function printArea() {
+    // Hole print-area aus dem Parent-DOM
+    const area = parent.document.querySelector('.print-area');
+    if (!area) { alert('print-area nicht gefunden!'); return; }
+    
+    const content = area.innerHTML;
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <html><head>
+        <style>
+            @page { size: A4 portrait; margin: 10mm; }
+            body { font-family: sans-serif; }
+            .js-plotly-plot { width: 100% !important; }
+            svg { overflow: visible !important; }
+        </style>
+        </head><body>${content}</body></html>
+    `);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { win.print(); win.close(); }, 1000);
+}
+</script>
 """, height=50)
 
-# -------------------- PRINT CSS --------------------
-st.markdown("""
-<style>
-@page {
-    size: A4 portrait;
-    margin: 10mm;
-}
-@media print {
-    body * {
-        visibility: hidden !important;
-        height: 0 !important;
-        overflow: hidden !important;
-    }
-    .print-area {
-        visibility: visible !important;
-        height: auto !important;
-        overflow: visible !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-    .print-area * {
-        visibility: visible !important;
-        height: auto !important;
-        overflow: visible !important;
-    }
-    .print-area svg {
-        overflow: visible !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
+
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
