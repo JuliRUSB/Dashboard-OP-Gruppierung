@@ -485,9 +485,9 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-# ---------------- PRINT BUTTON ----------------
+# -------------------- Button "PDF" + PRINT CSS --------------------
 components.html("""
-<button onclick="window.print()" style="
+<button onclick="printWithPlots()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -498,54 +498,35 @@ components.html("""
     cursor: pointer;">
     Drucken / PDF
 </button>
-""", height=60)
+<script>
+function printWithPlots() {
+    const plots = parent.document.querySelectorAll('.print-area .js-plotly-plot');
+    Promise.all(Array.from(plots).map(plot => {
+        return parent.Plotly.Plots.resize(plot);
+    })).then(() => {
+        setTimeout(() => { parent.window.print(); }, 800);
+    });
+}
+</script>
+""", height=50)
 
-# ---------------- PRINT CSS ----------------
 st.markdown("""
 <style>
 @media print {
-
-    /* Sidebar + Header sicher entfernen */
-    section[data-testid="stSidebar"],
-    header,
-    [data-testid="stHeader"],
-    [data-testid="stToolbar"] {
-        display: none !important;
-    }
-
-    /* Streamlit Layout auf Full Width */
-    .block-container {
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Alles außerhalb des Content-Bereichs ausblenden */
-    body * {
-        visibility: hidden;
-    }
-
-    /* Nur Main Content sichtbar */
-    .block-container,
-    .block-container * {
-        visibility: visible;
-    }
-
-    /* Position korrekt setzen */
-    .block-container {
+    body * { visibility: hidden; }
+    .print-area, .print-area * { visibility: visible; }
+    .print-area {
         position: absolute;
-        top: 0;
         left: 0;
+        top: 0;
         width: 100%;
     }
-
-    /* Plotly Fix */
-    .js-plotly-plot {
-        width: 100% !important;
-    }
+    .js-plotly-plot, .plot-container { width: 100% !important; }
+    svg { width: 100% !important; height: auto !important; }
 }
 </style>
 """, unsafe_allow_html=True)
+
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
