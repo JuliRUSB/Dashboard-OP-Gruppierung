@@ -397,9 +397,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ==================================================
-# Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang
-# ==================================================
+# =================================================================#
+# Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
+# =================================================================#
 with st.sidebar:
     st.header("Filter")
     
@@ -477,8 +477,33 @@ with st.sidebar:
         ["Alle"] + sorted(df['zugang'].unique())
     )
 
+# =================================================================#
+#              Button erstellen, Seitenleiste ausblenden           #
+# =================================================================#
+# -------------------- Button "PDF" erstellen --------------------
+st.button("Drucken / Als PDF speichern", on_click=lambda: st.markdown(
+    """
+    <script>
+    window.print();
+    </script>
+    """,
+    unsafe_allow_html=True
+))
 
-# -------------------- Daten filtern --------------------
+# -------------------- Seitenleiste im PDF ausblenden --------------------
+st.markdown("""
+<style>
+@media print {
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    .main {
+        margin-left: 0 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 selected_jahre = st.session_state['selected_jahre']
 selected_quartale = st.session_state['selected_quartale']
