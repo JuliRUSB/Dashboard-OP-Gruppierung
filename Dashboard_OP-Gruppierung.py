@@ -508,7 +508,12 @@ st.markdown("""
 
 @media print {
 
-    /* WICHTIG: Streamlit Layout auf 1 Spalte zwingen */
+    /* Sidebar komplett entfernen */
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+
+    /* Streamlit Layout auf 1 Spalte zwingen */
     div[data-testid="stHorizontalBlock"] {
         display: block !important;
     }
