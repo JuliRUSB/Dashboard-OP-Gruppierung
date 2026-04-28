@@ -509,9 +509,19 @@ st.markdown("""
     margin: 10mm;
 }
 @media print {
-    html, body {
-        width: 100% !important;
-        overflow: visible !important;
+    /* Alles ausblenden */
+    body * {
+        visibility: hidden !important;
+    }
+    /* Nur print-area anzeigen */
+    .print-area, .print-area * {
+        visibility: visible !important;
+    }
+    .print-area {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
     }
     .block-container,
     .main,
