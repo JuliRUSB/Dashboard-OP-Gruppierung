@@ -503,31 +503,26 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    /* Alles verstecken */
-    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"], footer {
+    /* 1. ALLES ausblenden */
+    div[data-testid="stAppViewContainer"] > section > div {
         display: none !important;
     }
-    
-    /* Hauptcontainer sichtbar machen, aber Standard-Inhalt ausblenden */
-    [data-testid="stAppViewContainer"] { visibility: hidden !important; }
-    
-    /* NUR die print-area einblenden */
-    .print-area, .print-area * {
-        visibility: visible !important;
+    header, [data-testid="stHeader"], section[data-testid="stSidebar"], [data-testid="stToolbar"] {
+        display: none !important;
+    }
+
+    /* 2. NUR die print-area anzeigen und auf die Seite zwingen */
+    div.print-area {
         display: block !important;
-    }
-
-    /* Breite auf A4 zwingen und Abschneiden verhindern */
-    .print-area {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
         width: 100% !important;
-        max-width: 650px !important; /* Verhindert das Abschneiden rechts */
+        max-width: 650px !important; /* Verhindert Abschneiden */
+        position: absolute;
+        left: 0;
+        top: 0;
     }
 
-    /* Grafiken proportional verkleinern */
-    .js-plotly-plot, .plot-container, svg {
+    /* 3. Grafiken zwingen, in der Breite zu bleiben */
+    .stPlotlyChart, .js-plotly-plot, .plot-container, svg {
         width: 100% !important;
         height: auto !important;
     }
