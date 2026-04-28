@@ -485,9 +485,18 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-# -------------------- Button "PDF" + PRINT CSS --------------------
+import streamlit as st
+import streamlit.components.v1 as components
+
+# ---------------- CONTENT ----------------
+st.title("Report")
+
+st.write("Hier dein Inhalt")
+st.plotly_chart(...)
+
+# ---------------- PRINT BUTTON ----------------
 components.html("""
-<button onclick="printApp()" style="
+<button onclick="window.print()" style="
     width: 180px;
     height: 40px;
     background-color: #4CAF50;
@@ -498,26 +507,54 @@ components.html("""
     cursor: pointer;">
     Drucken / PDF
 </button>
+""", height=60)
 
-<script>
-function printApp() {
-    const plots = parent.document.querySelectorAll('.js-plotly-plot');
+# ---------------- PRINT CSS ----------------
+st.markdown("""
+<style>
+@media print {
 
-    if (parent.Plotly && plots.length > 0) {
-        Promise.all(Array.from(plots).map(plot => {
-            return parent.Plotly.Plots.resize(plot);
-        })).then(() => {
-            setTimeout(() => {
-                parent.window.print();
-            }, 500);
-        });
-    } else {
-        parent.window.print();
+    /* Sidebar + Header sicher entfernen */
+    section[data-testid="stSidebar"],
+    header,
+    [data-testid="stHeader"],
+    [data-testid="stToolbar"] {
+        display: none !important;
+    }
+
+    /* Streamlit Layout auf Full Width */
+    .block-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Alles außerhalb des Content-Bereichs ausblenden */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Nur Main Content sichtbar */
+    .block-container,
+    .block-container * {
+        visibility: visible;
+    }
+
+    /* Position korrekt setzen */
+    .block-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    /* Plotly Fix */
+    .js-plotly-plot {
+        width: 100% !important;
     }
 }
-</script>
-""", height=80)
-
+</style>
+""", unsafe_allow_html=True)
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
 selected_jahre = st.session_state['selected_jahre']
