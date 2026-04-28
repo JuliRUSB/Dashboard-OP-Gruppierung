@@ -485,82 +485,95 @@ with st.sidebar:
 #              Button erstellen, Seitenleiste ausblenden           #
 # =================================================================#
 
-# -------------------- Button "PDF" + PRINT CSS --------------------
-components.html("""
-<button onclick="printWithPlots()" style="
-    width: 180px;
-    height: 40px;
+# Einfacher Druck-Button (ganz unten oder wo du ihn willst)
+st.markdown("""
+<style>
+.stButton > button {
     background-color: #4CAF50;
     color: white;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
-    font-family: sans-serif;
-    cursor: pointer;">
-    Drucken / PDF
-</button>
-
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script>
-function printWithPlots() {
-    const plots = document.querySelectorAll('.js-plotly-plot');
-    
-    // Warte auf alle Chart-Renderings
-    Promise.all(Array.from(plots).map(plot => {
-        return new Promise((resolve) => {
-            Plotly.Plots.resize(plot).then(() => {
-                setTimeout(resolve, 500); // Extra Wartezeit
-            });
-        });
-    })).then(() => {
-        setTimeout(() => {
-            window.print();
-        }, 1000); // Längere Verzögerung
-    });
+    cursor: pointer;
+    font-size: 16px;
 }
-</script>
-""", height=80)
+</style>
+""", unsafe_allow_html=True)
+
+if st.button("🖨️ Seite drucken / PDF speichern"):
+    st.markdown(
+        """
+        <script>
+        window.print();
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.markdown("""
 <style>
+/* Nur für den Druck gelten diese Regeln */
 @media print {
-    /* Header + Sidebar verstecken */
-    header, [data-testid="stHeader"], [data-testid="stSidebar"], 
-    .stApp, [class*="css-"], [class*="block-container"] {
-        display: none !important;
+    /* 1. ALLES standardmäßig verstecken, außer dem Hauptinhalt */
+    body * {
+        visibility: hidden;
     }
 
-    /* Nur print-area sichtbar */
-    .print-area, .print-area * {
+    /* 2. Nur die spezifischen Streamlit-Elemente wieder sichtbar machen */
+    /* Hauptcontainer und Text */
+    .block-container, 
+    .stMarkdown, 
+    h1, h2, h3, h4, h5, h6, 
+    p, span, div, 
+    [data-testid="stMetric"], 
+    [data-testid="stMetricValue"], 
+    [data-testid="stMetricLabel"],
+    [data-testid="stTabs"],
+    [data-testid="stTab"],
+    .stDataFrame,
+    .stTable {
+        visibility: visible;
+    }
+
+    /* 3. Plotly Charts explizit sichtbar machen und formatieren */
+    .js-plotly-plot, 
+    .plot-container, 
+    svg {
         visibility: visible !important;
-        display: block !important;
-    }
-
-    /* Layout für Druck optimieren */
-    .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 20px;
-        background: white;
-    }
-
-    /* Plotly Charts für Druck fixieren */
-    .js-plotly-plot, .plot-container {
         width: 100% !important;
         height: auto !important;
         page-break-inside: avoid;
     }
 
-    svg {
-        width: 100% !important;
-        height: auto !important;
+    /* 4. ALLES verstecken, was nicht gedruckt werden soll */
+    /* Sidebar, Header, Buttons, Filter, Inputs */
+    [data-testid="stSidebar"],
+    [data-testid="stHeader"],
+    header,
+    button,
+    input,
+    select,
+    textarea,
+    .stButton,
+    .stSlider,
+    .stSelectbox,
+    .stExpander,
+    [class*="sidebar"],
+    [class*="filter"],
+    [class*="button"],
+    .stAlert,
+    .stError,
+    .stWarning,
+    .stInfo {
+        display: none !important;
+        visibility: hidden !important;
     }
 
-    /* Metriken sichtbar halten */
-    [data-testid="stMetric"], [data-testid="stMetricValue"], 
-    [data-testid="stMetricLabel"] {
-        visibility: visible !important;
+    /* 5. Layout für Druck optimieren */
+    .block-container {
+        max-width: 100% !important;
+        padding: 20px !important;
+        margin: 0 !important;
     }
 }
 </style>
