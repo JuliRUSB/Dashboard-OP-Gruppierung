@@ -498,8 +498,20 @@ components.html("""
 st.markdown("""
 <style>
 @media print {
-    section[data-testid="stSidebar"] {
+    /* Seitenleiste und Header ausblenden (wie zuvor) */
+    section[data-testid="stSidebar"], header, [data-testid="stHeader"] {
         display: none !important;
+    }
+    
+    /* Ganze Seite auf 95% oder weniger skalieren, damit nichts abgeschnitten wird */
+    .main .block-container {
+        padding: 1rem !important;
+        max-width: 100% !important;
+    }
+    
+    /* Erzwingt, dass Grafiken nicht über die Seite hinausgehen */
+    div[data-testid="stVerticalBlock"] > div {
+        width: 100% !important;
     }
 }
 </style>
