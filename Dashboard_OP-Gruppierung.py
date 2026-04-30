@@ -738,7 +738,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
                     # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                    st.session_state.pdf_figures["kachel1"] = fig_kachel1
+                    st.session_state.pdf_figures["kachel1"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
@@ -797,7 +797,7 @@ for i, bereich in enumerate(bereiche):
                     )
 
                     # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                    st.session_state.pdf_figures["kachel2"] = fig_kachel2
+                    st.session_state.pdf_figures["kachel2"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
