@@ -494,18 +494,22 @@ if zugang_filter != "Alle":
 # ------------------- Export Button erstellen ---------------------
 def figures_to_html(figures: dict) -> bytes:
     import plotly.io as pio
-    html = """<html><body style="display:flex; flex-direction:column; align-items:center;">"""
+    
+    titles = {
+        "kachel1": "Gesamtzahl Operationen - Onkologie/Sarkome",
+        "kachel2": "Übersicht Operationen"
+    }
+    
+    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:800px; margin:auto;">"""
+    
     for name, fig in figures.items():
+        # Titel nur für Export hinzufügen, danach wieder entfernen
+        fig.update_layout(height=400, title=titles.get(name, ""))
         html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
+        fig.update_layout(height=None, title=None)  # Dashboard zurücksetzen
+    
     html += "</body></html>"
     return html.encode('utf-8')
-
-st.download_button(
-    label="📄 Grafiken exportieren",
-    data=figures_to_html(st.session_state.pdf_figures),
-    file_name="dashboard_export.html",
-    mime="text/html"
-)
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
@@ -722,8 +726,7 @@ for i, bereich in enumerate(bereiche):
                 
                     fig.update_layout(
                         autosize=True,
-                        height=400,  # feste Höhe
-                        title="Gesamtzahl Operationen - Onkologie/Sarkome",
+                        height=400,  
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
@@ -780,8 +783,7 @@ for i, bereich in enumerate(bereiche):
     
                     fig.update_layout(
                         autosize=True,
-                        height=400,  # feste Höhe
-                        title="Übersicht Operationen",  # Überschrift
+                        height=400,
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
