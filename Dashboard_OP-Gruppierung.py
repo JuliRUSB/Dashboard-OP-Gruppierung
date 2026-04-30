@@ -298,9 +298,10 @@ def prepare_data(df):
 # normale Variablen werden bei jedem Rerender gelöscht
 if "pdf_figures" not in st.session_state:
     st.session_state.pdf_figures = {}
-
 if "export_pdf" not in st.session_state:
     st.session_state.export_pdf = False
+if "pdf_bytes" not in st.session_state:
+    st.session_state.pdf_bytes = None
 
 # ==================================================
 # Hilfsfunktion für konsistente Farben
@@ -2365,7 +2366,7 @@ if st.session_state.export_pdf:
     st.session_state.export_pdf = False
 
 # Download-Button anzeigen mit dem fertigen PDF
-if "pdf_bytes" in st.session_state:
+if st.session_state.pdf_bytes:
     st.download_button(
         label="⬇️ PDF herunterladen",
         data=st.session_state.pdf_bytes,
