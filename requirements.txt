@@ -4,3 +4,7 @@ dash-bootstrap-components
 plotly
 requests
 urllib3
+streamlit
+urllib3
+kaleido
+fpdf2
