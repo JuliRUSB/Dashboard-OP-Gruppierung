@@ -10,8 +10,6 @@ import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
-pip install kaleido
-
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -484,7 +482,15 @@ if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 # ------------------- PDF Button rerstellen ---------------------
-
+if st.button("📄 Seite als PDF speichern"):
+    st.markdown(
+        """
+        <script>
+            window.print();
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
