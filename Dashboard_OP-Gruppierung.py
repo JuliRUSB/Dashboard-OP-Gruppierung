@@ -492,30 +492,27 @@ if zugang_filter != "Alle":
 
 # ------------------- PDF Button rerstellen ---------------------
 def figures_to_pdf(figures: dict) -> bytes:
-    from fpdf import FPDF
     import io
-    
-    pdf = FPDF(orientation="L", unit="mm", format="A4")
-    
-    for name, fig in figures.items():
-        img_bytes = fig.to_image(format="svg")
-        img_buffer = io.BytesIO(img_bytes)
-        pdf.add_page()
-        pdf.image(img_buffer, x=10, y=10, w=277)
-    
-    return bytes(pdf.output())
+    import matplotlib.pyplot as plt
+    import matplotlib.backends.backend_pdf as pdf_backend
 
-if st.session_state.pdf_figures:
-    if st.button("📄 Als PDF exportieren"):
-        with st.spinner("PDF wird erstellt..."):
-            pdf_bytes = figures_to_pdf(st.session_state.pdf_figures)
-        
-        st.download_button(
-            label="⬇️ PDF herunterladen",
-            data=pdf_bytes,
-            file_name="dashboard_export.pdf",
-            mime="application/pdf"
-        )
+    buf = io.BytesIO()
+    pdf = pdf_backend.PdfPages(buf)
+
+    for name, fig in figures.items():
+        # Plotly-Daten extrahieren
+        for trace in fig.data:
+            mpl_fig, ax = plt.subplots(figsize=(14, 7))
+            if hasattr(trace, 'x') and hasattr(trace, 'y'):
+                ax.bar(trace.x, trace.y, label=trace.name if trace.name else "")
+            ax.set_title(fig.layout.title.text if fig.layout.title.text else name)
+            ax.legend()
+            pdf.savefig(mpl_fig)
+            plt.close(mpl_fig)
+
+    pdf.close()
+    buf.seek(0)
+    return buf.read()
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
