@@ -503,14 +503,18 @@ def figures_to_html(figures: dict) -> bytes:
     html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:800px; margin:auto;">"""
     
     for name, fig in figures.items():
-        # Titel nur für Export hinzufügen, danach wieder entfernen
         fig.update_layout(height=400, title=titles.get(name, ""))
         html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
-        fig.update_layout(height=None, title=None)  # Dashboard zurücksetzen
+        fig.update_layout(height=None, title=None)
     
     html += "</body></html>"
     return html.encode('utf-8')
 
+st.download_button(
+    label="📄 Grafiken exportieren",
+    data=figures_to_html(st.session_state.pdf_figures),
+    file_name="dashboard_export.html",
+    mime="text/html"
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
 st.header("Kennzahlen")
