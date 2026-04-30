@@ -498,7 +498,7 @@ def figures_to_pdf(figures: dict) -> bytes:
     pdf = FPDF(orientation="L", unit="mm", format="A4")
     
     for name, fig in figures.items():
-        img_bytes = fig.to_image(format="png", width=1100, height=700, scale=2)
+        img_bytes = fig.to_image(format="svg")
         img_buffer = io.BytesIO(img_bytes)
         pdf.add_page()
         pdf.image(img_buffer, x=10, y=10, w=277)
