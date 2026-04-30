@@ -2341,12 +2341,19 @@ def figures_to_html(figures: dict) -> bytes:
         "kachel2": "Übersicht Operationen"
     }
     
-    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:800px; margin:auto;">"""
+    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:100%; margin:auto;">"""
     
     for name, fig in figures.items():
-        fig.update_layout(height=400, title=titles.get(name, ""))
+        fig.update_layout(
+            height=500,
+            width=1000,
+            title=titles.get(name, ""),
+            margin=dict(l=60, r=40, t=60, b=60)
+        )
+        html += f"<div style='width:1000px; margin-bottom:40px;'>"
         html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
-        fig.update_layout(height=None, title=None)
+        html += "</div>"
+        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=0, b=10))
     
     html += "</body></html>"
     return html.encode('utf-8')
