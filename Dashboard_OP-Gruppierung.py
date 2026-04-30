@@ -2341,22 +2341,25 @@ def figures_to_html(figures: dict) -> bytes:
         "kachel2": "Übersicht Operationen"
     }
     
-    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:100%; margin:auto;">"""
+    # 1. Breite im Body auf 100% setzen und Ränder entfernen
+    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:100%; margin:0; padding:0;">"""
     
     for name, fig in figures.items():
+        # 2. Festen Breitenwert bei der Grafik entfernen
         fig.update_layout(
             height=500,
-            width=1000,
             title=titles.get(name, ""),
             margin=dict(l=60, r=40, t=60, b=60)
         )
-        html += f"<div style='width:1000px; margin-bottom:40px;'>"
+        # 3. Div auf volle Breite oder einen Prozentsatz setzen (z. B. 95%)
+        html += "<div style='width:95%; max-width:1000px; margin-bottom:40px;'>"
         html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
         html += "</div>"
-        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=10, b=10))
+        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=0, b=10))
     
     html += "</body></html>"
     return html.encode('utf-8')
+
 
 st.download_button(
     label="📄 Grafiken exportieren",
