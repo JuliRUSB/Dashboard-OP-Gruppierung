@@ -783,7 +783,7 @@ for i, bereich in enumerate(bereiche):
             
                     # --- WICHTIG: HTML-BOX FÜR PDF START ---
                     st.markdown('<div id="drucken1">', unsafe_allow_html=True)
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": True, "responsive": True})
                     st.markdown('</div>', unsafe_allow_html=True)
                     # --- HTML-BOX ENDE ---
                 else:
@@ -843,7 +843,7 @@ for i, bereich in enumerate(bereiche):
     
                     # --- WICHTIG: HTML-BOX FÜR PDF START ---
                     st.markdown('<div id="drucken2">', unsafe_allow_html=True)
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": True, "responsive": True})
                     st.markdown('</div>', unsafe_allow_html=True)
                     # --- HTML-BOX ENDE ---
                 else:
