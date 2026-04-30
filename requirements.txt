@@ -6,4 +6,4 @@ requests
 urllib3
 streamlit
 urllib3
-fpdf2
+matplotlib
