@@ -491,34 +491,20 @@ if bereich_filter != "Alle":
 if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
-# ------------------- PDF Button erstellen ---------------------
-def figures_to_pdf(figures: dict) -> bytes:
-    import io
-    import matplotlib.pyplot as plt
-    import matplotlib.backends.backend_pdf as pdf_backend
-
-    buf = io.BytesIO()
-    pdf = pdf_backend.PdfPages(buf)
-
+# ------------------- Export Button erstellen ---------------------
+def figures_to_html(figures: dict) -> bytes:
+    import plotly.io as pio
+    html = """<html><body style="display:flex; flex-direction:column; align-items:center;">"""
     for name, fig in figures.items():
-        mpl_fig, ax = plt.subplots(figsize=(14, 7))
-        for i, trace in enumerate(fig.data):
-            if hasattr(trace, 'x') and hasattr(trace, 'y'):
-                ax.bar(trace.x, trace.y, label=trace.name if trace.name else "", color=f"C{i}")
-        ax.set_title(fig.layout.title.text if fig.layout.title and fig.layout.title.text else name)
-        ax.legend()
-        pdf.savefig(mpl_fig)
-        plt.close(mpl_fig)
-
-    pdf.close()
-    buf.seek(0)
-    return buf.read()
+        html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
+    html += "</body></html>"
+    return html.encode('utf-8')
 
 st.download_button(
-    label="📄 Als PDF exportieren",
-    data=figures_to_pdf(st.session_state.pdf_figures),
-    file_name="dashboard_export.pdf",
-    mime="application/pdf"
+    label="📄 Grafiken exportieren",
+    data=figures_to_html(st.session_state.pdf_figures),
+    file_name="dashboard_export.html",
+    mime="text/html"
 )
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
