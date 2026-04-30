@@ -482,41 +482,80 @@ if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 # ------------------- PDF Button rerstellen ---------------------
-if st.button("📄 als PDF speichern"):
-    st.markdown(
-        """
-        <style>
-        @media print {
-            /* 1. Alles komplett ausblenden */
-            body * {
-                visibility: hidden !important;
-            }
-            /* 2. Nur unsere zwei markierten Boxen wieder einblenden */
-            #drucken1, #drucken1 *, #drucken2, #drucken2 * {
-                visibility: visible !important;
-            }
-            /* 3. Schöne Positionierung auf dem PDF */
-            #drucken1 {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-            }
-            #drucken2 {
-                position: absolute !important;
-                left: 0 !important;
-                top: 450px !important; /* Platziert Grafik 2 unter Grafik 1 */
-                width: 100% !important;
-            }
-        }
-        </style>
+st.markdown(
+    """
+    <style>
+    /* Styling für deinen Button in der App */
+    .mein-pdf-button {
+        background-color: #FF4B4B;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .mein-pdf-button:hover {
+        background-color: #E03E3E;
+    }
+    </style>
+    
+    <!-- Dieser Button sammelt deine IDs drucken1 und drucken2 ein -->
+    <button class="mein-pdf-button" onclick="druckeAusgewaehlteGrafiken()">
+        📄 Ausgewählte Grafiken als PDF speichern
+    </button>
+
+    <script>
+    function druckeAusgewaehlteGrafiken() {
+        // 1. Hole deine exakt definierten Boxen aus dem Code
+        const grafik1 = document.getElementById('drucken1');
+        const grafik2 = document.getElementById('drucken2');
         
-        <script>
-            window.print();
-        </script>
-        """,
-        unsafe_allow_html=True
-    )
+        if (!grafik1 && !grafik2) {
+            alert('Die IDs drucken1 oder drucken2 wurden auf der Seite nicht gefunden.');
+            return;
+        }
+
+        // 2. Erstelle ein neues, sauberes Browserfenster
+        const druckFenster = window.open('', '_blank');
+        druckFenster.document.write('<html><head><title>PDF Export</title>');
+        
+        // CSS für das Druck-Layout im neuen Fenster
+        druckFenster.document.write(`
+            <style>
+                body { font-family: sans-serif; margin: 20px; }
+                .grafik-box { 
+                    margin-bottom: 30px; 
+                    page-break-inside: avoid; 
+                    width: 100% !important;
+                }
+                /* Stellt sicher, dass die Plotly SVG-Grafiken skaliert werden */
+                svg { width: 100% !important; height: auto !important; }
+            </style>
+        `);
+        druckFenster.document.write('</head><body>');
+        
+        // 3. Kopiere den Code aus deinen IDs in das neue Fenster
+        if (grafik1) {
+            druckFenster.document.write('<div class="grafik-box">' + grafik1.innerHTML + '</div>');
+        }
+        if (grafik2) {
+            druckFenster.document.write('<div class="grafik-box">' + grafik2.innerHTML + '</div>');
+        }
+        
+        druckFenster.document.write('</body></html>');
+        druckFenster.document.close();
+        
+        // 4. Kurze Verzögerung, damit die Plotly-Skripte im neuen Fenster laden können
+        setTimeout(() => {
+            druckFenster.print();
+            druckFenster.close();
+        }, 500);
+    }
+    </script>
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
