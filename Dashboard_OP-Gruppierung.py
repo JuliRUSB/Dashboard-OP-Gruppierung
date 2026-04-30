@@ -708,7 +708,7 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
             
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": True})
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
             else:
