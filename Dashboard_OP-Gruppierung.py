@@ -10,7 +10,7 @@ import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
-from streamlit_elements import Elements
+
 
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
@@ -483,20 +483,8 @@ if bereich_filter != "Alle":
 if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
-# ------------------- Button rerstellen ---------------------
-mt = Elements()
+# ------------------- PDF Button rerstellen ---------------------
 
-mt.button(
-"PDF", 
-target="_blank", 
-size="medium", 
-variant="contained", 
-start_icon=mt.icons.add_box, 
-onclick=mt.rerun, 
-style={"color":"#FFFFFF", "background":"#FF4B4B"}, 
-href="https://mui.com/components/buttons/")
-
-mt.show(key = "648")
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
