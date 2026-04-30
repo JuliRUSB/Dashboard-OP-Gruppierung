@@ -2363,11 +2363,15 @@ if st.session_state.export_pdf:
     with st.spinner("PDF wird erstellt..."):
         # Alle gespeicherten Figuren in ein PDF umwandeln
         pdf_bytes = figures_to_pdf(st.session_state.pdf_figures)
-    # Download-Button anzeigen mit dem fertigen PDF
+    # PDF-Bytes im Speicher ablegen damit Download-Button sichtbar bleibt
+    st.session_state.pdf_bytes = pdf_bytes
+    st.session_state.export_pdf = False
+
+# Download-Button anzeigen mit dem fertigen PDF
+if "pdf_bytes" in st.session_state:
     st.download_button(
         label="⬇️ PDF herunterladen",
-        data=pdf_bytes,
+        data=st.session_state.pdf_bytes,
         file_name="dashboard_export.pdf",
         mime="application/pdf"
     )
-    st.session_state.export_pdf = False
