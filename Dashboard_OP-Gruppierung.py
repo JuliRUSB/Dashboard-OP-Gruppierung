@@ -10,6 +10,7 @@ import streamlit as st             # Streamlit für Web-App
 import urllib3                     # Bibliothek für HTTP-Kommunikation
 import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
 import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
+from streamlit_elements import Elements
 
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
