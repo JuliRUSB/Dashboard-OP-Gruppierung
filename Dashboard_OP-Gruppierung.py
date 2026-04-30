@@ -293,6 +293,12 @@ def prepare_data(df):
     
     return df
 
+# Figuren-Speicher initialisieren (nur beim ersten Laden der App)
+# session_state bleibt über Streamlit-Rerenders hinweg erhalten,
+# normale Variablen werden bei jedem Rerender gelöscht
+if "pdf_figures" not in st.session_state:
+    st.session_state.pdf_figures = {}
+
 # ==================================================
 # Hilfsfunktion für konsistente Farben
 # ==================================================
@@ -482,7 +488,31 @@ if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 # ------------------- PDF Button rerstellen ---------------------
+def figures_to_pdf(figures: dict) -> bytes:
+    from fpdf import FPDF
+    import io
+    
+    pdf = FPDF(orientation="L", unit="mm", format="A4")
+    
+    for name, fig in figures.items():
+        img_bytes = fig.to_image(format="png", width=1100, height=700, scale=2)
+        img_buffer = io.BytesIO(img_bytes)
+        pdf.add_page()
+        pdf.image(img_buffer, x=10, y=10, w=277)
+    
+    return bytes(pdf.output())
 
+if st.session_state.pdf_figures:
+    if st.button("📄 Als PDF exportieren"):
+        with st.spinner("PDF wird erstellt..."):
+            pdf_bytes = figures_to_pdf(st.session_state.pdf_figures)
+        
+        st.download_button(
+            label="⬇️ PDF herunterladen",
+            data=pdf_bytes,
+            file_name="dashboard_export.pdf",
+            mime="application/pdf"
+        )
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
@@ -659,7 +689,7 @@ for i, bereich in enumerate(bereiche):
         st.markdown('<div class="print-area">', unsafe_allow_html=True)
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
         
-        # Drei Spalten/Kacheln definieren (1. Reihe)
+        # Zwei Spalten/Kacheln definieren (1. Reihe)
         col1, col2 = st.columns(2)
         
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
@@ -707,7 +737,9 @@ for i, bereich in enumerate(bereiche):
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
-            
+                    # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
+                    st.session_state.pdf_figures["kachel1"] = fig_kachel1
+                    
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
@@ -763,7 +795,10 @@ for i, bereich in enumerate(bereiche):
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
-    
+
+                    # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
+                    st.session_state.pdf_figures["kachel2"] = fig_kachel2
+                    
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
                     st.info("Keine Sarkom-Daten")
