@@ -439,7 +439,7 @@ df_base = df[
 
 # --- TEIL 1: Filterlogik (nur für die Grafiken in Teil 2) ---
 
-# Wir erstellen Kopien für die Visualisierungen in Teil 2, 
+# Kopien für die Visualisierungen in Teil 2, 
 # damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
 df_plots = df_base.copy()
 
@@ -622,12 +622,10 @@ st.divider()
 
 st.header("Detailanalysen")
 
-# Wir definieren explizit, welche Bereiche als Tabs erscheinen sollen.
-# So verhinderst du, dass "falsche" Bereiche beim Laden aktiv sind.
-# Die auskommentierten Bereiche bleiben in deiner Liste im Code erhalten.
+# Definition, welche Bereiche als Tabs erscheinen sollen.
 ANALYSEN_PRO_BEREICH = {
     "Chirurgische Onkologie/Sarkome" : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
-    # "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
+    "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Allgemein": ["Komplikationen", "LOS", "Trends"],
@@ -642,7 +640,7 @@ bereich_tabs = st.tabs(bereiche)
 
 for i, bereich in enumerate(bereiche):
     with bereich_tabs[i]:
-        # Hier nutzen wir das ORIGINAL df_base, damit die Bereichs-Filter von oben NICHT greifen
+        # ORIGINAL df_base, damit die Bereichs-Filter von oben NICHT greifen
         df_bereich = df_base[df_base["bereich"] == bereich]
         
         st.subheader(f"Bereich: {bereich}")
@@ -652,7 +650,7 @@ for i, bereich in enumerate(bereiche):
             continue
             
         analysen = ANALYSEN_PRO_BEREICH.get(bereich)
-        # Hier würdest du deine Unter-Tabs erstellen:
+        # Unter-Tabs erstellen:
         # tabs = st.tabs(analysen)
 
         st.markdown('<div class="print-area">', unsafe_allow_html=True)
