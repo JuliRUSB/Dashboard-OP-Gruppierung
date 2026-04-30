@@ -299,6 +299,9 @@ def prepare_data(df):
 if "pdf_figures" not in st.session_state:
     st.session_state.pdf_figures = {}
 
+if "export_pdf" not in st.session_state:
+    st.session_state.export_pdf = False
+
 # ==================================================
 # Hilfsfunktion für konsistente Farben
 # ==================================================
@@ -2353,3 +2356,18 @@ for i, bereich in enumerate(bereiche):
                 # yaxis={"tickfont": {"size": 16}} 
             # )
             # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
+
+# Wurde der Export-Button geklickt?
+if st.session_state.export_pdf:
+    # Ladeanimation anzeigen während PDF erstellt wird
+    with st.spinner("PDF wird erstellt..."):
+        # Alle gespeicherten Figuren in ein PDF umwandeln
+        pdf_bytes = figures_to_pdf(st.session_state.pdf_figures)
+    # Download-Button anzeigen mit dem fertigen PDF
+    st.download_button(
+        label="⬇️ PDF herunterladen",
+        data=pdf_bytes,
+        file_name="dashboard_export.pdf",
+        mime="application/pdf"
+    )
+    st.session_state.export_pdf = False
