@@ -482,9 +482,35 @@ if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 # ------------------- PDF Button rerstellen ---------------------
-if st.button("📄 Seite als PDF speichern"):
+if st.button("📄 als PDF speichern"):
     st.markdown(
         """
+        <style>
+        @media print {
+            /* 1. Alles komplett ausblenden */
+            body * {
+                visibility: hidden !important;
+            }
+            /* 2. Nur unsere zwei markierten Boxen wieder einblenden */
+            #drucken1, #drucken1 *, #drucken2, #drucken2 * {
+                visibility: visible !important;
+            }
+            /* 3. Schöne Positionierung auf dem PDF */
+            #drucken1 {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+            }
+            #drucken2 {
+                position: absolute !important;
+                left: 0 !important;
+                top: 450px !important; /* Platziert Grafik 2 unter Grafik 1 */
+                width: 100% !important;
+            }
+        }
+        </style>
+        
         <script>
             window.print();
         </script>
@@ -716,7 +742,11 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
             
+                    # --- WICHTIG: HTML-BOX FÜR PDF START ---
+                    st.markdown('<div id="drucken1">', unsafe_allow_html=True)
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    # --- HTML-BOX ENDE ---
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
             else:
@@ -772,7 +802,11 @@ for i, bereich in enumerate(bereiche):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
     
+                    # --- WICHTIG: HTML-BOX FÜR PDF START ---
+                    st.markdown('<div id="drucken2">', unsafe_allow_html=True)
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    # --- HTML-BOX ENDE ---
                 else:
                     st.info("Keine Sarkom-Daten")
             else:
