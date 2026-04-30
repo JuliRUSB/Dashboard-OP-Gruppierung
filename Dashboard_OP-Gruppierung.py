@@ -515,6 +515,7 @@ st.download_button(
     data=figures_to_html(st.session_state.pdf_figures),
     file_name="dashboard_export.html",
     mime="text/html"
+)
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
 st.header("Kennzahlen")
