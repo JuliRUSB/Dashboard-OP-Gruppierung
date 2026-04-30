@@ -492,6 +492,8 @@ if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 # ------------------- PDF Button rerstellen ---------------------
+if st.button("📄 Als PDF exportieren"):
+    st.session_state.export_pdf = True
 def figures_to_pdf(figures: dict) -> bytes:
     import io
     import matplotlib.pyplot as plt
