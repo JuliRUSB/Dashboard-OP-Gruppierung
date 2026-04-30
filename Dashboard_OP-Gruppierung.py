@@ -2353,7 +2353,7 @@ def figures_to_html(figures: dict) -> bytes:
         html += f"<div style='width:1000px; margin-bottom:40px;'>"
         html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
         html += "</div>"
-        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=0, b=10))
+        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=10, b=10))
     
     html += "</body></html>"
     return html.encode('utf-8')
