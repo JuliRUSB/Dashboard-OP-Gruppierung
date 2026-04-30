@@ -491,9 +491,7 @@ if bereich_filter != "Alle":
 if zugang_filter != "Alle":
     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
-# ------------------- PDF Button rerstellen ---------------------
-if st.button("📄 Als PDF exportieren"):
-    st.session_state.export_pdf = True
+# ------------------- PDF Button erstellen ---------------------
 def figures_to_pdf(figures: dict) -> bytes:
     import io
     import matplotlib.pyplot as plt
@@ -503,19 +501,25 @@ def figures_to_pdf(figures: dict) -> bytes:
     pdf = pdf_backend.PdfPages(buf)
 
     for name, fig in figures.items():
-        # Plotly-Daten extrahieren
-        for trace in fig.data:
-            mpl_fig, ax = plt.subplots(figsize=(14, 7))
+        mpl_fig, ax = plt.subplots(figsize=(14, 7))
+        for i, trace in enumerate(fig.data):
             if hasattr(trace, 'x') and hasattr(trace, 'y'):
-                ax.bar(trace.x, trace.y, label=trace.name if trace.name else "")
-            ax.set_title(fig.layout.title.text if fig.layout.title.text else name)
-            ax.legend()
-            pdf.savefig(mpl_fig)
-            plt.close(mpl_fig)
+                ax.bar(trace.x, trace.y, label=trace.name if trace.name else "", color=f"C{i}")
+        ax.set_title(fig.layout.title.text if fig.layout.title and fig.layout.title.text else name)
+        ax.legend()
+        pdf.savefig(mpl_fig)
+        plt.close(mpl_fig)
 
     pdf.close()
     buf.seek(0)
     return buf.read()
+
+st.download_button(
+    label="📄 Als PDF exportieren",
+    data=figures_to_pdf(st.session_state.pdf_figures),
+    file_name="dashboard_export.pdf",
+    mime="application/pdf"
+)
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
@@ -2357,21 +2361,4 @@ for i, bereich in enumerate(bereiche):
             # )
             # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
 
-# Wurde der Export-Button geklickt?
-if st.session_state.export_pdf:
-    # Ladeanimation anzeigen während PDF erstellt wird
-    with st.spinner("PDF wird erstellt..."):
-        # Alle gespeicherten Figuren in ein PDF umwandeln
-        pdf_bytes = figures_to_pdf(st.session_state.pdf_figures)
-    # PDF-Bytes im Speicher ablegen damit Download-Button sichtbar bleibt
-    st.session_state.pdf_bytes = pdf_bytes
-    st.session_state.export_pdf = False
 
-# Download-Button anzeigen mit dem fertigen PDF
-if st.session_state.pdf_bytes:
-    st.download_button(
-        label="⬇️ PDF herunterladen",
-        data=st.session_state.pdf_bytes,
-        file_name="dashboard_export.pdf",
-        mime="application/pdf"
-    )
