@@ -722,7 +722,8 @@ for i, bereich in enumerate(bereiche):
                 
                     fig.update_layout(
                         autosize=True,
-                        height=None,
+                        height=400,  # feste Höhe
+                        title="Gesamtzahl Operationen - Onkologie/Sarkome",
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
@@ -779,7 +780,8 @@ for i, bereich in enumerate(bereiche):
     
                     fig.update_layout(
                         autosize=True,
-                        height=None,
+                        height=400,  # feste Höhe
+                        title="Übersicht Operationen",  # Überschrift
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
