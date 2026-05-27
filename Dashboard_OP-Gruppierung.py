@@ -39,11 +39,11 @@ def export_redcap_data(api_url):
     # Daten für POST-Request definieren
     data = {
         'token': API_TOKEN,
-        'content': 'record',              # Datentyp: Records
-        'action': 'export',               # Aktion: Export
-        'format': 'json',                 # Format: JSON
-        'type': 'flat',                   # Flache Struktur (nicht verschachtelt)
-        'fields[0]': 'opdatum',           # Felder, die exportiert werden sollen
+        'content': 'record',                       # Datentyp: Records
+        'action': 'export',                        # Aktion: Export
+        'format': 'json',                          # Format: JSON
+        'type': 'flat',                            # Flache Struktur (nicht verschachtelt)
+        'fields[0]': 'opdatum',                    # Felder, die exportiert werden sollen
         'fields[1]': 'bereich',
         'fields[2]': 'leber_gruppen',              # Leber
         'fields[3]': 'hsm',                        # Leber 
@@ -55,19 +55,18 @@ def export_redcap_data(api_url):
         'fields[9]': 'max_dindo_calc_surv',
         'fields[10]': 'los_opdatum',
         'fields[11]': 'los_eintritt_austritt',
-        'fields[12]': 'type_sark',
-        'fields[13]': 'gruppen_chir_onko_sark',
-        'fields[14]': 'malignit_t_sark',
-        'fields[15]': 'lokalisation_sark',
-        'fields[16]': 'hipec',
-        'fields[17]': 'anastomosen_crs',
+        'fields[12]': 'type_sark',                 # Sarkom
+        'fields[13]': 'gruppen_chir_onko_sark',    # Sarkom
+        'fields[14]': 'malignit_t_sark',           # Sarkom
+        'fields[15]': 'lokalisation_sark',         # Sarkom
+        'fields[16]': 'hipec',                     # Sarkom
+        'fields[17]': 'anastomosen_crs',           # Sarkom
         'fields[18]': 'statistik_dindo_2',
         'fields[19]': 'los_opdatum',
-        'fields[20]': 'crs_details',
-        'fields[21]': 'anastomosen_crs',
-        'fields[22]': 'kpl_was',
-        'fields[23]': 'kpl_was_surv',
-        'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
+        'fields[20]': 'crs_details',               # Sarkom
+        'fields[21]': 'kpl_was',
+        'fields[22]': 'kpl_was_surv',
+        'rawOrLabel': 'raw',                       # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
         'exportSurveyFields': 'false',
@@ -188,6 +187,14 @@ def prepare_data(df):
     df['gallefistel_surv'] = pd.to_numeric(df['gallefistel_surv'], errors='coerce')
     df['gallefistel_surv'] = df['gallefistel_surv'].map(gallefistel_surv_mapping).fillna('Unbekannt')
 
+    # Reoperation 30d: numerische Codes in Text umwandeln
+    reoperation_30d_mapping = {
+        1: 'Ja',
+        0: 'Nein'
+    }
+    df['reoperation_30d'] = pd.to_numeric(df['reoperation_30d'], errors='coerce')
+    df['reoperation_30d'] = df['reoperation_30d'].map(reoperation_30d_mapping).fillna('Unbekannt')
+    
     # Typ Sarkom: numerische Codes in Text umwandeln
     type_sark_mapping = {
         1: 'CRS',
