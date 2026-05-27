@@ -45,25 +45,28 @@ def export_redcap_data(api_url):
         'type': 'flat',                   # Flache Struktur (nicht verschachtelt)
         'fields[0]': 'opdatum',           # Felder, die exportiert werden sollen
         'fields[1]': 'bereich',
-        'fields[2]': 'leber_gruppen',
-        'fields[3]': 'hsm',
-        'fields[4]': 'zugang',
-        'fields[5]': 'max_dindo_calc',
-        'fields[6]': 'max_dindo_calc_surv',
-        'fields[7]': 'los_opdatum',
-        'fields[8]':  'los_eintritt_austritt',
-        'fields[9]':  'type_sark',
-        'fields[10]':  'gruppen_chir_onko_sark',
-        'fields[11]':  'malignit_t_sark',
-        'fields[12]':  'lokalisation_sark',
-        'fields[13]':  'hipec',
-        'fields[14]':  'anastomosen_crs',
-        'fields[15]':  'statistik_dindo_2',
-        'fields[16]':  'los_opdatum',
-        'fields[17]':  'crs_details',
-        'fields[18]':  'anastomosen_crs',
-        'fields[19]':  'kpl_was',
-        'fields[20]':  'kpl_was_surv',
+        'fields[2]': 'leber_gruppen',              # Leber
+        'fields[3]': 'hsm',                        # Leber 
+        'fields[4]': 'zugang',                     # Leber
+        'fields[5]': 'gallefistel_isgls',          # Leber
+        'fields[6]': 'gallefistel_isgls_surv',     # Leber
+        'fields[7]': 'reoperation_30d',            # Leber
+        'fields[8]': 'max_dindo_calc',
+        'fields[9]': 'max_dindo_calc_surv',
+        'fields[10]': 'los_opdatum',
+        'fields[11]': 'los_eintritt_austritt',
+        'fields[12]': 'type_sark',
+        'fields[13]': 'gruppen_chir_onko_sark',
+        'fields[14]': 'malignit_t_sark',
+        'fields[15]': 'lokalisation_sark',
+        'fields[16]': 'hipec',
+        'fields[17]': 'anastomosen_crs',
+        'fields[18]': 'statistik_dindo_2',
+        'fields[19]': 'los_opdatum',
+        'fields[20]': 'crs_details',
+        'fields[21]': 'anastomosen_crs',
+        'fields[22]': 'kpl_was',
+        'fields[23]': 'kpl_was_surv',
         'rawOrLabel': 'raw',              # Werte als Rohdaten exportieren
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -102,7 +105,7 @@ def prepare_data(df):
             'bereich___4': 'Chirurgische Onkologie/Sarkome',
             #'bereich___5': 'Hernien',
             #'bereich___6': 'Kolorektal',
-            #'bereich___7': 'Leber',
+            'bereich___7': 'Leber',
             #'bereich___8': 'Pankreas',
             #'bereich___9': 'Upper-GI'
         }
@@ -166,6 +169,24 @@ def prepare_data(df):
     }
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
+
+    # Gallefistel: numerische Codes in Text umwandeln
+    gallefistel_mapping = {
+        1: 'Grade A',
+        2: 'Grade B',
+        3: 'Grade C'
+    }
+    df['gallefistel'] = pd.to_numeric(df['gallefistel'], errors='coerce')
+    df['gallefistel'] = df['gallefistel'].map(gallefistel_mapping).fillna('Unbekannt')
+
+     # Gallefistel_surv: numerische Codes in Text umwandeln
+    gallefistel_surv_mapping = {
+        1: 'Grade A',
+        2: 'Grade B',
+        3: 'Grade C'
+    }
+    df['gallefistel_surv'] = pd.to_numeric(df['gallefistel_surv'], errors='coerce')
+    df['gallefistel_surv'] = df['gallefistel_surv'].map(gallefistel_surv_mapping).fillna('Unbekannt')
 
     # Typ Sarkom: numerische Codes in Text umwandeln
     type_sark_mapping = {
@@ -2155,7 +2176,16 @@ for i, bereich in enumerate(bereiche):
         st.markdown('</div>', unsafe_allow_html=True)
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
-
+# 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
+# 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
+# 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
+# 4. Grafik: Hospital Stay
+# 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
+# 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
+# 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
+# Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
+# 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
+        
         
         
         # Drei Spalten/Kacheln definieren (7. Reihe)
