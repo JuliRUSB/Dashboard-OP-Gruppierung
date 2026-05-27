@@ -169,23 +169,23 @@ def prepare_data(df):
     df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
     df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
-    # Gallefistel: numerische Codes in Text umwandeln
-    gallefistel_mapping = {
+    # Gallefistel_isgls: numerische Codes in Text umwandeln
+    gallefistel_isgls_mapping = {
         1: 'Grade A',
         2: 'Grade B',
         3: 'Grade C'
     }
-    df['gallefistel'] = pd.to_numeric(df['gallefistel'], errors='coerce')
-    df['gallefistel'] = df['gallefistel'].map(gallefistel_mapping).fillna('Unbekannt')
+    df['gallefistel_isgls'] = pd.to_numeric(df['gallefistel_isgls'], errors='coerce')
+    df['gallefistel_isgls'] = df['gallefistel_isgls'].map(gallefistel_isgls_mapping).fillna('Unbekannt')
 
-     # Gallefistel_surv: numerische Codes in Text umwandeln
-    gallefistel_surv_mapping = {
+     # Gallefistel_isgls_surv: numerische Codes in Text umwandeln
+    gallefistel_isgls_surv_mapping = {
         1: 'Grade A',
         2: 'Grade B',
         3: 'Grade C'
     }
-    df['gallefistel_surv'] = pd.to_numeric(df['gallefistel_surv'], errors='coerce')
-    df['gallefistel_surv'] = df['gallefistel_surv'].map(gallefistel_surv_mapping).fillna('Unbekannt')
+    df['gallefistel_isgls_surv'] = pd.to_numeric(df['gallefistel_isgls_surv'], errors='coerce')
+    df['gallefistel_isgls_surv'] = df['gallefistel_isgls_surv'].map(gallefistel_isgls_surv_mapping).fillna('Unbekannt')
 
     # Reoperation 30d: numerische Codes in Text umwandeln
     reoperation_30d_mapping = {
