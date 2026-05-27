@@ -2,14 +2,14 @@
 # Imports – Bibliotheken laden
 # ==================================================
 
-import os                          # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
-import requests                    # HTTP-Requests (hier für REDCap API)
-import pandas as pd                # Datenverarbeitung mit DataFrames
-import plotly.express as px        # Plotly Express für Diagramme
-import streamlit as st             # Streamlit für Web-App
-import urllib3                     # Bibliothek für HTTP-Kommunikation
-import plotly.graph_objects as go  # Low-Level-Schnittstelle von Plotly
-import streamlit.components.v1 as components #Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
+import os                                        # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
+import requests                                  # HTTP-Requests (hier für REDCap API)
+import pandas as pd                              # Datenverarbeitung mit DataFrames
+import plotly.express as px                      # Plotly Express für Diagramme
+import streamlit as st                           # Streamlit für Web-App
+import urllib3                                   # Bibliothek für HTTP-Kommunikation
+import plotly.graph_objects as go                # Low-Level-Schnittstelle von Plotly
+import streamlit.components.v1 as components     # Modul von Streamlit, mit dem man HTML/JavaScript-Code direkt im Browser ausführen kann
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
