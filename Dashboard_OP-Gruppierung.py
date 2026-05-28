@@ -2201,13 +2201,12 @@ for i, bereich in enumerate(bereiche):
         with col1.container(border=True):
             required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
-                df_los = df_bereich[
                     pattern = "HCC|CCC|Metastasen|Benigne"
                     df_los = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_leber_gruppen = len(df_los)
-                st.metric(label="Aufenthaltsdauer - Leberchirurgie", value=total_crs_ohne_hipec)
+                st.metric(label="Aufenthaltsdauer - Leberchirurgie", value=total_leber_gruppen)
                 # st.divider()
                 # verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
