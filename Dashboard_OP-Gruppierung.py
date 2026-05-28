@@ -2198,7 +2198,7 @@ for i, bereich in enumerate(BEREICHE):
         col1, col2 = st.columns(2)
 
         # ================== Kachel 17 "Aufenthaltsdauer - CRS ohne HIPEC" ==================       
-        if bereich == "Chirurgische Onkologie/Sarkome":
+        if bereich == "Leberchururgie":
             with col1.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
