@@ -741,63 +741,64 @@ for i, bereich in enumerate(BEREICHE):
                     st.error("Fehlende Spalten im Datensatz.")
     
         # ================== Kachel 2 "Übersicht Operationen" ==================
-        with col2.container(border=True):
-            # if "Übersicht Sarkome" in analysen:
-            # Check auf Spalten
-            required_cols = {"type_sark", "jahr_opdatum"}
-            if required_cols.issubset(df_bereich.columns):
+        if bereich == "Chirurgische Onkologie/Sarkome":
+            with col2.container(border=True):
+                # if "Übersicht Sarkome" in analysen:
+                # Check auf Spalten
+                required_cols = {"type_sark", "jahr_opdatum"}
+                if required_cols.issubset(df_bereich.columns):
+        
+                    # Filter für CRS oder Sarkom
+                    df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                    total_crs_und_sark = len(df_plot)
+        
+                    st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
+                    # st.divider()
+                    # verkleinert den Raum oberhalb der Trennlinie
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+        
+                    if total_crs_und_sark > 0:
+                        # Gruppierung nach Jahr und Typ
+                        grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "type_sark", "count"]
+        
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="type_sark",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"type_sark": "Sarkomtyp"}
+                        )
+        
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0
+                        )
+        
+                        fig.update_layout(
+                            # autosize=True,
+                            height=400,
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
     
-                # Filter für CRS oder Sarkom
-                df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-                total_crs_und_sark = len(df_plot)
-    
-                st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
-                # st.divider()
-                # verkleinert den Raum oberhalb der Trennlinie
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-    
-                if total_crs_und_sark > 0:
-                    # Gruppierung nach Jahr und Typ
-                    grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
-    
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="type_sark",
-                        barmode="group",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"type_sark": "Sarkomtyp"}
-                    )
-    
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='auto',
-                        marker_line_width=0
-                    )
-    
-                    fig.update_layout(
-                        # autosize=True,
-                        height=400,
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        showlegend=True,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                    )
-
-                    # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                    st.session_state.pdf_figures["kachel2"] = fig
-                    
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
+                        st.session_state.pdf_figures["kachel2"] = fig
+                        
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Sarkom-Daten")
                 else:
-                    st.info("Keine Sarkom-Daten")
-            else:
-                st.error("Spalten fehlen")
+                    st.error("Spalten fehlen")
                 
         st.markdown(
             """
