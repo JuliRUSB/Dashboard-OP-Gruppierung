@@ -2206,7 +2206,6 @@ for i, bereich in enumerate(BEREICHE):
                     st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_final_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
-)
 
 
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
