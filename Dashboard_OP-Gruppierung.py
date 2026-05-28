@@ -2148,6 +2148,44 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
+        # ================== Kachel "HSM" ==================
+        if bereich == "Chirurgische Onkologie/Sarkome":
+            with col1.container(border=True):
+                if df_bereich['hsm'].notna().any():
+                    df_hsm = df_bereich.dropna(subset=['hsm', 'jahr_opdatum']).copy()
+                    df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
+
+                    hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
+                    fig_hsm = px.bar(
+                        hsm_jahr,
+                        x='jahr_opdatum',
+                        y='count',
+                        color='hsm_label',
+                        barmode='group',
+                        text='count',
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hsm_label": "HSM"}
+                    )
+                        
+                    fig_hsm.update_traces(
+                        textfont_size=16, 
+                        textposition='inside',
+                        marker_line_width=0
+                    )
+                        
+                    fig_hsm.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+                        
+                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_{bereich}", config={"displayModeBar": False, "responsive": True})
+                else:
+                    st.info("Keine HSM-Daten für diesen Bereich vorhanden.")
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
 # 4. Grafik: Hospital Stay -> OK
