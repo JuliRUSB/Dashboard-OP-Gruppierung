@@ -660,7 +660,7 @@ st.header("Detailanalysen")
 # Nur noch die aktiven Bereiche als Liste
 BEREICHE = [
     "Chirurgische Onkologie/Sarkome",
-    "Leberchirurgie"
+    "Leber"
 ]
 
 bereich_tabs = st.tabs(BEREICHE)
@@ -2198,7 +2198,7 @@ for i, bereich in enumerate(BEREICHE):
         col1, col2 = st.columns(2)
 
         # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
-        if bereich == "Leberchirurgie":
+        if bereich == "Leber":
             with col1.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
