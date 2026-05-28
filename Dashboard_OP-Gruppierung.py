@@ -2188,20 +2188,22 @@ for i, bereich in enumerate(BEREICHE):
                         y='count',            # Höhe des Balkens basiert auf der absoluten Anzahl
                         color='hsm',
                         barmode='group',
-                        text='custom_label',  # Nutzt das kombinierte Text-Label im Balken
+                        text='custom_label',  # Nutzt das kombinierte Text-Label
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hsm": "HSM"}
                     )
                         
                     fig_hsm.update_traces(
                         textfont_size=16, 
-                        textposition='inside',
+                        textposition='outside', # Zwingt den Text nach draussen über den Balken
+                        textangle=0,            # Garantiert immer waagerechte Ausrichtung
+                        cliponaxis=False,       # Verhindert, dass der Text am oberen Rand abgeschnitten wird
                         marker_line_width=0
                     )
                         
                     fig_hsm.update_layout(
                         height=400,
-                        margin=dict(l=10, r=10, t=10, b=10),
+                        margin=dict(l=10, r=10, t=30, b=10), # Oben mehr Platz für die Labels
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
