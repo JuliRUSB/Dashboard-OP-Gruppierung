@@ -680,9 +680,7 @@ for i, bereich in enumerate(BEREICHE):
         col1, col2 = st.columns(2)
 
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
-        
-        # Zwei Spalten/Kacheln definieren (1. Reihe)
-        col1, col2 = st.columns(2)
+
         
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
