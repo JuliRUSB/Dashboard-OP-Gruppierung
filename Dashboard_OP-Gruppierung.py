@@ -660,7 +660,7 @@ st.header("Detailanalysen")
 # Definition, welche Bereiche als Tabs erscheinen sollen.
 ANALYSEN_PRO_BEREICH = {
     "Chirurgische Onkologie/Sarkome",
-    "Leber":,
+    "Leber"
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Allgemein": ["Komplikationen", "LOS", "Trends"],
