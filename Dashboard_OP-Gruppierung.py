@@ -2180,7 +2180,7 @@ for i, bereich in enumerate(BEREICHE):
                     hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
                     # Text-Label erstellen: "Absolut (Prozent%)" -> z.B. "12 (45.2%)"
-                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']}<br>({r['pct']:.1f}%)", axis=1) # <br> macht einen Zeilenumbruch, damit es kompakter ist
                     
                     fig_hsm = px.bar(
                         hsm_jahr,
@@ -2195,19 +2195,21 @@ for i, bereich in enumerate(BEREICHE):
                         
                     fig_hsm.update_traces(
                         textfont_size=16, 
-                        textposition='outside', # Zwingt den Text nach draussen über den Balken
-                        textangle=0,            # Garantiert immer waagerechte Ausrichtung
-                        cliponaxis=False,       # Verhindert, dass der Text am oberen Rand abgeschnitten wird
+                        textposition='inside',  # Bleibt fest im Balken
+                        textangle=0,            # Zwingt den Text, immer waagerecht zu bleiben
+                        insidetextanchor='middle', # Zentriert den Text im Balken
                         marker_line_width=0
                     )
                         
                     fig_hsm.update_layout(
                         height=400,
-                        margin=dict(l=10, r=10, t=30, b=10), # Oben mehr Platz für die Labels
+                        margin=dict(l=10, r=10, t=10, b=10),
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        # Zwingt Plotly, die Schriftgrösse 16 im Balken unverändert anzuzeigen, anstatt sie zu verkleinern:
+                        uniformtext=dict(mode='hide', minsize=16),
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
