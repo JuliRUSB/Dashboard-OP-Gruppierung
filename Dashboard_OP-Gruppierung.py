@@ -686,58 +686,59 @@ for i, bereich in enumerate(BEREICHE):
         col1, col2 = st.columns(2)
         
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
-        with col1.container(border=True):
-            # Vorab-Check der Analyse-Auswahl
-            # if "Gesamtzahl Operationen" in analysen:
-            # Sicherstellen, dass notwendige Spalten vorhanden sind
-            required_cols = {"bereich", "jahr_opdatum"}
-            if required_cols.issubset(df_bereich.columns):
-        
-                # Filterung Gesamtzahl Operationen "Onkologie/Sarkome"
-                df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
-                total_ops = len(df_plot)
-        
-                st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
-                # st.divider()
-                # verkleinert den Raum oberhalb der Trennlinie
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                
-                if total_ops > 0:
-                    # Aggregation
-                    grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
-        
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE
-                    )
-                
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='auto',
-                        marker_line_width=0 # Cleaner Look
-                    )
-                
-                    fig.update_layout(
-                        # autosize=True,
-                        height=400,  
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        showlegend=False,
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                    )
-                    # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                    st.session_state.pdf_figures["kachel1"] = fig
+        if bereich == "Chirurgische Onkologie/Sarkome":
+            with col1.container(border=True):
+                # Vorab-Check der Analyse-Auswahl
+                # if "Gesamtzahl Operationen" in analysen:
+                # Sicherstellen, dass notwendige Spalten vorhanden sind
+                required_cols = {"bereich", "jahr_opdatum"}
+                if required_cols.issubset(df_bereich.columns):
+            
+                    # Filterung Gesamtzahl Operationen "Onkologie/Sarkome"
+                    df_plot = df_bereich[df_bereich["bereich"] == 'Chirurgische Onkologie/Sarkome'].copy()
+                    total_ops = len(df_plot)
+            
+                    st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
+                    # st.divider()
+                    # verkleinert den Raum oberhalb der Trennlinie
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    if total_ops > 0:
+                        # Aggregation
+                        grp = df_plot.groupby("jahr_opdatum").size().reset_index(name="count")
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE
+                        )
+                    
+                        fig.update_traces(
+                            textfont_size=16, 
+                            textposition='auto',
+                            marker_line_width=0 # Cleaner Look
+                        )
+                    
+                        fig.update_layout(
+                            # autosize=True,
+                            height=400,  
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=False,
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+                        # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
+                        st.session_state.pdf_figures["kachel1"] = fig
+                        
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für diesen Bereich gefunden.")
                 else:
-                    st.info("Keine Daten für diesen Bereich gefunden.")
-            else:
-                st.error("Fehlende Spalten im Datensatz.")
+                    st.error("Fehlende Spalten im Datensatz.")
     
         # ================== Kachel 2 "Übersicht Operationen" ==================
         with col2.container(border=True):
