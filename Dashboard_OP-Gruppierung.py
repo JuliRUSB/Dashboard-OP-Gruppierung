@@ -2156,7 +2156,7 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
-        # ================== Kachel "HSM" Absolute Zahlen ==================
+        # ================== Kachel "HSM (absolut und %)" ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 # 1. Nur Daten für diesen Bereich (Leber) und die spezifischen Lebergruppen filtern
@@ -2173,16 +2173,22 @@ for i, bereich in enumerate(BEREICHE):
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_hsm > 0:
-                    # Aggregation nach Jahr und HSM-Status
+                    # Aggregation: Absolute Zahlen pro Jahr und HSM-Status holen
                     hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
+                    
+                    # Prozentualen Anteil relativ zum jeweiligen Jahr berechnen
+                    hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+                    
+                    # Text-Label erstellen: "Absolut (Prozent%)" -> z.B. "12 (45.2%)"
+                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
                     fig_hsm = px.bar(
                         hsm_jahr,
                         x='jahr_opdatum',
-                        y='count',
+                        y='count',            # Höhe des Balkens basiert auf der absoluten Anzahl
                         color='hsm',
                         barmode='group',
-                        text='count',
+                        text='custom_label',  # Nutzt das kombinierte Text-Label im Balken
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hsm": "HSM"}
                     )
@@ -2203,65 +2209,10 @@ for i, bereich in enumerate(BEREICHE):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
-                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_combined_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
                     st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
 
-        # ================== Kachel "HSM (%)" ==================
-        if bereich == "Leber":
-            with col2.container(border=True):
-                # 1. Nur Daten für diesen Bereich (Leber) und die spezifischen Lebergruppen filtern
-                pattern = "HCC|CCC|Metastasen|Benigne"
-                df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                
-                # 2. Nur gültige HSM-Einträge (Ja/Nein) behalten und "Unbekannt" ausschliessen
-                df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
-                total_hsm = len(df_hsm)
-
-                # Metrik anzeigen (bleibt die absolute Gesamtzahl zur Einordnung)
-                st.metric(label="Gesamtzahl Fälle - HSM", value=total_hsm)
-                # Verkleinert den Raum oberhalb der Trennlinie
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-
-                if total_hsm > 0:
-                    # Aggregation: Erst absolute Zahlen pro Jahr und HSM-Status holen
-                    hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
-                    
-                    # Prozentualen Anteil relativ zum jeweiligen Jahr berechnen
-                    hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
-                    
-                    fig_hsm = px.bar(
-                        hsm_jahr,
-                        x='jahr_opdatum',
-                        y='pct',            # Jetzt 'pct' statt 'count' auf der Y-Achse
-                        color='hsm',
-                        barmode='group',
-                        text='pct',          # Zeigt die Prozentwerte im Balken an
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hsm": "HSM", "pct": "Anteil (%)"}
-                    )
-                        
-                    fig_hsm.update_traces(
-                        texttemplate='%{text:.1f}%', # Formatiert den Text auf eine Nachkommastelle mit %-Zeichen
-                        textfont_size=16, 
-                        textposition='inside',
-                        marker_line_width=0
-                    )
-                        
-                    fig_hsm.update_layout(
-                        height=400,
-                        margin=dict(l=10, r=10, t=10, b=10),
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        # Y-Achse auf maximal 100 % begrenzen und %-Zeichen an die Labels hängen
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "ticksuffix": "%", "range": [0, 105]},
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
-                    )
-                        
-                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_pct_{bereich}", config={"displayModeBar": False, "responsive": True})
-                else:
-                    st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
 
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
