@@ -2165,7 +2165,7 @@ for i, bereich in enumerate(BEREICHE):
                 df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
                 total_hsm = len(df_hsm)
 
-                st.metric(label="Gesamtzahl Fälle - HSM", value=total_hsm)
+                st.metric(label="Gesamtzahl Fälle Leberchirurgie - HSM", value=total_hsm)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_hsm > 0:
@@ -2186,9 +2186,9 @@ for i, bereich in enumerate(BEREICHE):
                     )
                         
                     fig_hsm.update_traces(
-                        textposition='outside', # Schiebt alle Texte einfach nach draussen
-                        textfont_size=16,       # Starr Grösse 16
-                        textangle=0,            # Immer waagerecht
+                        textposition='auto', 
+                        textfont_size=16,       
+                        textangle=0,            
                         cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
                         marker_line_width=0
                     )
