@@ -113,6 +113,14 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') # or 'Nicht angegeben'
         df['bereich'] = df.apply(get_bereich, axis=1)
         df = df.drop(columns=bereich_cols)  # Ursprüngliche Spalten löschen
+
+    # HSM: numerische Codes in Text umwandeln
+    hsm_mapping = {
+        1: 'Ja',
+        0: 'Nein'
+    }
+    df['hsm'] = pd.to_numeric(df['hsm'], errors='coerce')
+    df['hsm'] = df['hsm'].map(hsm_mapping).fillna('Unbekannt')
     
     # Leber-Gruppen: Spalten mit 'leber_gruppen___' mappen
     leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
@@ -2148,23 +2156,35 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
-        # ================== Kachel "HSM" ==================
-        if bereich == "Chirurgische Onkologie/Sarkome":
+                # ================== Kachel "HSM" ==================
+        if bereich == "Leber":
             with col1.container(border=True):
-                if df_bereich['hsm'].notna().any():
-                    df_hsm = df_bereich.dropna(subset=['hsm', 'jahr_opdatum']).copy()
-                    df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0': 'Nein', '1': 'Ja', '0.0': 'Nein', '1.0': 'Ja'})
+                # 1. Nur Daten für diesen Bereich (Leber) und die spezifischen Lebergruppen filtern
+                pattern = "HCC|CCC|Metastasen|Benigne"
+                df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                
+                # 2. Nur gültige HSM-Einträge (Ja/Nein) behalten und "Unbekannt" ausschliessen
+                df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
+                total_hsm = len(df_hsm)
 
-                    hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm_label']).size().reset_index(name='count')
+                # Metrik anzeigen
+                st.metric(label="Gesamtzahl Fälle - HSM", value=total_hsm)
+                # Verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+
+                if total_hsm > 0:
+                    # Aggregation nach Jahr und HSM-Status
+                    hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
+                    
                     fig_hsm = px.bar(
                         hsm_jahr,
                         x='jahr_opdatum',
                         y='count',
-                        color='hsm_label',
+                        color='hsm',
                         barmode='group',
                         text='count',
                         color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hsm_label": "HSM"}
+                        labels={"hsm": "HSM"}
                     )
                         
                     fig_hsm.update_traces(
@@ -2185,7 +2205,8 @@ for i, bereich in enumerate(BEREICHE):
                         
                     st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
-                    st.info("Keine HSM-Daten für diesen Bereich vorhanden.")
+                    st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
+
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
 # 4. Grafik: Hospital Stay -> OK
