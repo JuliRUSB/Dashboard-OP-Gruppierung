@@ -2156,6 +2156,7 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
+        
         # ================== Kachel "HSM (absolut und %)" ==================
         if bereich == "Leber":
             with col1.container(border=True):
@@ -2179,37 +2180,38 @@ for i, bereich in enumerate(BEREICHE):
                     # Prozentualen Anteil relativ zum jeweiligen Jahr berechnen
                     hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
-                    # Text-Label erstellen: "Absolut (Prozent%)" -> z.B. "12 (45.2%)"
-                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']}<br>({r['pct']:.1f}%)", axis=1) # <br> macht einen Zeilenumbruch, damit es kompakter ist
+                    # Text-Label erstellen: Wenn es ausserhalb steht, nutzen wir ein Leerzeichen statt <br>, damit es nebeneinander steht
+                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
                     fig_hsm = px.bar(
                         hsm_jahr,
                         x='jahr_opdatum',
-                        y='count',            # Höhe des Balkens basiert auf der absoluten Anzahl
+                        y='count',            
                         color='hsm',
                         barmode='group',
-                        text='custom_label',  # Nutzt das kombinierte Text-Label
+                        text='custom_label',  
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"hsm": "HSM"}
                     )
                         
                     fig_hsm.update_traces(
-                        textfont_size=16, 
-                        textposition='inside',  # Bleibt fest im Balken
-                        textangle=0,            # Zwingt den Text, immer waagerecht zu bleiben
-                        insidetextanchor='middle', # Zentriert den Text im Balken
+                        textposition='auto',       # Plotly entscheidet dynamisch: inside oder outside
+                        textangle=0,               # IMMER waagerecht, egal ob drinnen oder draussen
+                        insidetextanchor='middle', # Zentriert, falls im Balken
+                        # Erzwingt Schriftgrösse 16 für beide Fälle:
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        cliponaxis=False,          # Verhindert Abschneiden über dem Diagramm
                         marker_line_width=0
                     )
                         
                     fig_hsm.update_layout(
                         height=400,
-                        margin=dict(l=10, r=10, t=10, b=10),
+                        margin=dict(l=10, r=10, t=30, b=10), # Oben etwas Platz für die Outside-Texte
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
-                        # Zwingt Plotly, die Schriftgrösse 16 im Balken unverändert anzuzeigen, anstatt sie zu verkleinern:
-                        uniformtext=dict(mode='hide', minsize=16),
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
