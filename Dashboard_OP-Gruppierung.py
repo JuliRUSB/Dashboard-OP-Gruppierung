@@ -657,38 +657,29 @@ st.divider()
 
 st.header("Detailanalysen")
 
-# Definition, welche Bereiche als Tabs erscheinen sollen.
-ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
-    "Leber": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Allgemein": ["Komplikationen", "LOS", "Trends"],
-    # "BMC": ["Komplikationen", "LOS", "Trends"],
-    # "Endokrin": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Hernien": ["Zugang", "Komplikationen", "LOS", "Trends"],
-    # "Pankreas": ["Zugang", "Komplikationen", "LOS", "Trends"],
-}
+# --- TEIL 3: Detailanalysen (Tabs) ---
 
-bereiche = list(ANALYSEN_PRO_BEREICH.keys())
-bereich_tabs = st.tabs(bereiche)
+st.header("Detailanalysen")
 
-for i, bereich in enumerate(bereiche):
+# Nur noch die aktiven Bereiche als Liste
+BEREICHE = [
+    "Chirurgische Onkologie/Sarkome",
+    "Leber"
+]
+
+bereich_tabs = st.tabs(BEREICHE)
+
+for i, bereich in enumerate(BEREICHE):
     with bereich_tabs[i]:
         # ORIGINAL df_base, damit die Bereichs-Filter von oben NICHT greifen
         df_bereich = df_base[df_base["bereich"] == bereich]
         
-        st.subheader(f"Bereich: {bereich}")
-        
         if df_bereich.empty:
             st.warning("Keine Daten für diesen Bereich")
             continue
-            
-        analysen = ANALYSEN_PRO_BEREICH.get(bereich)
-        # Unter-Tabs erstellen:
-        # tabs = st.tabs(analysen)
 
         st.markdown('<div class="print-area">', unsafe_allow_html=True)
+
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
         
         # Zwei Spalten/Kacheln definieren (1. Reihe)
