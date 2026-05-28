@@ -665,9 +665,9 @@ BEREICHE = [
 
 bereich_tabs = st.tabs(BEREICHE)
 
+# 3. Die Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
 for i, bereich in enumerate(BEREICHE):
     with bereich_tabs[i]:
-        # ORIGINAL df_base, damit die Bereichs-Filter von oben NICHT greifen
         df_bereich = df_base[df_base["bereich"] == bereich]
         
         if df_bereich.empty:
@@ -675,6 +675,9 @@ for i, bereich in enumerate(BEREICHE):
             continue
 
         st.markdown('<div class="print-area">', unsafe_allow_html=True)
+        
+        # Spalten werden hier für jedes Tab frisch oben gestartet
+        col1, col2 = st.columns(2)
 
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
         
