@@ -2157,30 +2157,22 @@ for i, bereich in enumerate(BEREICHE):
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         
-        # ================== Kachel "HSM (absolut und %)" ==================
+        # ================== Kachel "HSM" ==================
         if bereich == "Leber":
             with col1.container(border=True):
-                # 1. Nur Daten für diesen Bereich (Leber) und die spezifischen Lebergruppen filtern
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                
-                # 2. Nur gültige HSM-Einträge (Ja/Nein) behalten und "Unbekannt" ausschliessen
                 df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
                 total_hsm = len(df_hsm)
 
-                # Metrik anzeigen
                 st.metric(label="Gesamtzahl Fälle - HSM", value=total_hsm)
-                # Verkleinert den Raum oberhalb der Trennlinie
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_hsm > 0:
-                    # Aggregation: Absolute Zahlen pro Jahr und HSM-Status holen
                     hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
-                    
-                    # Prozentualen Anteil relativ zum jeweiligen Jahr berechnen
                     hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
-                    # Text-Label erstellen: Wenn es ausserhalb steht, nutzen wir ein Leerzeichen statt <br>, damit es nebeneinander steht
+                    # Einfacher Text: Anzahl (Prozent%)
                     hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
                     fig_hsm = px.bar(
@@ -2190,24 +2182,20 @@ for i, bereich in enumerate(BEREICHE):
                         color='hsm',
                         barmode='group',
                         text='custom_label',  
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hsm": "HSM"}
+                        color_discrete_sequence=COLOR_PALETTE
                     )
                         
                     fig_hsm.update_traces(
-                        textposition='auto',       # Plotly entscheidet dynamisch: inside oder outside
-                        textangle=0,               # IMMER waagerecht, egal ob drinnen oder draussen
-                        insidetextanchor='middle', # Zentriert, falls im Balken
-                        # Erzwingt Schriftgrösse 16 für beide Fälle:
-                        insidetextfont=dict(size=16),
-                        outsidetextfont=dict(size=16),
-                        cliponaxis=False,          # Verhindert Abschneiden über dem Diagramm
+                        textposition='outside', # Schiebt alle Texte einfach nach draussen
+                        textfont_size=16,       # Starr Grösse 16
+                        textangle=0,            # Immer waagerecht
+                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
                         marker_line_width=0
                     )
                         
                     fig_hsm.update_layout(
                         height=400,
-                        margin=dict(l=10, r=10, t=30, b=10), # Oben etwas Platz für die Outside-Texte
+                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
@@ -2215,9 +2203,10 @@ for i, bereich in enumerate(BEREICHE):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
-                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_combined_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_final_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
+)
 
 
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
