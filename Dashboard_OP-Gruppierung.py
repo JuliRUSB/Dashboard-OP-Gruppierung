@@ -659,7 +659,7 @@ st.header("Detailanalysen")
 
 # Definition, welche Bereiche als Tabs erscheinen sollen.
 ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome":  : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
+    "Chirurgische Onkologie/Sarkome": ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
     "Leber": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
