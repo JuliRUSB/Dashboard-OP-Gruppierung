@@ -2209,7 +2209,7 @@ for i, bereich in enumerate(BEREICHE):
 
         # ================== Kachel "HSM (%)" ==================
         if bereich == "Leber":
-            with col1.container(border=True):
+            with col2.container(border=True):
                 # 1. Nur Daten für diesen Bereich (Leber) und die spezifischen Lebergruppen filtern
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
