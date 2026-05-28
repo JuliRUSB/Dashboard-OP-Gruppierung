@@ -2157,7 +2157,7 @@ for i, bereich in enumerate(BEREICHE):
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         
-        # ================== Kachel "HSM" ==================
+        # ================== Kachel "Leber HSM" % und absolute Zahlen ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2165,7 +2165,7 @@ for i, bereich in enumerate(BEREICHE):
                 df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
                 total_hsm = len(df_hsm)
 
-                st.metric(label="Gesamtzahl Fälle Leberchirurgie - HSM", value=total_hsm)
+                st.metric(label="Leberchirurgie - HSM", value=total_hsm)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_hsm > 0:
