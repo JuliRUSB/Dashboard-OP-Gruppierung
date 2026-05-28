@@ -2201,8 +2201,8 @@ for i, bereich in enumerate(bereiche):
         with col1.container(border=True):
             required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
             if required_cols.issubset(df_bereich.columns):
-                    pattern = "HCC|CCC|Metastasen|Benigne"
-                    df_los = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                pattern = "HCC|CCC|Metastasen|Benigne"
+                df_los = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                 df_los = df_los.dropna(subset=["los_opdatum"])
                 total_leber_gruppen = len(df_los)
