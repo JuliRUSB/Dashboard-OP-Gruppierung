@@ -658,14 +658,10 @@ st.divider()
 st.header("Detailanalysen")
 
 # Nur noch die aktiven Bereiche als Liste
-BEREICHE = [
-    "Chirurgische Onkologie/Sarkome",
-    "Leber"
-]
-
+BEREICHE = ["Chirurgische Onkologie/Sarkome", "Leber"]
 bereich_tabs = st.tabs(BEREICHE)
 
-# 3. Die Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
+# 3. Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
 for i, bereich in enumerate(BEREICHE):
     with bereich_tabs[i]:
         df_bereich = df_base[df_base["bereich"] == bereich]
@@ -679,9 +675,7 @@ for i, bereich in enumerate(BEREICHE):
         # Spalten werden hier für jedes Tab frisch oben gestartet
         col1, col2 = st.columns(2)
 
-        # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================  
-
-        
+        # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================    
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
@@ -804,8 +798,6 @@ for i, bereich in enumerate(BEREICHE):
             unsafe_allow_html=True
         )  # horizontale Linie
         
-        # Zwei Spalten/Kacheln definieren (2. Reihe)
-        col1, col2 = st.columns(2)
         
         # ================== Kachel 3 HIPEC bei CRS ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
@@ -864,9 +856,6 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für CRS")
                 else:
                     st.error("Spalten fehlen")
-
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
-        col1, col2 = st.columns(2)
         
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1039,9 +1028,6 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für HIPEC")
                 else:
                     st.error("Spalten fehlen")
-        
-        # Zwei Spalten/Kacheln definieren (4. Reihe)
-        col1, col2 = st.columns(2)
 
         # ================== Kachel 6 "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1270,9 +1256,6 @@ for i, bereich in enumerate(BEREICHE):
                                 st.info("Keine validen Grade >= IIIa gefunden.")
                         else:
                             st.error("Spalten fehlen")
-        
-        # Zwei Spalten/Kacheln definieren (5. Reihe)
-        col1, col2 = st.columns(2)
 
         # ================== Kachel 8 "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
@@ -1361,10 +1344,6 @@ for i, bereich in enumerate(BEREICHE):
                                 st.info("Keine Anastomoseninsuffizienzen vorhanden")
                         else:
                             st.error("Spalten fehlen")
-
-                        
-        # Zwei Spalten/Kacheln definieren (6. Reihe)
-        col1, col2 = st.columns(2)
 
         # ================== Kachel 16 "Aufenthaltsdauer - CRS mit HIPEC" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1541,9 +1520,6 @@ for i, bereich in enumerate(BEREICHE):
             """,
             unsafe_allow_html=True
         )
-        
-        # Zwei Spalten/Kacheln definieren (7. Reihe)
-        col1, col2 = st.columns(2)
 
         # ================== Kachel 9 "Gruppe - Sarkome/Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1676,9 +1652,6 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für Sarkom/Weichteiltumor")
                 else:
                     st.error("Spalten fehlen")
-
-        # Zwei Spalten/Kacheln definieren (7. Reihe)
-        col1, col2 = st.columns(2)
         
         # ================== Kachel 11 "Sarkomzentrum Weichteiltumoren /GIST - maligne und intermediate" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1740,9 +1713,6 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für Malignität")
                 else:
                     st.error("Spalten fehlen")     
-
-        # Zwei Spalten/Kacheln definieren (3. Reihe)
-        col1, col2 = st.columns(2)
         
         # ================== Kachel 19 "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -1911,10 +1881,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Weichteiltumoren")
                 else:
-                    st.error("Spalten fehlen")
-        
-        # Zwei Spalten/Kacheln definieren (8. Reihe)
-        col1, col2 = st.columns(2)        
+                    st.error("Spalten fehlen") 
         
         # ================== Kachel 12 "Komplikationen ≥ IIIa - Weichteiltumoren" ==================
         # with col1.container(border=True):
@@ -2088,9 +2055,6 @@ for i, bereich in enumerate(BEREICHE):
             """,
             unsafe_allow_html=True
         )
-                
-        # Drei Spalten/Kacheln definieren (9. Reihe)
-        col1, col2 = st.columns(2)
 
         # ================== Kachel 15 "Aufenthaltsdauer - Weichteiltumoren" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -2192,11 +2156,7 @@ for i, bereich in enumerate(BEREICHE):
 # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
 # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
 # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
-        
-        
-        
-        # Drei Spalten/Kacheln definieren (1. Reihe)
-        col1, col2 = st.columns(2)
+    
 
         # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
         if bereich == "Leber":
