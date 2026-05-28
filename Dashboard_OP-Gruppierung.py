@@ -589,15 +589,12 @@ with col1:
 
 # -------------------- Quartals-Chart --------------------
 with col2:
-
     if not df_plots.empty:
-
         q_counts = (
             df_plots
             .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
             .size()
         )
-
         q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
         q_counts["quartal_label"] = (
@@ -662,8 +659,8 @@ st.header("Detailanalysen")
 
 # Definition, welche Bereiche als Tabs erscheinen sollen.
 ANALYSEN_PRO_BEREICH = {
-    "Chirurgische Onkologie/Sarkome" : ["Gesamtzahl Operationen", "Übersicht Sarkome", "Gruppen (Sarkome/Weichteiltumoren)", "HIPEC bei CRS", "Lokalisation (Sarkome/Weichteiltumoren)", "Kolorektale Resektionen bei CRS ohne HIPEC", "Anastomoseinsuffizienz", "Komplikationen", "LOS"],
-    "Leber": ["Gruppen", "Zugang", "Komplikationen", "HSM", "LOS", "Trends"],
+    "Chirurgische Onkologie/Sarkome",
+    "Leber":,
     # "Kolorektal": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Upper-GI": ["Zugang", "Komplikationen", "LOS", "Trends"],
     # "Allgemein": ["Komplikationen", "LOS", "Trends"],
@@ -2185,7 +2182,7 @@ for i, bereich in enumerate(bereiche):
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
-# 4. Grafik: Hospital Stay
+# 4. Grafik: Hospital Stay -> OK
 # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
 # 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
 # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
