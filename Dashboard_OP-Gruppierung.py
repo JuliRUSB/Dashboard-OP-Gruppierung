@@ -2359,14 +2359,14 @@ for i, bereich in enumerate(BEREICHE):
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_reoperation_30d = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja'])].copy()
-                total_reop = len(df_hsm)
+                total_reop = len(df_reoperation_30d)
 
                 st.metric(label="Leberchirurgie - Reoperation 30 Tage postoperativ", value=total_reop)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
                 if total_reop > 0:
-                    leber_reop_jahr = df_reoperation_30d.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
-                    leber_reop_jahr['pct'] = leber_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+                    leber_reop_jahr = df_reoperation_30d.groupby(['jahr_opdatum', 'reoperation_30d']).size().reset_index(name='count')
+                    leber_reop_jahr['pct'] = leber_reop_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
                     # Einfacher Text: Anzahl (Prozent%)
                     leber_reop_jahr['custom_label'] = leber_reop_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
