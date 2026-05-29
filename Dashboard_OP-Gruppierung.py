@@ -2168,15 +2168,15 @@ for i, bereich in enumerate(BEREICHE):
                 st.metric(label="Leberchirurgie - HSM", value=total_hsm)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
-                if total_hsm > 0:
-                    hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
-                    hsm_jahr['pct'] = hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+                if total_leber_hsm > 0:
+                    leber_hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
+                    leber_hsm_jahr['pct'] = leber_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
                     # Einfacher Text: Anzahl (Prozent%)
                     hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
-                    fig_hsm = px.bar(
-                        hsm_jahr,
+                    fig_leber_hsm = px.bar(
+                        leber_hsm_jahr,
                         x='jahr_opdatum',
                         y='count',            
                         color='hsm',
@@ -2185,7 +2185,7 @@ for i, bereich in enumerate(BEREICHE):
                         color_discrete_sequence=COLOR_PALETTE
                     )
                         
-                    fig_hsm.update_traces(
+                    fig_leber_hsm.update_traces(
                         textposition='auto', 
                         textfont_size=16,       
                         textangle=0,            
@@ -2193,7 +2193,7 @@ for i, bereich in enumerate(BEREICHE):
                         marker_line_width=0
                     )
                         
-                    fig_hsm.update_layout(
+                    fig_leber_hsm.update_layout(
                         height=400,
                         margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
                         xaxis_title=None, 
@@ -2203,7 +2203,7 @@ for i, bereich in enumerate(BEREICHE):
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
-                    st.plotly_chart(fig_hsm, use_container_width=True, key=f"kachel_hsm_final_{bereich}", config={"displayModeBar": False})
+                    st.plotly_chart(fig_leber_hsm, use_container_width=True, key=f"kachel_leber_hsm_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
 
@@ -2222,30 +2222,38 @@ for i, bereich in enumerate(BEREICHE):
                     total_zugang = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
                     total_zugang.columns = ["jahr_opdatum", "zugang", "count"]
 
-                    fig = px.bar(
-                        total_zugang,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="zugang",
-                        barmode="group",
-                        text="count",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"zugang": "Zugang"}
+                    # Einfacher Text: Anzahl (Prozent%)
+                    leber_zugang_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    
+                    fig_leber_zugang = px.bar(
+                        leber_zugang_jahr,
+                        x='jahr_opdatum',
+                        y='count',            
+                        color='zugang',
+                        barmode='group',
+                        text='custom_label',  
+                        color_discrete_sequence=COLOR_PALETTE
                     )
-
-                    fig.update_traces(
-                        textfont_size=16, 
-                        textposition='auto'
+                        
+                    fig_leber_zugang.update_traces(
+                        textposition='auto', 
+                        textfont_size=16,       
+                        textangle=0,            
+                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
+                        marker_line_width=0
                     )
-
-                    fig.update_layout(
+                        
+                    fig_leber_zugang.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"tickfont": {"size": 16}} 
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                     )
                         
-                    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
+                    st.plotly_chart(fig_leber_zugang, use_container_width=True, key=f"kachel_leber_zugang_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine Zugangsdaten")
 
