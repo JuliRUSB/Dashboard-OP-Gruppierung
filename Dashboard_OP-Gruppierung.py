@@ -2217,6 +2217,9 @@ for i, bereich in enumerate(BEREICHE):
                 df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
                 total_zugang = len(df_zugang)
 
+                st.metric(label="Leberchirurgie - Zugang", value=total_zugang)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
                 if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
                     # 1. Groupby auf den gefilterten Leber-Daten ausführen
                     leber_zugang_jahr = df_zugang.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
