@@ -2168,7 +2168,7 @@ for i, bereich in enumerate(BEREICHE):
                 st.metric(label="Leberchirurgie - HSM", value=total_hsm)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
-                if total_leber_hsm > 0:
+                if total_hsm > 0:
                     leber_hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
                     leber_hsm_jahr['pct'] = leber_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
