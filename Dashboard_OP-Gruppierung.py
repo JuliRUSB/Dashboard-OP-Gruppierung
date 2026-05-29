@@ -2266,15 +2266,8 @@ for i, bereich in enumerate(BEREICHE):
 
 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
-# 4. Grafik: Hospital Stay -> OK
-# 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
-# 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
-# 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
-# Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
-# 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
-    
-
-        # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
+# 4. Grafik: Hospital Stay
+# ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
         if bereich == "Leber":
             with col1.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
@@ -2357,6 +2350,14 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für Leberchirurgie")
                 else:
                     st.error("Spalten fehlen")
+# 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
+# 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
+# 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
+# Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
+# 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
+    
+
+        
 
         
         
