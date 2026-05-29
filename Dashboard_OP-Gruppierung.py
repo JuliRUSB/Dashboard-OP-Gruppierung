@@ -2214,16 +2214,16 @@ for i, bereich in enumerate(BEREICHE):
             with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
-                total_zugang = len(df_zugang)
+                df_leber_zugang = df_zugang[df_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
+                total_leber_zugang = len(df_leber_zugang)
 
             # Der restliche Analyse-Code läuft jetzt innerhalb dieses Blocks
                 if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
-                    zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                    zug.columns = ["jahr_opdatum", "zugang", "count"]
+                    total_zugang = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                    total_zugang.columns = ["jahr_opdatum", "zugang", "count"]
 
                     fig = px.bar(
-                        zug,
+                        total_zugang,
                         x="jahr_opdatum",
                         y="count",
                         color="zugang",
@@ -2235,7 +2235,7 @@ for i, bereich in enumerate(BEREICHE):
 
                     fig.update_traces(
                         textfont_size=16, 
-                        textposition='inside'
+                        textposition='auto'
                     )
 
                     fig.update_layout(
