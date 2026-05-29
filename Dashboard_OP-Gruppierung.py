@@ -2354,54 +2354,66 @@ for i, bereich in enumerate(BEREICHE):
 # 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
 # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
 # ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
-        if bereich == "Leber":
-            with col2.container(border=True):
-                pattern = "HCC|CCC|Metastasen|Benigne"
-                df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                df_reoperation_30d = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja'])].copy()
-                total_reop = len(df_reoperation_30d)
-
-                st.metric(label="Leberchirurgie - Reoperation 30 Tage postoperativ", value=total_reop)
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-
-                if total_reop > 0:
-                    leber_reop_jahr = df_reoperation_30d.groupby(['jahr_opdatum', 'reoperation_30d']).size().reset_index(name='count')
-                    leber_reop_jahr['pct'] = leber_reop_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+            if bereich == "Leber":
+                with col2.container(border=True):
+                    pattern = "HCC|CCC|Metastasen|Benigne"
+                    df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                     
-                    # Einfacher Text: Anzahl (Prozent%)
-                    leber_reop_jahr['custom_label'] = leber_reop_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
-                    
-                    fig_leber_reop = px.bar(
-                        leber_reop_jahr,
-                        x='jahr_opdatum',
-                        y='count',            
-                        color='reoperataion_30d',
-                        barmode='group',
-                        text='custom_label',  
-                        color_discrete_sequence=COLOR_PALETTE
-                    )
+                    # Nur die echten Reoperationen filtern
+                    df_reoperation_30d = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja'])].copy()
+                    total_reop = len(df_reoperation_30d)
+    
+                    st.metric(label="Leberchirurgie - Reoperation 30 Tage postoperativ", value=total_reop)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+    
+                    if total_reop > 0:
+                        # Absolute Zahlen der Reoperationen pro Jahr zählen
+                        leber_reop_jahr = df_reoperation_30d.groupby(['jahr_opdatum', 'reoperation_30d']).size().reset_index(name='count')
                         
-                    fig_leber_reop.update_traces(
-                        textposition='auto', 
-                        textfont_size=16,       
-                        textangle=0,            
-                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
-                        marker_line_width=0
-                    )
+                        # Basis ermitteln: Wie viele Fälle gab es insgesamt pro Jahr (Ja + Nein)?
+                        gesamt_pro_jahr = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja', 'Nein'])].groupby('jahr_opdatum').size()
                         
-                    fig_leber_reop.update_layout(
-                        height=400,
-                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
-                        xaxis_title=None, 
-                        yaxis_title=None, 
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
-                    )
+                        # Prozentwert korrekt im Verhältnis zur Jahresgesamtzahl berechnen
+                        leber_reop_jahr['pct'] = leber_reop_jahr.apply(
+                            lambda r: (r['count'] / gesamt_pro_jahr[r['jahr_opdatum']]) * 100 if r['jahr_opdatum'] in gesamt_pro_jahr else 0, 
+                            axis=1
+                        )
                         
-                    st.plotly_chart(fig_leber_reop, use_container_width=True, key=f"kachel_leber_reop_{bereich}", config={"displayModeBar": False})
-                else:
-                    st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
+                        # Text-Label: Anzahl (Prozent%)
+                        leber_reop_jahr['custom_label'] = leber_reop_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                        
+                        fig_leber_reop = px.bar(
+                            leber_reop_jahr,
+                            x='jahr_opdatum',
+                            y='count',            
+                            color='reoperation_30d', # Tippfehler behoben
+                            barmode='group',
+                            text='custom_label',  
+                            color_discrete_sequence=COLOR_PALETTE
+                        )
+                            
+                        fig_leber_reop.update_traces(
+                            textposition='auto', 
+                            textfont_size=16,       
+                            textangle=0,            
+                            cliponaxis=False,       
+                            marker_line_width=0
+                        )
+                            
+                        fig_leber_reop.update_layout(
+                            height=400,
+                            margin=dict(l=10, r=10, t=30, b=10), 
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                        )
+                            
+                        st.plotly_chart(fig_leber_reop, use_container_width=True, key=f"kachel_leber_reop_{bereich}", config={"displayModeBar": False})
+                    else:
+                        st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
+
 
 
 # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
