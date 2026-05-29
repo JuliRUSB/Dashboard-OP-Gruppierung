@@ -2173,7 +2173,7 @@ for i, bereich in enumerate(BEREICHE):
                     leber_hsm_jahr['pct'] = leber_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
                     
                     # Einfacher Text: Anzahl (Prozent%)
-                    hsm_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    leber_hsm_jahr['custom_label'] = leber_hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
                     fig_leber_hsm = px.bar(
                         leber_hsm_jahr,
