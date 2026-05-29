@@ -2355,7 +2355,7 @@ for i, bereich in enumerate(BEREICHE):
 # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
 # ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
         if bereich == "Leber":
-            with col1.container(border=True):
+            with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_reoperation_30d = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja'])].copy()
@@ -2375,7 +2375,7 @@ for i, bereich in enumerate(BEREICHE):
                         leber_reop_jahr,
                         x='jahr_opdatum',
                         y='count',            
-                        color='hsm',
+                        color='reoperataion_30d',
                         barmode='group',
                         text='custom_label',  
                         color_discrete_sequence=COLOR_PALETTE
@@ -2402,6 +2402,8 @@ for i, bereich in enumerate(BEREICHE):
                     st.plotly_chart(fig_leber_reop, use_container_width=True, key=f"kachel_leber_reop_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
+
+
 # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
 # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
     
