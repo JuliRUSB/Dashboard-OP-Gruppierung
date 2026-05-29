@@ -2210,21 +2210,18 @@ for i, bereich in enumerate(BEREICHE):
 
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
         # ================== ZUGANG ==================
-        if "Zugang" in analysen:
-            with st.container():
-                # Spezifische Filterung für den Bereich "Leber"
-                if bereich == "Leber":
-                    with col2.container(border=True):
-                        pattern = "HCC|CCC|Metastasen|Benigne"
-                        df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                        df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
-                        total_zugang = len(df_zugang)
-    
-                # Visualisierung des Zugangs
+        if bereich == "Leber":
+            with col2.container(border=True):
+                pattern = "HCC|CCC|Metastasen|Benigne"
+                df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
+                total_zugang = len(df_zugang)
+
+            # Der restliche Analyse-Code läuft jetzt innerhalb dieses Blocks
                 if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
                     zug = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
                     zug.columns = ["jahr_opdatum", "zugang", "count"]
-    
+
                     fig = px.bar(
                         zug,
                         x="jahr_opdatum",
@@ -2235,12 +2232,12 @@ for i, bereich in enumerate(BEREICHE):
                         color_discrete_sequence=COLOR_PALETTE,
                         labels={"zugang": "Zugang"}
                     )
-    
+
                     fig.update_traces(
                         textfont_size=16, 
                         textposition='inside'
                     )
-    
+
                     fig.update_layout(
                         xaxis_title=None, 
                         yaxis_title=None, 
@@ -2251,6 +2248,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
                 else:
                     st.info("Keine Zugangsdaten")
+
 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
 # 4. Grafik: Hospital Stay -> OK
