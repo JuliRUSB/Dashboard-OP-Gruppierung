@@ -2214,8 +2214,8 @@ for i, bereich in enumerate(BEREICHE):
             with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
                 df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                df_leber_zugang = df_zugang[df_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
-                total_leber_zugang = len(df_leber_zugang)
+                df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
+                total_zugang = len(df_zugang)
 
             # Der restliche Analyse-Code läuft jetzt innerhalb dieses Blocks
                 if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
