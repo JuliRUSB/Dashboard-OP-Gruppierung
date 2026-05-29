@@ -195,6 +195,8 @@ def prepare_data(df):
     df['gallefistel_isgls_surv'] = pd.to_numeric(df['gallefistel_isgls_surv'], errors='coerce')
     df['gallefistel_isgls_surv'] = df['gallefistel_isgls_surv'].map(gallefistel_isgls_surv_mapping).fillna('Unbekannt')
 
+
+    
     # Reoperation 30d: numerische Codes in Text umwandeln
     reoperation_30d_mapping = {
         1: 'Ja',
@@ -2263,8 +2265,6 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Zugangsdaten")
 
-
-
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
 # 4. Grafik: Hospital Stay
 # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
@@ -2353,6 +2353,55 @@ for i, bereich in enumerate(BEREICHE):
 # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
 # 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
 # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
+# ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
+        if bereich == "Leber":
+            with col1.container(border=True):
+                pattern = "HCC|CCC|Metastasen|Benigne"
+                df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                df_reoperation_30d = df_leber_reop[df_leber_reop['reoperation_30d'].isin(['Ja'])].copy()
+                total_reop = len(df_hsm)
+
+                st.metric(label="Leberchirurgie - Reoperation 30 Tage postoperativ", value=total_reop)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+
+                if total_reop > 0:
+                    leber_reop_jahr = df_reoperation_30d.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
+                    leber_reop_jahr['pct'] = leber_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+                    
+                    # Einfacher Text: Anzahl (Prozent%)
+                    leber_reop_jahr['custom_label'] = leber_reop_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    
+                    fig_leber_reop = px.bar(
+                        leber_reop_jahr,
+                        x='jahr_opdatum',
+                        y='count',            
+                        color='hsm',
+                        barmode='group',
+                        text='custom_label',  
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                        
+                    fig_leber_reop.update_traces(
+                        textposition='auto', 
+                        textfont_size=16,       
+                        textangle=0,            
+                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
+                        marker_line_width=0
+                    )
+                        
+                    fig_leber_reop.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+                        
+                    st.plotly_chart(fig_leber_reop, use_container_width=True, key=f"kachel_leber_reop_{bereich}", config={"displayModeBar": False})
+                else:
+                    st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
 # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
 # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
     
