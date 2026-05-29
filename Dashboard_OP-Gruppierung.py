@@ -2213,7 +2213,7 @@ for i, bereich in enumerate(BEREICHE):
         if bereich == "Leber":
             with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
-                df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                df_leber_zugang = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
                 total_zugang = len(df_zugang)
 
