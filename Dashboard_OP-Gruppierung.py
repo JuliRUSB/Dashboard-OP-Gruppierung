@@ -2217,13 +2217,16 @@ for i, bereich in enumerate(BEREICHE):
                 df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
                 total_zugang = len(df_zugang)
 
-            # Der restliche Analyse-Code läuft jetzt innerhalb dieses Blocks
-                if "zugang" in df_bereich.columns and df_bereich["zugang"].nunique() > 0:
-                    total_zugang = df_bereich.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                    total_zugang.columns = ["jahr_opdatum", "zugang", "count"]
+                if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
+                    # 1. Groupby auf den gefilterten Leber-Daten ausführen
+                    leber_zugang_jahr = df_zugang.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                    leber_zugang_jahr.columns = ["jahr_opdatum", "zugang", "count"]
 
-                    # Einfacher Text: Anzahl (Prozent%)
-                    leber_zugang_jahr['custom_label'] = hsm_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    # Prozentberechnung pro Jahr hinzufügen
+                    leber_zugang_jahr['pct'] = leber_zugang_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+
+                    # 2. Custom Label korrekt von leber_zugang_jahr ableiten
+                    leber_zugang_jahr['custom_label'] = leber_zugang_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
                     fig_leber_zugang = px.bar(
                         leber_zugang_jahr,
@@ -2239,13 +2242,13 @@ for i, bereich in enumerate(BEREICHE):
                         textposition='auto', 
                         textfont_size=16,       
                         textangle=0,            
-                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
+                        cliponaxis=False,       
                         marker_line_width=0
                     )
                         
                     fig_leber_zugang.update_layout(
                         height=400,
-                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
+                        margin=dict(l=10, r=10, t=30, b=10), 
                         xaxis_title=None, 
                         yaxis_title=None, 
                         xaxis={"type": "category", "tickfont": {"size": 16}},
@@ -2256,6 +2259,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.plotly_chart(fig_leber_zugang, use_container_width=True, key=f"kachel_leber_zugang_{bereich}", config={"displayModeBar": False})
                 else:
                     st.info("Keine Zugangsdaten")
+
 
 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
