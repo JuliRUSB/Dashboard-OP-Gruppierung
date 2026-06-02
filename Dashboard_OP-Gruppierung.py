@@ -439,25 +439,25 @@ with st.sidebar:
     #          damit beim updaten der App die Grafiken nur die         #
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
     # =================================================================#
-    
 
-    # 1. Filtern nach dem ausgewählten Zeitraum aus dem Slider
+    # 1. Start- und Endjahr aus dem Range-Slider-Tupel extrahieren
+    start_jahr, end_jahr = jahr_range
+    
+    # 2. Filtern nach dem ausgewählten Zeitraum
     df_filtered = df[
-        (df['jahr_opdatum'] >= jahr_range[0]) & 
-        (df['jahr_opdatum'] <= jahr_range[1])
+        (df['jahr_opdatum'] >= start_jahr) & 
+        (df['jahr_opdatum'] <= end_jahr)
     ].copy()
     
-    # 2. Filtern nach den ausgewählten Quartalen aus den Pills
-    if st.session_state['selected_quartale']:
+    # 3. Filtern nach den ausgewählten Quartalen aus den Pills
+    if st.session_state.get('selected_quartale'):
         df_filtered = df_filtered[df_filtered['quartal_opdatum'].isin(st.session_state['selected_quartale'])].copy()
     else:
         # Falls kein Quartal gewählt ist, leeres Dataframe bereitstellen
         df_filtered = df_filtered.iloc[0:0].copy()
     
-    # 3. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
+    # 4. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
     df = df_filtered.copy()
-
-
 
     # Buttons erstellen (Logik zum An/Abwählen)
     # for i, q in enumerate(quartal_werte):
