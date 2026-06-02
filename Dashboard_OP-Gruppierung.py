@@ -769,8 +769,9 @@ for i, bereich in enumerate(BEREICHE):
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
+                        
                         # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                        st.session_state.pdf_figures["kachel1"] = fig
+                        st.session_state.setdefault("pdf_figures", {})["kachel1"] = fig
                         
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel1_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
