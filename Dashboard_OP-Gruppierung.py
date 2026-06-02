@@ -910,8 +910,7 @@ for i, bereich in enumerate(BEREICHE):
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
-                            uniformtext=dict(mode="hide", minsize=16) # Verhindert das Schrumpfen und zwingt die 16pt-Zahl bei Platzmangel nach draussen
-                        )
+                                                    )
                     
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
