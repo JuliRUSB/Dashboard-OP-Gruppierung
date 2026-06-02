@@ -2182,7 +2182,7 @@ for i, bereich in enumerate(BEREICHE):
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         
-        # ================== Kachel "Leber HSM" % und absolute Zahlen ==================
+        # ================== Kachel "Leber HSM" % und  absolute Zahlen ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
