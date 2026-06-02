@@ -942,7 +942,7 @@ for i, bereich in enumerate(BEREICHE):
                     )
                     # st.divider()
                     # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -30px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                     if total_crs > 0:
                         # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
@@ -1028,7 +1028,7 @@ for i, bereich in enumerate(BEREICHE):
                     )
                     # st.divider()
                     # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    st.markdown("<hr style='margin-top: -30px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                     if total_crs > 0:
                         # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
