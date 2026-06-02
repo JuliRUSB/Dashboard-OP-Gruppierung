@@ -922,91 +922,91 @@ for i, bereich in enumerate(BEREICHE):
                     st.error("Spalten fehlen")
         
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
-if bereich == "Chirurgische Onkologie/Sarkome":
-    with col1.container(border=True):
-        # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-        # Check auf Spalten
-        required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
-        if required_cols.issubset(df_bereich.columns):
-
-            # CRS filtern
-            df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-            total_crs = len(df_plot_all)
-
-            # Dindo ≥ IIIa filtern
-            df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-            total_dindo = len(df_plot)
-
-            st.metric(
-                label="Clavien-Dindo-Grad ≥ IIIa - HIPEC bei CRS",
-                value=f"{total_dindo} von {total_crs}",
-            )
-            # st.divider()
-            # verkleinert den Raum oberhalb der Trennlinie
-            st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-
-            if total_crs > 0:
-                # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
-                grp = df_plot.groupby(
-                    ["jahr_opdatum", "hipec"],
-                    as_index=False
-                ).size()
-                grp.columns = ["jahr_opdatum", "hipec", "count"]
-
-                # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
-                grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
-
-                grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
-
-                grp["text_label"] = grp.apply(lambda row: f"{row['count']}<br>(von {row['count_gesamt']})", axis=1)
-
-                fig = px.bar(
-                    grp,
-                    x="jahr_opdatum",
-                    y="count",
-                    color="hipec",
-                    barmode="group",
-                    text="text_label",
-                    color_discrete_sequence=COLOR_PALETTE,
-                    labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
-                    # category_orders={"jahr_opdatum": quartal_order}
+    if bereich == "Chirurgische Onkologie/Sarkome":
+        with col1.container(border=True):
+            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
+            # Check auf Spalten
+            required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
+            if required_cols.issubset(df_bereich.columns):
+    
+                # CRS filtern
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot_all)
+    
+                # Dindo ≥ IIIa filtern
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_dindo = len(df_plot)
+    
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa - HIPEC bei CRS",
+                    value=f"{total_dindo} von {total_crs}",
                 )
-
-                fig.update_traces(
-                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
-                    textposition='auto',
-                    textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                    cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                    insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                    # 2. Schriftgrösse
-                    textfont_size=16,
-                    insidetextfont=dict(size=16),
-                    outsidetextfont=dict(size=16),
-                    # 3. Visuelle Details des Balkens selbst
-                    marker_line_width=0     # keine Begrenzungslinie
-                )
-
-                fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-
-                fig.update_layout(
-                    autosize=True,
-                    height=None,
-                    bargap=0.1,
-                    margin=dict(l=10, r=10, t=30, b=10),
-                    xaxis_title=None,
-                    yaxis_title=None,
-                    showlegend=True,
-                    legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),  # y=-0.2,
-                    xaxis={"type": "category", "tickfont": {"size": 16}},
-                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
-                )
-
-                st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
+                # st.divider()
+                # verkleinert den Raum oberhalb der Trennlinie
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+    
+                if total_crs > 0:
+                    # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
+                    grp = df_plot.groupby(
+                        ["jahr_opdatum", "hipec"],
+                        as_index=False
+                    ).size()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+    
+                    # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+    
+                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+    
+                    grp["text_label"] = grp.apply(lambda row: f"{row['count']}<br>(von {row['count_gesamt']})", axis=1)
+    
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="hipec",
+                        barmode="group",
+                        text="text_label",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
+                        # category_orders={"jahr_opdatum": quartal_order}
+                    )
+    
+                    fig.update_traces(
+                        # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                        textposition='auto',
+                        textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        # 2. Schriftgrösse
+                        textfont_size=16,
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        # 3. Visuelle Details des Balkens selbst
+                        marker_line_width=0     # keine Begrenzungslinie
+                    )
+    
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+    
+                    fig.update_layout(
+                        autosize=True,
+                        height=None,
+                        bargap=0.1,
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),  # y=-0.2,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                    )
+    
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
+                else:
+                    st.info("Keine Daten für HIPEC")
             else:
-                st.info("Keine Daten für HIPEC")
-        else:
-            st.error("Spalten fehlen")
+                st.error("Spalten fehlen")
                    
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS  ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
