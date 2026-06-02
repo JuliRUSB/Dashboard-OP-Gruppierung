@@ -2288,7 +2288,7 @@ for i, bereich in enumerate(BEREICHE):
                     # 2. Custom Label korrekt von leber_zugang_jahr ableiten
                     leber_robot_jahr['custom_label'] = leber_robot_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
                     
-                    fig_robot_zugang = px.bar(
+                    fig_leber_robot = px.bar(
                         leber_robot_jahr,
                         x='jahr_opdatum',
                         y='count',            
