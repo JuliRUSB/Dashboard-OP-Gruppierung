@@ -745,10 +745,16 @@ for i, bereich in enumerate(BEREICHE):
                         )
                     
                         fig.update_traces(
-                            textfont_size=16, 
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            marker_line_width=0,
-                            textangle=0
+                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0    # keine Begrenzungslinie
                         )
                     
                         fig.update_layout(
@@ -804,10 +810,16 @@ for i, bereich in enumerate(BEREICHE):
                         )
         
                         fig.update_traces(
-                            textfont_size=16, 
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            marker_line_width=0,
-                            textangle=0
+                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0    # keine Begrenzungslinie
                         )
         
                         fig.update_layout(
@@ -874,10 +886,16 @@ for i, bereich in enumerate(BEREICHE):
                         )
                     
                         fig.update_traces(
-                            textfont_size=16, 
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            marker_line_width=0,
-                            textangle=0
+                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0    # keine Begrenzungslinie
                         )
                     
                         fig.update_layout(
@@ -951,11 +969,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                    
                         fig.update_traces(
-                            textfont_size=16,
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                             insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                            textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                            marker_line_width=0
+                            # 2. Schriftgrösse
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
     
                         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -1038,11 +1062,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                    
                         fig.update_traces(
-                            textfont_size=16,
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            insidetextanchor='middle',
-                            textangle=-45, # Damit die Zahlen im 45 Grad Winkel dargestellt werden
-                            marker_line_width=0
+                            textangle=-45,              # Damit die Zahlen im 45 Grad Winkel dargestellt werden
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                            # 2. Schriftgrösse
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -1154,11 +1184,17 @@ for i, bereich in enumerate(BEREICHE):
                                 )
                     
                                 fig.update_traces(
-                                    textfont_size=16, 
-                                    textposition='inside', 
+                                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                                    textposition='auto',
+                                    textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                                    cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                                     insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                                    textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                                    cliponaxis=False
+                                    # 2. Schriftgrösse
+                                    textfont_size=16, 
+                                    insidetextfont=dict(size=16),
+                                    outsidetextfont=dict(size=16),
+                                    # 3. Visuelle Details des Balkens selbst
+                                    marker_line_width=0         # keine Begrenzungslinie
                                 )
                                 
                                 fig.update_layout(
@@ -1268,11 +1304,17 @@ for i, bereich in enumerate(BEREICHE):
                                 )
                     
                                 fig.update_traces(
-                                    textfont_size=16, 
-                                    textposition='inside', 
+                                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                                    textposition='auto',
+                                    textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                                    cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                                     insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                                    textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                                    cliponaxis=False
+                                    # 2. Schriftgrösse
+                                    textfont_size=16, 
+                                    insidetextfont=dict(size=16),
+                                    outsidetextfont=dict(size=16),
+                                    # 3. Visuelle Details des Balkens selbst
+                                    marker_line_width=0         # keine Begrenzungslinie
                                 )
                                 
                                 fig.update_layout(
@@ -1360,9 +1402,16 @@ for i, bereich in enumerate(BEREICHE):
                                 )
                     
                                 fig.update_traces(
-                                    textfont_size=16,
+                                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                                     textposition='auto',
-                                    marker_line_width=0, textangle=0
+                                    textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                                    cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                                    # 2. Schriftgrösse
+                                    textfont_size=16, 
+                                    insidetextfont=dict(size=16),
+                                    outsidetextfont=dict(size=16),
+                                    # 3. Visuelle Details des Balkens selbst
+                                    marker_line_width=0         # keine Begrenzungslinie
                                 )
                     
                                 fig.update_layout(
@@ -1419,10 +1468,18 @@ for i, bereich in enumerate(BEREICHE):
                         )
             
                         fig.update_traces(
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                            textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
                             texttemplate='%{text:.2f}',
-                            textposition='outside',
-                            textfont=dict(size=16),
-                            marker_line_width=0
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         # Linien für Median, Min, Max
@@ -1503,10 +1560,18 @@ for i, bereich in enumerate(BEREICHE):
                         )
             
                         fig.update_traces(
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                            textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
                             texttemplate='%{text:.2f}',
-                            textposition='outside',
-                            textfont=dict(size=16),
-                            marker_line_width=0
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         # Linien für Median, Min, Max
@@ -1597,13 +1662,16 @@ for i, bereich in enumerate(BEREICHE):
                         )
                     
                         fig.update_traces(
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                            textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse etc.
                             textfont_size=16, 
-                            # textposition='auto',
-                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                            marker_line_width=0,
-                            outsidetextfont=dict(size=16),
                             insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
     
                         # Pro Balken: textposition basierend auf Wert setzen
@@ -1669,10 +1737,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                     
                         fig.update_traces(
-                            textfont_size=16, 
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            marker_line_width=0, 
-                            textangle=0
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            texttemplate='%{text:.2f}',
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
                     
                         fig.update_layout(
@@ -1729,11 +1804,16 @@ for i, bereich in enumerate(BEREICHE):
                         )
     
                         fig.update_traces(
-                            textfont_size=16,
-                            textposition="auto",
-                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                            marker_line_width=0
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                            textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
     
                         fig.update_layout(
@@ -1809,11 +1889,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                    
                         fig.update_traces(
-                            textfont_size=16,
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                             insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                            textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                            marker_line_width=0
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
     
                         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -1893,11 +1979,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                    
                         fig.update_traces(
-                            textfont_size=16,
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            insidetextanchor='middle',
                             textangle=-45, # Damit die Zahlen im 45 Grad Winkel dargestellt werden
-                            marker_line_width=0
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -1968,11 +2060,17 @@ for i, bereich in enumerate(BEREICHE):
                     # )
                
                     # fig.update_traces(
-                        # textfont_size=16,
-                        # textposition='auto',
+                        # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                        #    textposition='auto',
+                        #   textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        #  cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                         # insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                        # textangle=0, # erzwingt, dass die Zahl steht (90 Grad Drehung)
-                        # marker_line_width=0
+                        # 2. Schriftgrösse etc.
+                        # textfont_size=16, 
+                        #    insidetextfont=dict(size=16),
+                        #    outsidetextfont=dict(size=16),
+                            # 3. Visuelle Details des Balkens selbst
+                         #   marker_line_width=0         # keine Begrenzungslinie
                     # )
 
                     # fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -2064,11 +2162,17 @@ for i, bereich in enumerate(BEREICHE):
                                 )
                     
                                 fig.update_traces(
-                                    textfont_size=16,
+                                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                                     textposition='auto',
-                                    insidetextanchor='middle',
-                                    textangle=0,
-                                    marker_line_width=0
+                                    textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                                    cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                                    insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                                    # 2. Schriftgrösse etc.
+                                    textfont_size=16, 
+                                    insidetextfont=dict(size=16),
+                                    outsidetextfont=dict(size=16),
+                                    # 3. Visuelle Details des Balkens selbst
+                                    marker_line_width=0         # keine Begrenzungslinie
                                 )
                     
                                 fig.update_layout(
@@ -2137,10 +2241,15 @@ for i, bereich in enumerate(BEREICHE):
                         )
             
                         fig.update_traces(
-                            texttemplate='%{text:.2f}',
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='outside',
-                            textfont=dict(size=16),
-                            marker_line_width=0
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            texttemplate='%{text:.2f}',
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         # Linien für Median, Min, Max
@@ -2332,11 +2441,17 @@ for i, bereich in enumerate(BEREICHE):
                     )
                         
                     fig_leber_robot.update_traces(
-                        textposition='auto', 
-                        textfont_size=16,       
-                        textangle=0,            
-                        cliponaxis=False,       
-                        marker_line_width=0
+                        # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                        textposition='auto',
+                        textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        # 2. Schriftgrösse etc.
+                        textfont_size=16, 
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        # 3. Visuelle Details des Balkens selbst
+                        marker_line_width=0         # keine Begrenzungslinie
                     )
                         
                     fig_leber_robot.update_layout(
@@ -2393,7 +2508,18 @@ for i, bereich in enumerate(BEREICHE):
                             texttemplate='%{text:.2f}',
                             textposition='outside',
                             textfont=dict(size=16),
-                            marker_line_width=0
+                            marker_line_width=0,
+                            cliponaxis=False 
+
+                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
+                        textposition='outside',
+                        textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                        cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                        # 2. Schriftgrösse etc.
+                        textfont_size=16, 
+                        texttemplate='%{text:.2f}',
+                        # 3. Visuelle Details des Balkens selbst
+                        marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         # Linien für Median, Min, Max
