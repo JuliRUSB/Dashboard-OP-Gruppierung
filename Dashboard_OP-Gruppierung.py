@@ -461,6 +461,7 @@ with st.sidebar:
     
     # 4. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
     df = df_filtered.copy()
+    st.sidebar.write(f"Filter aktiv: {df['jahr_opdatum'].min()} - {df['jahr_opdatum'].max()}")
 
     # Buttons erstellen (Logik zum An/Abwählen)
     # for i, q in enumerate(quartal_werte):
@@ -715,6 +716,7 @@ for i, bereich in enumerate(BEREICHE):
 
         # ================== ANFANG BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ==================    
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
+        st.write(f"In Grafik ankommend: {df_bereich['jahr_opdatum'].min()} - {df_bereich['jahr_opdatum'].max()}")
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
                 # Vorab-Check der Analyse-Auswahl
