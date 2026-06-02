@@ -895,8 +895,8 @@ for i, bereich in enumerate(BEREICHE):
                             cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                             # 2. Schriftgrösse
                             textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
+                            #insidetextfont=dict(size=16),
+                            #outsidetextfont=dict(size=16),
                             # 3. Visuelle Details des Balkens selbst
                             marker_line_width=0    # keine Begrenzungslinie
                         )
