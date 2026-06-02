@@ -691,22 +691,6 @@ with col2:
         )
 st.divider()
 
-# CSS für identische Abstände in den Kacheln zwischen Trennlinie und Plot
-st.markdown("""
-    <style>
-    .kachel-linie {
-        margin-top: -25px !important;  /* Zieht die Linie starr nach oben zur Metrik */
-        margin-bottom: 5px !important; /* Abstand zum Plot darunter */
-        padding: 0 !important;
-    }
-    .kachel-linie hr {
-        margin: 0 !important;
-        border: none !important;
-        border-top: 1px solid #ddd !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- TEIL 3: Detailanalysen (Tabs) ---
 
 st.header("Detailanalysen")
@@ -745,9 +729,9 @@ for i, bereich in enumerate(BEREICHE):
                     total_ops = len(df_plot)
             
                     st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
-                    st.divider()
+                    # st.divider()
                     # verkleinert den Raum oberhalb der Trennlinie
-                    #st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_ops > 0:
                         # Aggregation
