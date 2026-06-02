@@ -904,18 +904,17 @@ for i, bereich in enumerate(BEREICHE):
                         )
                     
                         fig.update_layout(
-                                                        # autosize=True,
-                                                        height=400,
-                                                        margin=dict(l=10, r=10, t=0, b=10),
-                                                        xaxis_title=None, 
-                                                        yaxis_title=None, 
-                                                        showlegend=True,
-                                                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
-                                                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                                                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "automargin": True},
-                                                        uniformtext=dict(mode="show", minsize=16),
-                                                        bargap=0.2
-                                                )
+                            # autosize=True,
+                            height=400,
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "automargin": True},
+                            bargap=0.2
+                        )
                     
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
