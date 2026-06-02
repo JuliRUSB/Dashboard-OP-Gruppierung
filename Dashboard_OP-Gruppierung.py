@@ -959,28 +959,11 @@ for i, bereich in enumerate(BEREICHE):
                         grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
         
                         # Zusammenführen für korrekte Prozentbasis
-                        # Zusammenführen für korrekte Prozentbasis
-                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left")
-                        
-                        # Spalten explizit als Integer füllen, um den Streamlit-DOM-Bug zu verhindern
-                        grp["count"] = grp["count"].fillna(0).astype(int)
-                        grp["count_gesamt"] = grp["count_gesamt"].fillna(0).astype(int)
+                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left").fillna(0)
         
                         grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
-                        grp["prozent"] = grp["prozent"].fillna(0) # Falls count_gesamt 0 ist
         
                         grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
-        
-                        # CSS-Injektion NUR für Kachel 4, um den überschüssigen Container-Abstand zu eliminieren
-                        st.markdown(
-                            """
-                            <style>
-                            div[data-testid="stVerticalBlock"] > div:has(.stPlotlyChart) {
-                                margin-top: -20px !important;
-                            </style>
-                            """,
-                            unsafe_allow_html=True
-                        )
         
                         fig = px.bar(
                             grp,
