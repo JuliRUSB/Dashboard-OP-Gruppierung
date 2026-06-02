@@ -905,9 +905,7 @@ for i, bereich in enumerate(BEREICHE):
     
                         grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
     
-                        grp["text_label"] = grp.apply(
-                            lambda row: f"{row['count']} (von {row['count_gesamt']})", axis=1
-                        )
+                        grp["text_label"] = grp.apply(lambda row: f"{row['count']}<br>(von {row['count_gesamt']})", axis=1)
                         
                         fig = px.bar(
                             grp,
@@ -2231,7 +2229,7 @@ for i, bereich in enumerate(BEREICHE):
                     leber_zugang_jahr['pct'] = leber_zugang_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
 
                     # 2. Custom Label korrekt von leber_zugang_jahr ableiten
-                    leber_zugang_jahr['text_label'] = leber_zugang_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    leber_zugang_jahr['text_label'] = leber_zugang_jahr.apply(lambda r: f"{r['count']}<br>({r['pct']:.1f}%)", axis=1)
                     
                     fig_leber_zugang = px.bar(
                         leber_zugang_jahr,
@@ -2286,7 +2284,7 @@ for i, bereich in enumerate(BEREICHE):
                     leber_robot_jahr['pct'] = leber_robot_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
 
                     # 2. Custom Label korrekt von leber_zugang_jahr ableiten
-                    leber_robot_jahr['text_label'] = leber_robot_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    leber_robot_jahr['text_label'] = leber_robot_jahr.apply(lambda r: f"{r['count']}<br>({r['pct']:.1f}%)", axis=1)
                     
                     fig_leber_robot = px.bar(
                         leber_robot_jahr,
