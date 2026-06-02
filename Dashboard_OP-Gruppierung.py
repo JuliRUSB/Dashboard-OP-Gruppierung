@@ -194,8 +194,6 @@ def prepare_data(df):
     }
     df['gallefistel_isgls_surv'] = pd.to_numeric(df['gallefistel_isgls_surv'], errors='coerce')
     df['gallefistel_isgls_surv'] = df['gallefistel_isgls_surv'].map(gallefistel_isgls_surv_mapping).fillna('Unbekannt')
-
-
     
     # Reoperation 30d: numerische Codes in Text umwandeln
     reoperation_30d_mapping = {
@@ -402,7 +400,7 @@ with st.sidebar:
     )
 
     # den aktuellen Wert im Speicher aktuell halten
-    st.session_state['slider_jahr_speicher'] = jahr_range
+    # st.session_state['slider_jahr_speicher'] = jahr_range
     
     st.session_state.setdefault('selected_quartale', [1, 2, 3, 4])
     st.session_state.setdefault('selected_jahre', list(range(df['jahr_opdatum'].min(), df['jahr_opdatum'].max() + 1)))
@@ -476,7 +474,7 @@ with st.sidebar:
     #         st.rerun()
 
     # Jahre speichern
-    st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  
+    # st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  
 
     st.divider()
     
