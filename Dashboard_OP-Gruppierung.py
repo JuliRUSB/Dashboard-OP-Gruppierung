@@ -2293,7 +2293,8 @@ for i, bereich in enumerate(BEREICHE):
                         color='leber_gruppen', 
                         barmode='group',
                         text='text_label',  
-                        color_discrete_sequence=COLOR_PALETTE
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={'leber_gruppen': 'Lebergruppen'} 
                     )
                         
                     fig_leber_robot.update_traces(
