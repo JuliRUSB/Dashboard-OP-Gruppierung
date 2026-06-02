@@ -2235,7 +2235,7 @@ for i, bereich in enumerate(BEREICHE):
 
 
 # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
-        # ================== ZUGANG ==================
+        # ================== Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
         if bereich == "Leber":
             with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2243,7 +2243,7 @@ for i, bereich in enumerate(BEREICHE):
                 df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['Offen', 'Laparoskopisch', 'roboter-assistiert'])].copy()
                 total_zugang = len(df_zugang)
 
-                st.metric(label="Leberchirurgie - Zugang", value=total_zugang)
+                st.metric(label="Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne)", value=total_zugang)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
