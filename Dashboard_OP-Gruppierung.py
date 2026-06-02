@@ -694,15 +694,10 @@ st.divider()
 # CSS für identische Abstände in den Kacheln zwischen Trennlinie und Plot
 st.markdown("""
     <style>
-    /* Setzt den Abstand vor und nach jeder Trennlinie exakt fest */
-    [data-testid="stDivider"] {
-        margin-top: -20px !important;   /* Negativer Wert zieht die Linie näher an die Metrik */
-        margin-bottom: 10px !important;  /* Steuert den Abstand zum Plot darunter */
-        padding: 0 !important;
-    }
-    /* Verhindert, dass der Container unter der Metrik wandert */
-    [data-testid="stMetric"] {
-        margin-bottom: 0px !important;
+    /* Greift das Element direkt nach der Metrik und zieht es hoch */
+    [data-testid="stMetric"] + div [data-testid="stMarkdownContainer"] {
+        margin-top: -25px !important;
+        margin-bottom: 5px !important;
     }
     </style>
 """, unsafe_allow_html=True)
