@@ -434,6 +434,29 @@ with st.sidebar:
     else:
         st.write("Kein Quartal ausgewählt.")
 
+    # =================================================================#
+    #                   AKTIVE FILTERUNG DER DATEN:                    #
+    #          damit beim updaten der App die Grafiken nur die         #
+    #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
+    # =================================================================#
+    
+    # 1. Filtern nach dem ausgewählten Zeitraum aus dem Slider
+    df_filtered = df[
+        (df['jahr_opdatum'] >= jahr_range[0]) & 
+        (df['jahr_opdatum'] <= jahr_range[1])
+    ].copy()
+    
+    # 2. Filtern nach den ausgewählten Quartalen aus den Pills
+    if st.session_state['selected_quartale']:
+        df_filtered = df_filtered[df_filtered['quartal_opdatum'].isin(st.session_state['selected_quartale'])].copy()
+    else:
+        # Falls kein Quartal gewählt ist, leeres Dataframe bereitstellen
+        df_filtered = df_filtered.iloc[0:0].copy()
+    
+    # 3. WICHTIG: Das df_bereich für deine Kacheln auf Basis der gefilterten Daten erstellen
+    df_bereich = df_filtered[df_filtered['bereich'] == bereich].copy()
+
+
     # Buttons erstellen (Logik zum An/Abwählen)
     # for i, q in enumerate(quartal_werte):
     #     is_active = q in st.session_state['selected_quartale']
