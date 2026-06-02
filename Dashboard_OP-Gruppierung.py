@@ -378,6 +378,9 @@ if 'selected_jahre' not in st.session_state:
     st.session_state.selected_jahre = alle_jahre
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
+Das Standard-Filter-Tupel einmalig beim allerersten Start merken
+if 'slider_jahr_speicher' not in st.session_state:
+    st.session_state['slider_jahr_speicher'] = (alle_jahre[0], alle_jahre[-1])
 
 
 # =================================================================#
@@ -394,13 +397,13 @@ with st.sidebar:
         "Zeitraum auswählen",
         min_value=min_jahr,
         max_value=max_jahr,
-        value=(min_jahr, max_jahr)
+        value=st.session_state['slider_jahr_speicher'], # Nutzt den Speicher statt den harten Reset
+        key="jahr_slider_widget"                        # Verhindert den Verlust der Instanz bei Code-Updates
     )
-    
-    # Sicherstellen, dass die Liste im Session State existiert
-    #if 'selected_quartale' not in st.session_state:
-        #st.session_state['selected_quartale'] = [1, 2, 3, 4]
 
+    # den aktuellen Wert im Speicher aktuell halten
+    st.session_state['slider_jahr_speicher'] = jahr_range
+    
     st.session_state.setdefault('selected_quartale', [1, 2, 3, 4])
     st.session_state.setdefault('selected_jahre', list(range(df['jahr_opdatum'].min(), df['jahr_opdatum'].max() + 1)))
 
