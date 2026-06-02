@@ -697,7 +697,7 @@ st.markdown("""
     /* Setzt den Abstand vor und nach jeder Trennlinie exakt fest */
     [data-testid="stDivider"] {
         margin-top: 5px !important;
-        margin-bottom: 15px !important;
+        margin-bottom: 5px !important;
         padding: 0 !important;
     }
     /* Verhindert, dass der Container unter der Metrik wandert */
