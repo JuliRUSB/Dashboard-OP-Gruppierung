@@ -744,7 +744,8 @@ for i, bereich in enumerate(BEREICHE):
                         fig.update_traces(
                             textfont_size=16, 
                             textposition='auto',
-                            marker_line_width=0 
+                            marker_line_width=0,
+                            textangle=0
                         )
                     
                         fig.update_layout(
@@ -802,7 +803,8 @@ for i, bereich in enumerate(BEREICHE):
                         fig.update_traces(
                             textfont_size=16, 
                             textposition='auto',
-                            marker_line_width=0
+                            marker_line_width=0,
+                            textangle=0
                         )
         
                         fig.update_layout(
@@ -871,7 +873,8 @@ for i, bereich in enumerate(BEREICHE):
                         fig.update_traces(
                             textfont_size=16, 
                             textposition='auto',
-                            marker_line_width=0
+                            marker_line_width=0,
+                            textangle=0
                         )
                     
                         fig.update_layout(
@@ -1356,7 +1359,7 @@ for i, bereich in enumerate(BEREICHE):
                                 fig.update_traces(
                                     textfont_size=16,
                                     textposition='auto',
-                                    marker_line_width=0
+                                    marker_line_width=0, textangle=0
                                 )
                     
                                 fig.update_layout(
@@ -1665,7 +1668,8 @@ for i, bereich in enumerate(BEREICHE):
                         fig.update_traces(
                             textfont_size=16, 
                             textposition='auto',
-                            marker_line_width=0
+                            marker_line_width=0, 
+                            textangle=0
                         )
                     
                         fig.update_layout(
