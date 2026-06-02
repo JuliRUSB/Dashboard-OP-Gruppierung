@@ -923,7 +923,7 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
     if bereich == "Chirurgische Onkologie/Sarkome":
-        with col1.container(border=True):
+        with col2.container(border=True):
             # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
             # Check auf Spalten
             required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
@@ -934,7 +934,7 @@ for i, bereich in enumerate(BEREICHE):
                 total_crs = len(df_plot_all)
     
                 # Dindo ≥ IIIa filtern
-                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                df_plot = df_plot_all[df_bereich["statistik_dindo_2"] == '1'].copy()
                 total_dindo = len(df_plot)
     
                 st.metric(
@@ -974,17 +974,14 @@ for i, bereich in enumerate(BEREICHE):
                     )
     
                     fig.update_traces(
-                        # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                         textposition='auto',
-                        textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                        cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                        # 2. Schriftgrösse
+                        textangle=0,
+                        cliponaxis=False,
+                        insidetextanchor='middle',
                         textfont_size=16,
                         insidetextfont=dict(size=16),
                         outsidetextfont=dict(size=16),
-                        # 3. Visuelle Details des Balkens selbst
-                        marker_line_width=0     # keine Begrenzungslinie
+                        marker_line_width=0
                     )
     
                     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
@@ -997,14 +994,12 @@ for i, bereich in enumerate(BEREICHE):
                         xaxis_title=None,
                         yaxis_title=None,
                         showlegend=True,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),  # y=-0.2,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
     
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
-                else:
-                    st.info("Keine Daten für HIPEC")
+                st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
             else:
                 st.error("Spalten fehlen")
                    
