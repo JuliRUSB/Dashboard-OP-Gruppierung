@@ -911,7 +911,7 @@ for i, bereich in enumerate(BEREICHE):
                             showlegend=True,
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
                             xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
                             uniformtext=dict(mode=Show, minsize=16)                        
                         )
                     
