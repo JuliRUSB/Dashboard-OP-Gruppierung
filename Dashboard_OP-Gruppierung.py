@@ -2183,6 +2183,7 @@ for i, bereich in enumerate(BEREICHE):
                         barmode='group',
                         text='text_label',  
                         color_discrete_sequence=COLOR_PALETTE
+                        labels={'hsm': 'HSM'} 
                     )
                         
                     fig_leber_hsm.update_traces(
@@ -2239,6 +2240,7 @@ for i, bereich in enumerate(BEREICHE):
                         barmode='group',
                         text='text_label',  
                         color_discrete_sequence=COLOR_PALETTE
+                        labels={'zugang': 'Zugang'} 
                     )
                         
                     fig_leber_zugang.update_traces(
