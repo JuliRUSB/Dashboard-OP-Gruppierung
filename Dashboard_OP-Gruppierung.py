@@ -1070,7 +1070,7 @@ for i, bereich in enumerate(BEREICHE):
                         fig.update_traces(
                             # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
                             textposition='auto',
-                            textangle=-45,              # Damit die Zahlen im 45 Grad Winkel dargestellt werden
+                            textangle=0,              # Damit die Zahlen im 45 Grad Winkel dargestellt werden
                             cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                             insidetextanchor='middle',  # Zentriert die Zahl im Segment
                             # 2. Schriftgrösse
