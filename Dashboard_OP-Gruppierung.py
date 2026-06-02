@@ -378,7 +378,7 @@ if 'selected_jahre' not in st.session_state:
     st.session_state.selected_jahre = alle_jahre
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
-Das Standard-Filter-Tupel einmalig beim allerersten Start merken
+# Das Standard-Filter-Tupel einmalig beim allerersten Start merken
 if 'slider_jahr_speicher' not in st.session_state:
     st.session_state['slider_jahr_speicher'] = (alle_jahre[0], alle_jahre[-1])
 
