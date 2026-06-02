@@ -894,8 +894,8 @@ for i, bereich in enumerate(BEREICHE):
                             cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
                             # 2. Schriftgrösse
                             textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
+                            # insidetextfont=dict(size=16),
+                            # outsidetextfont=dict(size=16),
                             # 3. Visuelle Details des Balkens selbst
                             marker_line_width=0    # keine Begrenzungslinie
                         )
@@ -909,7 +909,8 @@ for i, bereich in enumerate(BEREICHE):
                             showlegend=True,
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
                             xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                            uniformtext=dict(mode="hide", minsize=16) # Verhindert das Schrumpfen und zwingt die 16pt-Zahl bei Platzmangel nach draussen
                         )
                     
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={"displayModeBar": False, "responsive": True})
