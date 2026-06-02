@@ -959,7 +959,7 @@ for i, bereich in enumerate(BEREICHE):
                         grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
         
                         # Zusammenführen für korrekte Prozentbasis
-                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left").fillna(0)
+                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left")
         
                         grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
         
