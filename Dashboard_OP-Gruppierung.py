@@ -440,6 +440,7 @@ with st.sidebar:
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
     # =================================================================#
     
+
     # 1. Filtern nach dem ausgewählten Zeitraum aus dem Slider
     df_filtered = df[
         (df['jahr_opdatum'] >= jahr_range[0]) & 
@@ -453,8 +454,9 @@ with st.sidebar:
         # Falls kein Quartal gewählt ist, leeres Dataframe bereitstellen
         df_filtered = df_filtered.iloc[0:0].copy()
     
-    # 3. WICHTIG: Das df_bereich für deine Kacheln auf Basis der gefilterten Daten erstellen
-    df_bereich = df_filtered[df_filtered['bereich'] == bereich].copy()
+    # 3. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
+    df = df_filtered.copy()
+
 
 
     # Buttons erstellen (Logik zum An/Abwählen)
