@@ -838,7 +838,7 @@ for i, bereich in enumerate(BEREICHE):
                         )
     
                         # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                        st.session_state.pdf_figures["kachel2"] = fig
+                        st.session_state.pdf_figures.setdefault("kachel2", fig)
                         
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
