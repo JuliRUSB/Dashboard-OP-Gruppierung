@@ -2182,7 +2182,7 @@ for i, bereich in enumerate(BEREICHE):
                         color='hsm',
                         barmode='group',
                         text='text_label',  
-                        color_discrete_sequence=COLOR_PALETTE
+                        color_discrete_sequence=COLOR_PALETTE,
                         labels={'hsm': 'HSM'} 
                     )
                         
