@@ -2643,6 +2643,7 @@ for i, bereich in enumerate(BEREICHE):
             # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
 
 # ------------------- Export Button erstellen ---------------------
+# ------------------- Export Button erstellen ---------------------
 def figures_to_html(figures: dict) -> bytes:
     import plotly.io as pio
     
@@ -2670,10 +2671,11 @@ def figures_to_html(figures: dict) -> bytes:
     html += "</body></html>"
     return html.encode('utf-8')
 
-
+.get() verhindert den Absturz, falls das Objekt beim ersten Laden noch nicht existiert
 st.download_button(
     label="📄 Grafiken exportieren",
-    data=figures_to_html(st.session_state.pdf_figures),
+    data=figures_to_html(st.session_state.get("pdf_figures", {})),
     file_name="dashboard_export.html",
     mime="text/html"
 )
+
