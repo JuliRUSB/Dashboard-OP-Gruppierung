@@ -2264,19 +2264,19 @@ for i, bereich in enumerate(BEREICHE):
                     st.info("Keine Zugangsdaten")
 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
-        # ================== ZUGANG ==================
+        # ================== Kachel: Roboterassistierte Eingriffe nach Lebergruppen (HCC|CCC|Metastasen) ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen"
                 df_leber_robot = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['roboter-assistiert'])].copy()
-                total_zugang = len(df_zugang)
+                df_zugang = df_leber_robot[df_leber_robot['zugang'].isin(['roboter-assistiert'])].copy()
+                total_zugang_robot = len(df_zugang)
 
                 st.metric(label="Leberchirurgie - Roboterassistierte Eingriffe nach Gruppen (HCC|CCC|Metastasen)", value=total_zugang)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
-                    # 1. Groupby auf den gefilterten Leber-Daten ausführen (Geändert auf leber_gruppen)
+                    # 1. Groupby auf den gefilterten Leber-Daten ausführen
                     leber_robot_jahr = df_zugang.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
                     leber_robot_jahr.columns = ["jahr_opdatum", "leber_gruppen", "count"]
 
