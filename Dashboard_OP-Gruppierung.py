@@ -942,7 +942,7 @@ for i, bereich in enumerate(BEREICHE):
                     )
                     # st.divider()
                     # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 0px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                     if total_crs > 0:
                         # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
@@ -986,7 +986,7 @@ for i, bereich in enumerate(BEREICHE):
         
                         fig.update_layout(
                             # autosize=True,
-                            height=380,
+                            height=400,
                             bargap=0.1,
                             margin=dict(l=10, r=10, t=0, b=10),
                             xaxis_title=None,
