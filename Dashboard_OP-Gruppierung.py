@@ -730,9 +730,9 @@ for i, bereich in enumerate(BEREICHE):
                     total_ops = len(df_plot)
             
                     st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
-                    # st.divider()
+                    st.divider()
                     # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    #st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_ops > 0:
                         # Aggregation
