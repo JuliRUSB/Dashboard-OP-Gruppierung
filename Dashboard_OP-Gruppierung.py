@@ -2505,21 +2505,15 @@ for i, bereich in enumerate(BEREICHE):
                         )
             
                         fig.update_traces(
-                            texttemplate='%{text:.2f}',
-                            textposition='outside',
-                            textfont=dict(size=16),
-                            marker_line_width=0,
-                            cliponaxis=False 
-
                             # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
-                        textposition='outside',
-                        textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                        cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                        # 2. Schriftgrösse etc.
-                        textfont_size=16, 
-                        texttemplate='%{text:.2f}',
-                        # 3. Visuelle Details des Balkens selbst
-                        marker_line_width=0         # keine Begrenzungslinie
+                            textposition='outside',
+                            textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
+                            cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            # 2. Schriftgrösse etc.
+                            textfont_size=16, 
+                            texttemplate='%{text:.2f}',
+                            # 3. Visuelle Details des Balkens selbst
+                            marker_line_width=0         # keine Begrenzungslinie
                         )
             
                         # Linien für Median, Min, Max
