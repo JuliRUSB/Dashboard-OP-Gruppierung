@@ -893,6 +893,7 @@ for i, bereich in enumerate(BEREICHE):
                             textposition='auto',
                             textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
                             cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
+                            insidetextanchor='end',  # positioniert die Zahl oben im Segment
                             # 2. Schriftgrösse
                             textfont=dict(size=16),
                             #textfont_size=16, 
