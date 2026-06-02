@@ -696,8 +696,8 @@ st.markdown("""
     <style>
     /* Setzt den Abstand vor und nach jeder Trennlinie exakt fest */
     [data-testid="stDivider"] {
-        margin-top: 5px !important;
-        margin-bottom: 5px !important;
+        margin-top: -20px !important;   /* Negativer Wert zieht die Linie näher an die Metrik */
+        margin-bottom: 10px !important;  /* Steuert den Abstand zum Plot darunter */
         padding: 0 !important;
     }
     /* Verhindert, dass der Container unter der Metrik wandert */
