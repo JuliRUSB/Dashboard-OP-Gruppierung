@@ -435,14 +435,16 @@ with st.sidebar:
     else:
         st.write("Kein Quartal ausgewählt.")
 
-    # =================================================================#
+        # =================================================================#
     #                   AKTIVE FILTERUNG DER DATEN:                    #
     #          damit beim updaten der App die Grafiken nur die         #
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
     # =================================================================#
 
-    # 1. Start- und Endjahr aus dem Range-Slider-Tupel extrahieren
-    start_jahr, end_jahr = jahr_range
+    # ÄNDERUNG: Werte direkt aus dem Session State des Sliders holen.
+    # Falls nach dem Code-Update kurzzeitig leer, greift das Fallback (min_jahr, max_jahr)
+    slider_werte = st.session_state.get("pills_selection_jahr", jahr_range) # Nutze hier den EXAKTEN key deines Sliders
+    start_jahr, end_jahr = slider_werte
     
     # 2. Filtern nach dem ausgewählten Zeitraum
     df_filtered = df[
