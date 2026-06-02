@@ -2266,6 +2266,61 @@ for i, bereich in enumerate(BEREICHE):
                     st.info("Keine Zugangsdaten")
 
 # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
+        # ================== ZUGANG ==================
+        if bereich == "Leber":
+            with col1.container(border=True):
+                pattern = "HCC|CCC|Metastasen"
+                df_leber_robot = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+                df_zugang = df_leber_zugang[df_leber_zugang['zugang'].isin(['roboter-assistiert'])].copy()
+                total_zugang = len(df_zugang)
+
+                st.metric(label="Leberchirurgie - Roboterassistierte Eingriffe nach Gruppen (HCC|CCC|Metastasen)", value=total_zugang)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
+                if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
+                    # 1. Groupby auf den gefilterten Leber-Daten ausführen (Geändert auf leber_gruppen)
+                    leber_robot_jahr = df_zugang.groupby(["jahr_opdatum", "leber_gruppen"], as_index=False).size()
+                    leber_robot_jahr.columns = ["jahr_opdatum", "leber_gruppen", "count"]
+
+                    # Prozentberechnung pro Jahr hinzufügen
+                    leber_robot_jahr['pct'] = leber_robot_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+
+                    # 2. Custom Label korrekt von leber_zugang_jahr ableiten
+                    leber_robot_jahr['custom_label'] = leber_robot_jahr.apply(lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1)
+                    
+                    fig_robot_zugang = px.bar(
+                        leber_robot_jahr,
+                        x='jahr_opdatum',
+                        y='count',            
+                        color='leber_gruppen', 
+                        barmode='group',
+                        text='custom_label',  
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                        
+                    fig_leber_robot.update_traces(
+                        textposition='auto', 
+                        textfont_size=16,       
+                        textangle=0,            
+                        cliponaxis=False,       
+                        marker_line_width=0
+                    )
+                        
+                    fig_leber_robot.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=30, b=10), 
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+                        
+                    st.plotly_chart(fig_leber_robot, use_container_width=True, key=f"kachel_leber_robot_{bereich}", config={"displayModeBar": False})
+                else:
+                    st.info("Keine Daten")
+
+
 # 4. Grafik: Hospital Stay
 # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
         if bereich == "Leber":
