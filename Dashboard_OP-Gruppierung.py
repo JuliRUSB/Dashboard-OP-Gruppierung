@@ -16,7 +16,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 
 # Konfiguration
-# ==================================================
+# ==================================================Gesamtzahl 
 API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 # ==================================================
 
@@ -691,6 +691,21 @@ with col2:
         )
 st.divider()
 
+# CSS für identische Abstände in den Kacheln zwischen Trennlinie und Plot
+st.markdown("""
+    <style>
+    /* Setzt den Abstand vor und nach jeder Trennlinie exakt fest */
+    [data-testid="stDivider"] {
+        margin-top: 5px !important;
+        margin-bottom: 15px !important;
+        padding: 0 !important;
+    }
+    /* Verhindert, dass der Container unter der Metrik wandert */
+    [data-testid="stMetric"] {
+        margin-bottom: 0px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- TEIL 3: Detailanalysen (Tabs) ---
 
