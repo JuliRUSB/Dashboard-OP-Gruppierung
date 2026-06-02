@@ -968,7 +968,7 @@ for i, bereich in enumerate(BEREICHE):
                             barmode="group",
                             text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"hipec": "HIPEC", "Dindo_Status": "Dindo-Grad"},
+                            labels={"hipec": "HIPEC"},
                         )
         
                         fig.update_traces(
