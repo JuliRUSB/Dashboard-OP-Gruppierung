@@ -1751,7 +1751,6 @@ for i, bereich in enumerate(BEREICHE):
                             textfont_size=16, 
                             insidetextfont=dict(size=16),
                             outsidetextfont=dict(size=16),
-                            texttemplate='%{text:.2f}',
                             # 3. Visuelle Details des Balkens selbst
                             marker_line_width=0         # keine Begrenzungslinie
                         )
