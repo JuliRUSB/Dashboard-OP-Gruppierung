@@ -1004,7 +1004,7 @@ for i, bereich in enumerate(BEREICHE):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
                         )
         
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
                         st.info("Keine Daten für HIPEC")
                 else:
@@ -1087,7 +1087,7 @@ for i, bereich in enumerate(BEREICHE):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                         )
         
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel5_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
                         st.info("Keine Daten für HIPEC")
                 else:
