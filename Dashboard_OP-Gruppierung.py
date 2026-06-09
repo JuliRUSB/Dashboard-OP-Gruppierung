@@ -696,7 +696,7 @@ st.divider()
 st.header("Detailanalysen")
 
 # Nur noch die aktiven Bereiche als Liste
-BEREICHE = ["Chirurgische Onkologie/Sarkome", "Leber"]
+BEREICHE = ["Chirurgische Onkologie/Sarkome", "Kolorektale Chirurgie", "Leber"]
 bereich_tabs = st.tabs(BEREICHE)
 
 # 3. Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
