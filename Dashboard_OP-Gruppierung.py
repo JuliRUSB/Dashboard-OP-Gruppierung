@@ -19,6 +19,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 API_URL = os.getenv("API_URL")
 
 # ==================================================
+# Session State Initialisierung
+# ==================================================
+if "pdf_figures" not in st.session_state:
+    st.session_state.pdf_figures = {}
+
+# ==================================================
 # Globale Konstanten und Hilfsfunktionen
 # ==================================================
 # Reihenfolge der Clavien-Dindo-Grade
@@ -2762,76 +2768,8 @@ for i, bereich in enumerate(BEREICHE):
                 # # else:
                     # # st.info("Keine Komplikationsdaten")
 
-        # ================== HSM ==================
-        # if "HSM" in analysen:
-        # with st.container():
-            # if df_bereich['hsm'].notna().any():
-                # df_hsm = df_bereich.dropna(subset=['hsm','jahr_opdatum']).copy()
-                # df_hsm['hsm_label'] = df_hsm['hsm'].astype(str).map({'0':'Nein','1':'Ja','0.0':'Nein','1.0':'Ja'})
+       
 
-                # col1, col2 = st.columns(2)
-
-                # with col1:
-                    # hsm_jahr = df_hsm.groupby(['jahr_opdatum','hsm_label']).size().reset_index(name='count')
-                    # fig_hsm = px.bar(
-                        # hsm_jahr,
-                        # x='jahr_opdatum',
-                        # y='count',
-                        # color='hsm_label',
-                        # barmode='group',
-                        # text='count',
-                        # color_discrete_sequence=COLOR_PALETTE,
-                        # labels={"hsm_label": "HSM"}
-                    # )
-                        
-                    # fig.update_layout(
-                        # xaxis_title=None, 
-                        # yaxis_title=None, 
-                        # xaxis={"type": "category", "tickfont": {"size": 16}},
-                        # yaxis={"tickfont": {"size": 16}} 
-                    # )
-                        
-                    # st.plotly_chart(fig_hsm, use_container_width=True, config={"displayModeBar": False, "responsive": True})
-
-                # with col2:
-                    # hsm_bereich = df_hsm.groupby(['bereich','hsm_label']).size().reset_index(name='count')
-                    # fig_bereich = px.bar(
-                        # hsm_bereich,
-                        # x='bereich',
-                        # y='count',
-                        # color='hsm_label',
-                        # barmode='stack',
-                        # text='count',
-                        # color_discrete_sequence=COLOR_PALETTE,
-                        # labels={"hsm_label": "HSM"}
-                    # )
-                    # st.plotly_chart(fig_bereich, use_container_width=True, config={"displayModeBar": False, "responsive": True})
-                # # else:
-                    # # st.info("Keine HSM-Daten für diesen Bereich")
-
-        # ================== TRENDS ==================
-        # if "Trends" in analysen:
-        # with st.container():
-            # t = df_bereich.groupby(["jahr_opdatum"], as_index=False).size()
-            # t.columns = ["jahr_opdatum", "count"]
-
-            # fig = px.line(
-                # t,
-                # x="jahr_opdatum",
-                # y="count",
-                # markers=True,
-                # color_discrete_sequence=COLOR_PALETTE,
-            # )
-
-            # fig.update_layout(
-                # xaxis_title=None, 
-                # yaxis_title=None, 
-                # xaxis={"type": "category", "tickfont": {"size": 16}},
-                # yaxis={"tickfont": {"size": 16}} 
-            # )
-            # st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False, "responsive": True})
-
-# ------------------- Export Button erstellen ---------------------
 # ------------------- Export Button erstellen ---------------------
 def figures_to_html(figures: dict) -> bytes:
     import plotly.io as pio
