@@ -1056,7 +1056,7 @@ for i, bereich in enumerate(BEREICHE):
         
                         df_crs_hipec = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
                         total_crs_hipec = len(df_crs_hipec)
-        
+                        st.write(df_crs_hipec[["max_dindo_calc", "max_dindo_calc_surv"]].head())
                         df_crs_hipec["dindo_final_text"] = df_crs_hipec.apply(get_highest_dindo, axis=1)
         
                         df_crs_hipec_dindo = df_crs_hipec[df_crs_hipec["statistik_dindo_2"] == '1'].copy()
