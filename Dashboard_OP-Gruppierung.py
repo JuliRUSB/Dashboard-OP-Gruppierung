@@ -2413,13 +2413,6 @@ for i, bereich in enumerate(BEREICHE):
                 df_zugang = df_leber_robot[df_leber_robot['zugang'].isin(['roboter-assistiert'])].copy()
                 total_zugang_robot = len(df_zugang)
 
-                 with col1.container(border=True):
-                # pattern = "HCC|CCC|Metastasen|Benigne"
-                #df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
-                df_leber_hsm = df_bereich.copy()
-                df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
-                total_hsm = len(df_hsm)
-
                 st.metric(label="Leberchirurgie - Roboterassistierte Eingriffe nach Gruppen (HCC|CCC|Metastasen)", value=total_zugang_robot)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
