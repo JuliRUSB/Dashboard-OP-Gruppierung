@@ -2409,7 +2409,7 @@ for i, bereich in enumerate(BEREICHE):
                 df_zugang = df_leber_robot[df_leber_robot['zugang'].isin(['roboter-assistiert'])].copy()
                 total_zugang_robot = len(df_zugang)
 
-                st.metric(label="Leberchirurgie - Roboterassistierte Eingriffe nach Gruppen (HCC|CCC|Metastasen)", value=total_zugang)
+                st.metric(label="Leberchirurgie - Roboterassistierte Eingriffe nach Gruppen (HCC|CCC|Metastasen)", value=total_zugang_robot)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if "zugang" in df_zugang.columns and df_zugang["zugang"].nunique() > 0:
@@ -2555,7 +2555,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.error("Spalten fehlen")
             # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
            
-        # 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
+            # 6. Grafik: Bile Leak [kpl_was] = Gallenfistel oder [kpl_was] = Gallenfistel, in absoluten Zahlen und % 
             # ================== Kachel 8 "Gallefisteln - Leber" ================== 
             if bereich == "Leber":
                 with col2.container(border=True):
@@ -2581,6 +2581,11 @@ for i, bereich in enumerate(BEREICHE):
                             df_gallefistel.groupby("jahr_opdatum")
                             .size()
                             .reset_index(name="count")
+                        )
+                        
+                        gesamt_pro_jahr = (
+                        df_leber_gallefistel.groupby("jahr_opdatum")
+                        .size()
                         )
                         
                         # Prozentwert berechnen
