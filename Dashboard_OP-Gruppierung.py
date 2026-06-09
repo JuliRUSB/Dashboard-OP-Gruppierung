@@ -28,7 +28,7 @@ def export_redcap_data(api_url):
     API_TOKEN = os.getenv("tok_op_gruppen")
     if not API_TOKEN:
         st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
-        return pd.DataFrame(r.json())
+        return None
 
 # ==================================================
 # Globale Konstanten und Hilfsfunktionen
