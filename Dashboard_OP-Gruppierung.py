@@ -2290,9 +2290,11 @@ for i, bereich in enumerate(BEREICHE):
             st.markdown('</div>', unsafe_allow_html=True)
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
-        
+
+
+        # ========================= ANFANG BEREICH LEBERCHIRURGIE ========================= 
         # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
-        # ================== Kachel "Leber HSM" % und absolute Zahlen ==================
+        # ================== Kachel 1 "Leber HSM" % und absolute Zahlen ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2345,7 +2347,7 @@ for i, bereich in enumerate(BEREICHE):
 
 
         # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
-        # ================== Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
+        # ================== Kachel 2: Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
         if bereich == "Leber":
             with col2.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2401,7 +2403,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.info("Keine Zugangsdaten")
 
         # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
-        # ================== Kachel: Roboterassistierte Eingriffe nach Lebergruppen (HCC|CCC|Metastasen) ==================
+        # ================== Kachel 3: Roboterassistierte Eingriffe nach Lebergruppen (HCC|CCC|Metastasen) ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen"
@@ -2465,9 +2467,9 @@ for i, bereich in enumerate(BEREICHE):
 
 
         # 4. Grafik: Hospital Stay
-        # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
+        # ================== Kachel 4: "Aufenthaltsdauer - Leberchirurgie" ==================       
         if bereich == "Leber":
-            with col1.container(border=True):
+            with col2.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
                     pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2548,15 +2550,89 @@ for i, bereich in enumerate(BEREICHE):
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                         )
             
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_los_leber_{bereich}", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_leber_los_{bereich}", config={'displayModeBar': False})
                     else:
                         st.info("Keine Daten für Leberchirurgie")
                 else:
                     st.error("Spalten fehlen")
+            
             # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
-           
+            # ================== Kachel 5: "Mortalität - Leberchirurgie" ==================
+            if bereich == "Leber":
+                with col1.container(border=True):
+                    pattern = "HCC|CCC|Metastasen|Benigne"
+                    df_leber_mortalitaet = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
+            
+                    # Fälle mit Mortalität (Grade V)
+                    df_mortalitaet = df_leber_mortalitaet[
+                        (df_leber_mortalitaet["max_dindo_calc"] == 13) |
+                        (df_leber_mortalitaet["max_dindo_calc_surv"] == 13)
+                    ].copy()
+            
+                    total_mortalitaet = len(df_mortalitaet)
+            
+                    st.metric(label="Leberchirurgie - Mortalität (Grade V)", value=total_mortalitaet)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+            
+                    if total_mortalitaet > 0:
+                        leber_mortalitaet_pro_jahr = (
+                            df_mortalitaet.groupby("jahr_opdatum")
+                            .size()
+                            .reset_index(name="count")
+                        )
+            
+                        gesamt_pro_jahr = (
+                            df_leber_mortalitaet.groupby("jahr_opdatum")
+                            .size()
+                        )
+            
+                        leber_mortalitaet_pro_jahr["pct"] = leber_mortalitaet_pro_jahr.apply(
+                            lambda r: (r["count"] / gesamt_pro_jahr[r["jahr_opdatum"]]) * 100
+                            if r["jahr_opdatum"] in gesamt_pro_jahr.index else 0,
+                            axis=1
+                        )
+            
+                        leber_mortalitaet_pro_jahr["text_label"] = leber_mortalitaet_pro_jahr.apply(
+                            lambda r: f"{int(r['count'])} ({r['pct']:.1f}%)", axis=1
+                        )
+            
+                        fig_leber_mortalitaet = px.bar(
+                            leber_mortalitaet_pro_jahr,
+                            x="jahr_opdatum",
+                            y="count",
+                            text="text_label",
+                            color_discrete_sequence=COLOR_PALETTE
+                        )
+            
+                        fig_leber_mortalitaet.update_traces(
+                            textposition="auto",
+                            textfont_size=16,
+                            textangle=0,
+                            cliponaxis=False,
+                            marker_line_width=0
+                        )
+            
+                        fig_leber_mortalitaet.update_layout(
+                            height=400,
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "dtick": 1},
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                        )
+            
+                        st.plotly_chart(
+                            fig_leber_mortalitaet,
+                            use_container_width=True,
+                            key=f"kachel_leber_mortalitaet_{bereich}",
+                            config={"displayModeBar": False}
+                        )
+                    else:
+                        st.info("Keine auswertbaren Mortalitätsdaten für die Leberchirurgie vorhanden.")
+            
             # 6. Grafik: Bile Leak [kpl_was] = Gallenfistel oder [kpl_was] = Gallenfistel, in absoluten Zahlen und % 
-            # ================== Kachel 8 "Gallefisteln - Leber" ================== 
+            # ================== Kachel 6: "Gallefisteln - Leber" ================== 
             if bereich == "Leber":
                 with col2.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2570,7 +2646,7 @@ for i, bereich in enumerate(BEREICHE):
                         df_leber_gallefistel["kpl_was"].fillna("").str.contains("Gallenfistel", case=False)
                     ].copy()
             
-                    total_gallefistel = len(df_gallefistel)  # ← fehlte komplett
+                    total_gallefistel = len(df_gallefistel)
             
                     st.metric(label="Leberchirurgie - Gallefistel als Komplikation", value=total_gallefistel)
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
@@ -2635,7 +2711,7 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine auswertbaren Gallefistel-Daten für die Leberchirurgie vorhanden.")
             
             # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
-            # ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
+            # ================== Kachel 7: "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
             if bereich == "Leber":
                 with col2.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2696,9 +2772,8 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
 
-
-
-# Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
+ # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
+            
 # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
     
 
