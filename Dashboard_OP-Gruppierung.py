@@ -2290,8 +2290,8 @@ for i, bereich in enumerate(BEREICHE):
             st.markdown('</div>', unsafe_allow_html=True)
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
-# 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         
+        # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         # ================== Kachel "Leber HSM" % und absolute Zahlen ==================
         if bereich == "Leber":
             with col1.container(border=True):
@@ -2344,7 +2344,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
 
 
-# 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
+        # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
         # ================== Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
         if bereich == "Leber":
             with col2.container(border=True):
@@ -2400,7 +2400,7 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Zugangsdaten")
 
-# 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
+        # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
         # ================== Kachel: Roboterassistierte Eingriffe nach Lebergruppen (HCC|CCC|Metastasen) ==================
         if bereich == "Leber":
             with col1.container(border=True):
@@ -2464,8 +2464,8 @@ for i, bereich in enumerate(BEREICHE):
                     st.info("Keine Daten")
 
 
-# 4. Grafik: Hospital Stay
-# ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
+        # 4. Grafik: Hospital Stay
+        # ================== Kachel 17 "Aufenthaltsdauer - Leberchirurgie" ==================       
         if bereich == "Leber":
             with col1.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
@@ -2553,10 +2553,83 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für Leberchirurgie")
                 else:
                     st.error("Spalten fehlen")
-# 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
-# 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
-# 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
-# ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
+            # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
+           
+        # 6. Grafik: Bile Leak [gallefistel_isgls] = 1, 2, 3 oder [gallefistel_isgls_surv] = 1, 2, 3, in absoluten Zahlen und % 
+            # ================== Kachel 8 "Gallefisteln - Leber" ================== 
+            if bereich == "Leber":
+                with col2.container(border=True):
+                    pattern = "HCC|CCC|Metastasen|Benigne"
+                    df_leber_gallefistel = df_bereich[
+                        df_bereich["leber_gruppen"].str.contains(pattern, na=False)
+                    ].copy()
+            
+                    # Fälle mit Gallefistel (aus beiden Spalten)
+                    df_gallefistel = df_leber_gallefistel[
+                        df_leber_gallefistel["kpl_was_surv"].fillna("").str.contains("Gallenfistel", case=False) |
+                        df_leber_gallefistel["kpl_was"].fillna("").str.contains("Gallenfistel", case=False)
+                    ].copy()
+            
+                    total_gallefistel = len(df_gallefistel)  # ← fehlte komplett
+            
+                    st.metric(label="Leberchirurgie - Gallefistel als Komplikation", value=total_gallefistel)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+            
+                    if total_gallefistel > 0:
+                        # Gallefisteln pro Jahr zählen
+                        leber_gallefistel_pro_jahr = (
+                            df_gallefistel.groupby("jahr_opdatum")
+                            .size()
+                            .reset_index(name="count")
+                        )
+                        
+                        # Prozentwert berechnen
+                        leber_gallefistel_pro_jahr["pct"] = leber_gallefistel_pro_jahr.apply(
+                            lambda r: (r["count"] / gesamt_pro_jahr[r["jahr_opdatum"]]) * 100
+                            if r["jahr_opdatum"] in gesamt_pro_jahr.index else 0,
+                            axis=1
+                        )
+                        
+                        leber_gallefistel_pro_jahr["text_label"] = leber_gallefistel_pro_jahr.apply(
+                            lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1
+                        )
+                        
+                        fig_leber_gallefistel = px.bar(
+                            leber_gallefistel_pro_jahr,
+                            x="jahr_opdatum",
+                            y="count",
+                            text="text_label",
+                            color_discrete_sequence=COLOR_PALETTE
+            
+                        fig_leber_gallefistel.update_traces(
+                            textposition="auto",
+                            textfont_size=16,
+                            textangle=0,
+                            cliponaxis=False,
+                            marker_line_width=0
+                        )
+            
+                        fig_leber_gallefistel.update_layout(
+                            height=400,
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                        )
+            
+                        st.plotly_chart(
+                            fig_leber_gallefistel,
+                            use_container_width=True,
+                            key=f"kachel_leber_gallefistel_{bereich}",
+                            config={"displayModeBar": False}
+                        )
+                    else:
+                        st.info("Keine auswertbaren Gallefistel-Daten für die Leberchirurgie vorhanden.")
+            
+            # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
+            # ================== Kachel "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
             if bereich == "Leber":
                 with col2.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
