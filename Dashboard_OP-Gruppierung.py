@@ -1021,9 +1021,9 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Daten für HIPEC")
 
-        # ================== Kachel 6 "Aufteilung Komplikationen - CRS mit HIPEC" ==================
+        # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
-            with col1:
+            with col2:
                 # Zustand initialisieren
                 if f"expand_{bereich}_k6" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k6"] = False
@@ -1141,9 +1141,9 @@ for i, bereich in enumerate(BEREICHE):
                         else:
                             st.error("Spalten fehlen")
 
-        # ================== Kachel 7 "Aufteilung Komplikationen - CRS ohne HIPEC" ==================
+        # ================== Kachel 7: "Aufteilung Komplikationen - CRS ohne HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
-            with col2:
+            with col1:
                 # Zustand initialisieren
                 if f"expand_{bereich}_k7" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k7"] = False
@@ -1261,11 +1261,11 @@ for i, bereich in enumerate(BEREICHE):
                         else:
                             st.error("Spalten fehlen")
 
-        # ================== Kachel 8 "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
+        # ================== Kachel 8: "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
         if bereich == "Chirurgische Onkologie/Sarkome":
-            with col1:
+            with col2:
                 # Zustand initialisieren
                 if f"expand_{bereich}_k8" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k8"] = False
@@ -1356,7 +1356,7 @@ for i, bereich in enumerate(BEREICHE):
                         else:
                             st.error("Spalten fehlen")
 
-        # ================== Kachel 16 "Aufenthaltsdauer - CRS mit HIPEC" ==================       
+        # ================== Kachel 9: "Aufenthaltsdauer - CRS mit HIPEC" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
                 required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
@@ -1448,13 +1448,12 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.error("Spalten fehlen")
 
-        # ================== Kachel 17 "Aufenthaltsdauer - CRS ohne HIPEC" ==================       
+        # ================== Kachel 10: "Aufenthaltsdauer - CRS ohne HIPEC" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
                 required_cols = {"los_opdatum", "type_sark", "jahr_opdatum", "hipec"}
                 if required_cols.issubset(df_bereich.columns):
-                    df_los = df_bereich[
-                        (df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Nein")].copy()
+                    df_los = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Nein")].copy()
                     df_los["los_opdatum"] = pd.to_numeric(df_los["los_opdatum"], errors='coerce')
                     df_los = df_los.dropna(subset=["los_opdatum"])
                     total_crs_ohne_hipec = len(df_los)
@@ -1533,7 +1532,7 @@ for i, bereich in enumerate(BEREICHE):
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
                         )
             
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel17_{bereich}", config={'displayModeBar': False})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_los_crs_ohne_hipec_{bereich}", config={'displayModeBar': False})
                     else:
                         st.info("Keine Daten für Sarkome/Weichteiltumore ohne Knochen")
                 else:
@@ -1547,7 +1546,7 @@ for i, bereich in enumerate(BEREICHE):
             unsafe_allow_html=True
         )
 
-        # ================== Kachel 9 "Gruppe - Sarkome/Weichteiltumoren" ==================
+        # ================== Kachel 11: "Gruppe - Sarkome/Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
                 # if "Gruppen (Sarkome/Weichteiltumoren)" in analysen:
@@ -1625,7 +1624,7 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.error("Spalten fehlen")
         
-        # ================== Kachel 10 "Lokalisation - Weichteiltumoren" ==================
+        # ================== Kachel 12: "Lokalisation - Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
                 # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
@@ -1689,7 +1688,7 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.error("Spalten fehlen")
         
-        # ================== Kachel 11 "Sarkomzentrum Weichteiltumoren /GIST - maligne und intermediate" ==================
+        # ================== Kachel 13: "Sarkomzentrum Weichteiltumoren /GIST - maligne und intermediate" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
                 required_cols = {"type_sark", "jahr_opdatum", "lokalisation_sark", "gruppen_chir_onko_sark", "malignit_t_sark"}
@@ -1755,9 +1754,9 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.error("Spalten fehlen")     
         
-        # ================== Kachel 19 "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiltumoren" ==================
+        # ================== Kachel 14: "Clavien-Dindo-Grad >= IIIa - Lokalisation Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
-            with col1.container(border=True):
+            with col2.container(border=True):
                 # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
                 # Check auf Spalten
                 required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
