@@ -975,91 +975,95 @@ for i, bereich in enumerate(BEREICHE):
 
         # ================== Kachel 5: "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
-            with col1.container(border=True):
-                df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                total_crs = len(df_plot_crs)
-        
-                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == '1'].copy()
-                total_dindo = len(df_plot_dindo)
-        
-                st.metric(
-                    label="Clavien-Dindo-Grad ≥ IIIa - HIPEC bei CRS",
-                    value=f"{total_dindo} von {total_crs}",
+            with col1:
+                st.markdown(
+                    """
+                    <style>
+                    /* Fixiert Kachel 5 auf eine feste Höhe */
+                    div[data-testid="stHorizontalBlock"] > div:nth-child(1) div[data-testid="stVerticalBlockBorder"] {
+                        min-height: 560px !important;
+                        height: 560px !important;
+                    }
+                    /* Fixiert Kachel 6 im geöffneten Zustand auf exakt dieselbe Höhe */
+                    .k6-open-container div[data-testid="stVerticalBlockBorder"] {
+                        min-height: 560px !important;
+                        height: 560px !important;
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
                 )
-                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-        
-                if total_crs > 0:
-                    grp = df_plot_dindo.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                    grp.columns = ["jahr_opdatum", "hipec", "count"]
-        
-                    grp_gesamt = df_plot_crs.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
-        
-                    grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
-        
-                    grp["text_label"] = grp.apply(lambda row: f"{row['count']}/{row['count_gesamt']}", axis=1)
-        
-                    fig = px.bar(
-                        grp,
-                        x="jahr_opdatum",
-                        y="count",
-                        color="hipec",
-                        barmode="group",
-                        text="text_label",
-                        color_discrete_sequence=COLOR_PALETTE,
-                        labels={"hipec": "HIPEC"},
+                with st.container(border=True):
+                    df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                    total_crs = len(df_plot_crs)
+            
+                    df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == '1'].copy()
+                    total_dindo = len(df_plot_dindo)
+            
+                    st.metric(
+                        label="Clavien-Dindo-Grad ≥ IIIa - HIPEC bei CRS",
+                        value=f"{total_dindo} von {total_crs}",
                     )
-        
-                    fig.update_traces(
-                        textposition='auto',
-                        textangle=0,
-                        cliponaxis=False,
-                        textfont_size=16,
-                        insidetextfont=dict(size=16),
-                        outsidetextfont=dict(size=16),
-                        marker_line_width=0
-                    )
-        
-                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-        
-                    fig.update_layout(
-                        height=400,
-                        uniformtext_minsize=16,
-                        uniformtext_mode='show',
-                        bargap=0.1,
-                        margin=dict(l=10, r=10, t=0, b=10),
-                        xaxis_title=None,
-                        yaxis_title=None,
-                        showlegend=True,
-                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                        xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 2}
-                    )
-        
-                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_claviendindo3_abs_{bereich}", config={"displayModeBar": False, "responsive": True})
-                else:
-                    st.info("Keine Daten für HIPEC")
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+            
+                    if total_crs > 0:
+                        grp = df_plot_dindo.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "hipec", "count"]
+            
+                        grp_gesamt = df_plot_crs.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                        grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+            
+                        grp = grp.merge(grp_gesamt, on=["jahr_opdatum", "hipec"], how="left")
+            
+                        grp["text_label"] = grp.apply(lambda row: f"{row['count']}/{row['count_gesamt']}", axis=1)
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="hipec",
+                            barmode="group",
+                            text="text_label",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"hipec": "HIPEC"},
+                        )
+            
+                        fig.update_traces(
+                            textposition='auto',
+                            textangle=0,
+                            cliponaxis=False,
+                            textfont_size=16,
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+            
+                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+            
+                        fig.update_layout(
+                            height=400,
+                            uniformtext_minsize=16,
+                            uniformtext_mode='show',
+                            bargap=0.1,
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 2}
+                        )
+            
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_claviendindo3_abs_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für HIPEC")
 
         # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2:
                 if f"expand_{bereich}_k6" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k6"] = False
-        
-                # CSS-Fix mit eindeutigem HTML-Anker für eine feste Kachelgrösse
-                st.markdown(
-                    """
-                    <div id="kachel-k6-anchor"></div>
-                    <style>
-                    #kachel-k6-anchor + div div[data-testid="stVerticalBlockBorder"] {
-                        min-height: 400px !important; /* Fixiert die Höhe komplett */
-                        height: 400px !important;     
-                    }
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-                )
-        
+           
                 # Berechnungen müssen vor der If-Abfrage laufen, damit die Werte in BEIDEN Zuständen da sind
                 df_crs_hipec = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
                 total_crs_hipec = len(df_crs_hipec)
