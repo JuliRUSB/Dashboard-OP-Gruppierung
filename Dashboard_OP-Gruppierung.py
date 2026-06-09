@@ -1078,7 +1078,7 @@ for i, bereich in enumerate(BEREICHE):
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
-                                color="dindo_final_text",
+                                #color="dindo_final_text",
                                 barmode="stack",
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
