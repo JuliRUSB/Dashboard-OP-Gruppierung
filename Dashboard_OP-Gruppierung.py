@@ -314,18 +314,20 @@ def prepare_data(df):
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
 
-    # Globale Funktion: Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
-    def get_highest_dindo(row):
-    dindo_order = [
+    # Globale Reihenfolge der Clavien-Dindo-Grade
+    DINDO_ORDER = [
         'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
         'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
     ]
-    v1 = row['max_dindo_calc']
-    v2 = row['max_dindo_calc_surv']
-    valid_values = [v for v in [v1, v2] if v in dindo_order]
-    if not valid_values:
-        return "Unbekannt"
-    return max(valid_values, key=lambda x: dindo_order.index(x))
+    
+    # Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
+    def get_highest_dindo(row):
+        v1 = row['max_dindo_calc']
+        v2 = row['max_dindo_calc_surv']
+        valid_values = [v for v in [v1, v2] if v in DINDO_ORDER]
+        if not valid_values:
+            return "Unbekannt"
+        return max(valid_values, key=lambda x: DINDO_ORDER.index(x))
     
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
