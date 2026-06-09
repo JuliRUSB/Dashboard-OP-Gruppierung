@@ -900,7 +900,7 @@ for i, bereich in enumerate(BEREICHE):
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_crs > 0:
-                    grp = df_plot_crs.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp = df_plot_dindo.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "hipec", "count"]
         
                     grp_gesamt = df_plot_crs.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
