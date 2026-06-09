@@ -1072,23 +1072,14 @@ for i, bereich in enumerate(BEREICHE):
                 total_crs_hipec_dindo = len(df_crs_hipec_dindo)
                 
                 if not st.session_state[f"expand_{bereich}_k6"]:
-                    # ZUSTAND: GESCHLOSSEN (mit exakt deinen Original-Texten und Werten)
-                    with st.container(border=True):
-                        st.metric(
-                            label="Aufteilung Komplikationen - CRS mit HIPEC", 
-                            value=f"{total_crs_hipec_dindo} von {total_crs_hipec}",
-                        )
-                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                        
-                        if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6_show"):
-                            st.session_state[f"expand_{bereich}_k6"] = True
-                            st.rerun()
+                    if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6"):
+                        st.session_state[f"expand_{bereich}_k6"] = True
+                        st.rerun()
                 else:
-                    # ZUSTAND: GEÖFFNET
                     with st.container(border=True):
                         header_col1, header_col2 = st.columns([0.8, 0.2])
                         with header_col2:
-                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k6_hide"):
+                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k6"):
                                 st.session_state[f"expand_{bereich}_k6"] = False
                                 st.rerun()
                 
