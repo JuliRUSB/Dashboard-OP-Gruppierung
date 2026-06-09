@@ -2596,7 +2596,7 @@ for i, bereich in enumerate(BEREICHE):
                         )
                         
                         leber_gallefistel_pro_jahr["text_label"] = leber_gallefistel_pro_jahr.apply(
-                            lambda r: f"{r['count']} ({r['pct']:.1f}%)", axis=1
+                            lambda r: f"{int(r['count'])} ({r['pct']:.1f}%)", axis=1
                         )
                         
                         fig_leber_gallefistel = px.bar(
