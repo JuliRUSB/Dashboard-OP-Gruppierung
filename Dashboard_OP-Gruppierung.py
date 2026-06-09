@@ -19,21 +19,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 API_URL = os.getenv("API_URL")
 
 # ==================================================
-# Datenexport aus REDCap
-# ==================================================
-@st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
-def export_redcap_data(api_url):
-    """Exportiert Daten aus REDCap mit Caching"""
-    # API-Token und URL aus Umgebungsvariable holen
-    API_TOKEN = os.getenv("tok_op_gruppen")
-    if not API_TOKEN:
-        st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
-        return None
-
-# ==================================================
 # Globale Konstanten und Hilfsfunktionen
 # ==================================================
-# Globale Reihenfolge der Clavien-Dindo-Grade
+# Reihenfolge der Clavien-Dindo-Grade
 DINDO_ORDER = [
     'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
     'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
@@ -57,6 +45,18 @@ def get_color_map(items):
     unique_items = sorted(set(items))
     colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
     return {item: colors[i] for i, item in enumerate(unique_items)}
+    
+# ==================================================
+# Datenexport aus REDCap
+# ==================================================
+@st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
+def export_redcap_data(api_url):
+    """Exportiert Daten aus REDCap mit Caching"""
+    # API-Token und URL aus Umgebungsvariable holen
+    API_TOKEN = os.getenv("tok_op_gruppen")
+    if not API_TOKEN:
+        st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
+        return None
     
     # Daten für POST-Request definieren
     data = {
