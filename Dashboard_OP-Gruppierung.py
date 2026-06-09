@@ -1082,7 +1082,7 @@ for i, bereich in enumerate(BEREICHE):
                                 barmode="stack",
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
-                                labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
+                                labels={"jahr_opdatum": "Jahr"},
                                 category_orders={"dindo_final_text": DINDO_ORDER, "jahr_opdatum": jahr_order} 
                             )
         
