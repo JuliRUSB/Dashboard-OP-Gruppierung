@@ -759,79 +759,63 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Daten für diesen Bereich gefunden.")
     
-        # ================== Kachel 2 "Übersicht Operationen" ==================
+        # ================== Kachel 2 "Übersicht Operationen nach Sarkomtyp" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
-                # if "Übersicht Sarkome" in analysen:
-                # Check auf Spalten
-                required_cols = {"type_sark", "jahr_opdatum"}
-                if required_cols.issubset(df_bereich.columns):
+                df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                total_crs_und_sark = len(df_plot)
         
-                    # Filter für CRS oder Sarkom
-                    df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-                    total_crs_und_sark = len(df_plot)
+                st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
-                    st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
-                    # st.divider()
-                    # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                if total_crs_und_sark > 0:
+                    grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "type_sark", "count"]
         
-                    if total_crs_und_sark > 0:
-                        # Gruppierung nach Jahr und Typ
-                        grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "type_sark", "count"]
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        color="type_sark",
+                        barmode="group",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"type_sark": "Sarkomtyp"}
+                    )
         
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="type_sark",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"type_sark": "Sarkomtyp"}
-                        )
+                    fig.update_traces(
+                        textposition='auto',
+                        textangle=0,
+                        cliponaxis=False,
+                        textfont_size=16, 
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        marker_line_width=0
+                    )
         
-                        fig.update_traces(
-                            # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
-                            textposition='auto',
-                            textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                            cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                            # 2. Schriftgrösse
-                            textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            # 3. Visuelle Details des Balkens selbst
-                            marker_line_width=0    # keine Begrenzungslinie
-                        )
+                    fig.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
         
-                        fig.update_layout(
-                            # autosize=True,
-                            height=400,
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
-    
-                        # Figur im Speicher ablegen, damit sie beim PDF-Export noch verfügbar ist
-                        st.session_state.pdf_figures.setdefault("kachel2", fig)
-                        
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel2_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Sarkom-Daten")
+                    st.session_state.pdf_figures.setdefault("kachel_sarkome_typ", fig)
+                    
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_typ_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Sarkom-Daten")
                 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )  # horizontale Linie
+            st.markdown(
+                """
+                <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+                """,
+                unsafe_allow_html=True
+            )  # horizontale Linie
         
         
         # ================== Kachel 3 HIPEC bei CRS ================== 
