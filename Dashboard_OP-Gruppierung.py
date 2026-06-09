@@ -17,8 +17,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Konfiguration
 API_URL = os.getenv("API_URL")
-# API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
-# ==================================================
 
 # ==================================================
 # Datenexport aus REDCap
@@ -26,11 +24,39 @@ API_URL = os.getenv("API_URL")
 @st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
 def export_redcap_data(api_url):
     """Exportiert Daten aus REDCap mit Caching"""
-    # API-Token aus Umgebungsvariable holen
+    # API-Token und URL aus Umgebungsvariable holen
     API_TOKEN = os.getenv("tok_op_gruppen")
     if not API_TOKEN:
         st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
-        return None
+        return pd.DataFrame(r.json())
+
+# ==================================================
+# Globale Konstanten und Hilfsfunktionen
+# ==================================================
+# Globale Reihenfolge der Clavien-Dindo-Grade
+DINDO_ORDER = [
+    'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+    'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+]
+
+# Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
+def get_highest_dindo(row):
+    v1 = row['max_dindo_calc']
+    v2 = row['max_dindo_calc_surv']
+    valid_values = [v for v in [v1, v2] if v in DINDO_ORDER]
+    if not valid_values:
+        return "Unbekannt"
+    return max(valid_values, key=lambda x: DINDO_ORDER.index(x))
+
+# Globale Farbpalette
+COLOR_PALETTE = px.colors.qualitative.Safe
+
+# Hilfsfunktion für konsistente Farben
+def get_color_map(items):
+    """Erstellt ein Farbmapping für eine Liste von Items"""
+    unique_items = sorted(set(items))
+    colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
+    return {item: colors[i] for i, item in enumerate(unique_items)}
     
     # Daten für POST-Request definieren
     data = {
@@ -77,34 +103,6 @@ def export_redcap_data(api_url):
     except requests.exceptions.RequestException as e:
         st.error(f"Fehler beim Export: {e}")
         return None
-
-    # ==================================================
-    # Globale Konstanten und Hilfsfunktionen
-    # ==================================================
-    # Globale Reihenfolge der Clavien-Dindo-Grade
-    DINDO_ORDER = [
-        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
-        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
-    ]
-    
-    # Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
-    def get_highest_dindo(row):
-        v1 = row['max_dindo_calc']
-        v2 = row['max_dindo_calc_surv']
-        valid_values = [v for v in [v1, v2] if v in DINDO_ORDER]
-        if not valid_values:
-            return "Unbekannt"
-        return max(valid_values, key=lambda x: DINDO_ORDER.index(x))
-
-    # Globale Farbpalette
-    COLOR_PALETTE = px.colors.qualitative.Safe
-
-    # Hilfsfunktion für konsistente Farben
-    def get_color_map(items):
-        """Erstellt ein Farbmapping für eine Liste von Items"""
-        unique_items = sorted(set(items))
-        colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
-        return {item: colors[i] for i, item in enumerate(unique_items)}
         
 # ==================================================
 # Datenaufbereitung
