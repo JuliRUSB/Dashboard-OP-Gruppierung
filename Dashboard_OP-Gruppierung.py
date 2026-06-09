@@ -2457,7 +2457,6 @@ for i, bereich in enumerate(BEREICHE):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         bargap=0.1,        # Abstand zwischen Jahres-Gruppen (0 = kein Abstand, 1 = max)
-                        bargroupgap=0.05   # Abstand zwischen Balken innerhalb einer Gruppe
                     )
                         
                     st.plotly_chart(fig_leber_robot, use_container_width=True, key=f"kachel_leber_robot_{bereich}", config={"displayModeBar": False})
