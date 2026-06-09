@@ -826,8 +826,8 @@ for i, bereich in enumerate(BEREICHE):
                 if required_cols.issubset(df_bereich.columns):
                 
                     # Filter für CRS
-                    df_plot = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                    total_crs = len(df_plot)
+                    df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                    total_crs = len(df_plot_CRS)
                     
                     st.metric(label="HIPEC bei CRS", value=total_crs)
                     # st.divider()
@@ -855,7 +855,6 @@ for i, bereich in enumerate(BEREICHE):
                             textposition='auto',
                             textangle=0,            # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
                             cliponaxis=False,       # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                            # insidetextanchor='middle',  # positioniert die Zahl oben im Segment
                             # 2. Schriftgrösse
                             textfont=dict(size=16),
                             #textfont_size=16, 
@@ -886,11 +885,11 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
-                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                total_crs = len(df_plot_all)
+                df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot_crs)
         
-                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                total_dindo = len(df_plot)
+                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == '1'].copy()
+                total_dindo = len(df_plot_dindo)
         
                 metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
         
