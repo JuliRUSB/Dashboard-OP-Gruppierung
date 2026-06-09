@@ -313,6 +313,19 @@ def prepare_data(df):
     }
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
+
+    # Globale Funktion: Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
+    def get_highest_dindo(row):
+    dindo_order = [
+        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+    ]
+    v1 = row['max_dindo_calc']
+    v2 = row['max_dindo_calc_surv']
+    valid_values = [v for v in [v1, v2] if v in dindo_order]
+    if not valid_values:
+        return "Unbekannt"
+    return max(valid_values, key=lambda x: dindo_order.index(x))
     
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
@@ -1024,122 +1037,81 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2:
-                # Zustand initialisieren
                 if f"expand_{bereich}_k6" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k6"] = False
-    
-                # Wenn ausgeblendet: Button allein (ohne Container-Rahmen), damit col2 leer wirkt
+        
                 if not st.session_state[f"expand_{bereich}_k6"]:
                     if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6"):
                         st.session_state[f"expand_{bereich}_k6"] = True
                         st.rerun()
                 else:
-                    # Wenn eingeblendet: Button IM Container oben rechts
                     with st.container(border=True):
-                         # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
                         header_col1, header_col2 = st.columns([0.8, 0.2])
                         with header_col2:
                             if st.button("▲ ausblenden", key=f"btn_{bereich}_k6"):
                                 st.session_state[f"expand_{bereich}_k6"] = False
                                 st.rerun()
-    
-                        required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
-                
-                        if required_cols.issubset(df_bereich.columns):
-            
-                            # CRS und HIPEC = ja filtern
-                            df_plot_all = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
-                            total_crs_und_hipec = len(df_plot_all)
-                    
-                            # 1. Definition der Hierarchie (Wichtig für den Vergleich)
-                            dindo_order = [
-                                'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
-                                'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
-                            ]
-            
-                            # 2. Funktion um den höheren Grad aus den zwei Text-Spalten zu wählen
-                            def get_highest_dindo(row):
-                                v1 = row['max_dindo_calc']
-                                v2 = row['max_dindo_calc_surv']
-                                # Nur Werte berücksichtigen, die in unserer Liste oben stehen
-                                valid_values = [v for v in [v1, v2] if v in dindo_order]
-                                if not valid_values:
-                                    return "Unbekannt"
-                                # Den Wert mit dem höchsten Index in dindo_order zurückgeben
-                                return max(valid_values, key=lambda x: dindo_order.index(x))
-            
-                            df_plot_all["dindo_final_text"] = df_plot_all.apply(get_highest_dindo, axis=1)
-            
-                            # 3. Nur Fälle mit Dindo >= IIIa laut Filter
-                            df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                            
-                            # ZUSÄTZLICHER SICHERHEITSCHECK: "Keine Komplikation" und "Unbekannt" rauswerfen
-                            df_plot = df_plot[df_plot["dindo_final_text"].isin(dindo_order)]
-                            
-                            total_kompl = len(df_plot)
-                            
-                            st.metric(
-                                label="Aufteilung Komplikationen - CRS mit HIPEC", 
-                                value=f"{total_kompl} von {total_crs_und_hipec}",
+        
+                        df_crs_hipec = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
+                        total_crs_hipec = len(df_crs_hipec)
+        
+                        df_crs_hipec["dindo_final_text"] = df_crs_hipec.apply(get_highest_dindo, axis=1)
+        
+                        df_crs_hipec_dindo = df_crs_hipec[df_crs_hipec["statistik_dindo_2"] == '1'].copy()
+                        df_crs_hipec_dindo = df_crs_hipec_dindo[df_crs_hipec_dindo["dindo_final_text"].isin(DINDO_ORDER)]
+        
+                        total_crs_hipec_dindo = len(df_crs_hipec_dindo)
+        
+                        st.metric(
+                            label="Aufteilung Komplikationen - CRS mit HIPEC", 
+                            value=f"{total_crs_hipec_dindo} von {total_crs_hipec}",
+                        )
+                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+        
+                        if not df_crs_hipec_dindo.empty:
+                            grp = df_crs_hipec_dindo.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
+                            grp = grp.sort_values("jahr_opdatum")
+                            jahr_order = grp["jahr_opdatum"].unique().tolist()
+        
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="dindo_final_text",
+                                barmode="stack",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
+                                category_orders={"dindo_final_text": DINDO_ORDER, "jahr_opdatum": jahr_order} 
                             )
-                            # st.divider()
-                            # verkleinert den Raum oberhalb der Trennlinie
-                            st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                    
-                            if not df_plot.empty:
-                                grp = df_plot.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
-                                grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
-                                
-                                # Jahre sortieren
-                                grp = grp.sort_values("jahr_opdatum")
-                                jahr_order = grp["jahr_opdatum"].unique().tolist()
-                    
-                                fig = px.bar(
-                                    grp,
-                                    x="jahr_opdatum",
-                                    y="count",
-                                    color="dindo_final_text",
-                                    barmode="stack",
-                                    text="count",
-                                    color_discrete_sequence=COLOR_PALETTE,
-                                    labels={"jahr_opdatum": "Jahr", "dindo_final_text": "Dindo-Grad"},
-                                    category_orders={"dindo_final_text": dindo_order, "jahr_opdatum": jahr_order} 
-                                )
-                    
-                                fig.update_traces(
-                                    # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
-                                    textposition='auto',
-                                    textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                                    cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                                    insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                                    # 2. Schriftgrösse
-                                    textfont_size=16, 
-                                    insidetextfont=dict(size=16),
-                                    outsidetextfont=dict(size=16),
-                                    # 3. Visuelle Details des Balkens selbst
-                                    marker_line_width=0         # keine Begrenzungslinie
-                                )
-                                
-                                fig.update_layout(
-                                    autosize=True,
-                                    height=None,
-                                    uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
-                                    uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
-                                    bargap=0.1,
-                                    margin=dict(l=10, r=10, t=30, b=10),
-                                    xaxis_title=None,
-                                    yaxis_title=None,
-                                    showlegend=True,
-                                    legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), # y=-0.2, 
-                                    xaxis={"type": "category", "tickfont": {"size": 16}},
-                                    yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
-                                )
-                    
-                                st.plotly_chart(fig, use_container_width=True, key=f"kachel6_{bereich}_final", config={"displayModeBar": False, "responsive": True})
-                            else:
-                                st.info("Keine validen Grade >= IIIa gefunden.")
+        
+                            fig.update_traces(
+                                textposition='auto',
+                                textangle=0,
+                                cliponaxis=False,
+                                insidetextanchor='middle',
+                                textfont_size=16, 
+                                insidetextfont=dict(size=16),
+                                outsidetextfont=dict(size=16),
+                                marker_line_width=0
+                            )
+        
+                            fig.update_layout(
+                                height=400,
+                                bargap=0.1,
+                                margin=dict(l=10, r=10, t=30, b=10),
+                                xaxis_title=None,
+                                yaxis_title=None,
+                                showlegend=True,
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                            )
+        
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_mit_hipec_claviendindo3_{bereich}_final", config={"displayModeBar": False, "responsive": True})
                         else:
-                            st.error("Spalten fehlen")
+                            st.info("Keine Fälle mit Grade >= IIIa gefunden.")
 
         # ================== Kachel 7: "Aufteilung Komplikationen - CRS ohne HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
