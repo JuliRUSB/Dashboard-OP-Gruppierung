@@ -827,7 +827,7 @@ for i, bereich in enumerate(BEREICHE):
                 
                     # Filter für CRS
                     df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                    total_crs = len(df_plot_CRS)
+                    total_crs = len(df_plot_crs)
                     
                     st.metric(label="HIPEC bei CRS", value=total_crs)
                     # st.divider()
