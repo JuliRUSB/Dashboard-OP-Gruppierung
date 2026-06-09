@@ -16,8 +16,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ==================================================
 
 # Konfiguration
-# ==================================================Gesamtzahl 
-API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
+url = os.getenv("API_URL")
+# API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 # ==================================================
 
 # Globale Farbpalette
