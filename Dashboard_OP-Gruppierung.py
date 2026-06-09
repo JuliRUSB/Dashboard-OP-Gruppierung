@@ -20,10 +20,6 @@ API_URL = os.getenv("API_URL")
 # API_URL = 'https://fxdb.usb.ch/api/'  # REDCap API URL
 # ==================================================
 
-# Globale Farbpalette
-COLOR_PALETTE = px.colors.qualitative.Safe
-# ==================================================
-
 # ==================================================
 # Datenexport aus REDCap
 # ==================================================
@@ -82,6 +78,34 @@ def export_redcap_data(api_url):
         st.error(f"Fehler beim Export: {e}")
         return None
 
+    # ==================================================
+    # Globale Konstanten und Hilfsfunktionen
+    # ==================================================
+    # Globale Reihenfolge der Clavien-Dindo-Grade
+    DINDO_ORDER = [
+        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
+        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
+    ]
+    
+    # Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
+    def get_highest_dindo(row):
+        v1 = row['max_dindo_calc']
+        v2 = row['max_dindo_calc_surv']
+        valid_values = [v for v in [v1, v2] if v in DINDO_ORDER]
+        if not valid_values:
+            return "Unbekannt"
+        return max(valid_values, key=lambda x: DINDO_ORDER.index(x))
+
+    # Globale Farbpalette
+    COLOR_PALETTE = px.colors.qualitative.Safe
+
+    # Hilfsfunktion für konsistente Farben
+    def get_color_map(items):
+        """Erstellt ein Farbmapping für eine Liste von Items"""
+        unique_items = sorted(set(items))
+        colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
+        return {item: colors[i] for i, item in enumerate(unique_items)}
+        
 # ==================================================
 # Datenaufbereitung
 # ==================================================
@@ -313,22 +337,7 @@ def prepare_data(df):
     }
     df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
     df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
-
-    # Globale Reihenfolge der Clavien-Dindo-Grade
-    DINDO_ORDER = [
-        'Grade IIIa', 'Grade IIIa d', 'Grade IIIb', 'Grade IIIb d', 
-        'Grade IVa', 'Grade IVa d', 'Grade IVb', 'Grade IVb d', 'Grade V'
-    ]
-    
-    # Gibt den höchsten Clavien-Dindo-Grad aus zwei Spalten zurück
-    def get_highest_dindo(row):
-        v1 = row['max_dindo_calc']
-        v2 = row['max_dindo_calc_surv']
-        valid_values = [v for v in [v1, v2] if v in DINDO_ORDER]
-        if not valid_values:
-            return "Unbekannt"
-        return max(valid_values, key=lambda x: DINDO_ORDER.index(x))
-    
+   
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
     # Quartal erstellen: 1, 2, 3 oder 4
@@ -353,15 +362,6 @@ if "export_pdf" not in st.session_state:
     st.session_state.export_pdf = False
 if "pdf_bytes" not in st.session_state:
     st.session_state.pdf_bytes = None
-
-# ==================================================
-# Hilfsfunktion für konsistente Farben
-# ==================================================
-def get_color_map(items):
-    """Erstellt ein Farbmapping für eine Liste von Items"""
-    unique_items = sorted(set(items))
-    colors = COLOR_PALETTE * (len(unique_items) // len(COLOR_PALETTE) + 1)
-    return {item: colors[i] for i, item in enumerate(unique_items)}
 
 # ==================================================
 # Streamlit App
@@ -450,7 +450,7 @@ with st.sidebar:
     else:
         st.write("Kein Quartal ausgewählt.")
 
-        # =================================================================#
+    # =================================================================#
     #                   AKTIVE FILTERUNG DER DATEN:                    #
     #          damit beim updaten der App die Grafiken nur die         #
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
