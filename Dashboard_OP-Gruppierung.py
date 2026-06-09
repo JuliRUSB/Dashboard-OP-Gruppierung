@@ -995,7 +995,6 @@ for i, bereich in enumerate(BEREICHE):
                         textposition='auto',
                         textangle=0,
                         cliponaxis=False,
-                        insidetextanchor='middle',
                         textfont_size=16,
                         insidetextfont=dict(size=16),
                         outsidetextfont=dict(size=16),
