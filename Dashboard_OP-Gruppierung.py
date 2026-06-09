@@ -818,9 +818,7 @@ for i, bereich in enumerate(BEREICHE):
             )  # horizontale Linie
         
         
-        # ================== Kachel 3 HIPEC bei CRS ================== 
-        #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
-        #st.write("DEBUG - Werte in Spalte type_sark:", df_bereich["type_sark"].unique())
+        # ================== Kachel 3: HIPEC bei CRS ================== 
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
                 # Check auf Spalten
@@ -879,7 +877,7 @@ for i, bereich in enumerate(BEREICHE):
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                         )
                     
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel3_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
                         st.info("Keine Daten für CRS")
                 else:
@@ -888,92 +886,75 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 4 "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
-                # Check auf Spalten
-                required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark"}
-                if required_cols.issubset(df_bereich.columns):
+                df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                total_crs = len(df_plot_all)
         
-                    # CRS filtern
-                    df_plot_all = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
-                    total_crs = len(df_plot_all)
+                df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
+                total_dindo = len(df_plot)
         
-                    # Dindo ≥ IIIa filtern
-                    df_plot = df_plot_all[df_plot_all["statistik_dindo_2"] == '1'].copy()
-                    total_dindo = len(df_plot)
+                metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
         
-                    # Korrekte Berechnung mit Python-round
-                    metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
+                st.metric(
+                    label="Clavien-Dindo-Grad ≥ IIIa in % - HIPEC bei CRS",
+                    value=f"{metrik_prozent} % ({total_dindo} von {total_crs})",
+                )
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
-                    st.metric(
-                        label="Clavien-Dindo-Grad ≥ IIIa in % - HIPEC bei CRS",
-                        value=f"{metrik_prozent} % ({total_dindo} von {total_crs})",
+                if total_crs > 0:
+                    grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp.columns = ["jahr_opdatum", "hipec", "count"]
+        
+                    grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                    grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+        
+                    grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left")
+        
+                    grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
+        
+                    grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
+        
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="prozent",
+                        color="hipec",
+                        barmode="group",
+                        text="text_label",
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
                     )
-                    # st.divider()
-                    # verkleinert den Raum oberhalb der Trennlinie
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
-                    if total_crs > 0:
-                        # Gruppierung nach Jahr, HIPEC (nur Komplikationen >= IIIa)
-                        grp = df_plot.groupby(
-                            ["jahr_opdatum", "hipec"],
-                            as_index=False
-                        ).size()
-                        grp.columns = ["jahr_opdatum", "hipec", "count"]
+                    fig.update_traces(
+                        textposition='auto',
+                        textangle=-45,
+                        cliponaxis=False,
+                        insidetextanchor='middle',
+                        textfont_size=16,
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        marker_line_width=0
+                    )
         
-                        # Gesamtzahl pro Jahr UND HIPEC (alle CRS-Fälle)
-                        grp_gesamt = df_plot_all.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
-                        grp_gesamt.columns = ["jahr_opdatum", "hipec", "count_gesamt"]
+                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
         
-                        # Zusammenführen für korrekte Prozentbasis
-                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "hipec"], how="left")
+                    fig.update_layout(
+                        autosize=True,
+                        height=None,
+                        uniformtext_minsize=16,
+                        uniformtext_mode='show',
+                        bargap=0.1,
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title=None,
+                        yaxis_title=None,
+                        showlegend=True,
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
+                    )
         
-                        grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
-        
-                        grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
-        
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="prozent",
-                            color="hipec",
-                            barmode="group",
-                            text="text_label",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
-                        )
-        
-                        fig.update_traces(
-                            textposition='auto',
-                            textangle=-45,
-                            cliponaxis=False,
-                            insidetextanchor='middle',
-                            textfont_size=16,
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            marker_line_width=0
-                        )
-        
-                        fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-        
-                        fig.update_layout(
-                            autosize=True,
-                            height=None,
-                            uniformtext_minsize=16,
-                            uniformtext_mode='show',
-                            bargap=0.1,
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
-                        )
-        
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel4_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Daten für HIPEC")
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_claviendindo3_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
-                    st.error("Spalten fehlen")
+                    st.info("Keine Daten für HIPEC")
 
         # ================== Kachel 5 "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
