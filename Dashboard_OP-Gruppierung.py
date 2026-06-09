@@ -1014,7 +1014,7 @@ for i, bereich in enumerate(BEREICHE):
                         showlegend=True,
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 2}
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_claviendindo3_abs_{bereich}", config={"displayModeBar": False, "responsive": True})
