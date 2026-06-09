@@ -2600,7 +2600,8 @@ for i, bereich in enumerate(BEREICHE):
                             y="count",
                             text="text_label",
                             color_discrete_sequence=COLOR_PALETTE
-            
+                        )
+                        
                         fig_leber_gallefistel.update_traces(
                             textposition="auto",
                             textfont_size=16,
