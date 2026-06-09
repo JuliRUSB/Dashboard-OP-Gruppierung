@@ -1005,6 +1005,8 @@ for i, bereich in enumerate(BEREICHE):
         
                     fig.update_layout(
                         height=400,
+                        uniformtext_minsize=16,
+                        uniformtext_mode='show',
                         bargap=0.1,
                         margin=dict(l=10, r=10, t=0, b=10),
                         xaxis_title=None,
