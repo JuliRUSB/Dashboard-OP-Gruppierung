@@ -2292,7 +2292,7 @@ for i, bereich in enumerate(BEREICHE):
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         
-        # ================== Kachel "Leber HSM" % und  absolute Zahlen ==================
+        # ================== Kachel "Leber HSM" % und absolute Zahlen ==================
         if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2439,7 +2439,7 @@ for i, bereich in enumerate(BEREICHE):
                         textposition='auto',
                         textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
                         cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                        insidetextanchor='middle',  # Zentriert die Zahl im Segment
+                        #insidetextanchor='middle',  # Zentriert die Zahl im Segment
                         # 2. Schriftgrösse etc.
                         textfont_size=16, 
                         insidetextfont=dict(size=16),
