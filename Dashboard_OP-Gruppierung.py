@@ -1039,6 +1039,19 @@ for i, bereich in enumerate(BEREICHE):
             with col2:
                 if f"expand_{bereich}_k6" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k6"] = False
+
+                # CSS injizieren, um eine feste Mindesthöhe für die Kachel zu erzwingen
+                # Das verhindert das Springen des Layouts im geschlossenen Zustand
+                st.markdown(
+                    """
+                    <style>
+                    div[data-testid="stVerticalBlockBorder"] {
+                        min-height: 400px; /* Wert anpassen, damit er der Höhe des geöffneten Diagramms entspricht */
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True
+                )
         
                 if not st.session_state[f"expand_{bereich}_k6"]:
                     if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6"):
