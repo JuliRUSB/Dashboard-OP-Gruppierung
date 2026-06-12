@@ -777,7 +777,8 @@ for i, bereich in enumerate(BEREICHE):
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
-                    
+
+                    pdf_figures = st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
                     st.session_state.setdefault("pdf_figures", {})["kachel_sarkome_ges"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
@@ -832,7 +833,8 @@ for i, bereich in enumerate(BEREICHE):
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
-        
+
+                    pdf_figures = st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
                     st.session_state.pdf_figures["kachel_sarkome_typ"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_typ_{bereich}", config={"displayModeBar": False, "responsive": True})
@@ -2805,7 +2807,10 @@ def figures_to_html(figures: dict) -> bytes:
 #.get() verhindert den Absturz, falls das Objekt beim ersten Laden noch nicht existiert
 st.download_button(
     label="📄 Grafiken exportieren",
-    data=figures_to_html(st.session_state.get("pdf_figures", {})),
+    label=f"📄 Grafiken exportieren - {bereich}",
+    data=figures_to_html(
+        st.session_state.get("pdf_figures", {}).get(bereich, {})
+    ),
     file_name="dashboard_export.html",
     mime="text/html"
 )
