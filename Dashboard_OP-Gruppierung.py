@@ -1083,8 +1083,8 @@ for i, bereich in enumerate(BEREICHE):
                         <style>
                         div.k6-open-container 
                         > div[data-testid="stVerticalBlockBorder"] {
-                            min-height: 400px !important;
-                            height: 400px !important;
+                            min-height: 560px !important;
+                            height: 560px !important;
                         }
                         </style>
                         <div class="k6-open-container">
