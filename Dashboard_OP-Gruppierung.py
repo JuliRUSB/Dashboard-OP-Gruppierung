@@ -2805,6 +2805,7 @@ def figures_to_html(figures: dict) -> bytes:
     return html.encode('utf-8')
 
 #.get() verhindert den Absturz, falls das Objekt beim ersten Laden noch nicht existiert
+if bereich == "Chirurgische Onkologie/Sarkome":
 st.download_button(
     label="📄 Grafiken exportieren",
     data=figures_to_html(st.session_state.get("pdf_figures", {})),
