@@ -541,13 +541,13 @@ df_base = df[
 
 # Kopien für die Visualisierungen in Teil 2, 
 # damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
-df_plots = df_base.copy()
+# df_plots = df_base.copy()
 
-if bereich_filter != "Alle":
-    df_plots = df_plots[df_plots['bereich'] == bereich_filter]
+# if bereich_filter != "Alle":
+#    df_plots = df_plots[df_plots['bereich'] == bereich_filter]
 
-if zugang_filter != "Alle":
-    df_plots = df_plots[df_plots['zugang'] == zugang_filter]
+# if zugang_filter != "Alle":
+#     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
