@@ -2048,12 +2048,6 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     # Wenn eingeblendet: Button IM Container oben rechts
                     with st.container(border=True):
-                        # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
-                        header_col1, header_col2 = st.columns([0.8, 0.2])
-                        with header_col2:
-                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k13"):
-                                st.session_state[f"expand_{bereich}_k13"] = False
-                                st.rerun()
                         
                         required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "gruppen_chir_onko_sark", "max_dindo_calc", "max_dindo_calc_surv"}
                         if required_cols.issubset(df_bereich.columns):
@@ -2123,6 +2117,7 @@ for i, bereich in enumerate(BEREICHE):
                                     xaxis_title=None,
                                     yaxis_title=None,
                                     showlegend=True,
+                                    legend_title_text="",
                                     legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), # y=-0.2, 
                                     xaxis={"type": "category", "tickfont": {"size": 16}},
                                     yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
@@ -2133,6 +2128,10 @@ for i, bereich in enumerate(BEREICHE):
                                 st.info("Keine Daten für Sarkom/Weichteiltumor")
                         else:
                             st.error("Spalten fehlen")
+
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k13_close"):
+                            st.session_state[f"expand_{bereich}_k13"] = False
+                            st.rerun()
 
         # Horizontale Trennlinie zur thematischen Abgrenzung 
         st.markdown(
