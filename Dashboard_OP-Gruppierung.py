@@ -2119,8 +2119,6 @@ for i, bereich in enumerate(BEREICHE):
                             st.session_state[f"expand_{bereich}_k13"] = False
                             st.rerun()
 
-        
-
         # ================== Kachel 15 "Aufenthaltsdauer - Weichteiltumoren" ==================       
         #if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
@@ -2219,11 +2217,13 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
+        if bereich == "Leber":
+            col1, col2 = st.columns(2)
 
         # ========================= ANFANG BEREICH LEBERCHIRURGIE ========================= 
         # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         # ================== Kachel 1 "Leber HSM" % und absolute Zahlen ==================
-        if bereich == "Leber":
+        #if bereich == "Leber":
             with col1.container(border=True):
                 # pattern = "HCC|CCC|Metastasen|Benigne"
                 #df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
@@ -2277,7 +2277,7 @@ for i, bereich in enumerate(BEREICHE):
 
         # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
         # ================== Kachel 2: Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
-        if bereich == "Leber":
+        #if bereich == "Leber":
             with col2.container(border=True):
                 #pattern = "HCC|CCC|Metastasen|Benigne"
                 #df_leber_zugang = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
@@ -2334,7 +2334,7 @@ for i, bereich in enumerate(BEREICHE):
 
         # 3. Grafik: Roboterassistierte Eingriffe nach Lebergruppen darstellen in % + insgesamt in % für HCC, CCC und Metastasen (ohne Benigne)
         # ================== Kachel 3: Roboterassistierte Eingriffe nach Lebergruppen (HCC|CCC|Metastasen) ==================
-        if bereich == "Leber":
+        #if bereich == "Leber":
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen"
                 df_leber_robot = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
@@ -2398,7 +2398,7 @@ for i, bereich in enumerate(BEREICHE):
 
         # 4. Grafik: Hospital Stay
         # ================== Kachel 4: "Aufenthaltsdauer - Leberchirurgie" ==================       
-        if bereich == "Leber":
+        #if bereich == "Leber":
             with col2.container(border=True):
                 required_cols = {"los_opdatum", "leber_gruppen", "jahr_opdatum"}
                 if required_cols.issubset(df_bereich.columns):
@@ -2487,7 +2487,7 @@ for i, bereich in enumerate(BEREICHE):
             
             # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
             # ================== Kachel 5: "Mortalität - Leberchirurgie" ==================
-            if bereich == "Leber":
+            #if bereich == "Leber":
                 with col1.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
                     df_leber_mortalitaet = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
@@ -2562,7 +2562,7 @@ for i, bereich in enumerate(BEREICHE):
             
             # 6. Grafik: Bile Leak [kpl_was] = Gallenfistel oder [kpl_was] = Gallenfistel, in absoluten Zahlen und % 
             # ================== Kachel 6: "Gallefisteln - Leber" ================== 
-            if bereich == "Leber":
+            #if bereich == "Leber":
                 with col2.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
                     df_leber_gallefistel = df_bereich[
@@ -2641,7 +2641,7 @@ for i, bereich in enumerate(BEREICHE):
             
             # 7. Grafik: Reoperation [reoperation_30d] = 1 in absoluten Zahlen und % 
             # ================== Kachel 7: "Leber Reoperation 30 Tage" % und absolute Zahlen ==================
-            if bereich == "Leber":
+            #if bereich == "Leber":
                 with col2.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
                     df_leber_reop = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
