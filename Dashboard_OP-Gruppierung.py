@@ -1274,7 +1274,7 @@ for i, bereich in enumerate(BEREICHE):
                                     uniformtext_minsize=14,     # Verhindert, dass Zahlen bei Platzmangel verschwinden
                                     uniformtext_mode='hide',    # Versteckt Text nur, wenn er absolut nicht passt
                                     bargap=0.1,
-                                    margin=dict(l=10, r=10, t=30, b=10),
+                                    margin=dict(l=10, r=10, t=0, b=10),
                                     xaxis_title=None,
                                     yaxis_title=None,
                                     showlegend=True,
