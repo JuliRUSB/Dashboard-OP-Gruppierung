@@ -427,7 +427,7 @@ with st.sidebar:
         options=[1, 2, 3, 4],
         format_func=lambda x: f"Q{x}",
         selection_mode="multi",
-        default=[1, 2, 3, 4],
+        default=st.session_state.get('selected_quartale', [1,2,3,4]),
         key="pills_selection"
     )
 
@@ -437,7 +437,7 @@ with st.sidebar:
         (df["quartal_opdatum"].isin(selected_quartale))
     ]
     # 4. Update des Session States
-    st.session_state['selected_quartale'] = selected
+    st.session_state['selected_quartale'] = selected_quartale
 
     # Anzeige der aktuell gewählten Quartale
     if st.session_state['selected_quartale']:
