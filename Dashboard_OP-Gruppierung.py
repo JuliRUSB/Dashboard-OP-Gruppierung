@@ -575,11 +575,11 @@ df_base = df[
 # Visualisierungs-Filter
 df_plots = df_base.copy()
 
-if bereich_filter != "Alle":
-    df_plots = df_plots[df_plots['bereich'] == bereich_filter]
+# if bereich_filter != "Alle":
+#     df_plots = df_plots[df_plots['bereich'] == bereich_filter]
 
-if zugang_filter != "Alle":
-    df_plots = df_plots[df_plots['zugang'] == zugang_filter]
+# if zugang_filter != "Alle":
+#     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
 
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
