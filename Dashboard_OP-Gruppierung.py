@@ -235,7 +235,7 @@ def prepare_data(df):
     type_sark_mapping = {
         1: 'CRS',
         2: 'Sarkom/Weichteiltumor'
-    
+    }
     df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
     df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
     
