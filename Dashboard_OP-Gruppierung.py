@@ -2225,7 +2225,7 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 1 "Leber HSM" % und absolute Zahlen ==================
         #if bereich == "Leber":
             with col1.container(border=True):
-                # pattern = "HCC|CCC|Metastasen|Benigne"
+                pattern = "HCC|CCC|Metastasen|Benigne"
                 #df_leber_hsm = df_bereich[df_bereich["leber_gruppen"].str.contains(pattern, na=False)].copy()
                 df_leber_hsm = df_bereich.copy()
                 df_hsm = df_leber_hsm[df_leber_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
