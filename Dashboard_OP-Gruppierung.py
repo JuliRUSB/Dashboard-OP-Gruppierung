@@ -824,7 +824,7 @@ for i, bereich in enumerate(BEREICHE):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
         
-                    st.session_state.pdf_figures("kachel_sarkome_typ", fig)
+                    st.session_state.pdf_figures["kachel_sarkome_typ"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_typ_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
