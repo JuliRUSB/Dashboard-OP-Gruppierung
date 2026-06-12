@@ -1045,6 +1045,14 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für HIPEC")
 
+        # Horizontale Trennlinie zur thematischen Abgrenzung 
+        st.markdown(
+            """
+            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
+            """,
+            unsafe_allow_html=True
+        )
+
         # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2:
@@ -1559,13 +1567,8 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.error("Spalten fehlen")
 
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
+
+    
 
         # ================== Kachel 11: "Gruppe - Sarkome/Weichteiltumoren" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -2133,13 +2136,7 @@ for i, bereich in enumerate(BEREICHE):
                             st.session_state[f"expand_{bereich}_k13"] = False
                             st.rerun()
 
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
+        
 
         # ================== Kachel 15 "Aufenthaltsdauer - Weichteiltumoren" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
@@ -2729,13 +2726,7 @@ for i, bereich in enumerate(BEREICHE):
 
         
         
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        # st.markdown(
-            # """
-            # <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            # """,
-            # unsafe_allow_html=True
-        # )
+       
 
         # ================== BEREICH LEBER ==================    
         # ================== GRUPPEN ==================
