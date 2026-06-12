@@ -838,14 +838,7 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Sarkom-Daten")
                 
-            st.markdown(
-                """
-                <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-                """,
-                unsafe_allow_html=True
-            )  # horizontale Linie
-        
-        
+                   
         # ================== Kachel 3: HIPEC bei CRS ================== 
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
