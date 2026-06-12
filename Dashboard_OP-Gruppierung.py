@@ -945,7 +945,6 @@ for i, bereich in enumerate(BEREICHE):
         
                     fig.update_traces(
                         textposition='outside',
-                        textangle=-45,
                         cliponaxis=False,
                         insidetextanchor='middle',
                         textfont_size=16,
