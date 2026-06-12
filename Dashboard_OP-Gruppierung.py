@@ -1142,7 +1142,7 @@ for i, bereich in enumerate(BEREICHE):
                             )
         
                             fig.update_layout(
-                                height=340,  
+                                height=345,  
                                 bargap=0.1,
                                 margin=dict(l=10, r=10, t=30, b=10),
                                 xaxis_title=None,
