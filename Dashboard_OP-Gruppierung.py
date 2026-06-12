@@ -786,14 +786,14 @@ for i, bereich in enumerate(BEREICHE):
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
                 # df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
-                df_plot = df_bereich.copy()
+                # df_plot = df_bereich.copy()
+                df_plot = df_bereich[df_bereich["type_sark"].isin(['CRS', 'Sarkom/Weichteiltumor'])].copy()
                 
                 total_crs_und_sark = len(df_plot)
         
                 st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
 
-                df_bereich.loc[df_bereich["jahr_opdatum"]==2026, "type_sark"].value_counts(dropna=False)
                 if total_crs_und_sark > 0:
 
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
