@@ -1185,12 +1185,6 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     # Wenn eingeblendet: Button IM Container oben rechts
                     with st.container(border=True):
-                         # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
-                        header_col1, header_col2 = st.columns([0.8, 0.2])
-                        with header_col2:
-                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k7"):
-                                st.session_state[f"expand_{bereich}_k7"] = False
-                                st.rerun()
     
                         required_cols = {"jahr_opdatum", "hipec", "statistik_dindo_2", "type_sark", "max_dindo_calc", "max_dindo_calc_surv"}
                 
@@ -1289,6 +1283,10 @@ for i, bereich in enumerate(BEREICHE):
                                 st.info("Keine validen Grade >= IIIa gefunden.")
                         else:
                             st.error("Spalten fehlen")
+
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k7_close"):
+                            st.session_state[f"expand_{bereich}_k7"] = False
+                            st.rerun()
 
         # ================== Kachel 8: "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
         if bereich == "Chirurgische Onkologie/Sarkome":
