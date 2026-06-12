@@ -781,7 +781,8 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 2 "Übersicht Operationen nach Sarkomtyp" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
-                df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                # df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
+                df_plot = df_bereich.copy()
                 total_crs_und_sark = len(df_plot)
         
                 st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
