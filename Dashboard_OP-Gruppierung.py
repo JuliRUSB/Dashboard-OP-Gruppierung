@@ -58,43 +58,40 @@ def get_color_map(items):
 @st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
 def export_redcap_data(api_url):
     """Exportiert Daten aus REDCap mit Caching"""
-    # API-Token und URL aus Umgebungsvariable holen
     API_TOKEN = os.getenv("tok_op_gruppen")
     if not API_TOKEN:
         st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
         return None
     
-    # Daten für POST-Request definieren
     data = {
         'token': API_TOKEN,
-        'content': 'record',                       # Datentyp: Records
-        'action': 'export',                        # Aktion: Export
-        'format': 'json',                          # Format: JSON
-        'type': 'flat',                            # Flache Struktur (nicht verschachtelt)
-        'fields[0]': 'opdatum',                    # Felder, die exportiert werden sollen
+        'content': 'record',
+        'action': 'export',
+        'format': 'json',
+        'type': 'flat',
+        'fields[0]': 'opdatum',
         'fields[1]': 'bereich',
-        'fields[2]': 'leber_gruppen',              # Leber
-        'fields[3]': 'hsm',                        # Leber 
-        'fields[4]': 'zugang',                     # Leber
-        'fields[5]': 'gallefistel_isgls',          # Leber
-        'fields[6]': 'gallefistel_isgls_surv',     # Leber
-        'fields[7]': 'reoperation_30d',            # Leber
+        'fields[2]': 'leber_gruppen',
+        'fields[3]': 'hsm',
+        'fields[4]': 'zugang',
+        'fields[5]': 'gallefistel_isgls',
+        'fields[6]': 'gallefistel_isgls_surv',
+        'fields[7]': 'reoperation_30d',
         'fields[8]': 'max_dindo_calc',
         'fields[9]': 'max_dindo_calc_surv',
         'fields[10]': 'los_opdatum',
         'fields[11]': 'los_eintritt_austritt',
-        'fields[12]': 'type_sark',                 # Sarkom
-        'fields[13]': 'gruppen_chir_onko_sark',    # Sarkom
-        'fields[14]': 'malignit_t_sark',           # Sarkom
-        'fields[15]': 'lokalisation_sark',         # Sarkom
-        'fields[16]': 'hipec',                     # Sarkom
-        'fields[17]': 'anastomosen_crs',           # Sarkom
+        'fields[12]': 'type_sark',
+        'fields[13]': 'gruppen_chir_onko_sark',
+        'fields[14]': 'malignit_t_sark',
+        'fields[15]': 'lokalisation_sark',
+        'fields[16]': 'hipec',
+        'fields[17]': 'anastomosen_crs',
         'fields[18]': 'statistik_dindo_2',
-        'fields[19]': 'los_opdatum',
-        'fields[20]': 'crs_details',               # Sarkom
-        'fields[21]': 'kpl_was',
-        'fields[22]': 'kpl_was_surv',
-        'rawOrLabel': 'raw',                       # Werte als Rohdaten exportieren
+        'fields[19]': 'crs_details',
+        'fields[20]': 'kpl_was',
+        'fields[21]': 'kpl_was_surv',
+        'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
         'exportSurveyFields': 'false',
@@ -102,10 +99,16 @@ def export_redcap_data(api_url):
         'returnFormat': 'json'
     }
     try:
-        # API-Request senden (POST)
-        r = requests.post(api_url, data=data, verify=False, timeout=30)
-        r.raise_for_status()  # Fehler werfen, falls HTTP-Status nicht OK
-        return pd.DataFrame(r.json())  # JSON in DataFrame umwandeln
+        r = requests.post(api_url, data=data, verify=True, timeout=30)
+        r.raise_for_status()
+        result = r.json()
+        if isinstance(result, dict) and "error" in result:
+            st.error(f"REDCap-Fehler: {result['error']}")
+            return None
+        df = pd.DataFrame(result)
+        if df.empty:
+            st.warning("Keine Daten zurückgegeben.")
+        return df
     except requests.exceptions.RequestException as e:
         st.error(f"Fehler beim Export: {e}")
         return None
