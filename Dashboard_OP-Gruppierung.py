@@ -2202,6 +2202,7 @@ for i, bereich in enumerate(BEREICHE):
                         ))
             
                         fig.update_layout(
+                            height=400,
                             margin=dict(l=10, r=10, t=20, b=10), # T etwas erhöht für Text 'outside'
                             xaxis_title=None,
                             yaxis_title=None,
