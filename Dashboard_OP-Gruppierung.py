@@ -794,6 +794,7 @@ for i, bereich in enumerate(BEREICHE):
                 
                     st.write("TYPE SARK TYPES:")
                     st.write(df_plot["type_sark"].apply(type).value_counts())
+                    st.write(df_plot[df_plot["jahr_opdatum"] == 2026]["type_sark"].value_counts(dropna=False))
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
