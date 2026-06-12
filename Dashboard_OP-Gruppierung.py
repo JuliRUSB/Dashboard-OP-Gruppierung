@@ -855,7 +855,7 @@ for i, bereich in enumerate(BEREICHE):
                 
                     if total_crs > 0:
                         # Gruppierung nach Jahr und HIPEC
-                        grp = df_plot.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
+                        grp = df_plot_crs.groupby(["jahr_opdatum", "hipec"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "hipec", "count"]
                     
                         fig = px.bar(
