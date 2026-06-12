@@ -1045,15 +1045,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für HIPEC")
 
-        # Horizontale Trennlinie zur thematischen Abgrenzung 
-        st.markdown(
-            """
-            <hr style="border: 2px solid #d3d3d3; margin: 20px 0;">
-            """,
-            unsafe_allow_html=True
-        )
-
-        # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
+             # ================== Kachel 6: "Aufteilung Komplikationen - CRS mit HIPEC" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2:
                 if f"expand_{bereich}_k6" not in st.session_state:
