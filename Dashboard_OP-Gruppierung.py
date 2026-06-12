@@ -403,7 +403,7 @@ if 'selected_quartale' not in st.session_state:
 # Das Standard-Filter-Tupel einmalig beim allerersten Start merken
 if 'slider_jahr_speicher' not in st.session_state:
     st.session_state['slider_jahr_speicher'] = (alle_jahre[0], alle_jahre[-1])
-st.write(df.columns)
+
 
 # =================================================================#
 # Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
@@ -432,9 +432,9 @@ with st.sidebar:
     )
 
     df_filtered = df[
-    (df["jahr_opdatum"] >= jahr_range[0]) &
-    (df["jahr_opdatum"] <= jahr_range[1]) &
-    (df["quartal"].isin(selected_quartale))
+        (df["opdatum"].dt.year >= jahr_range[0]) &
+        (df["opdatum"].dt.year <= jahr_range[1]) &
+        (df["quartal_opdatum"].isin(selected_quartale))
     ]
     # 4. Update des Session States
     st.session_state['selected_quartale'] = selected
