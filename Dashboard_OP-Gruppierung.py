@@ -783,17 +783,15 @@ for i, bereich in enumerate(BEREICHE):
             with col2.container(border=True):
                 # df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
                 df_plot = df_bereich.copy()
+                df_bereich["type_sark"].apply(type).value_counts()
+                df_bereich.loc[~df_bereich["type_sark"].isin([1,2]), "type_sark"].unique()
                 total_crs_und_sark = len(df_plot)
         
                 st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_crs_und_sark > 0:
-                    st.write("RAW 2026 CHECK:")
-                    st.write(df_plot[df_plot["jahr_opdatum"] == 2026][["type_sark"]].value_counts(dropna=False))
-                    st.write(df_plot[df_plot["jahr_opdatum"] == 2026].shape)
-                    st.write(df_bereich.shape)
-                    st.write(df_plot.shape)
+
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
