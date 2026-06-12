@@ -2813,3 +2813,5 @@ if bereich == "Chirurgische Onkologie/Sarkome":
         mime="text/html"
     )
 
+if bereich == "Chirurgische Onkologie/Sarkome":
+    st.download_button(label="📄 Grafiken exportieren", data="TEST", file_name="dashboard_export.html", mime="text/html")
