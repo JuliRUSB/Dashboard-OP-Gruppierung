@@ -232,12 +232,18 @@ def prepare_data(df):
     df['reoperation_30d'] = df['reoperation_30d'].map(reoperation_30d_mapping).fillna('Unbekannt')
     
     # Typ Sarkom: numerische Codes in Text umwandeln
+    #type_sark_mapping = {
+    #    1: 'CRS',
+    #    2: 'Sarkom/Weichteiltumor'
+    #}
+    #df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
+    #df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
     type_sark_mapping = {
-        1: 'CRS',
-        2: 'Sarkom/Weichteiltumor'
+    1: 'CRS',
+    2: 'Sarkom/Weichteiltumor'
     }
-    df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
-    df['type_sark'] = df['type_sark'].map(type_sark_mapping).fillna('Unbekannt')
+    
+    df['type_sark_label'] = df['type_sark'].map(type_sark_mapping)
 
     # CRS Dtetails (Für Anastomosen): numerische Codes in Text umwandeln
     crs_details_cols = [c for c in df.columns if c.startswith('crs_details___')]
