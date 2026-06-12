@@ -740,13 +740,14 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 1 "Gesamtzahl Operationen - Onkologie/Sarkome" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1.container(border=True):
-                total_ops = len(df_bereich)
+                df_plot_ges = df_bereich[df_bereich["type_sark"].notna()].copy()
+                total_ops = len(df_plot_ges)
         
                 st.metric(label="Gesamtzahl Operationen - Onkologie/Sarkome", value=total_ops)
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                 
                 if total_ops > 0:
-                    grp = df_bereich.groupby("jahr_opdatum").size().reset_index(name="count")
+                    grp = df_plot_ges.groupby("jahr_opdatum").size().reset_index(name="count")
         
                     fig = px.bar(
                         grp,
