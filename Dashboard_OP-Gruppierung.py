@@ -1303,12 +1303,6 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     # Wenn eingeblendet: Button IM Container oben rechts
                     with st.container(border=True):
-                         # Header-Spalten: links Titel/Metrik-Platz, rechts der Button
-                        header_col1, header_col2 = st.columns([0.8, 0.2])
-                        with header_col2:
-                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k8"):
-                                st.session_state[f"expand_{bereich}_k8"] = False
-                                st.rerun()
     
                         required_cols = {"crs_details", "anastomosen_crs", "jahr_opdatum", "kpl_was_surv", "kpl_was"}
                         if required_cols.issubset(df_bereich.columns):
@@ -1379,6 +1373,10 @@ for i, bereich in enumerate(BEREICHE):
                                 st.info("Keine Anastomoseninsuffizienzen vorhanden")
                         else:
                             st.error("Spalten fehlen")
+
+                        if st.button("▲ ausblenden", key=f"btn_{bereich}_k8_close"):
+                            st.session_state[f"expand_{bereich}_k8"] = False
+                            st.rerun()
 
         # ================== Kachel 9: "Aufenthaltsdauer - CRS mit HIPEC" ==================       
         if bereich == "Chirurgische Onkologie/Sarkome":
