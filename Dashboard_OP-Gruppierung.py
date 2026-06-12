@@ -1144,7 +1144,7 @@ for i, bereich in enumerate(BEREICHE):
                             fig.update_layout(
                                 height=345,  
                                 bargap=0.1,
-                                margin=dict(l=10, r=10, t=30, b=10),
+                                margin=dict(l=10, r=10, t=10, b=10),
                                 xaxis_title=None,
                                 yaxis_title=None,
                                 showlegend=True,
@@ -1155,30 +1155,14 @@ for i, bereich in enumerate(BEREICHE):
                                     xanchor="right",
                                     x=0.99,
                                 ),
-                                xaxis={
-                                    "type": "category",
-                                    "tickfont": {"size": 16},
-                                },
-                                yaxis={
-                                    "showticklabels": True,
-                                    "showgrid": True,
-                                    "tickfont": {"size": 16},
-                                },
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
                             )
         
-                            st.plotly_chart(
-                                fig,
-                                use_container_width=True,
-                                key=f"kachel_crs_mit_hipec_dindo3_{bereich}",
-                                config={
-                                    "displayModeBar": False,
-                                    "responsive": True,
-                                },
-                            )
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_mit_hipec_dindo3_{bereich}", config={"displayModeBar": False, "responsive": True})
                         else:
                             st.info("Keine Fälle mit Grade >= IIIa gefunden.")
         
-                        # DER BUTTON SITZT JETZT UNTEN: Blockiert oben keinen Platz mehr!
                         if st.button(
                             "▲ ausblenden", key=f"btn_{bereich}_k6_close"
                         ):
