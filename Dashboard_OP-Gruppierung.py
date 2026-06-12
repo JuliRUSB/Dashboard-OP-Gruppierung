@@ -789,11 +789,14 @@ for i, bereich in enumerate(BEREICHE):
                 st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
         
                 if total_crs_und_sark > 0:
+                    st.write("TYPE SARK VALUE COUNTS:")
+                    st.write(df_plot["type_sark"].value_counts(dropna=False))
+                
+                    st.write("TYPE SARK TYPES:")
+                    st.write(df_plot["type_sark"].apply(type).value_counts())
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
                     grp.columns = ["jahr_opdatum", "type_sark", "count"]
 
-                    for x in sorted(df_plot["type_sark"].unique(), key=str):
-                        st.write(repr(x), type(x))
                     fig = px.bar(
                         grp,
                         x="jahr_opdatum",
