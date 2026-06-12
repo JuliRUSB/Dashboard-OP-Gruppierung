@@ -1068,7 +1068,7 @@ for i, bereich in enumerate(BEREICHE):
         
                 if not st.session_state[f"expand_{bereich}_k6"]:
                     if st.button(
-                        "<b>Aufteilung Komplikationen - CRS mit HIPEC ▼ anzeigen</b>",
+                        "Aufteilung Komplikationen - CRS mit HIPEC ▼ anzeigen",
                         key=f"btn_{bereich}_k6",
                     ):
                         st.session_state[f"expand_{bereich}_k6"] = True
