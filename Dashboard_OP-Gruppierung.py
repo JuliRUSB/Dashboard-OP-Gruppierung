@@ -485,7 +485,6 @@ with st.sidebar:
     
     # 4. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
     df = df_filtered.copy()
-    st.sidebar.write(f"Filter aktiv: {df['jahr_opdatum'].min()} - {df['jahr_opdatum'].max()}")
 
     # Buttons erstellen (Logik zum An/Abwählen)
     # for i, q in enumerate(quartal_werte):
@@ -505,16 +504,16 @@ with st.sidebar:
     st.divider()
     
     # Bereich-Filter
-    bereich_filter = st.selectbox(
-        "Bereich auswählen:", 
-        ["Alle"] + sorted(df['bereich'].unique())
-    )
+    # bereich_filter = st.selectbox(
+    #     "Bereich auswählen:", 
+    #     ["Alle"] + sorted(df['bereich'].unique())
+    # )
 
     # Zugang-Filter
-    zugang_filter = st.selectbox(
-        "Zugang auswählen:", 
-        ["Alle"] + sorted(df['zugang'].unique())
-    )
+    # zugang_filter = st.selectbox(
+    #     "Zugang auswählen:", 
+    #     ["Alle"] + sorted(df['zugang'].unique())
+    # )
    
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
