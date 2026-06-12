@@ -790,9 +790,8 @@ for i, bereich in enumerate(BEREICHE):
         
                 if total_crs_und_sark > 0:
                     grp = df_plot.groupby(["jahr_opdatum", "type_sark"], as_index=False).size()
-                    st.dataframe(
-                    grp.sort_values(["jahr_opdatum", "type_sark"])
-                    )
+                    for x in sorted(df_plot["type_sark"].unique(), key=str):
+                        st.write(repr(x), type(x))
                     grp.columns = ["jahr_opdatum", "type_sark", "count"]
         
                     fig = px.bar(
