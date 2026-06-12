@@ -2781,8 +2781,8 @@ for i, bereich in enumerate(BEREICHE):
             import plotly.io as pio
             
             titles = {
-                "kachel1": "Gesamtzahl Operationen - Onkologie/Sarkome",
-                "kachel2": "Übersicht Operationen"
+                "kachel_sarkome_ges": "Gesamtzahl Operationen - Onkologie/Sarkome",
+                "kachel_sarkome_typ": "Übersicht Operationen"
             }
             
             # 1. Breite im Body auf 100% setzen und Ränder entfernen
