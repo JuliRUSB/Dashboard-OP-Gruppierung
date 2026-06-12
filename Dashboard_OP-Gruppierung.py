@@ -1067,42 +1067,83 @@ for i, bereich in enumerate(BEREICHE):
             with col2:
                 if f"expand_{bereich}_k6" not in st.session_state:
                     st.session_state[f"expand_{bereich}_k6"] = False
-           
-                # Berechnungen müssen vor der If-Abfrage laufen, damit die Werte in BEIDEN Zuständen da sind
-                df_crs_hipec = df_bereich[(df_bereich["type_sark"] == "CRS") & (df_bereich["hipec"] == "Ja")].copy()
+        
+                # Schnelle Basis-Filterung für die Gesamtanzahl
+                df_crs_hipec = df_bereich[
+                    (df_bereich["type_sark"] == "CRS")
+                    & (df_bereich["hipec"] == "Ja")
+                ].copy()
                 total_crs_hipec = len(df_crs_hipec)
         
-                df_crs_hipec["dindo_final_text"] = df_crs_hipec.apply(get_highest_dindo, axis=1)
+                # Schnelle Zählung der Komplikationen ohne teures apply
+                df_crs_hipec_dindo_basis = df_crs_hipec[
+                    df_crs_hipec["statistik_dindo_2"] == '1'
+        ].copy()
+                total_crs_hipec_dindo = len(df_crs_hipec_dindo_basis)
         
-                df_crs_hipec_dindo = df_crs_hipec[df_crs_hipec["statistik_dindo_2"] == '1'].copy()
-                df_crs_hipec_dindo = df_crs_hipec_dindo[df_crs_hipec_dindo["dindo_final_text"].isin(DINDO_ORDER)]
+                # Chronologische Achsenreihenfolge aus allen OPs sichern
+                jahr_order = sorted(
+                    df_bereich["jahr_opdatum"].dropna().unique().tolist()
+                )
         
-                total_crs_hipec_dindo = len(df_crs_hipec_dindo)
-                
                 if not st.session_state[f"expand_{bereich}_k6"]:
-                    if st.button("𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen", key=f"btn_{bereich}_k6"):
+                    if st.button(
+                        "𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen",
+                        key=f"btn_{bereich}_k6",
+                    ):
                         st.session_state[f"expand_{bereich}_k6"] = True
                         st.rerun()
                 else:
                     with st.container(border=True):
                         header_col1, header_col2 = st.columns([0.8, 0.2])
                         with header_col2:
-                            if st.button("▲ ausblenden", key=f"btn_{bereich}_k6"):
-                                st.session_state[f"expand_{bereich}_k6"] = False
+                            if st.button(
+                                "▲ ausblenden", key=f"btn_{bereich}_k6"
+                            ):
+                                st.session_state[f"expand_{bereich}_k6"] = (
+                                    False
+                                )
                                 st.rerun()
-                
+        
                         st.metric(
-                            label="Aufteilung Komplikationen - CRS mit HIPEC", 
-                            value=f"{total_crs_hipec_dindo} von {total_crs_hipec}",
+                            label="Aufteilung Komplikationen - CRS mit HIPEC",
+                            value=(
+                                f"{total_crs_hipec_dindo} von "
+                                f"{total_crs_hipec}"
+                            ),
                         )
-                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                
-                        if not df_crs_hipec_dindo.empty:
-                            grp = df_crs_hipec_dindo.groupby(["jahr_opdatum", "dindo_final_text"], as_index=False).size()
-                            grp.columns = ["jahr_opdatum", "dindo_final_text", "count"]
-                            grp = grp.sort_values("jahr_opdatum")
-                            jahr_order = grp["jahr_opdatum"].unique().tolist()
-                
+                        st.markdown(
+                            "<hr style='margin-top: -15px; margin-bottom: 5px; "
+                            "border: none; border-top: 1px solid #ddd;'>",
+                            unsafe_allow_html=True,
+                        )
+        
+                        if total_crs_hipec_dindo > 0:
+                            # Das langsame apply läuft NUR, wenn die Kachel offen ist
+                            df_crs_hipec_dindo_basis["dindo_final_text"] = (
+                                df_crs_hipec_dindo_basis.apply(
+                                    get_highest_dindo, axis=1
+                                )
+                            )
+        
+                            df_crs_hipec_dindo = df_crs_hipec_dindo_basis[
+                                df_crs_hipec_dindo_basis[
+                                    "dindo_final_text"
+                                ].isin(DINDO_ORDER)
+                            ].copy()
+        
+                            grp = (
+                                df_crs_hipec_dindo.groupby(
+                                    ["jahr_opdatum", "dindo_final_text"],
+                                    as_index=False,
+                                ).size()
+                            )
+                            grp.columns = [
+                                "jahr_opdatum",
+                                "dindo_final_text",
+                                "count",
+                            ]
+        
                             fig = px.bar(
                                 grp,
                                 x="jahr_opdatum",
@@ -1112,7 +1153,10 @@ for i, bereich in enumerate(BEREICHE):
                                 text="count",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"jahr_opdatum": "Jahr"},
-                                category_orders={"dindo_final_text": DINDO_ORDER, "jahr_opdatum": jahr_order} 
+                                category_orders={
+                                    "dindo_final_text": DINDO_ORDER,
+                                    "jahr_opdatum": jahr_order,
+                                },
                             )
                 
                             fig.update_traces(
