@@ -778,8 +778,8 @@ for i, bereich in enumerate(BEREICHE):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
 
-                    pdf_figures = st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                    st.session_state.setdefault("pdf_figures", {})["kachel_sarkome_ges"] = fig
+                    st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                    st.session_state["pdf_figures"][bereich]["kachel_sarkome_ges"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
@@ -834,8 +834,8 @@ for i, bereich in enumerate(BEREICHE):
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                     )
 
-                    pdf_figures = st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                    st.session_state.pdf_figures["kachel_sarkome_typ"] = fig
+                    st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                    st.session_state["pdf_figures"][bereich]["kachel_sarkome_typ"] = fig
                     
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_sarkome_typ_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
