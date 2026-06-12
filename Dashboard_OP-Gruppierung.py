@@ -980,23 +980,6 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 5: "Clavien-Dindo-Grad >= IIIa - HIPEC ja/nein bei CRS" ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col1:
-                st.markdown(
-                    """
-                    <style>
-                    /* Fixiert Kachel 5 auf eine feste Höhe */
-                    div[data-testid="stHorizontalBlock"] > div:nth-child(1) div[data-testid="stVerticalBlockBorder"] {
-                        min-height: 560px !important;
-                        height: 560px !important;
-                    }
-                    /* Fixiert Kachel 6 im geöffneten Zustand auf exakt dieselbe Höhe */
-                    .k6-open-container div[data-testid="stVerticalBlockBorder"] {
-                        min-height: 560px !important;
-                        height: 560px !important;
-                    }
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-                )
                 with st.container(border=True):
                     df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
                     total_crs = len(df_plot_crs)
@@ -1094,6 +1077,20 @@ for i, bereich in enumerate(BEREICHE):
                         st.session_state[f"expand_{bereich}_k6"] = True
                         st.rerun()
                 else:
+                    # ANPASSUNG: CSS setzt die Containerhöhe passend zum 400px Plot
+                    st.markdown(
+                        """
+                        <style>
+                        div.k6-open-container 
+                        > div[data-testid="stVerticalBlockBorder"] {
+                            min-height: 400px !important;
+                            height: 400px !important;
+                        }
+                        </style>
+                        <div class="k6-open-container">
+                        """,
+                        unsafe_allow_html=True,
+                    )
                     with st.container(border=True):
                         header_col1, header_col2 = st.columns([0.8, 0.2])
                         with header_col2:
