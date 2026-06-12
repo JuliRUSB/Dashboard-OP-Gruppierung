@@ -1068,7 +1068,7 @@ for i, bereich in enumerate(BEREICHE):
         
                 if not st.session_state[f"expand_{bereich}_k6"]:
                     if st.button(
-                        "Aufteilung Komplikationen - CRS mit HIPEC ▼ anzeigen",
+                        "𝗔𝘂𝗳𝘁𝗲𝗶𝗹𝘂𝗻𝗴 𝗞𝗼𝗺𝗽𝗹𝗶𝗸𝗮𝘁𝗶𝗼𝗻𝗲𝗻 - 𝗖𝗥𝗦 𝗺𝗶𝘁 𝗛𝗜𝗣𝗘𝗖 ▼ anzeigen",
                         key=f"btn_{bereich}_k6",
                     ):
                         st.session_state[f"expand_{bereich}_k6"] = True
@@ -1142,7 +1142,7 @@ for i, bereich in enumerate(BEREICHE):
                             )
         
                             fig.update_layout(
-                                height=400,  # Gleiche Höhe wie Kachel 5
+                                height=320,  
                                 bargap=0.1,
                                 margin=dict(l=10, r=10, t=30, b=10),
                                 xaxis_title=None,
