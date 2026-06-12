@@ -896,6 +896,9 @@ for i, bereich in enumerate(BEREICHE):
                         xaxis={"type": "category", "tickfont": {"size": 16}},
                         yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
                     )
+
+                    st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                    st.session_state["pdf_figures"][bereich]["kachel_crs_hipec"] = fig
                 
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
@@ -2782,7 +2785,8 @@ for i, bereich in enumerate(BEREICHE):
             
             titles = {
                 "kachel_sarkome_ges": "Gesamtzahl Operationen - Onkologie/Sarkome",
-                "kachel_sarkome_typ": "Übersicht Operationen"
+                "kachel_sarkome_typ": "Übersicht Operationen",
+                "kachel_crs_hipec": "HIPEC bei CRS"
             }
             
             # 1. Breite im Body auf 100% setzen und Ränder entfernen
