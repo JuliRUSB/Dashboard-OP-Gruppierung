@@ -911,8 +911,7 @@ for i, bereich in enumerate(BEREICHE):
                 # FILTER: Nur echte CRS-Fälle behalten, bei denen HIPEC und Clavien-Dindo ausgefüllt sind
                 df_plot_crs = df_bereich[
                     (df_bereich["type_sark"] == 'CRS') & 
-                    (df_bereich["hipec"].notna()) & (df_bereich["hipec"] != "") &
-                    (df_bereich["statistik_dindo_2"].notna()) & (df_bereich["statistik_dindo_2"] != "")
+                    (df_bereich["hipec"].notna())
                 ].copy()
                 total_crs = len(df_plot_crs)
         
