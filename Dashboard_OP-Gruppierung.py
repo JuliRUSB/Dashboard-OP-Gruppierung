@@ -2776,42 +2776,42 @@ for i, bereich in enumerate(BEREICHE):
 
        
 
-# ------------------- Export Button erstellen ---------------------
-def figures_to_html(figures: dict) -> bytes:
-    import plotly.io as pio
-    
-    titles = {
-        "kachel1": "Gesamtzahl Operationen - Onkologie/Sarkome",
-        "kachel2": "Übersicht Operationen"
-    }
-    
-    # 1. Breite im Body auf 100% setzen und Ränder entfernen
-    html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:100%; margin:0; padding:0;">"""
-    
-    for name, fig in figures.items():
-        # 2. Festen Breitenwert bei der Grafik entfernen
-        fig.update_layout(
-            height=500,
-            title=titles.get(name, ""),
-            margin=dict(l=60, r=40, t=60, b=60)
+        # ------------------- Export Button erstellen ---------------------
+        def figures_to_html(figures: dict) -> bytes:
+            import plotly.io as pio
+            
+            titles = {
+                "kachel1": "Gesamtzahl Operationen - Onkologie/Sarkome",
+                "kachel2": "Übersicht Operationen"
+            }
+            
+            # 1. Breite im Body auf 100% setzen und Ränder entfernen
+            html = """<html><body style="display:flex; flex-direction:column; align-items:center; width:100%; margin:0; padding:0;">"""
+            
+            for name, fig in figures.items():
+                # 2. Festen Breitenwert bei der Grafik entfernen
+                fig.update_layout(
+                    height=500,
+                    title=titles.get(name, ""),
+                    margin=dict(l=60, r=40, t=60, b=60)
+                )
+                # 3. Div auf volle Breite oder einen Prozentsatz setzen (z. B. 95%)
+                html += "<div style='width:95%; max-width:1000px; margin-bottom:40px;'>"
+                html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
+                html += "</div>"
+                fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=0, b=10))
+            
+            html += "</body></html>"
+            return html.encode('utf-8')
+        
+        #.get() verhindert den Absturz, falls das Objekt beim ersten Laden noch nicht existiert
+        st.download_button(
+            label=f"📄 Grafiken exportieren - {bereich}",
+            data=figures_to_html(
+                st.session_state.get("pdf_figures", {}).get(bereich, {})
+            ),
+            file_name="dashboard_export.html",
+            mime="text/html"
         )
-        # 3. Div auf volle Breite oder einen Prozentsatz setzen (z. B. 95%)
-        html += "<div style='width:95%; max-width:1000px; margin-bottom:40px;'>"
-        html += pio.to_html(fig, full_html=False, include_plotlyjs='cdn')
-        html += "</div>"
-        fig.update_layout(height=None, width=None, title=None, margin=dict(l=10, r=10, t=0, b=10))
-    
-    html += "</body></html>"
-    return html.encode('utf-8')
-
-#.get() verhindert den Absturz, falls das Objekt beim ersten Laden noch nicht existiert
-st.download_button(
-    label=f"📄 Grafiken exportieren - {bereich}",
-    data=figures_to_html(
-        st.session_state.get("pdf_figures", {}).get(bereich, {})
-    ),
-    file_name="dashboard_export.html",
-    mime="text/html"
-)
-
-
+        
+        
