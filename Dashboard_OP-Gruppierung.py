@@ -789,7 +789,6 @@ for i, bereich in enumerate(BEREICHE):
             with col2.container(border=True):
                 # df_plot = df_bereich[df_bereich["type_sark"].notna()].copy()
                 df_plot = df_bereich.copy()
-                df_plot["type_sark"] = pd.to_numeric(df_plot["type_sark"], errors="coerce")
                 total_crs_und_sark = len(df_plot)
         
                 st.metric(label="Übersicht Operationen", value=total_crs_und_sark)
