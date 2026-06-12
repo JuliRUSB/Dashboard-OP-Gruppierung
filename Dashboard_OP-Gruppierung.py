@@ -410,45 +410,32 @@ if 'slider_jahr_speicher' not in st.session_state:
 # =================================================================#
 with st.sidebar:
     st.header("Filter")
-    
-    # Jahr-Range-Slider
+
     min_jahr = int(df['jahr_opdatum'].dropna().min())
     max_jahr = int(df['jahr_opdatum'].dropna().max())
-    
+
     jahr_range = st.slider(
         "Zeitraum auswählen",
         min_value=min_jahr,
         max_value=max_jahr,
-        value=st.session_state['slider_jahr_speicher'], # Nutzt den Speicher statt den harten Reset
-        key="jahr_slider_widget"                        # Verhindert den Verlust der Instanz bei Code-Updates
+        value=(min_jahr, max_jahr),
+        key="jahr_slider_widget"
     )
 
-    # den aktuellen Wert im Speicher aktuell halten
-    # st.session_state['slider_jahr_speicher'] = jahr_range
-    
-    st.session_state.setdefault('selected_quartale', [1, 2, 3, 4])
-    st.session_state.setdefault('selected_jahre', list(range(df['jahr_opdatum'].min(), df['jahr_opdatum'].max() + 1)))
-
-    #st.write("Quartal(e) auswählen:")
-    quartal_labels = {1: "Q1", 2: "Q2", 3: "Q3", 4: "Q4"}
-    quartal_werte = [1, 2, 3, 4]
-
-    # Anzeige der aktuell gewählten Quartale
-    #st.write(", ".join([f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]))
-
-    # Spalten für die Buttons erstellen
-    cols = st.columns(4)
-
-    # 3. Pills-Widget
-    selected = st.pills(
-        label="Quartal(e) ab-/auswählen", # Label kann mit label_visibility="collapsed" versteckt werden
-        options=[1,2,3,4],
+    selected_quartale = st.pills(
+        label="Quartal(e) ab-/auswählen",
+        options=[1, 2, 3, 4],
         format_func=lambda x: f"Q{x}",
         selection_mode="multi",
-        default=st.session_state['selected_quartale'],
+        default=[1, 2, 3, 4],
         key="pills_selection"
     )
 
+    df_filtered = df[
+    (df["jahr_opdatum"] >= jahr_range[0]) &
+    (df["jahr_opdatum"] <= jahr_range[1]) &
+    (df["quartal"].isin(selected_quartale))
+    ]
     # 4. Update des Session States
     st.session_state['selected_quartale'] = selected
 
@@ -596,7 +583,8 @@ with col2:
 with col3:
     st.metric(
         "Zeitraum",
-        f"{len(selected_jahre)} Jahre, {len(selected_quartale)} Quartale"
+        f"{jahr_range[1] - jahr_range[0] + 1} Jahre, {len(selected_quartale)} Quartale"
+        #f"{len(selected_jahre)} Jahre, {len(selected_quartale)} Quartale"
     )
 
 st.divider()
