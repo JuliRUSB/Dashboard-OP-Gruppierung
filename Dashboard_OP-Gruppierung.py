@@ -1077,28 +1077,7 @@ for i, bereich in enumerate(BEREICHE):
                         st.session_state[f"expand_{bereich}_k6"] = True
                         st.rerun()
                 else:
-                    # ANPASSUNG: Absolutes CSS positioniert den Button in der Ecke
-                    st.markdown(
-                        """
-                        <style>
-                        /* Macht das Elternelement relativ für die Positionierung */
-                        div.k6-open-container 
-                        > div[data-testid="stVerticalBlockBorder"] {
-                            position: relative !important;
-                        }
-                        /* Platziert das Button-Element exakt oben rechts */
-                        div.k6-button-wrapper {
-                            position: absolute !important;
-                            top: 15px !important;
-                            right: 15px !important;
-                            z-index: 999 !important;
-                        }
-                        </style>
-                        <div class="k6-open-container">
-                        """,
-                        unsafe_allow_html=True,
-                    )
-                    with st.container(border=True):
+                   with st.container(border=True):
                         header_col1, header_col2 = st.columns([0.8, 0.2])
                         with header_col2:
                             if st.button(
