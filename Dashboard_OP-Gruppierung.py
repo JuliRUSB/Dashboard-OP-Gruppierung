@@ -913,7 +913,7 @@ for i, bereich in enumerate(BEREICHE):
                 total_crs = len(df_plot_crs)
         
                 # Filter auf die exakte Zahl 1, da Radio-Buttons immer als Ganzzahl kommen
-                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == 1].copy()
+                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == '1'].copy()
                 total_dindo = len(df_plot_dindo)
         
                 metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
