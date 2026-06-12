@@ -903,9 +903,7 @@ for i, bereich in enumerate(BEREICHE):
                 
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_{bereich}", config={"displayModeBar": False, "responsive": True})
                 else:
-                    st.info("Keine Daten für CRS")
-            else:
-                st.error("Spalten fehlen")       
+                    st.info("Keine Daten für CRS")       
         
         # ================== Kachel 4: "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
