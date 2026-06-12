@@ -1293,6 +1293,7 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 8: "Anastomoseinsuffizienz - CRS (Kolon und Rektum)" ================== 
         #DEBUGGING: um zu schauen, wie die Werte angezeigt werden
         #st.write("DEBUG - Werte in Spalte anastomosen_crs:", df_bereich["anastomosen_crs"].unique())
+        st.write("DEBUG 2026:", df_bereich[df_bereich["jahr_opdatum"] == 2026]["anastomosen_crs"].unique(), "Anzahl Fälle:", len(df_bereich[df_bereich["jahr_opdatum"] == 2026]))
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2:
                 # Zustand initialisieren
