@@ -908,10 +908,16 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 4: "Clavien-Dindo-Grad >= IIIa in % - HIPEC ja/nein bei CRS ==================
         if bereich == "Chirurgische Onkologie/Sarkome":
             with col2.container(border=True):
-                df_plot_crs = df_bereich[df_bereich["type_sark"] == 'CRS'].copy()
+                # FILTER: Nur echte CRS-Fälle behalten, bei denen HIPEC und Clavien-Dindo ausgefüllt sind
+                df_plot_crs = df_bereich[
+                    (df_bereich["type_sark"] == 'CRS') & 
+                    (df_bereich["hipec"].notna()) & (df_bereich["hipec"] != "") &
+                    (df_bereich["statistik_dindo_2"].notna()) & (df_bereich["statistik_dindo_2"] != "")
+                ].copy()
                 total_crs = len(df_plot_crs)
         
-                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == '1'].copy()
+                # Filter auf die exakte Zahl 1, da Radio-Buttons immer als Ganzzahl kommen
+                df_plot_dindo = df_plot_crs[df_plot_crs["statistik_dindo_2"] == 1].copy()
                 total_dindo = len(df_plot_dindo)
         
                 metrik_prozent = round(total_dindo / total_crs * 100, 1) if total_crs > 0 else 0
@@ -934,7 +940,8 @@ for i, bereich in enumerate(BEREICHE):
         
                     grp["prozent"] = (grp["count"] / grp["count_gesamt"] * 100).round(1)
         
-                    grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%")
+                    # Zeigt das Label nur an, wenn der Prozentwert grösser als 0 ist
+                    grp["text_label"] = grp["prozent"].apply(lambda x: f"{x}%" if x > 0 else "")
         
                     fig = px.bar(
                         grp,
@@ -950,14 +957,11 @@ for i, bereich in enumerate(BEREICHE):
                     fig.update_traces(
                         textposition='outside',
                         cliponaxis=False,
-                        insidetextanchor='middle',
                         textfont_size=16,
                         insidetextfont=dict(size=16),
                         outsidetextfont=dict(size=16),
                         marker_line_width=0
                     )
-        
-                    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
         
                     fig.update_layout(
                         height=400,
@@ -970,7 +974,7 @@ for i, bereich in enumerate(BEREICHE):
                         showlegend=True,
                         legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                         xaxis={"type": "category", "tickfont": {"size": 16}},
-                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range": [0, 100]}
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range":}
                     )
         
                     st.plotly_chart(fig, use_container_width=True, key=f"kachel_crs_hipec_claviendindo3_pct_{bereich}", config={"displayModeBar": False, "responsive": True})
