@@ -92,6 +92,7 @@ def export_redcap_data(api_url):
         'fields[19]': 'crs_details',
         'fields[20]': 'kpl_was',
         'fields[21]': 'kpl_was_surv',
+        'fields[22]': 'gruppen',            #kolorektal
         'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -168,7 +169,23 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['leber_gruppen'] = df.apply(get_leber_gruppen, axis=1)
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
-
+    
+    # Kolorektal: Spalten mit 'gruppen___' mappen
+    leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
+    if leber_gruppen_cols:
+        mapping = {
+            'gruppen___1': 'Rektum',
+            'gruppen___2': 'Kolonkarzinom',
+            'gruppen___3': 'Kolon nicht-onkologisch',
+            'gruppen___4': 'Rektopexie',
+            'gruppen___5': 'Rektum - watchful waiting',
+        }
+        # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
+        def get_kolorektal_gruppen(row):
+            return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
+        df['kolorektal_gruppen'] = df.apply(get_kolorektal_gruppen, axis=1)
+        df = df.drop(columns=kolorektal_gruppen_cols)  # Ursprüngliche Spalten löschen
+    
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
     if gruppen_chir_onko_sark_cols:
@@ -188,10 +205,10 @@ def prepare_data(df):
     malignit_t_sark_cols = [c for c in df.columns if c.startswith('malignit_t_sark___')]
     if malignit_t_sark_cols:
         mapping = {
-    'malignit_t_sark___1': 'maligne',
-    'malignit_t_sark___3': 'intermediate',
-    'malignit_t_sark___2': 'andere',
-    }
+            'malignit_t_sark___1': 'maligne',
+            'malignit_t_sark___3': 'intermediate',
+            'malignit_t_sark___2': 'andere',
+        }
     # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
         def get_malignit_t_sark(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
