@@ -432,15 +432,15 @@ st.title("Dashboard OP-Gruppierung")
 # Daten laden
 # ==================================================
 with st.spinner('Lade Daten...'):
-    # df_raw = export_redcap_data(API_URL)  # Daten aus REDCap exportieren
-    # df = prepare_data(df_raw)             # Daten aufbereiten
-    raw = export_redcap_data(API_URL)
+     df_raw = export_redcap_data(API_URL)  # Daten aus REDCap exportieren
+     df = prepare_data(df_raw)             # Daten aufbereiten
+    # raw = export_redcap_data(API_URL)
 
-    df_op = pd.DataFrame(raw.get("op_gruppen", []))
-    df_kol = pd.DataFrame(raw.get("kolorektal", []))
+    # df_op = pd.DataFrame(raw.get("op_gruppen", []))
+    # df_kol = pd.DataFrame(raw.get("kolorektal", []))
     
-    df_op = prepare_data(df_op)
-    df_kol = prepare_data(df_kol)
+    # df_op = prepare_data(df_op)
+    # df_kol = prepare_data(df_kol)
 
 # Fehlerbehandlung: keine Daten
 if df is None or df.empty:
