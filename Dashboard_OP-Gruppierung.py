@@ -617,14 +617,16 @@ with st.sidebar:
     
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
-selected_jahre = st.session_state.get('selected_jahre', [])
+# ÄNDERUNG 1: Da selected_jahre statisch im State eingefroren war, generieren wir die Liste 
+# jetzt dynamisch aus der aktuellen Slider-Position (jahr_range), damit die Filterung reagiert.
+start_jahr, end_jahr = jahr_range 
+selected_jahre = list(range(int(start_jahr), int(end_jahr) + 1))
+
 selected_quartale = st.session_state.get('selected_quartale', [])
 
 if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
     st.stop()
-
-start_jahr, end_jahr = jahr_range 
 
 # 1. Basis-Filterung nach Zeit für OP-Gruppen (Graphen UND Tabs)
 if not df_opgrupp.empty:
@@ -657,17 +659,18 @@ df_kolo_base = df_kolo[
 df_opgrupp_plots = df_opgrupp_base.copy()
 df_kolo_plots = df_kolo_base.copy()
 
-if 'bereich_filter' in locals() and bereich_filter != "Alle":
-    if 'bereich' in df_opgrupp_plots.columns:
-        df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['bereich'] == bereich_filter]
-    if 'bereich' in df_kolo_plots.columns:
-        df_kolo_plots = df_kolo_plots[df_kolo_plots['bereich'] == bereich_filter]
+# if 'bereich_filter' in locals() and bereich_filter != "Alle":
+#     if 'bereich' in df_opgrupp_plots.columns:
+#         df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['bereich'] == bereich_filter]
+#     if 'bereich' in df_kolo_plots.columns:
+#         df_kolo_plots = df_kolo_plots[df_kolo_plots['bereich'] == bereich_filter]
+# 
+# if 'zugang_filter' in locals() and zugang_filter != "Alle":
+#     if 'zugang' in df_opgrupp_plots.columns:
+#         df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['zugang'] == zugang_filter]
+#     if 'zugang' in df_kolo_plots.columns:
+#         df_kolo_plots = df_kolo_plots[df_kolo_plots['zugang'] == zugang_filter]
 
-if 'zugang_filter' in locals() and zugang_filter != "Alle":
-    if 'zugang' in df_opgrupp_plots.columns:
-        df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['zugang'] == zugang_filter]
-    if 'zugang' in df_kolo_plots.columns:
-        df_kolo_plots = df_kolo_plots[df_kolo_plots['zugang'] == zugang_filter]
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
