@@ -674,13 +674,15 @@ df_kolo_plots = df_kolo_base.copy()
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
+# -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
+
 st.header("Kennzahlen")
 
 # Erstellt zwei Tabs auf der Hauptseite, um die Daten strikt getrennt anzuzeigen
 tab_opgrupp, tab_kolo = st.tabs(["OP-Gruppen", "Kolorektal"])
 
 # =========================================================================
-# TAB 1: OP-GRUPPEN
+# TAB 1: OP-GRUPPEN (Alles hier drunter muss eingerückt sein!)
 # =========================================================================
 with tab_opgrupp:
     col1, col2, col3, col4 = st.columns(4)
@@ -695,7 +697,7 @@ with tab_opgrupp:
     with col3:
         st.metric(
             "Zeitraum",
-            f"{jahr_range[1] - jahr_range[0] + 1} Jahre, {len(selected_quartale)} Quartale"
+            f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
         )
 
     st.divider()
@@ -764,7 +766,6 @@ with tab_opgrupp:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
-            # Deine originalen Trennlinien
             for i in range(len(quartal_order) - 1):
                 curr_q = quartal_order[i].split("-")[0]
                 next_q = quartal_order[i + 1].split("-")[0]
@@ -775,7 +776,7 @@ with tab_opgrupp:
 
 
 # =========================================================================
-# TAB 2: KOLOREKTAL (STRIKT GETRENNT)
+# TAB 2: KOLOREKTAL (Muss auf derselben Ebene wie 'with tab_opgrupp:' stehen!)
 # =========================================================================
 with tab_kolo:
     col1, col2, col3, col4 = st.columns(4)
@@ -790,7 +791,7 @@ with tab_kolo:
     with col3:
         st.metric(
             "Zeitraum",
-            f"{jahr_range[1] - jahr_range[0] + 1} Jahre, {len(selected_quartale)} Quartale"
+            f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
         )
 
     st.divider()
@@ -859,7 +860,6 @@ with tab_kolo:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
-            # Deine originalen Trennlinien
             for i in range(len(quartal_order_kolo) - 1):
                 curr_q = quartal_order_kolo[i].split("-")[0]
                 next_q = quartal_order_kolo[i + 1].split("-")[0]
