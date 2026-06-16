@@ -438,8 +438,8 @@ if "pdf_bytes" not in st.session_state:
 # ==================================================
 # Streamlit App
 # ==================================================
-st.set_page_config(page_title="OP-Gruppierung Dashboard", layout="wide")  # Layout festlegen
-st.title("Dashboard OP-Gruppierung")
+st.set_page_config(page_title="Dashboard Kennzahlen", layout="wide")  # Layout festlegen
+st.title("Dashboard Kennzahlen")
 
 # ==================================================
 # Daten laden
@@ -699,7 +699,7 @@ with tab_opgrupp:
         )
 
     st.divider()
-    st.header("Fallzahlen alle Bereiche (OP-Gruppen)")
+    st.header("Fallzahlen OP-Gruppierung)")
 
     if df_opgrupp_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
@@ -804,7 +804,7 @@ with tab_kolo:
         )
 
     st.divider()
-    st.header("Fallzahlen alle Bereiche (Kolorektal)")
+    st.header("Fallzahlen Kolorektale Chirurgie)")
 
     if df_kolo_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
