@@ -785,8 +785,7 @@ with tab_kolo:
         st.metric("Gesamt Fälle", len(df_kolo_plots))
 
     with col_kolo2:
-        anzahl_bereiche_kolo = df_kolo_plots['bereich'].nunique() if 'bereich' in df_kolo_plots.columns else 0
-        st.metric("Bereiche", anzahl_bereiche_kolo)
+        st.metric("Bereiche", 1)
 
     with col_kolo3:
         # Zeitraum dynamisch aus den tatsächlichen Kolorektal-Daten berechnen
