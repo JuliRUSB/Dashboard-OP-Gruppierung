@@ -470,8 +470,8 @@ if df_opgrupp.empty and df_kolo.empty:
 # -------- Session State initialisieren --------
 # Alle Jahre und Quartale sammeln
 # Jahre für OP-Gruppen bestimmen (nur aus der OP-Gruppierung)
-if not df_opgrupp.empty and 'jahr_opdatum' in df_op.columns:
-    jahre_opgrupp = sorted(df_op['jahr_opdatum'].dropna().unique().tolist())
+if not df_opgrupp.empty and 'jahr_opdatum' in df_opgrupp.columns:
+    jahre_opgrupp = sorted(df_opgrupp['jahr_opdatum'].dropna().unique().tolist())
 else:
     jahre_opgrupp = []
 
