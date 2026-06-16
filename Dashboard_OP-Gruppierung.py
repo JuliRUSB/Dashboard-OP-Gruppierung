@@ -512,36 +512,54 @@ if 'slider_jahr_speicher' not in st.session_state:
 # =================================================================#
 # Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
 # =================================================================#
+# =================================================================#
+# Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
+# =================================================================#
 with st.sidebar:
     st.header("Filter")
 
-    min_jahr = int(df['jahr_opdatum'].dropna().min())
-    max_jahr = int(df['jahr_opdatum'].dropna().max())
+    # Grenzen aus der kombinierten Jahresliste ermitteln
+    min_jahr = int(alle_jahre_kombiniert[0])
+    max_jahr = int(alle_jahre_kombiniert[-1])
 
     jahr_range = st.slider(
         "Zeitraum auswählen",
         min_value=min_jahr,
         max_value=max_jahr,
-        value=(min_jahr, max_jahr),
+        value=st.session_state.get('slider_jahr_speicher', (min_jahr, max_jahr)),
         key="jahr_slider_widget"
     )
+    
+    # Zustand des Sliders im Session State merken
+    st.session_state['slider_jahr_speicher'] = jahr_range
 
     selected_quartale = st.pills(
         label="Quartal(e) ab-/auswählen",
         options=[1, 2, 3, 4],
         format_func=lambda x: f"Q{x}",
         selection_mode="multi",
-        default=st.session_state.get('selected_quartale', [1,2,3,4]),
+        default=st.session_state.get('selected_quartale', [1, 2, 3, 4]),
         key="pills_selection"
     )
-
-    df_filtered = df[
-        (df["opdatum"].dt.year >= jahr_range[0]) &
-        (df["opdatum"].dt.year <= jahr_range[1]) &
-        (df["quartal_opdatum"].isin(selected_quartale))
-    ]
-    # 4. Update des Session States
+    
+    # Update des Session States für Quartale
     st.session_state['selected_quartale'] = selected_quartale
+
+    # --- DATENSTRÖME STRIKT GETRENNT FILTERN ---
+    
+    # 1. OP-Gruppen filtern
+    df_opgrupp_filtered = df_opgrupp[
+        (df_opgrupp["jahr_opdatum"] >= jahr_range[0]) &
+        (df_opgrupp["jahr_opdatum"] <= jahr_range[1]) &
+        (df_opgrupp["quartal_opdatum"].isin(selected_quartale))
+    ]
+
+    # 2. Kolorektal filtern
+    df_kolo_filtered = df_kolo[
+        (df_kolo["jahr_opdatum"] >= jahr_range[0]) &
+        (df_kolo["jahr_opdatum"] <= jahr_range[1]) &
+        (df_kolo["quartal_opdatum"].isin(selected_quartale))
+    ]
 
     # Anzeige der aktuell gewählten Quartale
     if st.session_state['selected_quartale']:
@@ -549,6 +567,7 @@ with st.sidebar:
         # st.write(f"Aktuell gewählt: {', '.join(anzeige_liste)}")
     else:
         st.write("Kein Quartal ausgewählt.")
+
 
     # =================================================================#
     #                   AKTIVE FILTERUNG DER DATEN:                    #
