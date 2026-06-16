@@ -2115,83 +2115,6 @@ for i, bereich in enumerate(BEREICHE):
                         st.info("Keine Daten für Weichteiltumoren")
                 else:
                     st.error("Spalten fehlen") 
-        
-        # ================== Kachel 12 "Komplikationen ≥ IIIa - Weichteiltumoren" ==================
-        # with col1.container(border=True):
-            # if "Lokalisation (Sarkome/Weichteiltumoren)" in analysen:
-            # Check auf Spalten
-            # required_cols = {"jahr_opdatum", "lokalisation_sark", "statistik_dindo_2", "type_sark"}
-            # if required_cols.issubset(df_bereich.columns):
-                    
-                # Filter für Sarkom/Weichteiltumor ohne Knochen
-                # df_plot = df_bereich[(df_bereich["type_sark"] == "Sarkom/Weichteiltumor") & (df_bereich["gruppen_chir_onko_sark"] != "Knochen")].copy()
-                # total_weichteil = len(df_plot)
-
-                # Filter für Clavien-Dindo-Grad
-                # df_plot = df_plot[df_plot["statistik_dindo_2"] == '1'].copy()
-                # total_dindo = len(df_plot)   
-                    
-                # st.metric(label="Komplikationen ≥ IIIa - Weichteiltumoren", value=f"{total_dindo} von {total_weichteil}")
-                # st.divider()
-                # verkleinert den Raum oberhalb der Trennlinie
-                # st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-
-                # if total_dindo > 0:
-                    # Gruppierung nach Jahr, Lokalisation
-                    # grp = df_plot.groupby(
-                        # ["jahr_opdatum", "lokalisation_sark"],
-                        # as_index=False
-                    # ).size()
-                    # grp.columns = ["jahr_opdatum", "lokalisation_sark", "count"]
-
-                    # Sortierung sicherstellen (chronologisch)
-                    # grp = grp.sort_values("jahr_opdatum")
-                    # quartal_order = grp["jahr_opdatum"].unique().tolist()
-                       
-                    # fig = px.bar(
-                        # grp,
-                        # x="jahr_opdatum",
-                        # y="count",
-                        # color="lokalisation_sark",
-                        # barmode="stack",
-                        # text="count",
-                        # color_discrete_sequence=COLOR_PALETTE,
-                        # labels={"lokalisation_sark": "Lokalisation", "Dindo_Status": "Dindo-Grad"},
-                        # category_orders={"jahr_opdatum": quartal_order}
-                    # )
-               
-                    # fig.update_traces(
-                        # 1. Positionierung & Ausrichtung (wo und wie steht der Text?)
-                        #    textposition='auto',
-                        #   textangle=0,                # Erzwingt, dass die Zahlen immer stehen (nicht liegend)
-                        #  cliponaxis=False,           # Verhindert, dass Zahlen am oberen Rand abgeschnitten werden
-                        # insidetextanchor='middle',  # Zentriert die Zahl im Segment
-                        # 2. Schriftgrösse etc.
-                        # textfont_size=16, 
-                        #    insidetextfont=dict(size=16),
-                        #    outsidetextfont=dict(size=16),
-                            # 3. Visuelle Details des Balkens selbst
-                         #   marker_line_width=0         # keine Begrenzungslinie
-                    # )
-
-                    # fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-               
-                    # fig.update_layout(
-                        # bargap=0.1,  
-                        # margin=dict(l=10, r=10, t=30, b=10),
-                        # xaxis_title=None,
-                        # yaxis_title=None,
-                        # showlegend=True,
-                        # legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                        # xaxis={"type": "category", "tickfont": {"size": 16}},
-                        # yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
-                    # )
-               
-                    # st.plotly_chart(fig, use_container_width=True, key=f"kachel12_{bereich}", config={"displayModeBar": False, "responsive": True})
-                # else:
-                        # st.info("Keine Daten für Sarkom/Weichteiltumor")
-            # else:
-                # st.error("Spalten fehlen")
 
         # ================== Kachel 13: "Aufteilung Komplikationen - Weichteiltumoren" ==================
         #if bereich == "Chirurgische Onkologie/Sarkome":
@@ -2395,6 +2318,7 @@ for i, bereich in enumerate(BEREICHE):
             col1, col2 = st.columns(2)
 
         # ========================= ANFANG BEREICH LEBERCHIRURGIE ========================= 
+            
         # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         # ================== Kachel 1 "Leber HSM" % und absolute Zahlen ==================
         #if bereich == "Leber":
@@ -2878,8 +2802,15 @@ for i, bereich in enumerate(BEREICHE):
  # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
             
 # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
-    
+        
+        # ================== ENDE BEREICH LEBER ================== 
 
+        # ================== ANFANG BEREICH KOLOREKTALE CHIRURGIE ================== 
+        
+            if bereich == "Kolorektale Chirurgie":
+                col1, col2 = st.columns(2)
+
+        # ================== ENDE BEREICH KOLOREKTALE CHIRURGIE ================== 
         
 
         
