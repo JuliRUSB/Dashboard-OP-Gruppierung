@@ -470,10 +470,10 @@ if df_op.empty and df_kolo.empty:
 # -------- Session State initialisieren --------
 # Alle Jahre und Quartale sammeln
 # Jahre für OP-Gruppen bestimmen (nur aus der OP-Gruppierung)
-if not df_op.empty and 'jahr_opdatum' in df_op.columns:
-    jahre_op = sorted(df_op['jahr_opdatum'].dropna().unique().tolist())
+if not df_opgrupp.empty and 'jahr_opdatum' in df_op.columns:
+    jahre_opgrupp = sorted(df_op['jahr_opdatum'].dropna().unique().tolist())
 else:
-    jahre_op = []
+    jahre_opgrupp = []
 
 # Jahre für Kolorektal bestimmen (nur aus der Kolorektal-DB)
 if not df_kolo.empty and 'jahr_opdatum' in df_kolo.columns:
@@ -481,7 +481,34 @@ if not df_kolo.empty and 'jahr_opdatum' in df_kolo.columns:
 else:
     jahre_kolo = []
 
+# ==================================================
 # Session State verwenden, damit Auswahl zwischen Reloads erhalten bleibt
+# ==================================================
+
+# --- 1. Session State für OP-Gruppen ---
+if not jahre_opgrupp:
+    st.error("Keine Jahresdaten für OP-Gruppen verfügbar.")
+    st.stop()
+
+if 'selected_jahre_opgrupp' not in st.session_state:
+    st.session_state.selected_jahre_op = jahre_opgrupp
+if 'selected_quartale_opgrupp' not in st.session_state:
+    st.session_state['selected_quartale_opgrupp'] = [1, 2, 3, 4]
+if 'slider_jahr_speicher_opgrupp' not in st.session_state:
+    st.session_state['slider_jahr_speicher_opgrupp'] = (jahre_opgrupp[0], jahre_opgrupp[-1])
+
+
+# --- 2. Session State für Kolorektal ---
+if not jahre_kolo:
+    st.error("Keine Jahresdaten für Kolorektal verfügbar.")
+    st.stop()
+
+if 'selected_jahre_kolo' not in st.session_state:
+    st.session_state.selected_jahre_kolo = jahre_kolo
+if 'selected_quartale_kolo' not in st.session_state:
+    st.session_state['selected_quartale_kolo'] = [1, 2, 3, 4]
+if 'slider_jahr_speicher_kolo' not in st.session_state:
+    st.session_state['slider_jahr_speicher_kolo'] = (jahre_kolo[0], jahre_kolo[-1])
 if 'selected_jahre' not in st.session_state:
     st.session_state.selected_jahre = alle_jahre
 if 'selected_quartale' not in st.session_state:
