@@ -804,7 +804,7 @@ with tab_kolo:
         )
 
     st.divider()
-    st.header("Fallzahlen Kolorektale Chirurgie)")
+    st.header("Fallzahlen Kolorektale Chirurgie")
 
     if df_kolo_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
