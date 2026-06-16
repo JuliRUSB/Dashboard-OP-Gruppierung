@@ -451,7 +451,7 @@ with st.spinner('Lade Daten...'):
     # 2. OP-Gruppen separat verarbeiten
     if raw_dict.get("op_gruppen"):
         df_raw_opgrupp = pd.DataFrame(raw_dict["op_gruppen"])
-        df_opgrupp = prepare_data(df_raw_op)
+        df_opgrupp = prepare_data(df_raw_opgrupp)
     else:
         df_opgrupp = pd.DataFrame() # Leerer DataFrame als Fallback
     
