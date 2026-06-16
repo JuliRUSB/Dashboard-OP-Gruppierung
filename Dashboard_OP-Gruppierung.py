@@ -624,6 +624,8 @@ if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
     st.stop()
 
+start_jahr, end_jahr = jahr_range 
+
 # 1. Basis-Filterung nach Zeit für OP-Gruppen (Graphen UND Tabs)
 if not df_opgrupp.empty:
     df_opgrupp['jahr_opdatum'] = df_opgrupp['jahr_opdatum'].astype(int)
