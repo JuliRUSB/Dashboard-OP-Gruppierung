@@ -450,10 +450,10 @@ with st.spinner('Lade Daten...'):
     
     # 2. OP-Gruppen separat verarbeiten
     if raw_dict.get("op_gruppen"):
-        df_raw_op = pd.DataFrame(raw_dict["op_gruppen"])
-        df_op = prepare_data(df_raw_op)
+        df_raw_opgrupp = pd.DataFrame(raw_dict["op_gruppen"])
+        df_opgrupp = prepare_data(df_raw_op)
     else:
-        df_op = pd.DataFrame() # Leerer DataFrame als Fallback
+        df_opgrupp = pd.DataFrame() # Leerer DataFrame als Fallback
     
     # 3. Kolorektal separat verarbeiten
     if raw_dict.get("kolorektal"):
