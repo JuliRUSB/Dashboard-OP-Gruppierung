@@ -683,7 +683,7 @@ with tab_opgrupp:
         st.metric("Bereiche", anzahl_bereiche)
 
      with col_op3:
-        Zeitraum dynamisch aus den tatsächlichen OP-Gruppen-Daten berechnen
+        # Zeitraum dynamisch aus den tatsächlichen OP-Gruppen-Daten berechnen
         if not df_opgrupp_plots.empty and 'jahr_opdatum' in df_opgrupp_plots.columns:
             opgrupp_min_j = int(df_opgrupp_plots['jahr_opdatum'].min())
             opgrupp_max_j = int(df_opgrupp_plots['jahr_opdatum'].max())
