@@ -438,8 +438,8 @@ if "pdf_bytes" not in st.session_state:
 # ==================================================
 # Streamlit App
 # ==================================================
-st.set_page_config(page_title="Dashboard Kennzahlen", layout="wide")  # Layout festlegen
-st.title("Dashboard Kennzahlen")
+# st.set_page_config(page_title="Dashboard Kennzahlen", layout="wide")  # Layout festlegen
+# st.title("Dashboard Kennzahlen")
 
 # ==================================================
 # Daten laden
@@ -664,7 +664,7 @@ df_kolo_plots = df_kolo_base.copy()
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
-st.header("Kennzahlen")
+st.header("Dashboard Kennzahlen")
 
 # Erstellt zwei Tabs auf der Hauptseite, um die Daten strikt getrennt anzuzeigen
 tab_opgrupp, tab_kolo = st.tabs(["OP-Gruppierung", "Kolorektale Chirurgie"])
