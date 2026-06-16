@@ -57,38 +57,36 @@ def get_color_map(items):
 # Datenexport aus REDCap
 # ==================================================
 @st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
-
 def export_redcap_data(api_url):
-     projects = [
-         {"name": "op_gruppen", "token_var": "tok_op_gruppen"},
-         {"name": "kolorektal", "token_var": "tok_kolorektal"}
-     ]
+    projects = [
+        {"name": "op_gruppen", "token_var": "tok_op_gruppen"},
+        {"name": "kolorektal", "token_var": "tok_kolorektal"}
+    ]
 
-     data = {}
+    data = {}
 
-     for project in projects:
+    for project in projects:
+        token = os.getenv(project["token_var"])
 
-         token = os.getenv(project["token_var"])
+        if not token:
+            st.warning(f"Token '{project['token_var']}' fehlt")
+            continue
 
-         if not token:
-             st.warning(f"Token '{project['token_var']}' fehlt")
-             continue
+        payload = {
+            "token": token,
+            "content": "record",
+            "format": "json",
+            "type": "flat"
+        }
 
-         payload = {
-             "token": token,
-             "content": "record",
-             "format": "json",
-             "type": "flat"
-         }
+        try:
+            r = requests.post(api_url, data=payload, timeout=30)
+            r.raise_for_status()
+            data[project["name"]] = r.json()
+        except Exception as e:
+            st.error(f"{project['name']} fehlgeschlagen: {e}")
 
-         try:
-             r = requests.post(api_url, data=payload, timeout=30)
-             r.raise_for_status()
-             data[project["name"]] = r.json()
-         except Exception as e:
-             st.error(f"{project['name']} fehlgeschlagen: {e}")
-
-     return data
+    return data
 
 #def export_redcap_data(api_url):
     #"""Exportiert Daten aus REDCap mit Caching"""
