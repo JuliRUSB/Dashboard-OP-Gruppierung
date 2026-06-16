@@ -341,8 +341,9 @@ def prepare_data(df):
         1: 'Ja',
         0: 'Nein'
     }
-    df['hipec'] = pd.to_numeric(df['hipec'], errors='coerce')
-    df['hipec'] = df['hipec'].map(hipec_mapping).fillna('Unbekannt')
+    if 'hipec' in df.columns:
+        df['hipec'] = pd.to_numeric(df['hipec'], errors='coerce')
+        df['hipec'] = df['hipec'].map(hipec_mapping).fillna('Unbekannt')
 
     # Bereich: Spalten mit 'lokalisation_sark___' mappen
     lokalisation_sark_cols = [c for c in df.columns if c.startswith('lokalisation_sark___')]
@@ -377,8 +378,9 @@ def prepare_data(df):
         12: 'Grade IVb d',
         13: 'Grade V'
     }
-    df['max_dindo_calc'] = pd.to_numeric(df['max_dindo_calc'], errors='coerce')
-    df['max_dindo_calc'] = df['max_dindo_calc'].map(max_dindo_calc_mapping).fillna('Unbekannt')
+    if 'max_dindo_calc' in df.columns:
+        df['max_dindo_calc'] = pd.to_numeric(df['max_dindo_calc'], errors='coerce')
+        df['max_dindo_calc'] = df['max_dindo_calc'].map(max_dindo_calc_mapping).fillna('Unbekannt')
 
     # max_dindo_calc_surv: numerische Codes in Text umwandeln
     max_dindo_calc_surv_mapping = {
@@ -397,8 +399,9 @@ def prepare_data(df):
         12: 'Grade IVb d',
         13: 'Grade V'
     }
-    df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
-    df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
+    if 'max_dindo_calc_surv' in df.columns:
+        df['max_dindo_calc_surv'] = pd.to_numeric(df['max_dindo_calc_surv'], errors='coerce')
+        df['max_dindo_calc_surv'] = df['max_dindo_calc_surv'].map(max_dindo_calc_surv_mapping).fillna('Unbekannt')
    
     # Numerische Felder für Analyse erstellen
     df['jahr_opdatum'] = df['opdatum'].dt.year.astype('Int64')  # Jahr extrahieren
