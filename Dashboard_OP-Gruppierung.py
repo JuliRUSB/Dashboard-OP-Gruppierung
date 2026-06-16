@@ -2810,6 +2810,56 @@ for i, bereich in enumerate(BEREICHE):
             if bereich == "Kolorektale Chirurgie":
                 col1, col2 = st.columns(2)
 
+        # ================== Kachel 1 "Rektum  HSM" % und absolute Zahlen ==================
+            with col1.container(border=True):
+                pattern = "HCC|CCC|Metastasen|Benigne"
+                df_kolo_hsm = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                df_hsm = df_kolol_hsm[df_kolo_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
+                total_hsm = len(df_hsm)
+
+                st.metric(label="Kolorektale Chirurgie (Rektum) - HSM", value=total_hsm)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+
+                if total_hsm > 0:
+                    kolor_hsm_jahr = df_hsm.groupby(['jahr_opdatum', 'hsm']).size().reset_index(name='count')
+                    kolo_hsm_jahr['pct'] = kolo_hsm_jahr.groupby('jahr_opdatum')['count'].transform(lambda x: (x / x.sum()) * 100)
+                    
+                    # Einfacher Text: Anzahl (Prozent%)
+                    kolo_hsm_jahr['text_label'] = leber_hsm_jahr.apply(lambda r: f"{r['count']}<br>({r['pct']:.1f}%)", axis=1)
+                    
+                    fig_kolo_hsm = px.bar(
+                        kolo_hsm_jahr,
+                        x='jahr_opdatum',
+                        y='count',            
+                        color='hsm',
+                        barmode='group',
+                        text='text_label',  
+                        color_discrete_sequence=COLOR_PALETTE,
+                        labels={'hsm': 'HSM'} 
+                    )
+                        
+                    fig_kolo_hsm.update_traces(
+                        textposition='auto', 
+                        textfont_size=16,       
+                        textangle=0,            
+                        cliponaxis=False,       # Verhindert Abschneiden am oberen Rand
+                        marker_line_width=0
+                    )
+                        
+                    fig_kolo_hsm.update_layout(
+                        height=400,
+                        margin=dict(l=10, r=10, t=30, b=10), # Platz für die Beschriftung oben
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}},
+                        legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99)
+                    )
+                        
+                    st.plotly_chart(fig_kolo_hsm, use_container_width=True, key=f"kachel_kolo_hsm_{bereich}", config={"displayModeBar": False})
+                else:
+                    st.info("Keine auswertbaren HSM-Daten für die kolorektale Chirurgie vorhanden.")
+
         # ================== ENDE BEREICH KOLOREKTALE CHIRURGIE ================== 
         
 
