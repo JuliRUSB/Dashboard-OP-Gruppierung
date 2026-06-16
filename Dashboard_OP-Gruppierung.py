@@ -667,7 +667,7 @@ df_kolo_plots = df_kolo_base.copy()
 st.header("Kennzahlen")
 
 # Erstellt zwei Tabs auf der Hauptseite, um die Daten strikt getrennt anzuzeigen
-tab_opgrupp, tab_kolo = st.tabs(["OP-Gruppen", "Kolorektal"])
+tab_opgrupp, tab_kolo = st.tabs(["OP-Gruppierung", "Kolorektale Chirurgie"])
 
 # =========================================================================
 # TAB 1: OP-GRUPPEN
@@ -699,7 +699,7 @@ with tab_opgrupp:
         )
 
     st.divider()
-    st.header("Fallzahlen OP-Gruppierung)")
+    st.header("Fallzahlen OP-Gruppierung")
 
     if df_opgrupp_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
@@ -723,7 +723,7 @@ with tab_opgrupp:
                 text='count',
                 color='jahr_str',
                 color_discrete_sequence=COLOR_PALETTE,
-                title="Fallzahlen pro Jahr"
+                title=None
             )
             fig_jahr.update_traces(textposition='inside', textfont_size=16)
             fig_jahr.update_layout(
@@ -732,7 +732,7 @@ with tab_opgrupp:
             )
             st.plotly_chart(fig_jahr, use_container_width=True)
 
-                # -------------------- Quartals-Chart OP-Gruppen --------------------
+        # -------------------- Quartals-Chart OP-Gruppen --------------------
         with col_chart_op2:
             q_counts = (
                 df_opgrupp_plots
@@ -758,7 +758,7 @@ with tab_opgrupp:
                 color=q_counts["quartal_opdatum"].astype(str),  # KORREKTUR: Färbt nach Quartal, nicht nach Jahr
                 color_discrete_sequence=COLOR_PALETTE,
                 category_orders={"quartal_label": quartal_order},
-                title="Fallzahlen pro Quartal"
+                title=None
             )
             fig_quartal.update_traces(textfont_size=16, textposition="auto", textangle=0)
             fig_quartal.update_layout(
@@ -828,7 +828,7 @@ with tab_kolo:
                 text='count',
                 color='jahr_str',
                 color_discrete_sequence=COLOR_PALETTE,
-                title="Fallzahlen pro Jahr"
+                title=None
             )
             fig_jahr_kolo.update_traces(textposition='inside', textfont_size=16)
             fig_jahr_kolo.update_layout(
@@ -837,7 +837,7 @@ with tab_kolo:
             )
             st.plotly_chart(fig_jahr_kolo, use_container_width=True)
 
-                # -------------------- Quartals-Chart Kolorektal --------------------
+        # -------------------- Quartals-Chart Kolorektal --------------------
         with col_chart_kolo2:
             q_counts_kolo = (
                 df_kolo_plots
@@ -863,7 +863,7 @@ with tab_kolo:
                 color=q_counts_kolo["quartal_opdatum"].astype(str),  # KORREKTUR: Färbt nach Quartal, nicht nach Jahr
                 color_discrete_sequence=COLOR_PALETTE,
                 category_orders={"quartal_label": quartal_order_kolo},
-                title="Fallzahlen pro Quartal"
+                title=None
             )
             fig_quartal_kolo.update_traces(textfont_size=16, textposition="auto", textangle=0)
             fig_quartal_kolo.update_layout(
