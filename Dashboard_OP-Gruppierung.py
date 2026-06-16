@@ -508,10 +508,6 @@ if 'slider_jahr_speicher' not in st.session_state:
     st.session_state['slider_jahr_speicher'] = (alle_jahre_kombiniert[0], alle_jahre_kombiniert[-1])
 
 
-
-# =================================================================#
-# Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
-# =================================================================#
 # =================================================================#
 # Sidebar: Jahr-Range-Slider + Quartal-Buttons + Bereich & Zugang  #
 # =================================================================#
@@ -570,12 +566,6 @@ with st.sidebar:
 
 
     # =================================================================#
-    #                   AKTIVE FILTERUNG DER DATEN:                    #
-    #          damit beim updaten der App die Grafiken nur die         #
-    #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
-    # =================================================================#
-
-        # =================================================================#
     #                   AKTIVE FILTERUNG DER DATEN:                    #
     #          damit beim updaten der App die Grafiken nur die         #
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
@@ -692,10 +682,20 @@ with tab_opgrupp:
         anzahl_bereiche = df_opgrupp_plots['bereich'].nunique() if 'bereich' in df_opgrupp_plots.columns else 0
         st.metric("Bereiche", anzahl_bereiche)
 
-    with col_op3:
+     with col_op3:
+        Zeitraum dynamisch aus den tatsächlichen OP-Gruppen-Daten berechnen
+        if not df_opgrupp_plots.empty and 'jahr_opdatum' in df_opgrupp_plots.columns:
+            opgrupp_min_j = int(df_opgrupp_plots['jahr_opdatum'].min())
+            opgrupp_max_j = int(df_opgrupp_plots['jahr_opdatum'].max())
+            opgrupp_jahre_anzahl = opgrupp_max_j - opgrupp_min_j + 1
+            opgrupp_quartale_anzahl = df_opgrupp_plots['quartal_opdatum'].nunique()
+        else:
+            opgrupp_jahre_anzahl = 0
+            opgrupp_quartale_anzahl = 0
+
         st.metric(
             "Zeitraum",
-            f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
+            f"{opgrupp_jahre_anzahl} Jahre, {opgrupp_quartale_anzahl} Quartale"
         )
 
     st.divider()
@@ -789,9 +789,19 @@ with tab_kolo:
         st.metric("Bereiche", anzahl_bereiche_kolo)
 
     with col_kolo3:
+        # Zeitraum dynamisch aus den tatsächlichen Kolorektal-Daten berechnen
+        if not df_kolo_plots.empty and 'jahr_opdatum' in df_kolo_plots.columns:
+            kolo_min_j = int(df_kolo_plots['jahr_opdatum'].min())
+            kolo_max_j = int(df_kolo_plots['jahr_opdatum'].max())
+            kolo_jahre_anzahl = kolo_max_j - kolo_min_j + 1
+            kolo_quartale_anzahl = df_kolo_plots['quartal_opdatum'].nunique()
+        else:
+            kolo_jahre_anzahl = 0
+            kolo_quartale_anzahl = 0
+
         st.metric(
             "Zeitraum",
-            f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
+            f"{kolo_jahre_anzahl} Jahre, {kolo_quartale_anzahl} Quartale"
         )
 
     st.divider()
