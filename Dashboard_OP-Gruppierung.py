@@ -485,37 +485,28 @@ else:
 # Session State verwenden, damit Auswahl zwischen Reloads erhalten bleibt
 # ==================================================
 
-# --- 1. Session State für OP-Gruppen ---
-if not jahre_opgrupp:
-    st.error("Keine Jahresdaten für OP-Gruppen verfügbar.")
+# 1. Alle verfügbaren Jahre für die Slider-Grenzen ermitteln
+alle_jahre_kombiniert = sorted(list(set(jahre_opgrupp + jahre_kolo)))
+
+if not alle_jahre_kombiniert:
+    st.error("Keine Jahresdaten in beiden Datenbanken verfügbar.")
     st.stop()
 
-if 'selected_jahre_opgrupp' not in st.session_state:
-    st.session_state.selected_jahre_op = jahre_opgrupp
-if 'selected_quartale_opgrupp' not in st.session_state:
-    st.session_state['selected_quartale_opgrupp'] = [1, 2, 3, 4]
-if 'slider_jahr_speicher_opgrupp' not in st.session_state:
-    st.session_state['slider_jahr_speicher_opgrupp'] = (jahre_opgrupp[0], jahre_opgrupp[-1])
-
-
-# --- 2. Session State für Kolorektal ---
-if not jahre_kolo:
-    st.error("Keine Jahresdaten für Kolorektal verfügbar.")
-    st.stop()
-
-if 'selected_jahre_kolo' not in st.session_state:
-    st.session_state.selected_jahre_kolo = jahre_kolo
-if 'selected_quartale_kolo' not in st.session_state:
-    st.session_state['selected_quartale_kolo'] = [1, 2, 3, 4]
-if 'slider_jahr_speicher_kolo' not in st.session_state:
-    st.session_state['slider_jahr_speicher_kolo'] = (jahre_kolo[0], jahre_kolo[-1])
+# 2. Zentralen Session State für die Steuerung initialisieren
 if 'selected_jahre' not in st.session_state:
-    st.session_state.selected_jahre = alle_jahre
+    st.session_state.selected_jahre = alle_jahre_kombiniert
+
 if 'selected_quartale' not in st.session_state:
     st.session_state['selected_quartale'] = [1, 2, 3, 4]
+
+if 'slider_jahr_speicher' not in st.session_state:
+    # Setzt den Slider standardmäßig auf das kleinste und größte Jahr aller Daten
+    st.session_state['slider_jahr_speicher'] = (alle_jahre_kombiniert[0], alle_jahre_kombiniert[-1])
+
 # Das Standard-Filter-Tupel einmalig beim allerersten Start merken
 if 'slider_jahr_speicher' not in st.session_state:
-    st.session_state['slider_jahr_speicher'] = (alle_jahre[0], alle_jahre[-1])
+    st.session_state['slider_jahr_speicher'] = (alle_jahre_kombiniert[0], alle_jahre_kombiniert[-1])
+
 
 
 # =================================================================#
