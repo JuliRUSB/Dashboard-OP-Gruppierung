@@ -543,20 +543,6 @@ with st.sidebar:
 
     # --- DATENSTRÖME STRIKT GETRENNT FILTERN ---
     
-    # 1. OP-Gruppen filtern
-    df_opgrupp_filtered = df_opgrupp[
-        (df_opgrupp["jahr_opdatum"] >= jahr_range[0]) &
-        (df_opgrupp["jahr_opdatum"] <= jahr_range[1]) &
-        (df_opgrupp["quartal_opdatum"].isin(selected_quartale))
-    ]
-
-    # 2. Kolorektal filtern
-    df_kolo_filtered = df_kolo[
-        (df_kolo["jahr_opdatum"] >= jahr_range[0]) &
-        (df_kolo["jahr_opdatum"] <= jahr_range[1]) &
-        (df_kolo["quartal_opdatum"].isin(selected_quartale))
-    ]
-
     # Anzeige der aktuell gewählten Quartale
     if st.session_state['selected_quartale']:
         anzeige_liste = [f"Q{q}" for q in sorted(st.session_state['selected_quartale'])]
