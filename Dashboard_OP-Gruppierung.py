@@ -469,8 +469,17 @@ if df_op.empty and df_kolo.empty:
 
 # -------- Session State initialisieren --------
 # Alle Jahre und Quartale sammeln
-alle_jahre = sorted(df['jahr_opdatum'].dropna().unique().tolist())
-alle_quartale = sorted(df['quartal_opdatum'].dropna().unique().tolist())
+# Jahre für OP-Gruppen bestimmen (nur aus der OP-Gruppierung)
+if not df_op.empty and 'jahr_opdatum' in df_op.columns:
+    jahre_op = sorted(df_op['jahr_opdatum'].dropna().unique().tolist())
+else:
+    jahre_op = []
+
+# Jahre für Kolorektal bestimmen (nur aus der Kolorektal-DB)
+if not df_kolo.empty and 'jahr_opdatum' in df_kolo.columns:
+    jahre_kolo = sorted(df_kolo['jahr_opdatum'].dropna().unique().tolist())
+else:
+    jahre_kolo = []
 
 # Session State verwenden, damit Auswahl zwischen Reloads erhalten bleibt
 if 'selected_jahre' not in st.session_state:
