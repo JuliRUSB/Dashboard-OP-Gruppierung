@@ -767,10 +767,11 @@ with tab_opgrupp:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
+            # Trennlinie wird nur gezeichnet, wenn das JAHR springt (Index 1 nach dem Bindestrich)
             for i in range(len(quartal_order) - 1):
-                curr_q = quartal_order[i].split("-")
-                next_q = quartal_order[i + 1].split("-")
-                if curr_q != next_q:
+                curr_year = quartal_order[i].split("-")[1]
+                next_year = quartal_order[i + 1].split("-")[1]
+                if curr_year != next_year:
                     fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
             st.plotly_chart(fig_quartal, use_container_width=True, config={"displayModeBar": False, "responsive": True})
