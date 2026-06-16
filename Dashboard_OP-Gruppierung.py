@@ -732,7 +732,7 @@ with tab_opgrupp:
             )
             st.plotly_chart(fig_jahr, use_container_width=True)
 
-        # -------------------- Quartals-Chart OP-Gruppen --------------------
+                # -------------------- Quartals-Chart OP-Gruppen --------------------
         with col_chart_op2:
             q_counts = (
                 df_opgrupp_plots
@@ -741,7 +741,7 @@ with tab_opgrupp:
             )
             q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
-            # Chronologische Sortierung (nach Jahr, dann nach Quartal)
+            # Chronologische Sortierung beibehalten
             q_counts = q_counts.sort_values(["jahr_opdatum", "quartal_opdatum"]).reset_index(drop=True)
 
             q_counts["quartal_label"] = (
@@ -755,7 +755,7 @@ with tab_opgrupp:
                 x="quartal_label",
                 y="count",
                 text="count",
-                color=q_counts["jahr_opdatum"].astype(str),
+                color=q_counts["quartal_opdatum"].astype(str),  # KORREKTUR: Färbt nach Quartal, nicht nach Jahr
                 color_discrete_sequence=COLOR_PALETTE,
                 category_orders={"quartal_label": quartal_order},
                 title="Fallzahlen pro Quartal"
@@ -766,7 +766,7 @@ with tab_opgrupp:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
-            # Korrekte Jahres-Trennlinie (zieht den Strich nur beim Wechsel der Jahreszahl im Label)
+            # Jahres-Trennlinie
             for i in range(len(quartal_order) - 1):
                 curr_year = quartal_order[i].split("-")[1]
                 next_year = quartal_order[i + 1].split("-")[1]
@@ -774,7 +774,6 @@ with tab_opgrupp:
                     fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
             st.plotly_chart(fig_quartal, use_container_width=True, config={"displayModeBar": False, "responsive": True})
-
 
 # =========================================================================
 # TAB 2: KOLOREKTAL
@@ -829,7 +828,7 @@ with tab_kolo:
             )
             st.plotly_chart(fig_jahr_kolo, use_container_width=True)
 
-        # -------------------- Quartals-Chart Kolorektal --------------------
+                # -------------------- Quartals-Chart Kolorektal --------------------
         with col_chart_kolo2:
             q_counts_kolo = (
                 df_kolo_plots
@@ -838,7 +837,7 @@ with tab_kolo:
             )
             q_counts_kolo.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
-            # Chronologische Sortierung (nach Jahr, dann nach Quartal)
+            # Chronologische Sortierung beibehalten
             q_counts_kolo = q_counts_kolo.sort_values(["jahr_opdatum", "quartal_opdatum"]).reset_index(drop=True)
 
             q_counts_kolo["quartal_label"] = (
@@ -852,7 +851,7 @@ with tab_kolo:
                 x="quartal_label",
                 y="count",
                 text="count",
-                color=q_counts_kolo["jahr_opdatum"].astype(str),
+                color=q_counts_kolo["quartal_opdatum"].astype(str),  # KORREKTUR: Färbt nach Quartal, nicht nach Jahr
                 color_discrete_sequence=COLOR_PALETTE,
                 category_orders={"quartal_label": quartal_order_kolo},
                 title="Fallzahlen pro Quartal"
@@ -863,7 +862,7 @@ with tab_kolo:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
-            # Korrekte Jahres-Trennlinie (zieht den Strich nur beim Wechsel der Jahreszahl im Label)
+            # Jahres-Trennlinie
             for i in range(len(quartal_order_kolo) - 1):
                 curr_year = quartal_order_kolo[i].split("-")[1]
                 next_year = quartal_order_kolo[i + 1].split("-")[1]
