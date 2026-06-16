@@ -124,7 +124,7 @@ def export_redcap_data(api_url):
         'fields[19]': 'crs_details',
         'fields[20]': 'kpl_was',
         'fields[21]': 'kpl_was_surv',
-        'fields[22]': 'gruppen',            #kolorektal
+        #'fields[22]': 'gruppen',            #kolorektal
         'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
