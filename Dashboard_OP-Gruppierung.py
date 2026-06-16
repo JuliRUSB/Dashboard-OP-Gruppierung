@@ -431,7 +431,7 @@ st.title("Dashboard OP-Gruppierung")
 # ==================================================
 with st.spinner('Lade Daten...'):
      # 1. Daten von der API abrufen
-    raw_dict = export_redcap_data(api_url)
+    raw_dict = export_redcap_data(API_URL)
     
     # 2. OP-Gruppen separat verarbeiten
     if raw_dict.get("op_gruppen"):
