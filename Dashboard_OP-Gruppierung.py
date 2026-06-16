@@ -893,7 +893,8 @@ bereich_tabs = st.tabs(BEREICHE)
 # 3. Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
 for i, bereich in enumerate(BEREICHE):
     with bereich_tabs[i]:
-        df_bereich = df_base[df_base["bereich"] == bereich]
+        # LÖSUNG: Direkt auf die korrekte, gefilterte OP-Gruppen-Tabelle zugreifen
+        df_bereich = df_opgrupp_base[df_opgrupp_base["bereich"] == bereich]
         
         if df_bereich.empty:
             st.warning("Keine Daten für diesen Bereich")
