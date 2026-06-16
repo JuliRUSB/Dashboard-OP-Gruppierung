@@ -430,18 +430,25 @@ st.title("Dashboard OP-Gruppierung")
 # Daten laden
 # ==================================================
 with st.spinner('Lade Daten...'):
-     df_raw = export_redcap_data(API_URL)  # Daten aus REDCap exportieren
-     df = prepare_data(df_raw)             # Daten aufbereiten
-    # raw = export_redcap_data(API_URL)
-
-    # df_op = pd.DataFrame(raw.get("op_gruppen", []))
-    # df_kol = pd.DataFrame(raw.get("kolorektal", []))
+     # 1. Daten von der API abrufen
+    raw_dict = export_redcap_data(api_url)
     
-    # df_op = prepare_data(df_op)
-    # df_kol = prepare_data(df_kol)
+    # 2. OP-Gruppen separat verarbeiten
+    if raw_dict.get("op_gruppen"):
+        df_raw_op = pd.DataFrame(raw_dict["op_gruppen"])
+        df_op = prepare_data(df_raw_op)
+    else:
+        df_op = pd.DataFrame() # Leerer DataFrame als Fallback
+    
+    # 3. Kolorektal separat verarbeiten
+    if raw_dict.get("kolorektal"):
+        df_raw_kolo = pd.DataFrame(raw_dict["kolorektal"])
+        df_kolo = prepare_data(df_raw_kolo)
+    else:
+        df_kolo = pd.DataFrame() # Leerer DataFrame als Fallback
 
-# Fehlerbehandlung: keine Daten
-if df is None or df.empty:
+# Fehlerbehandlung: bricht nur ab, wenn wirklich gar keine Daten da sind
+if df_op.empty and df_kolo.empty:
     st.error("Keine Daten verfügbar.")
     st.stop()
 
