@@ -2813,7 +2813,8 @@ for i, bereich in enumerate(BEREICHE):
         # ================== Kachel 1 "Rektum  HSM" % und absolute Zahlen ==================
             with col1.container(border=True):
                 pattern = "HCC|CCC|Metastasen|Benigne"
-                df_kolo_hsm = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                # Korrigiert: Greift direkt auf die Kolorektal-Datenbank zu
+                df_kolo_hsm = df_kolo_base[df_kolo_base["gruppen"].str.contains(pattern, na=False)].copy()
                 df_hsm = df_kolol_hsm[df_kolo_hsm['hsm'].isin(['Ja', 'Nein'])].copy()
                 total_hsm = len(df_hsm)
 
