@@ -5,6 +5,7 @@
 import os                                        # Zugriff auf Umgebungsvariablen (z.B. API-Tokens)
 import requests                                  # HTTP-Requests (hier für REDCap API)
 import pandas as pd                              # Datenverarbeitung mit DataFrames
+st.write("Pandas-Version:", pd.__version__)
 import plotly.express as px                      # Plotly Express für Diagramme
 import streamlit as st                           # Streamlit für Web-App
 import urllib3                                   # Bibliothek für HTTP-Kommunikation
