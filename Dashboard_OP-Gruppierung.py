@@ -674,8 +674,6 @@ df_kolo_plots = df_kolo_base.copy()
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
-# -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
-
 st.header("Kennzahlen")
 
 # Erstellt zwei Tabs auf der Hauptseite, um die Daten strikt getrennt anzuzeigen
@@ -706,7 +704,6 @@ with tab_opgrupp:
     if df_opgrupp_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
     else:
-        # Eindeutige Spaltennamen für OP-Gruppen
         col_chart_op1, col_chart_op2 = st.columns(2)
 
         # -------------------- Jahr-Chart OP-Gruppen --------------------
@@ -744,11 +741,13 @@ with tab_opgrupp:
             )
             q_counts.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
+            # Chronologische Sortierung (nach Jahr, dann nach Quartal)
+            q_counts = q_counts.sort_values(["jahr_opdatum", "quartal_opdatum"]).reset_index(drop=True)
+
             q_counts["quartal_label"] = (
-                "Q" + q_counts["quartal_opdatum"].astype(int).astype(str)
-                + "-" + q_counts["jahr_opdatum"].astype(int).astype(str)
+                "Q" + q_counts["quartal_opdatum"].astype(str)
+                + "-" + q_counts["jahr_opdatum"].astype(str)
             )
-            q_counts = q_counts.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
             quartal_order = q_counts["quartal_label"].tolist()
 
             fig_quartal = px.bar(
@@ -767,7 +766,7 @@ with tab_opgrupp:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
-            # Trennlinie wird nur gezeichnet, wenn das JAHR springt (Index 1 nach dem Bindestrich)
+            # Korrekte Jahres-Trennlinie (zieht den Strich nur beim Wechsel der Jahreszahl im Label)
             for i in range(len(quartal_order) - 1):
                 curr_year = quartal_order[i].split("-")[1]
                 next_year = quartal_order[i + 1].split("-")[1]
@@ -778,7 +777,7 @@ with tab_opgrupp:
 
 
 # =========================================================================
-# TAB 2: KOLOREKTAL (KORRIGIERT: Eindeutige Variablen & Spalten verhindern Dopplung)
+# TAB 2: KOLOREKTAL
 # =========================================================================
 with tab_kolo:
     col_kolo1, col_kolo2, col_kolo3, col_kolo4 = st.columns(4)
@@ -802,7 +801,6 @@ with tab_kolo:
     if df_kolo_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
     else:
-        # Geändert: Eindeutige Spalten-Variablen für das Kolorektal-Layout
         col_chart_kolo1, col_chart_kolo2 = st.columns(2)
 
         # -------------------- Jahr-Chart Kolorektal --------------------
@@ -840,11 +838,13 @@ with tab_kolo:
             )
             q_counts_kolo.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
 
+            # Chronologische Sortierung (nach Jahr, dann nach Quartal)
+            q_counts_kolo = q_counts_kolo.sort_values(["jahr_opdatum", "quartal_opdatum"]).reset_index(drop=True)
+
             q_counts_kolo["quartal_label"] = (
-                "Q" + q_counts_kolo["quartal_opdatum"].astype(int).astype(str)
-                + "-" + q_counts_kolo["jahr_opdatum"].astype(int).astype(str)
+                "Q" + q_counts_kolo["quartal_opdatum"].astype(str)
+                + "-" + q_counts_kolo["jahr_opdatum"].astype(str)
             )
-            q_counts_kolo = q_counts_kolo.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
             quartal_order_kolo = q_counts_kolo["quartal_label"].tolist()
 
             fig_quartal_kolo = px.bar(
@@ -863,10 +863,11 @@ with tab_kolo:
                 xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
             )
 
+            # Korrekte Jahres-Trennlinie (zieht den Strich nur beim Wechsel der Jahreszahl im Label)
             for i in range(len(quartal_order_kolo) - 1):
-                curr_q = quartal_order_kolo[i].split("-")
-                next_q = quartal_order_kolo[i + 1].split("-")
-                if curr_q != next_q:
+                curr_year = quartal_order_kolo[i].split("-")[1]
+                next_year = quartal_order_kolo[i + 1].split("-")[1]
+                if curr_year != next_year:
                     fig_quartal_kolo.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
             st.plotly_chart(fig_quartal_kolo, use_container_width=True, config={"displayModeBar": False, "responsive": True})
