@@ -575,41 +575,43 @@ with st.sidebar:
     #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
     # =================================================================#
 
-    # ÄNDERUNG: Werte direkt aus dem Session State des Sliders holen.
-    # Falls nach dem Code-Update kurzzeitig leer, greift das Fallback (min_jahr, max_jahr)
-    slider_werte = st.session_state.get("pills_selection_jahr", jahr_range) # Nutze hier den EXAKTEN key deines Sliders
+        # =================================================================#
+    #                   AKTIVE FILTERUNG DER DATEN:                    #
+    #          damit beim updaten der App die Grafiken nur die         #
+    #        Jahre/Quartale anzeigen, die vorher gefiltert wurden      #
+    # =================================================================#
+
+    # Werte direkt aus dem Session State des Sliders holen mit dem korrekten Widget-Key
+    slider_werte = st.session_state.get("jahr_slider_widget", jahr_range)
     start_jahr, end_jahr = slider_werte
     
-    # 2. Filtern nach dem ausgewählten Zeitraum
-    df_filtered = df[
-        (df['jahr_opdatum'] >= start_jahr) & 
-        (df['jahr_opdatum'] <= end_jahr)
+    # --- 1. FILTERUNG FÜR OP-GRUPPEN ---
+    # Filtern nach dem ausgewählten Zeitraum
+    df_opgrupp_filtered = df_opgrupp[
+        (df_opgrupp['jahr_opdatum'] >= start_jahr) & 
+        (df_opgrupp['jahr_opdatum'] <= end_jahr)
     ].copy()
     
-    # 3. Filtern nach den ausgewählten Quartalen aus den Pills
+    # Filtern nach den ausgewählten Quartalen
     if st.session_state.get('selected_quartale'):
-        df_filtered = df_filtered[df_filtered['quartal_opdatum'].isin(st.session_state['selected_quartale'])].copy()
+        df_opgrupp_filtered = df_opgrupp_filtered[df_opgrupp_filtered['quartal_opdatum'].isin(st.session_state['selected_quartale'])].copy()
     else:
-        # Falls kein Quartal gewählt ist, leeres Dataframe bereitstellen
-        df_filtered = df_filtered.iloc[0:0].copy()
+        df_opgrupp_filtered = df_opgrupp_filtered.iloc[0:0].copy()
     
-    # 4. Das globale df überschreiben, damit alle Grafiken diese Filter nutzen
-    df = df_filtered.copy()
+    
+    # --- 2. FILTERUNG FÜR KOLOREKTAL (STRIKT GETRENNT) ---
+    # Filtern nach dem ausgewählten Zeitraum
+    df_kolo_filtered = df_kolo[
+        (df_kolo['jahr_opdatum'] >= start_jahr) & 
+        (df_kolo['jahr_opdatum'] <= end_jahr)
+    ].copy()
+    
+    # Filtern nach den ausgewählten Quartalen
+    if st.session_state.get('selected_quartale'):
+        df_kolo_filtered = df_kolo_filtered[df_kolo_filtered['quartal_opdatum'].isin(st.session_state['selected_quartale'])].copy()
+    else:
+        df_kolo_filtered = df_kolo_filtered.iloc[0:0].copy()
 
-    # Buttons erstellen (Logik zum An/Abwählen)
-    # for i, q in enumerate(quartal_werte):
-    #     is_active = q in st.session_state['selected_quartale']
-    #     label = f"**{quartal_labels[i]}**" if is_active else quartal_labels[i]
-
-    #     if cols[i].button(label, key=f"q_btn_sidebar_{q}"):
-    #         if q in st.session_state['selected_quartale']:
-    #             st.session_state['selected_quartale'].remove(q)
-    #         else:
-    #             st.session_state['selected_quartale'].append(q)
-    #         st.rerun()
-
-    # Jahre speichern
-    # st.session_state['selected_jahre'] = list(range(jahr_range[0], jahr_range[1] + 1))  
 
     st.divider()
     
