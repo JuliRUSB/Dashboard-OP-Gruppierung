@@ -463,7 +463,7 @@ with st.spinner('Lade Daten...'):
         df_kolo = pd.DataFrame() # Leerer DataFrame als Fallback
 
 # Fehlerbehandlung: bricht nur ab, wenn wirklich gar keine Daten da sind
-if df_op.empty and df_kolo.empty:
+if df_opgrupp.empty and df_kolo.empty:
     st.error("Keine Daten verfügbar.")
     st.stop()
 
