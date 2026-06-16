@@ -2807,8 +2807,8 @@ for i, bereich in enumerate(BEREICHE):
 
         # ================== ANFANG BEREICH KOLOREKTALE CHIRURGIE ================== 
         
-            if bereich == "Kolorektale Chirurgie":
-                col1, col2 = st.columns(2)
+            #if bereich == "Kolorektale Chirurgie":
+                #col1, col2 = st.columns(2)
 
         
 
