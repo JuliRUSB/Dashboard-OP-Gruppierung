@@ -254,8 +254,9 @@ def prepare_data(df):
         4: 'konvertiert',
         5: 'hybrid (2Höhlen-Eingriffe)'
     }
-    df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
-    df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
+    if 'zugang' in df.columns:
+        df['zugang'] = pd.to_numeric(df['zugang'], errors='coerce')
+        df['zugang'] = df['zugang'].map(zugang_mapping).fillna('Unbekannt')
 
     # Gallefistel_isgls: numerische Codes in Text umwandeln
     gallefistel_isgls_mapping = {
@@ -263,8 +264,9 @@ def prepare_data(df):
         2: 'Grade B',
         3: 'Grade C'
     }
-    df['gallefistel_isgls'] = pd.to_numeric(df['gallefistel_isgls'], errors='coerce')
-    df['gallefistel_isgls'] = df['gallefistel_isgls'].map(gallefistel_isgls_mapping).fillna('Unbekannt')
+    if 'gallefistel_isgls' in df.columns:
+        df['gallefistel_isgls'] = pd.to_numeric(df['gallefistel_isgls'], errors='coerce')
+        df['gallefistel_isgls'] = df['gallefistel_isgls'].map(gallefistel_isgls_mapping).fillna('Unbekannt')
 
      # Gallefistel_isgls_surv: numerische Codes in Text umwandeln
     gallefistel_isgls_surv_mapping = {
@@ -272,24 +274,27 @@ def prepare_data(df):
         2: 'Grade B',
         3: 'Grade C'
     }
-    df['gallefistel_isgls_surv'] = pd.to_numeric(df['gallefistel_isgls_surv'], errors='coerce')
-    df['gallefistel_isgls_surv'] = df['gallefistel_isgls_surv'].map(gallefistel_isgls_surv_mapping).fillna('Unbekannt')
+    if 'gallefistel_isgls_surv' in df.columns:
+        df['gallefistel_isgls_surv'] = pd.to_numeric(df['gallefistel_isgls_surv'], errors='coerce')
+        df['gallefistel_isgls_surv'] = df['gallefistel_isgls_surv'].map(gallefistel_isgls_surv_mapping).fillna('Unbekannt')
     
     # Reoperation 30d: numerische Codes in Text umwandeln
     reoperation_30d_mapping = {
         1: 'Ja',
         0: 'Nein'
     }
-    df['reoperation_30d'] = pd.to_numeric(df['reoperation_30d'], errors='coerce')
-    df['reoperation_30d'] = df['reoperation_30d'].map(reoperation_30d_mapping).fillna('Unbekannt')
+    if 'reoperation_30d' in df.columns:
+        df['reoperation_30d'] = pd.to_numeric(df['reoperation_30d'], errors='coerce')
+        df['reoperation_30d'] = df['reoperation_30d'].map(reoperation_30d_mapping).fillna('Unbekannt')
     
     # Typ Sarkom: numerische Codes in Text umwandeln
     type_sark_mapping = {
         1: 'CRS',
         2: 'Sarkom/Weichteiltumor'
     }
-    df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
-    df['type_sark'] = df['type_sark'].map(type_sark_mapping) #.fillna('Unbekannt')
+    if 'type_sark' in df.columns:
+        df['type_sark'] = pd.to_numeric(df['type_sark'], errors='coerce')
+        df['type_sark'] = df['type_sark'].map(type_sark_mapping) #.fillna('Unbekannt')
     
 
     # CRS Dtetails (Für Anastomosen): numerische Codes in Text umwandeln
