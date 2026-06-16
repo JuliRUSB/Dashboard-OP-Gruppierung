@@ -58,7 +58,7 @@ def get_color_map(items):
 # ==================================================
 @st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
 
- def export_redcap_data(api_url):
+def export_redcap_data(api_url):
      projects = [
          {"name": "op_gruppen", "token_var": "tok_op_gruppen"},
          {"name": "kolorektal", "token_var": "tok_kolorektal"}
