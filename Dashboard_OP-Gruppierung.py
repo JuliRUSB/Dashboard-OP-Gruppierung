@@ -682,19 +682,19 @@ st.header("Kennzahlen")
 tab_opgrupp, tab_kolo = st.tabs(["OP-Gruppen", "Kolorektal"])
 
 # =========================================================================
-# TAB 1: OP-GRUPPEN (Alles hier drunter muss eingerückt sein!)
+# TAB 1: OP-GRUPPEN
 # =========================================================================
 with tab_opgrupp:
-    col1, col2, col3, col4 = st.columns(4)
+    col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 
-    with col1:
+    with col_op1:
         st.metric("Gesamt Fälle", len(df_opgrupp_plots))
 
-    with col2:
+    with col_op2:
         anzahl_bereiche = df_opgrupp_plots['bereich'].nunique() if 'bereich' in df_opgrupp_plots.columns else 0
         st.metric("Bereiche", anzahl_bereiche)
 
-    with col3:
+    with col_op3:
         st.metric(
             "Zeitraum",
             f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
@@ -706,10 +706,11 @@ with tab_opgrupp:
     if df_opgrupp_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
     else:
-        col1, col2 = st.columns(2)
+        # Eindeutige Spaltennamen für OP-Gruppen
+        col_chart_op1, col_chart_op2 = st.columns(2)
 
         # -------------------- Jahr-Chart OP-Gruppen --------------------
-        with col1:
+        with col_chart_op1:
             jahr_counts_df = (
                 df_opgrupp_plots
                 .groupby('jahr_opdatum')
@@ -735,7 +736,7 @@ with tab_opgrupp:
             st.plotly_chart(fig_jahr, use_container_width=True)
 
         # -------------------- Quartals-Chart OP-Gruppen --------------------
-        with col2:
+        with col_chart_op2:
             q_counts = (
                 df_opgrupp_plots
                 .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
@@ -767,8 +768,8 @@ with tab_opgrupp:
             )
 
             for i in range(len(quartal_order) - 1):
-                curr_q = quartal_order[i].split("-")[0]
-                next_q = quartal_order[i + 1].split("-")[0]
+                curr_q = quartal_order[i].split("-")
+                next_q = quartal_order[i + 1].split("-")
                 if curr_q != next_q:
                     fig_quartal.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
@@ -776,19 +777,19 @@ with tab_opgrupp:
 
 
 # =========================================================================
-# TAB 2: KOLOREKTAL (Muss auf derselben Ebene wie 'with tab_opgrupp:' stehen!)
+# TAB 2: KOLOREKTAL (KORRIGIERT: Eindeutige Variablen & Spalten verhindern Dopplung)
 # =========================================================================
 with tab_kolo:
-    col1, col2, col3, col4 = st.columns(4)
+    col_kolo1, col_kolo2, col_kolo3, col_kolo4 = st.columns(4)
 
-    with col1:
+    with col_kolo1:
         st.metric("Gesamt Fälle", len(df_kolo_plots))
 
-    with col2:
+    with col_kolo2:
         anzahl_bereiche_kolo = df_kolo_plots['bereich'].nunique() if 'bereich' in df_kolo_plots.columns else 0
         st.metric("Bereiche", anzahl_bereiche_kolo)
 
-    with col3:
+    with col_kolo3:
         st.metric(
             "Zeitraum",
             f"{end_jahr - start_jahr + 1} Jahre, {len(selected_quartale)} Quartale"
@@ -800,10 +801,11 @@ with tab_kolo:
     if df_kolo_plots.empty:
         st.warning("Keine Daten für die gewählten Filter verfügbar.")
     else:
-        col1, col2 = st.columns(2)
+        # Geändert: Eindeutige Spalten-Variablen für das Kolorektal-Layout
+        col_chart_kolo1, col_chart_kolo2 = st.columns(2)
 
         # -------------------- Jahr-Chart Kolorektal --------------------
-        with col1:
+        with col_chart_kolo1:
             jahr_counts_df_kolo = (
                 df_kolo_plots
                 .groupby('jahr_opdatum')
@@ -829,7 +831,7 @@ with tab_kolo:
             st.plotly_chart(fig_jahr_kolo, use_container_width=True)
 
         # -------------------- Quartals-Chart Kolorektal --------------------
-        with col2:
+        with col_chart_kolo2:
             q_counts_kolo = (
                 df_kolo_plots
                 .groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False)
@@ -861,84 +863,14 @@ with tab_kolo:
             )
 
             for i in range(len(quartal_order_kolo) - 1):
-                curr_q = quartal_order_kolo[i].split("-")[0]
-                next_q = quartal_order_kolo[i + 1].split("-")[0]
+                curr_q = quartal_order_kolo[i].split("-")
+                next_q = quartal_order_kolo[i + 1].split("-")
                 if curr_q != next_q:
                     fig_quartal_kolo.add_vline(x=i + 0.5, line_width=2, line_dash="dash", line_color="gray")
 
             st.plotly_chart(fig_quartal_kolo, use_container_width=True, config={"displayModeBar": False, "responsive": True})
 
 st.divider()
-
-
-
-# =========================================================================
-# TAB 2: KOLOREKTAL (STRIKT GETRENNT)
-# =========================================================================
-with tab_kolo:
-    st.header("Kennzahlen - Kolorektal")
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric("Gesamt Fälle", len(df_kolo_plots))
-
-    with col2:
-        anzahl_bereiche_kolo = df_kolo_plots['bereich'].nunique() if 'bereich' in df_kolo_plots.columns else 0
-        st.metric("Bereiche", anzahl_bereiche_kolo)
-
-    with col3:
-        st.metric(
-            "Zeitraum",
-            f"{jahr_range[1] - jahr_range[0] + 1} Jahre, {len(selected_quartale)} Quartale"
-        )
-
-    st.divider()
-    st.header("Fallzahlen alle Bereiche - Kolorektal")
-
-    if df_kolo_plots.empty:
-        st.warning("Keine Daten für die gewählten Filter in Kolorektal verfügbar.")
-    else:
-        col1, col2 = st.columns(2)
-
-        # -------------------- Jahr-Chart Kolorektal --------------------
-        with col1:
-            jahr_counts_df_kolo = df_kolo_plots.groupby('jahr_opdatum').size().reset_index(name='count')
-            jahr_counts_df_kolo['jahr_str'] = jahr_counts_df_kolo['jahr_opdatum'].astype(str)
-
-            fig_jahr_kolo = px.bar(
-                jahr_counts_df_kolo, x='jahr_str', y='count', text='count', color='jahr_str',
-                color_discrete_sequence=COLOR_PALETTE, title="Fallzahlen pro Jahr (Kolorektal)"
-            )
-            fig_jahr_kolo.update_traces(textposition='inside', textfont_size=16)
-            fig_jahr_kolo.update_layout(
-                height=400, xaxis_title=None, yaxis_title=None, showlegend=False,
-                xaxis={'categoryorder': 'category ascending', 'type': 'category', 'tickfont': {'size': 16}}
-            )
-            st.plotly_chart(fig_jahr_kolo, use_container_width=True)
-
-        # -------------------- Quartals-Chart Kolorektal --------------------
-        with col2:
-            q_counts_kolo = df_kolo_plots.groupby(["jahr_opdatum", "quartal_opdatum"], as_index=False).size()
-            q_counts_kolo.columns = ["jahr_opdatum", "quartal_opdatum", "count"]
-            q_counts_kolo["quartal_label"] = "Q" + q_counts_kolo["quartal_opdatum"].astype(str) + "-" + q_counts_kolo["jahr_opdatum"].astype(str)
-            q_counts_kolo = q_counts_kolo.sort_values(["quartal_opdatum", "jahr_opdatum"]).reset_index(drop=True)
-            
-            quartal_order_kolo = q_counts_kolo["quartal_label"].tolist()
-
-            fig_quartal_kolo = px.bar(
-                q_counts_kolo, x="quartal_label", y="count", text="count",
-                color=q_counts_kolo["jahr_opdatum"].astype(str), color_discrete_sequence=COLOR_PALETTE,
-                category_orders={"quartal_label": quartal_order_kolo}, title="Fallzahlen pro Quartal (Kolorektal)"
-            )
-            fig_quartal_kolo.update_traces(textfont_size=16, textposition="auto", textangle=0)
-            fig_quartal_kolo.update_layout(
-                height=400, xaxis_title=None, yaxis_title=None, showlegend=False,
-                xaxis={"type": "category", "tickfont": {"size": 16}}, yaxis={"tickfont": {"size": 16}},
-            )
-            st.plotly_chart(fig_quartal_kolo, use_container_width=True, config={"displayModeBar": False, "responsive": True})
-
-st.divider()
-
 
 # --- TEIL 3: Detailanalysen (Tabs) ---
 
