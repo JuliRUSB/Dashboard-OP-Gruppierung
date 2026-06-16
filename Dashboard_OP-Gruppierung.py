@@ -615,84 +615,57 @@ with st.sidebar:
 
     st.divider()
     
-    # Bereich-Filter
-    # bereich_filter = st.selectbox(
-    #     "Bereich auswählen:", 
-    #     ["Alle"] + sorted(df['bereich'].unique())
-    # )
-
-    # Zugang-Filter
-    # zugang_filter = st.selectbox(
-    #     "Zugang auswählen:", 
-    #     ["Alle"] + sorted(df['zugang'].unique())
-    # )
-   
 # -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
 
-selected_jahre = st.session_state['selected_jahre']
-selected_quartale = st.session_state['selected_quartale']
+selected_jahre = st.session_state.get('selected_jahre', [])
+selected_quartale = st.session_state.get('selected_quartale', [])
 
 if not selected_jahre or not selected_quartale:
     st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
     st.stop()
 
-# 1. Basis-Filterung nach Zeit (für Graphen UND Tabs)
-df['jahr_opdatum'] = df['jahr_opdatum'].astype(int)
-df['quartal_opdatum'] = df['quartal_opdatum'].astype(int)
+# 1. Basis-Filterung nach Zeit für OP-Gruppen (Graphen UND Tabs)
+if not df_opgrupp.empty:
+    df_opgrupp['jahr_opdatum'] = df_opgrupp['jahr_opdatum'].astype(int)
+    df_opgrupp['quartal_opdatum'] = df_opgrupp['quartal_opdatum'].astype(int)
+
+# 1. Basis-Filterung nach Zeit für Kolorektal (Graphen UND Tabs)
+if not df_kolo.empty:
+    df_kolo['jahr_opdatum'] = df_kolo['jahr_opdatum'].astype(int)
+    df_kolo['quartal_opdatum'] = df_kolo['quartal_opdatum'].astype(int)
 
 selected_jahre = list(map(int, selected_jahre))
 selected_quartale = list(map(int, selected_quartale))
 
-# 2. Entkoppelung: Zusätzliche Filter (Bereich/Zugang) NUR für die Graphen
-df_base = df[
-    df['jahr_opdatum'].isin(selected_jahre) &
-    df['quartal_opdatum'].isin(selected_quartale)
+# 2. Entkoppelung: Basis-Datensätze erstellen
+df_opgrupp_base = df_opgrupp[
+    df_opgrupp['jahr_opdatum'].isin(selected_jahre) &
+    df_opgrupp['quartal_opdatum'].isin(selected_quartale)
+].copy()
+
+df_kolo_base = df_kolo[
+    df_kolo['jahr_opdatum'].isin(selected_jahre) &
+    df_kolo['quartal_opdatum'].isin(selected_quartale)
 ].copy()
 
 # --- TEIL 1: Filterlogik (nur für die Grafiken in Teil 2) ---
 
 # Kopien für die Visualisierungen in Teil 2, 
 # damit die Filter nicht die Detailanalysen in Teil 3 beeinflussen.
-# df_plots = df_base.copy()
+df_opgrupp_plots = df_opgrupp_base.copy()
+df_kolo_plots = df_kolo_base.copy()
 
-# if bereich_filter != "Alle":
-#    df_plots = df_plots[df_plots['bereich'] == bereich_filter]
+if 'bereich_filter' in locals() and bereich_filter != "Alle":
+    if 'bereich' in df_opgrupp_plots.columns:
+        df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['bereich'] == bereich_filter]
+    if 'bereich' in df_kolo_plots.columns:
+        df_kolo_plots = df_kolo_plots[df_kolo_plots['bereich'] == bereich_filter]
 
-# if zugang_filter != "Alle":
-#     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
-
-
-# -------------------- Daten filtern (Zeit-Filter wirken auf ALLES) --------------------
-
-selected_jahre = st.session_state['selected_jahre']
-selected_quartale = st.session_state['selected_quartale']
-
-if not selected_jahre or not selected_quartale:
-    st.warning("⚠️ Bitte wählen Sie mindestens ein Jahr und ein Quartal aus.")
-    st.stop()
-
-# Datentypen absichern
-df['jahr_opdatum'] = df['jahr_opdatum'].astype(int)
-df['quartal_opdatum'] = df['quartal_opdatum'].astype(int)
-
-selected_jahre = list(map(int, selected_jahre))
-selected_quartale = list(map(int, selected_quartale))
-
-# Basis-Filter
-df_base = df[
-    df['jahr_opdatum'].isin(selected_jahre) &
-    df['quartal_opdatum'].isin(selected_quartale)
-].copy()
-
-# Visualisierungs-Filter
-df_plots = df_base.copy()
-
-# if bereich_filter != "Alle":
-#     df_plots = df_plots[df_plots['bereich'] == bereich_filter]
-
-# if zugang_filter != "Alle":
-#     df_plots = df_plots[df_plots['zugang'] == zugang_filter]
-
+if 'zugang_filter' in locals() and zugang_filter != "Alle":
+    if 'zugang' in df_opgrupp_plots.columns:
+        df_opgrupp_plots = df_opgrupp_plots[df_opgrupp_plots['zugang'] == zugang_filter]
+    if 'zugang' in df_kolo_plots.columns:
+        df_kolo_plots = df_kolo_plots[df_kolo_plots['zugang'] == zugang_filter]
 
 # -------------------- TEIL 2: Kennzahlen & Visualisierungen --------------------
 
