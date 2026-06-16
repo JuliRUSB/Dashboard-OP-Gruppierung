@@ -21,7 +21,7 @@ API_URL = os.getenv("API_URL")
 
 # ==================================================
 # Session State Initialisierung
-# ==================================================insuffizienzen
+# ==================================================
 if "pdf_figures" not in st.session_state:
     st.session_state.pdf_figures = {}
 
@@ -58,44 +58,44 @@ def get_color_map(items):
 # ==================================================
 @st.cache_data(ttl=300)  # Ergebnisse werden 5 Minuten gecacht, um wiederholte API-Aufrufe zu vermeiden
 
-# def export_redcap_data(api_url):
-#     projects = [
-#         {"name": "op_gruppen", "token_var": "tok_op_gruppen"},
-#         {"name": "kolorektal", "token_var": "tok_kolorektal"}
-#     ]
-#
-#     data = {}
-#
-#     for project in projects:
-#
-#         token = os.getenv(project["token_var"])
-#
-#         if not token:
-#             st.warning(f"Token '{project['token_var']}' fehlt")
-#             continue
-#
-#         payload = {
-#             "token": token,
-#             "content": "record",
-#             "format": "json",
-#             "type": "flat"
-#         }
-#
-#         try:
-#             r = requests.post(api_url, data=payload, timeout=30)
-#             r.raise_for_status()
-#             data[project["name"]] = r.json()
-#         except Exception as e:
-#             st.error(f"{project['name']} fehlgeschlagen: {e}")
-#
-#     return data
+ def export_redcap_data(api_url):
+     projects = [
+         {"name": "op_gruppen", "token_var": "tok_op_gruppen"},
+         {"name": "kolorektal", "token_var": "tok_kolorektal"}
+     ]
 
-def export_redcap_data(api_url):
-    """Exportiert Daten aus REDCap mit Caching"""
-    API_TOKEN = os.getenv("tok_op_gruppen")
-    if not API_TOKEN:
-        st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
-        return None
+     data = {}
+
+     for project in projects:
+
+         token = os.getenv(project["token_var"])
+
+         if not token:
+             st.warning(f"Token '{project['token_var']}' fehlt")
+             continue
+
+         payload = {
+             "token": token,
+             "content": "record",
+             "format": "json",
+             "type": "flat"
+         }
+
+         try:
+             r = requests.post(api_url, data=payload, timeout=30)
+             r.raise_for_status()
+             data[project["name"]] = r.json()
+         except Exception as e:
+             st.error(f"{project['name']} fehlgeschlagen: {e}")
+
+     return data
+
+#def export_redcap_data(api_url):
+    #"""Exportiert Daten aus REDCap mit Caching"""
+    #API_TOKEN = os.getenv("tok_op_gruppen")
+    #if not API_TOKEN:
+        #st.error("API Token nicht gefunden. Bitte Umgebungsvariable 'tok_op_gruppen' setzen.")
+        #return None
     
     data = {
         'token': API_TOKEN,
