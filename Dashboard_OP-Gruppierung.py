@@ -203,8 +203,8 @@ def prepare_data(df):
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Kolorektal: Spalten mit 'gruppen___' mappen
-    leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
-    if leber_gruppen_cols:
+    kolorektal_gruppen_cols = [c for c in df.columns if c.startswith('kolorektal_gruppen___')]
+    if kolorektal_gruppen_cols:
         mapping = {
             'gruppen___1': 'Rektum',
             'gruppen___2': 'Kolonkarzinom',
@@ -2316,10 +2316,10 @@ for i, bereich in enumerate(BEREICHE):
         
         # ================== ENDE BEREICH CHURURGISCHE ONKOLOGIE/SARKOME ================== 
 
+        # ========================= ANFANG BEREICH LEBERCHIRURGIE ========================= 
+
         if bereich == "Leber":
             col1, col2 = st.columns(2)
-
-        # ========================= ANFANG BEREICH LEBERCHIRURGIE ========================= 
             
         # 1. Grafik: Leber HSM JA / NEIN in absoluten Zahlen und % + Gesamtergebnis pro Jahr
         # ================== Kachel 1 "Leber HSM" % und absolute Zahlen ==================
@@ -2586,7 +2586,8 @@ for i, bereich in enumerate(BEREICHE):
                     st.error("Spalten fehlen")
             
             # 5. Grafik: Mortality [max_dindo_calc] = 13 (Grade V) oder [max_dindo_calc_surv] = 13 (Grade V), in absoluten Zahlen und % 
-            # ================== Kachel 5: "Mortalität - Leberchirurgie" ==================
+            
+                # ================== Kachel 5: "Mortalität - Leberchirurgie" ==================
             #if bereich == "Leber":
                 with col1.container(border=True):
                     pattern = "HCC|CCC|Metastasen|Benigne"
@@ -2801,18 +2802,61 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine auswertbaren Reoperation-Daten für die Leberchirurgie vorhanden.")
 
- # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
+        # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
             
-# 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
+        # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
         
-        # ================== ENDE BEREICH LEBER ================== 
+        # ================== ENDE BEREICH LEBERCHIRURGIE ================== 
 
         # ================== ANFANG BEREICH KOLOREKTALE CHIRURGIE ================== 
         
-            #if bereich == "Kolorektale Chirurgie":
-                #col1, col2 = st.columns(2)
+        if bereich == "Kolorektale Chirurgie":
+            col1, col2 = st.columns(2)
 
+            with col1.container(border=True):
+                df_plot_rektopexie = df_bereich[df_bereich["gruppen"].notna()].copy()
+                total_rektopexie = len(df_plot_ges)
         
+                st.metric(label="Rektopexien", value=total_rektopexie)
+                st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                
+                if total_rektopexie > 0:
+                    grp = df_plot_rektopexie.groupby("jahr_opdatum").size().reset_index(name="count")
+        
+                    fig = px.bar(
+                        grp,
+                        x="jahr_opdatum",
+                        y="count",
+                        text="count",
+                        color_discrete_sequence=COLOR_PALETTE
+                    )
+                
+                    fig.update_traces(
+                        textposition='auto',
+                        textangle=0,
+                        cliponaxis=False,
+                        textfont_size=16, 
+                        insidetextfont=dict(size=16),
+                        outsidetextfont=dict(size=16),
+                        marker_line_width=0
+                    )
+                
+                    fig.update_layout(
+                        height=400,  
+                        margin=dict(l=10, r=10, t=0, b=10),
+                        xaxis_title=None, 
+                        yaxis_title=None, 
+                        showlegend=False,
+                        xaxis={"type": "category", "tickfont": {"size": 16}},
+                        yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                    )
+
+                    st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                    st.session_state["pdf_figures"][bereich]["kachel_rektopexie_ges"] = fig
+                    
+                    st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                else:
+                    st.info("Keine Daten für Rektopexie gefunden.")
 
         # ================== ENDE BEREICH KOLOREKTALE CHIRURGIE ================== 
         
