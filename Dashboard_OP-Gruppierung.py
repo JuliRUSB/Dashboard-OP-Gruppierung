@@ -2363,7 +2363,6 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine auswertbaren HSM-Daten für die Leberchirurgie vorhanden.")
     
-    
             # 2. Grafik: Zugang Roboterassistiert / Offen in absoluten Zahlen und % 
             # ================== Kachel 2: Leberchirurgie - Zugang (HCC|CCC|Metastasen|Benigne) ==================
             #if bereich == "Leber":
@@ -2793,7 +2792,7 @@ for i, bereich in enumerate(BEREICHE):
             # Grafiken 4 - 7: Prüfen, was in diesem Zusammenhang Benchmarkdaten bedeuten. Evtl. Vergleich mit dem letzten Qurtal, oder mit dem selben Quartal des Vorjahres
                 
             # 8. Grafik Clavien Dindo >III und V getrennt darstellen, in absoluten Zahlen und % 
-            
+            st.markdown('</div>', unsafe_allow_html=True)
             # ================== ENDE BEREICH LEBERCHIRURGIE ================== 
             
         # FALL 2: Daten aus der Kolorektal-Datenbank
@@ -2856,6 +2855,7 @@ for i, bereich in enumerate(BEREICHE):
                 else:
                     st.info("Keine Daten für Rektopexie gefunden.")
 
+            st.markdown('</div>', unsafe_allow_html=True)
         # ================== ENDE BEREICH KOLOREKTALE CHIRURGIE ================== 
         
 
