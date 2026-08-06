@@ -2813,7 +2813,7 @@ for i, bereich in enumerate(BEREICHE):
             with col1.container(border=True):
                 st.write(f"DEBUG: Rektopexie wird gerade ausgeführt für Bereich: '{bereich}'")
                 pattern = "Rektopexie"
-                df_plot_rektopexie = df_bereich[df_bereich["gruppen"].notna()].copy()
+                df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                 total_rektopexie = len(df_plot_rektopexie)
         
                 st.metric(label="Rektopexien", value=total_rektopexie)
