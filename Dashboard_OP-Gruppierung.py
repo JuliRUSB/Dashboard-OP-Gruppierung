@@ -203,8 +203,8 @@ def prepare_data(df):
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Kolorektal: Spalten mit 'gruppen___' mappen
-    kolorektal_gruppen_cols = [c for c in df.columns if c.startswith('kolorektal_gruppen___')]
-    if kolorektal_gruppen_cols:
+    gruppen_cols = [c for c in df.columns if c.startswith('gruppen___')]
+    if gruppen_cols:
         mapping = {
             'gruppen___1': 'Rektum',
             'gruppen___2': 'Kolonkarzinom',
@@ -213,10 +213,10 @@ def prepare_data(df):
             'gruppen___5': 'Rektum - watchful waiting',
         }
         # Funktion, um alle markierten Bereiche zu einem String zusammenzufassen
-        def get_kolorektal_gruppen(row):
+        def get_gruppen(row):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
-        df['kolorektal_gruppen'] = df.apply(get_kolorektal_gruppen, axis=1)
-        df = df.drop(columns=kolorektal_gruppen_cols)  # Ursprüngliche Spalten löschen
+        df['gruppen'] = df.apply(get_gruppen, axis=1)
+        df = df.drop(columns=gruppen_cols)  # Ursprüngliche Spalten löschen
     
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
