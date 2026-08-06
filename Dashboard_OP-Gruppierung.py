@@ -438,7 +438,7 @@ if "pdf_bytes" not in st.session_state:
 # ==================================================
 # Streamlit App
 # ==================================================
-# st.set_page_config(page_title="Dashboard Kennzahlen", layout="wide")  # Layout festlegen
+st.set_page_config(layout="wide")  # Layout festlegen
 # st.title("Dashboard Kennzahlen")
 
 # ==================================================
