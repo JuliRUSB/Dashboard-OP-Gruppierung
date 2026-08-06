@@ -2812,6 +2812,7 @@ for i, bereich in enumerate(BEREICHE):
             # ================== Kachel 1 "Rektopexie" ==================      
             with col1.container(border=True):
                 st.write(f"DEBUG: Rektopexie wird gerade ausgeführt für Bereich: '{bereich}'")
+                pattern = "Rektopexie"
                 df_plot_rektopexie = df_bereich[df_bereich["gruppen"].notna()].copy()
                 total_rektopexie = len(df_plot_rektopexie)
         
