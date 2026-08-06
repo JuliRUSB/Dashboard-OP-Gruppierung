@@ -1913,6 +1913,7 @@ for i, bereich in enumerate(BEREICHE):
                             xaxis_title=None,
                             yaxis_title=None,
                             showlegend=True,
+                            legend_title_text="",
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
@@ -2002,6 +2003,7 @@ for i, bereich in enumerate(BEREICHE):
                             xaxis_title=None,
                             yaxis_title=None,
                             showlegend=True,
+                            legend_title_text="",
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99), #  y=-0.2,
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}}
