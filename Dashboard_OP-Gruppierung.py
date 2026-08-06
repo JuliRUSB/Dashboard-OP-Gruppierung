@@ -869,22 +869,32 @@ with tab_kolo:
 st.divider()
 
 # --- TEIL 3: Detailanalysen (Tabs) ---
-
 st.header("Detailanalysen")
 
-# Nur noch die aktiven Bereiche als Liste
 BEREICHE = ["Chirurgische Onkologie/Sarkome", "Kolorektale Chirurgie", "Leber"]
 bereich_tabs = st.tabs(BEREICHE)
 
-# 3. Schleife starten. Sorgt dafür, dass die Kacheln und Grafiken automatisch auf die richtigen Tabs aufgeteilt werden
 for i, bereich in enumerate(BEREICHE):
     with bereich_tabs[i]:
-        # LÖSUNG: Direkt auf die korrekte, gefilterte OP-Gruppen-Tabelle zugreifen
-        df_bereich = df_opgrupp_base[df_opgrupp_base["bereich"] == bereich]
         
-        if df_bereich.empty:
-            st.warning("Keine Daten für diesen Bereich")
-            continue
+        # FALL 1 & 3: Daten aus der OP-Gruppierung (Sarkome & Leber)
+        if bereich in ["Chirurgische Onkologie/Sarkome", "Leber"]:
+            df_bereich = df_opgrupp_base[df_opgrupp_base["bereich"] == bereich]
+            
+            if df_bereich.empty:
+                st.warning("Keine Daten für diesen Bereich")
+                continue # Springt zum nächsten Tab
+                
+            # Hier kommt dein originaler Code für Sarkome / Leber hin (ebenfalls eingerückt!)
+            st.markdown('<div class="print-area">', unsafe_allow_html=True)
+            
+        # FALL 2: Daten aus der Kolorektal-Datenbank
+        elif bereich == "Kolorektale Chirurgie":
+            df_bereich = df_kolo_base.copy()
+            
+            if df_bereich.empty:
+                st.warning("Keine Daten für die kolorektale Chirurgie verfügbar")
+                continue
 
         st.markdown('<div class="print-area">', unsafe_allow_html=True)
 
