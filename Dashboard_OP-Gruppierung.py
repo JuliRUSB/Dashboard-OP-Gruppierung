@@ -2907,7 +2907,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Komplikationen nach nicht-onkologischen Resektionen")
                         
-            # ================== Kachel 1 "Nicht-onkologische Kolonresektionen" ==================      
+            # ================== Kachel 1 "Gesamtzahl - nicht-onkologische Kolonresektionen" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "zugang"}
@@ -2917,7 +2917,7 @@ for i, bereich in enumerate(BEREICHE):
                     df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_nicht_onko = len(df_plot_nicht_onko)
             
-                    st.metric(label="Nicht-onkologische Kolonresektionen", value=total_nicht_onko)
+                    st.metric(label="Gesamtzahl - icht-onkologische Kolonresektionen", value=total_nicht_onko)
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko > 0:
@@ -2959,7 +2959,7 @@ for i, bereich in enumerate(BEREICHE):
                         )
     
                         st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                        st.session_state["pdf_figures"][bereich]["kachel_rektopexie_ges"] = fig
+                        st.session_state["pdf_figures"][bereich]["kachel_nicht_onko_ges"] = fig
                         
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
@@ -2970,17 +2970,17 @@ for i, bereich in enumerate(BEREICHE):
 
             st.markdown('</div>', unsafe_allow_html=True)
 
-            # ================== Kachel 1 "Reoperation - nicht-onkologische Kolonresektionen" ==================      
+            # ================== Kachel 1 "Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen" ==================      
             with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "anastomoseninsuffizienz"}
                 
                 if required_cols.issubset(df_bereich.columns):              
                     pattern = "Kolon nicht-onkologisch" # Filter für nicht-onkologische Kolonresektionen 
-                    df_plot_nicht_onko_anastinsuff = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                    total_nicht_onko_anastinsuff = len(df_plot_nicht_onko)
-            
-                    st.metric(label="Nicht-onkologische Kolonresektionen", value=total_nicht_onko_anastinsuff)
+                    total_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko_anastinsuff = len(total_nicht_onko)
+
+                    st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_nicht_onko_anastinsuff)} von {total_nicht_onko}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko_anastinsuff > 0:
