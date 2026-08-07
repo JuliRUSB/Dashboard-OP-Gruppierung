@@ -2945,7 +2945,7 @@ for i, bereich in enumerate(BEREICHE):
                         else:
 
                             # Gruppierung nach Jahr und Reoperation
-                            grp = df_plot_nicht_onko.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
+                            grp = df_nicht_onko.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "re_op", "count"]
 
                             # Prozentanteil berechnen
