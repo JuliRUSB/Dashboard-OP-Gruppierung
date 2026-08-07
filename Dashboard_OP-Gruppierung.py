@@ -2985,7 +2985,7 @@ for i, bereich in enumerate(BEREICHE):
                     
                     if total_nicht_onko_anastinsuff > 0:
                         # Gruppierung nach Jahr und Anastomoseninsuffizienz
-                        grp = df_plot_nicht_onko_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
+                        grp = total_nicht_onko.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
             
                         fig = px.bar(
