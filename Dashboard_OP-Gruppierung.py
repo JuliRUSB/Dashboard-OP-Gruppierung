@@ -2919,16 +2919,16 @@ for i, bereich in enumerate(BEREICHE):
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
-                            y="prozent",
+                            y="count",
                             color="gruppen",
                             barmode="group",
                             text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
+                            labels={"clavien_dindo": "Clavien-Dindo-Grad"},
                         )
             
                         fig.update_traces(
-                            textposition='outside',
+                            textposition='auto',
                             cliponaxis=False,
                             textfont_size=16,
                             insidetextfont=dict(size=16),
