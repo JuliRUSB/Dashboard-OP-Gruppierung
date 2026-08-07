@@ -2981,6 +2981,8 @@ for i, bereich in enumerate(BEREICHE):
                     if total_rektopexie > 0:
                         if total_dindo_rektopexie == 0:
                             st.success("Im ausgewählten Zeitraum sind keine Komplikationen (Grad ≥ IIIa) aufgetreten.")
+                            # Erzwingt, dass der Container die Höhe von 400px beibehält
+                            st.html("<div style='height: 330px;'></div>")
                         else:
                             grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "zugang", "count"]
