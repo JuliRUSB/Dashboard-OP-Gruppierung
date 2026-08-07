@@ -2983,8 +2983,8 @@ for i, bereich in enumerate(BEREICHE):
                             st.session_state["pdf_figures"][bereich]["kachel_nicht_onko_reop_ges"] = fig
                             
                             st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_reop_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
-                        else:
-                            st.info("Keine Daten für Reoperationen bei nicht-onkologischen Kolonresektionen gefunden.")
+                    else:
+                        st.info("Keine Daten für Reoperationen bei nicht-onkologischen Kolonresektionen gefunden.")
                 else:
                     missing = required_cols - set(df_bereich.columns)
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
