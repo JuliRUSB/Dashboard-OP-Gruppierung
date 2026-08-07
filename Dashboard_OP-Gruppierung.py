@@ -2980,7 +2980,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
 
             st.markdown('</div>', unsafe_allow_html=True)   
-            
+
             # ================== Kachel 1 "Zugang - nicht-onkologische Kolonresektionen" ==================      
             with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
