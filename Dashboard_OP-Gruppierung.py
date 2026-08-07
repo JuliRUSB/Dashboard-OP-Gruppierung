@@ -2979,54 +2979,57 @@ for i, bereich in enumerate(BEREICHE):
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_rektopexie > 0:
-                        grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "zugang", "count"]
-
-                        # Prozentanteil je Zugang berechnen
-                        grp["prozent"] = grp["count"] / total_rektopexie * 100
-
-                        # Beschriftung für Balken
-                        grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
-                        
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="zugang",
-                            barmode="group",
-                            text="text_label",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"zugang": "Zugang"},
-                        )
-            
-                        fig.update_traces(
-                            textposition='auto',
-                            textangle=0,
-                            cliponaxis=False,
-                            textfont_size=16,
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            marker_line_width=0
-                        )
-            
-                        fig.update_layout(
-                            height=400,
-                            uniformtext_minsize=16,
-                            uniformtext_mode='show',
-                            bargap=0.1,
-                            margin=dict(l=10, r=10, t=30, b=10),
-                            xaxis_title=None,
-                            yaxis_title=None,
-                            showlegend=True,
-                            legend_title_text="",
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
-                        )
-            
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Daten für Komplikationen nach Rektopexien")
+                        if total_dindo_rektopexie == 0:
+                            st.success("Im ausgewählten Zeitraum sind keine Komplikationen (Grad ≥ IIIa) aufgetreten.")
+                        else:
+                            grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "zugang", "count"]
+    
+                            # Prozentanteil je Zugang berechnen
+                            grp["prozent"] = grp["count"] / total_rektopexie * 100
+    
+                            # Beschriftung für Balken
+                            grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
+                            
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="zugang",
+                                barmode="group",
+                                text="text_label",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"zugang": "Zugang"},
+                            )
+                
+                            fig.update_traces(
+                                textposition='auto',
+                                textangle=0,
+                                cliponaxis=False,
+                                textfont_size=16,
+                                insidetextfont=dict(size=16),
+                                outsidetextfont=dict(size=16),
+                                marker_line_width=0
+                            )
+                
+                            fig.update_layout(
+                                height=400,
+                                uniformtext_minsize=16,
+                                uniformtext_mode='show',
+                                bargap=0.1,
+                                margin=dict(l=10, r=10, t=30, b=10),
+                                xaxis_title=None,
+                                yaxis_title=None,
+                                showlegend=True,
+                                legend_title_text="",
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
+                            )
+                
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        else:
+                            st.info("Keine Daten für Komplikationen nach Rektopexien")
     
             # ================== Kachel 2 "Rektopexie" ==================      
             with col2.container(border=True):
