@@ -236,6 +236,15 @@ def prepare_data(df):
         df['clavien_dindo'] = pd.to_numeric(df['clavien_dindo'], errors='coerce')
         df['clavien_dindo'] = df['clavien_dindo'].map(clavien_dindo_mapping).fillna('Unbekannt')
     
+    # KOLOREKTAL: anastomoseninsuffizienz: numerische Codes in Text umwandeln
+    anastomoseninsuffizienz_mapping = {
+        1: 'ja',
+        2: 'nein',
+        3: 'unbekannt'
+    }
+    df['anastomoseninsuffizienz'] = pd.to_numeric(df['anastomoseninsuffizienz'], errors='coerce')
+    df['anastomoseninsuffizienz'] = df['anastomoseninsuffizienz'].map(anastomoseninsuffizienz_mapping).fillna('Unbekannt')
+    
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
     if gruppen_chir_onko_sark_cols:
