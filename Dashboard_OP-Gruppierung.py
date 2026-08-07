@@ -221,13 +221,13 @@ def prepare_data(df):
 
     # KOLOREKTAL: clavien_dindo: numerische Codes in Text umwandeln
     clavien_dindo_mapping = {
-        1: 'Grade I',
-        2: 'Grade II',
-        3: 'Grade IIIa',
-        4: 'Grade IIIb',
-        5: 'Grade IVa',
-        6: 'Grade IVb',
-        7: 'Grade V',
+        1: 'I',
+        2: 'II',
+        3: 'IIIa',
+        4: 'IIIb',
+        5: 'IVa',
+        6: 'IVb',
+        7: 'V',
         8: 'keine Komplikation',
         9: 'unbekannt'
     }
