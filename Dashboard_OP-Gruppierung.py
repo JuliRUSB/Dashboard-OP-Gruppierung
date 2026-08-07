@@ -2892,7 +2892,7 @@ for i, bereich in enumerate(BEREICHE):
 
             # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
             with col1.container(border=True):          
-                required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo"}
+                required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo", "zugang"}
             
                 if required_cols.issubset(df_bereich.columns):
                     pattern = "Rektopexie"    # Filter für Rektopexie  
@@ -2907,18 +2907,18 @@ for i, bereich in enumerate(BEREICHE):
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_rektopexie > 0:
-                        grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "count"]
+                        grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "zugang", "count"]
             
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
                             y="count",
-                            #color="clavien_dindo",
-                            #barmode="group",
-                            #text="text_label",
+                            color="zugang",
+                            barmode="group",
+                            text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
-                            #labels={"clavien_dindo": "Clavien-Dindo-Grad"},
+                            labels={"zugang": "zugang"},
                         )
             
                         fig.update_traces(
