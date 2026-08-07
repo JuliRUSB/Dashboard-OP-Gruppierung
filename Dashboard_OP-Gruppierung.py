@@ -3133,7 +3133,7 @@ for i, bereich in enumerate(BEREICHE):
                     df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_rektopexie = len(df_plot_rektopexie)
             
-                    st.metric(label="Rektopexien", value=total_rektopexie)
+                    st.metric(label="Zugang - Rektopexien", value=total_rektopexie)
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_rektopexie > 0:
@@ -3187,7 +3187,7 @@ for i, bereich in enumerate(BEREICHE):
             st.markdown('</div>', unsafe_allow_html=True)
 
         # ================== Kachel 1 "Anastomoseninsuffizienz - Rektopexie" ==================      
-            with col1.container(border=True):
+            with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "anastomoseninsuffizienz"}
                 
