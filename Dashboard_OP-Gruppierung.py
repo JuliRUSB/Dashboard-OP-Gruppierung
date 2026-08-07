@@ -2890,69 +2890,69 @@ for i, bereich in enumerate(BEREICHE):
 
             st.markdown('</div>', unsafe_allow_html=True)
 
-                # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
-                with col1.container(border=True):          
-                    required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo"}
-                
-                    if required_cols.issubset(df_bereich.columns):
-                        pattern = "Rektopexie"    # Filter für Rektopexie  
-                        df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                        total_rektopexie = len(df_plot_rektopexie)
-    
-                        pattern = "IIIa|IIIb|IVa|IVb|V" # Filter für Clavien-Dindo >= IIIa
-                        df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"]].str.contains(pattern, na=False)].copy()
-                        total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
-              
-                        st.metric(label="Clavien-Dindo-Grad ≥ IIIa - Rektopexien", value=f"{total_dindo} von total_rektopexie")
-                        st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                
-                        if total_rektopexie > 0:
-                            grp = df_plot_dindo.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
-                            grp.columns = ["jahr_opdatum", "gruppen", "count"]
-                
-                            grp_gesamt = df_plot_rektopexie.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
-                            grp_gesamt.columns = ["jahr_opdatum", "gruppen", "count_gesamt"]
-                
-                            grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "gruppen"], how="left")
-                            grp["count"] = grp["count"].fillna(0) 
-                
-                            fig = px.bar(
-                                grp,
-                                x="jahr_opdatum",
-                                y="prozent",
-                                color="gruppen",
-                                barmode="group",
-                                text="text_label",
-                                color_discrete_sequence=COLOR_PALETTE,
-                                labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
-                            )
-                
-                            fig.update_traces(
-                                textposition='outside',
-                                cliponaxis=False,
-                                textfont_size=16,
-                                insidetextfont=dict(size=16),
-                                outsidetextfont=dict(size=16),
-                                marker_line_width=0
-                            )
-                
-                            fig.update_layout(
-                                height=400,
-                                uniformtext_minsize=16,
-                                uniformtext_mode='show',
-                                bargap=0.1,
-                                margin=dict(l=10, r=10, t=30, b=10),
-                                xaxis_title=None,
-                                yaxis_title=None,
-                                showlegend=True,
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                                xaxis={"type": "category", "tickfont": {"size": 16}},
-                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range": [0, 100]}
-                            )
-                
-                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
-                        else:
-                            st.info("Keine Daten für Komplikationen nach Rektopexie")
+            # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
+            with col1.container(border=True):          
+                required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo"}
+            
+                if required_cols.issubset(df_bereich.columns):
+                    pattern = "Rektopexie"    # Filter für Rektopexie  
+                    df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_rektopexie = len(df_plot_rektopexie)
+
+                    pattern = "IIIa|IIIb|IVa|IVb|V" # Filter für Clavien-Dindo >= IIIa
+                    df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"]].str.contains(pattern, na=False)].copy()
+                    total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
+          
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - Rektopexien", value=f"{total_dindo} von total_rektopexie")
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+            
+                    if total_rektopexie > 0:
+                        grp = df_plot_dindo.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "gruppen", "count"]
+            
+                        grp_gesamt = df_plot_rektopexie.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
+                        grp_gesamt.columns = ["jahr_opdatum", "gruppen", "count_gesamt"]
+            
+                        grp = grp_gesamt.merge(grp, on=["jahr_opdatum", "gruppen"], how="left")
+                        grp["count"] = grp["count"].fillna(0) 
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="prozent",
+                            color="gruppen",
+                            barmode="group",
+                            text="text_label",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"hipec": "HIPEC", "prozent": "Anteil in %"},
+                        )
+            
+                        fig.update_traces(
+                            textposition='outside',
+                            cliponaxis=False,
+                            textfont_size=16,
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+            
+                        fig.update_layout(
+                            height=400,
+                            uniformtext_minsize=16,
+                            uniformtext_mode='show',
+                            bargap=0.1,
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            showlegend=True,
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range": [0, 100]}
+                        )
+            
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für Komplikationen nach Rektopexie")
     
             # ================== Kachel 2 "Rektopexie" ==================      
             with col2.container(border=True):
