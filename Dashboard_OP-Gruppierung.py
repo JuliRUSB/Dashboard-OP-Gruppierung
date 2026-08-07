@@ -2907,7 +2907,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Komplikationen nach nicht-onkologischen Resektionen")
                         
-            # ================== Kachel 1 "Gesamtzahl - nicht-onkologische Kolonresektionen" ==================      
+            # ================== Kachel 1 "Zugang - nicht-onkologische Kolonresektionen" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "zugang"}
@@ -2917,7 +2917,7 @@ for i, bereich in enumerate(BEREICHE):
                     df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_nicht_onko = len(df_plot_nicht_onko)
             
-                    st.metric(label="Gesamtzahl - icht-onkologische Kolonresektionen", value=total_nicht_onko)
+                    st.metric(label="Zugang - nicht-onkologische Kolonresektionen", value=total_nicht_onko)
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko > 0:
@@ -2998,7 +2998,10 @@ for i, bereich in enumerate(BEREICHE):
                             # Gruppierung nach Jahr und Anastomoseninsuffizienz
                             grp = df_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
-                
+
+                            # Prozentanteil berechnen
+                            grp["prozent"] = grp["count"] / total_nicht_onko * 100
+
                             fig = px.bar(
                                 grp,
                                 x="jahr_opdatum",
