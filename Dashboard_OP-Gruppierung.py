@@ -2940,7 +2940,7 @@ for i, bereich in enumerate(BEREICHE):
                     
                     if total_nicht_onko > 0:
                         if total_reop == 0:
-                            st.success("Im ausgewählten Zeitraum habe keine Reoperationen stattgefunden.")
+                            st.success("Im ausgewählten Zeitraum haben keine Reoperationen stattgefunden.")
                             st.html("<div style='height: 330px;'></div>")
                         else:
                             # Gruppierung nach Jahr und Reoperation
@@ -3209,7 +3209,83 @@ for i, bereich in enumerate(BEREICHE):
                             st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
                         st.info("Keine Daten für Komplikationen nach Rektopexien")
-    
+
+            # ================== Kachel 1 "Reoperation - Rektopexien" ==================      
+            with col2.container(border=True):
+                # st.write(f"DEBUG: Bereich: '{bereich}'")
+                required_cols = {"gruppen", "jahr_opdatum", "re_op"}
+                
+                if required_cols.issubset(df_bereich.columns):                 
+                    pattern = "Rektopexie"  # Filter für Rektopexien
+                    df_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_rektopexie = len(df_rektopexie)
+
+                    pattern = "ja"
+                    df_reop = df_rektopexie[df_rektopexie["re_op"].str.contains(pattern, na=False)].copy()
+                    total_reop = len(df_reop)
+
+                    # Prozent berechnen
+                    prozent = (total_reop / total_rektopexie * 100 if total_rektopexie > 0 else 0)
+            
+                    st.metric(label="Reoperation - Rektopexien", value=f"{total_reop} ({prozent:.1f}%) von {total_rektopexie}")
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    
+                    if total_rektopexie > 0:
+                        if total_reop == 0:
+                            st.success("Im ausgewählten Zeitraum haben keine Reoperationen stattgefunden.")
+                            st.html("<div style='height: 330px;'></div>")
+                        else:
+                            # Gruppierung nach Jahr und Reoperation
+                            grp = df_reop.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "re_op", "count"]
+
+                            # Prozentanteil berechnen
+                            grp["prozent"] = grp["count"] / total_rektopexie * 100
+
+                            # Beschriftung für Balken
+                            grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
+
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                text="text_label",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"re_op": "Reoperation"}
+                            )
+                        
+                            fig.update_traces(
+                                textposition='auto',
+                                textangle=0,
+                                cliponaxis=False,
+                                textfont_size=16, 
+                                insidetextfont=dict(size=16),
+                                outsidetextfont=dict(size=16),
+                                marker_line_width=0
+                            )
+                        
+                            fig.update_layout(
+                                height=400,  
+                                margin=dict(l=10, r=10, t=0, b=10),
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                showlegend=False,
+                                font=dict(size=16),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            )
+        
+                            st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                            st.session_state["pdf_figures"][bereich]["kachel_rektopexie_reop_ges"] = fig
+                            
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_reop_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für Reoperationen bei Rektopexien gefunden.")
+                else:
+                    missing = required_cols - set(df_bereich.columns)
+                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
+
+            st.markdown('</div>', unsafe_allow_html=True)   
             # ================== Kachel 2 "Zugang - Rektopexien" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
