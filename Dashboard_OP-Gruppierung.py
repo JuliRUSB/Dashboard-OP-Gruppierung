@@ -2917,9 +2917,72 @@ for i, bereich in enumerate(BEREICHE):
                         st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
                     else:
                         st.info("Keine Daten für Komplikationen nach nicht-onkologischen Resektionen")
-                        
-            # ================== Kachel 1 "Zugang - nicht-onkologische Kolonresektionen" ==================      
+            
+            # ================== Kachel 1 "Reoperation - nicht-onkologische Kolonresektionen" ==================      
             with col2.container(border=True):
+                # st.write(f"DEBUG: Bereich: '{bereich}'")
+                required_cols = {"gruppen", "jahr_opdatum", "re_op"}
+                
+                if required_cols.issubset(df_bereich.columns):                 
+                    pattern = "Kolon nicht-onkologisch"  # Filter für nicht-onkologische Kolonresektionen
+                    df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko = len(df_plot_nicht_onko)
+            
+                    st.metric(label="Reoperation - nicht-onkologische Kolonresektionen", value=total_nicht_onko)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    
+                    if total_nicht_onko > 0:
+                        # Gruppierung nach Jahr und Reoperation
+                        grp = df_plot_nicht_onko.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "re_op", "count"]
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="re_op",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"zugang": "Zugang"}
+                        )
+                    
+                        fig.update_traces(
+                            textposition='auto',
+                            textangle=0,
+                            cliponaxis=False,
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+                    
+                        fig.update_layout(
+                            height=400,  
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend_title_text="",
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+    
+                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                        st.session_state["pdf_figures"][bereich]["kachel_nicht_onko_reop_ges"] = fig
+                        
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_reop_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für Reoperationen bei nicht-onkologischen Kolonresektionen gefunden.")
+                else:
+                    missing = required_cols - set(df_bereich.columns)
+                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
+
+            st.markdown('</div>', unsafe_allow_html=True)   
+            
+            # ================== Kachel 1 "Zugang - nicht-onkologische Kolonresektionen" ==================      
+            with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "zugang"}
                 
