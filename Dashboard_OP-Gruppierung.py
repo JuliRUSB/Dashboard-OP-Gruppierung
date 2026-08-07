@@ -186,8 +186,9 @@ def prepare_data(df):
         1: 'Ja',
         0: 'Nein'
     }
-    df['hsm'] = pd.to_numeric(df['hsm'], errors='coerce')
-    df['hsm'] = df['hsm'].map(hsm_mapping).fillna('Unbekannt')
+    if 'clavien_dindo' in df.columns:
+        df['hsm'] = pd.to_numeric(df['hsm'], errors='coerce')
+        df['hsm'] = df['hsm'].map(hsm_mapping).fillna('Unbekannt')
     
     # Leber-Gruppen: Spalten mit 'leber_gruppen___' mappen
     leber_gruppen_cols = [c for c in df.columns if c.startswith('leber_gruppen___')]
@@ -242,8 +243,9 @@ def prepare_data(df):
         2: 'nein',
         3: 'unbekannt'
     }
-    df['anastomoseninsuffizienz'] = pd.to_numeric(df['anastomoseninsuffizienz'], errors='coerce')
-    df['anastomoseninsuffizienz'] = df['anastomoseninsuffizienz'].map(anastomoseninsuffizienz_mapping).fillna('Unbekannt')
+    if 'anastomoseninsuffizienz' in df.columns:
+        df['anastomoseninsuffizienz'] = pd.to_numeric(df['anastomoseninsuffizienz'], errors='coerce')
+        df['anastomoseninsuffizienz'] = df['anastomoseninsuffizienz'].map(anastomoseninsuffizienz_mapping).fillna('Unbekannt')
     
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
