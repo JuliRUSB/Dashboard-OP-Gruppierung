@@ -2935,7 +2935,7 @@ for i, bereich in enumerate(BEREICHE):
                     # Prozent berechnen
                     prozent = (total_reop / total_nicht_onko * 100 if total_nicht_onko > 0 else 0)
             
-                    st.metric(label="Reoperation - nicht-onkologische Kolonresektionen", value=f"{total_reop}({prozent:.1f}%) von {total_nicht_onko}")
+                    st.metric(label="Reoperation - nicht-onkologische Kolonresektionen", value=f"{total_reop} ({prozent:.1f}%) von {total_nicht_onko}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko > 0:
@@ -2947,14 +2947,20 @@ for i, bereich in enumerate(BEREICHE):
                             # Gruppierung nach Jahr und Reoperation
                             grp = df_plot_nicht_onko.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "re_op", "count"]
-                
+
+                            # Prozentanteil berechnen
+                            grp["prozent"] = grp["count"] / total_nicht_onko * 100
+
+                            # Beschriftung für Balken
+                            grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
+
                             fig = px.bar(
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
                                 color="re_op",
                                 barmode="group",
-                                text="count",
+                                text="text_label",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"re_op": "Reoperation"}
                             )
