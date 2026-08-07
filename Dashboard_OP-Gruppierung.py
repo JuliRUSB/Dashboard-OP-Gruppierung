@@ -127,6 +127,7 @@ def export_redcap_data(api_url):
         'fields[22]': 'gruppen',                    # kolorektal
         'fields[23]': 'clavien_dindo',              # kolorektal
         'fields[24]': 'anastomoseninsuffizienz',    # kolorektal
+        'fields[25]': 're_op',                      # kolorektal
         'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -246,6 +247,16 @@ def prepare_data(df):
     if 'anastomoseninsuffizienz' in df.columns:
         df['anastomoseninsuffizienz'] = pd.to_numeric(df['anastomoseninsuffizienz'], errors='coerce')
         df['anastomoseninsuffizienz'] = df['anastomoseninsuffizienz'].map(anastomoseninsuffizienz_mapping).fillna('Unbekannt')
+
+    # KOLOREKTAL: Re-Operation innerhalb von 30 Tagen nach Indexoperation: numerische Codes in Text umwandeln
+    re_op_mapping = {
+        1: 'ja',
+        2: 'nein',
+        3: 'unbekannt'
+    }
+    if 're_op' in df.columns:
+        df['re_op'] = pd.to_numeric(df['re_op'], errors='coerce')
+        df['re_op'] = df['re_op'].map(re_op_mapping).fillna('Unbekannt')
     
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
