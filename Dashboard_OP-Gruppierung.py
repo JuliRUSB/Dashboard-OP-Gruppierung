@@ -2993,7 +2993,7 @@ for i, bereich in enumerate(BEREICHE):
                             st.html("<div style='height: 330px;'></div>")
                         else:
                             # Gruppierung nach Jahr und Anastomoseninsuffizienz
-                            grp = df_nicht_onko.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
+                            grp = df_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
                 
                             fig = px.bar(
