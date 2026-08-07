@@ -2984,7 +2984,10 @@ for i, bereich in enumerate(BEREICHE):
                     df_anastinsuff = df_nicht_onko[df_nicht_onko["anastomoseninsuffizienz"].str.contains(pattern, na=False)].copy()
                     total_anastinsuff = len(df_anastinsuff)
                     
-                    st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_anastinsuff} von {total_nicht_onko}")
+                    # Prozent berechnen
+                    prozent = (total_anastinsuff / total_nicht_onko * 100 if total_nicht_onko > 0 else 0)
+                    
+                    st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_anastinsuff}({prozent:.1f}%) von {total_nicht_onko}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko > 0:
