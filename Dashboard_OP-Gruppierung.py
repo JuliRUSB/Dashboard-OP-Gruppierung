@@ -2882,7 +2882,7 @@ for i, bereich in enumerate(BEREICHE):
                             legend_title_text="",
                             legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
                             xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range": [0, 100]}
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10}
                         )
             
                         st.plotly_chart(fig, use_container_width=True, key=f"kachelnicht_onko_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
