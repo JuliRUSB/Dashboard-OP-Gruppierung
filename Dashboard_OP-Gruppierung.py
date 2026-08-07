@@ -2974,7 +2974,7 @@ for i, bereich in enumerate(BEREICHE):
                                 margin=dict(l=10, r=10, t=0, b=10),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
-                                showlegend=false,
+                                showlegend=False,
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
