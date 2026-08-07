@@ -3021,9 +3021,10 @@ for i, bereich in enumerate(BEREICHE):
                             st.html("<div style='height: 330px;'></div>")
                         else:
                             # Gruppierung nach Jahr und Anastomoseninsuffizienz
-                            grp = df_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
-                            grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
-
+                            # grp = df_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
+                            # grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
+                            grp = df_anastinsuff.groupby(["jahr_opdatum"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "count"]
                             # Prozentanteil berechnen
                             grp["prozent"] = grp["count"] / total_nicht_onko * 100
 
@@ -3034,8 +3035,8 @@ for i, bereich in enumerate(BEREICHE):
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
-                                color="anastomoseninsuffizienz",
-                                barmode="group",
+                                # color="anastomoseninsuffizienz",
+                                # barmode="group",
                                 text="text_label",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"anastomoseninsuffizienz": "Anastomoseninsuffizienz"}
@@ -3058,7 +3059,7 @@ for i, bereich in enumerate(BEREICHE):
                                 yaxis_title=None, 
                                 showlegend=False,
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
-                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 1}  
                             )
         
                             st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
