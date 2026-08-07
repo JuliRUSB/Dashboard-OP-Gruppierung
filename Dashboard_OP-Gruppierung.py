@@ -2900,7 +2900,7 @@ for i, bereich in enumerate(BEREICHE):
                     total_rektopexie = len(df_plot_rektopexie)
 
                     pattern = "IIIa|IIIb|IVa|IVb|V" # Filter für Clavien-Dindo >= IIIa
-                    df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"]].str.contains(pattern, na=False)].copy()
+                    df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"].str.contains(pattern, na=False)].copy()
                     total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
           
                     st.metric(label="Clavien-Dindo-Grad ≥ IIIa - Rektopexien", value=f"{total_dindo} von total_rektopexie")
