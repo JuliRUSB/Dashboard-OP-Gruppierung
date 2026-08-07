@@ -2826,6 +2826,65 @@ for i, bereich in enumerate(BEREICHE):
         if bereich == "Kolorektale Chirurgie":
             col1, col2 = st.columns(2)
 
+            # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - nicht-onkologische Kolonresektionen ==================
+            with col1.container(border=True):          
+                required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo", "zugang"}
+            
+                if required_cols.issubset(df_bereich.columns):
+                    pattern = "Kolon nicht-onkologisch"    # Filter für nicht-onkologische Kolonresektionen  
+                    df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko = len(df_plot_nicht_onko)
+
+                    pattern = "IIIa|IIIb|IVa|IVb|V"     # Filter für Clavien-Dindo >= IIIa
+                    df_plot_dindo_nicht_onko = df_plot_nicht_onko[df_plot_nicht_onko["clavien_dindo"].str.contains(pattern, na=False)].copy()
+                    total_dindo_nicht_onko = len(df_plot_dindo_nicht_onko)
+          
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - nicht-onkologische Kolonresektionen", value=f"{total_dindo_nicht_onko} von {total_nicht_onko}")
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+            
+                    if total_nicht_onko > 0:
+                        grp = df_plot_dindo_nicht_onko.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "zugang", "count"]
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="zugang",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"zugang": "Zugang"},
+                        )
+            
+                        fig.update_traces(
+                            textposition='auto',
+                            cliponaxis=False,
+                            textfont_size=16,
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+            
+                        fig.update_layout(
+                            height=400,
+                            uniformtext_minsize=16,
+                            uniformtext_mode='show',
+                            bargap=0.1,
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            xaxis_title=None,
+                            yaxis_title=None,
+                            showlegend=True,
+                            legend_title_text="",
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}, "tick0": 0, "dtick": 10, "range": [0, 100]}
+                        )
+            
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachelnicht_onko_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für Komplikationen nach nicht-onkologischen Resektionen")
+                        
             # ================== Kachel 1 "Nicht-onkologische Kolonresektionen" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
