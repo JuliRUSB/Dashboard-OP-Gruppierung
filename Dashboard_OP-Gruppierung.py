@@ -3020,16 +3020,15 @@ for i, bereich in enumerate(BEREICHE):
                             st.success("Im ausgewählten Zeitraum sind keine Anastomoseninsuffizienzen aufgetreten.")
                             st.html("<div style='height: 330px;'></div>")
                         else:
-                            # Gruppierung nach Jahr und Anastomoseninsuffizienz
-                            # grp = df_anastinsuff.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
-                            # grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
+                            # Gruppierung nach Jahr
                             grp = df_anastinsuff.groupby(["jahr_opdatum"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "count"]
                             # Prozentanteil berechnen
                             grp["prozent"] = grp["count"] / total_nicht_onko * 100
 
                             # Beschriftung für Balken
-                            grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
+                            grp["text_label"] = grp.apply(lambda x: f"{x['count']:.0f} <br> ({x['prozent']:.1f}%)", axis=1)
+
 
                             fig = px.bar(
                                 grp,
