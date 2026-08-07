@@ -14,7 +14,7 @@ import streamlit.components.v1 as components     # Modul von Streamlit, mit dem 
 
 
 # Warnungen von urllib3 deaktivieren (unsicheres HTTPS)
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
 # ==================================================
 
 # Konfiguration
@@ -2842,7 +2842,7 @@ for i, bereich in enumerate(BEREICHE):
                     # Prozent berechnen
                     prozent = (total_dindo_nicht_onko / total_nicht_onko * 100 if total_nicht_onko > 0 else 0)
         
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - nicht-onkologische Kolonresektionen", value=f"{total_dindo_nicht_onko} ({prozent:.1f}%") von {total_nicht_onko})
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - nicht-onkologische Kolonresektionen", value=f"{total_dindo_nicht_onko} ({prozent:.1f}%) von {total_nicht_onko}"
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_nicht_onko > 0:
