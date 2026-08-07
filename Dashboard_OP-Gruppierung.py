@@ -2925,8 +2925,8 @@ for i, bereich in enumerate(BEREICHE):
                 
                 if required_cols.issubset(df_bereich.columns):                 
                     pattern = "Kolon nicht-onkologisch"  # Filter für nicht-onkologische Kolonresektionen
-                    df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                    total_nicht_onko = len(df_plot_nicht_onko)
+                    df_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko = len(df_nicht_onko)
 
                     pattern = "ja"
                     df_reop = df_nicht_onko[df_nicht_onko["re_op"].str.contains(pattern, na=False)].copy()
