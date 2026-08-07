@@ -2891,13 +2891,12 @@ for i, bereich in enumerate(BEREICHE):
             st.markdown('</div>', unsafe_allow_html=True)
 
                 # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
-                with col1.container(border=True):
-                    if required_cols.issubset(df_bereich.columns):              
+                with col1.container(border=True):           
                     pattern = "Rektopexie"    # Filter für Rektopexie  
                     df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_rektopexie = len(df_plot_rektopexie)
 
-                    pattern = "IIIa|IIIb|IVa|IVb|V"
+                    pattern = "IIIa|IIIb|IVa|IVb|V" # Filter für Clavien-Dindo >= IIIa
                     df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"]].str.contains(pattern, na=False)].copy()
                     total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
 
