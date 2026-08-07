@@ -2943,9 +2943,8 @@ for i, bereich in enumerate(BEREICHE):
                             st.success("Im ausgewählten Zeitraum habe keine Reoperationen stattgefunden.")
                             st.html("<div style='height: 330px;'></div>")
                         else:
-
                             # Gruppierung nach Jahr und Reoperation
-                            grp = df_nicht_onko.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
+                            grp = df_reop.groupby(["jahr_opdatum", "re_op"], as_index=False).size()
                             grp.columns = ["jahr_opdatum", "re_op", "count"]
 
                             # Prozentanteil berechnen
@@ -2958,8 +2957,6 @@ for i, bereich in enumerate(BEREICHE):
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
-                                color="re_op",
-                                barmode="group",
                                 text="text_label",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"re_op": "Reoperation"}
@@ -2981,6 +2978,7 @@ for i, bereich in enumerate(BEREICHE):
                                 xaxis_title=None, 
                                 yaxis_title=None, 
                                 showlegend=False,
+                                font=dict(size=16),
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
