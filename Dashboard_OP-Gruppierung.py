@@ -2907,10 +2907,8 @@ for i, bereich in enumerate(BEREICHE):
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_rektopexie > 0:
-                        grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "clavien_dindo", "count"]
-            
-                        grp["text_label"] = grp["count"].astype(str)
+                        grp = df_plot_dindo_rektopexie.groupby(["jahr_opdatum"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "count"]
             
                         fig = px.bar(
                             grp,
