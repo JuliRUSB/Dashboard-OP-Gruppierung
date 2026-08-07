@@ -2980,7 +2980,7 @@ for i, bereich in enumerate(BEREICHE):
                     total_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_nicht_onko_anastinsuff = len(total_nicht_onko)
 
-                    st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_nicht_onko_anastinsuff)} von {total_nicht_onko}")
+                    st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_nicht_onko_anastinsuff} von {total_nicht_onko}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_nicht_onko_anastinsuff > 0:
