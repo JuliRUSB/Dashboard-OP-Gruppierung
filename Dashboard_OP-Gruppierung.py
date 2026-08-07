@@ -124,7 +124,8 @@ def export_redcap_data(api_url):
         'fields[19]': 'crs_details',
         'fields[20]': 'kpl_was',
         'fields[21]': 'kpl_was_surv',
-        'fields[22]': 'gruppen',            #kolorektal
+        'fields[22]': 'gruppen',              #kolorektal
+        'fields[23]': 'clavien_dindo',        #kolorektal
         'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -202,7 +203,7 @@ def prepare_data(df):
         df['leber_gruppen'] = df.apply(get_leber_gruppen, axis=1)
         df = df.drop(columns=leber_gruppen_cols)  # Ursprüngliche Spalten löschen
     
-    # Kolorektal: Spalten mit 'gruppen___' mappen
+    # KOLOREKTAL: Spalten mit 'gruppen___' mappen
     gruppen_cols = [c for c in df.columns if c.startswith('gruppen___')]
     if gruppen_cols:
         mapping = {
@@ -217,6 +218,22 @@ def prepare_data(df):
             return ', '.join(label for col, label in mapping.items() if row.get(col) == '1') or 'Nicht angegeben'
         df['gruppen'] = df.apply(get_gruppen, axis=1)
         df = df.drop(columns=gruppen_cols)  # Ursprüngliche Spalten löschen
+
+    # KOLOREKTAL: clavien_dindo: numerische Codes in Text umwandeln
+    clavien_dindo_mapping = {
+        1: 'Grade I',
+        2: 'Grade II',
+        3: 'Grade IIIa',
+        4: 'Grade IIIb',
+        5: 'Grade IVa',
+        6: 'Grade IVb',
+        7: 'Grade V',
+        8: 'keine Komplikation',
+        9: 'unbekannt'
+    }
+    if 'clavien_dindo' in df.columns:
+        df['clavien_dindo'] = pd.to_numeric(df['clavien_dindo'], errors='coerce')
+        df['clavien_dindo'] = df['clavien_dindo'].map(clavien_dindo_mapping).fillna('Unbekannt')
     
     # Sarkom-Gruppen: Spalten mit 'gruppen_chir_onko_sark___' mappen
     gruppen_chir_onko_sark_cols = [c for c in df.columns if c.startswith('gruppen_chir_onko_sark___')]
