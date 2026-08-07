@@ -2810,7 +2810,7 @@ for i, bereich in enumerate(BEREICHE):
             col1, col2 = st.columns(2)
 
             # ================== Kachel 1 "Nicht-onkologische Kolonresektionen" ==================      
-            with col2.container(border=True):
+            with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "zugang"}
                 
