@@ -2853,7 +2853,7 @@ for i, bereich in enumerate(BEREICHE):
                         grp["prozent"] = grp["count"] / total_nicht_onko * 100
 
                         # Beschriftung für Balken
-                        grp["text_label"] = grp.apply(lambda x: f"{x['count']} ({x['prozent']:.1f}%)",axis=1)
+                        grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
                         
                         fig = px.bar(
                             grp,
