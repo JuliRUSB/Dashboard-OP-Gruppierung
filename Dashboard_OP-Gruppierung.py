@@ -3122,7 +3122,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Komplikationen nach Rektopexien")
     
-            # ================== Kachel 2 "Zugang - Rektopexie" ==================      
+            # ================== Kachel 2 "Zugang - Rektopexien" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "zugang"}
@@ -3186,7 +3186,7 @@ for i, bereich in enumerate(BEREICHE):
 
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # ================== Kachel 1 "Anastomoseninsuffizienz - Rektopexie" ==================      
+        # ================== Kachel 1 "Anastomoseninsuffizienz - Rektopexien" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "anastomoseninsuffizienz"}
@@ -3203,7 +3203,7 @@ for i, bereich in enumerate(BEREICHE):
                     # Prozent berechnen
                     prozent = (total_anastinsuff / total_rektopexie * 100 if total_rektopexie > 0 else 0)
                     
-                    st.metric(label="Anastomoseninsuffizienz - Rektopexie", value=f"{total_anastinsuff}({prozent:.1f}%) von {total_rektopexie}")
+                    st.metric(label="Anastomoseninsuffizienz - Rektopexien", value=f"{total_anastinsuff}({prozent:.1f}%) von {total_rektopexie}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_rektopexie > 0:
