@@ -2849,7 +2849,7 @@ for i, bereich in enumerate(BEREICHE):
         if bereich == "Kolorektale Chirurgie":
             col1, col2 = st.columns(2)
 
-            # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - nicht-onkologische Kolonresektionen ==================
+            # ================== Kachel : "Clavien-Dindo-Grad >= IIIa - nicht-onkologische Kolonresektionen ==================
             with col1.container(border=True):          
                 required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo", "zugang"}
             
@@ -2918,7 +2918,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Komplikationen nach nicht-onkologischen Resektionen")
             
-            # ================== Kachel 1 "Reoperation - nicht-onkologische Kolonresektionen" ==================      
+            # ================== Kachel : "Reoperation - nicht-onkologische Kolonresektionen" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "re_op"}
@@ -2995,70 +2995,7 @@ for i, bereich in enumerate(BEREICHE):
 
             st.markdown('</div>', unsafe_allow_html=True)   
 
-            # ================== Kachel 1 "Zugang - nicht-onkologische Kolonresektionen" ==================      
-            with col1.container(border=True):
-                # st.write(f"DEBUG: Bereich: '{bereich}'")
-                required_cols = {"gruppen", "jahr_opdatum", "zugang"}
-                
-                if required_cols.issubset(df_bereich.columns):                 
-                    pattern = "Kolon nicht-onkologisch"  # Filter für nicht-onkologische Kolonresektionen
-                    df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                    total_nicht_onko = len(df_plot_nicht_onko)
-            
-                    st.metric(label="Zugang - nicht-onkologische Kolonresektionen", value=total_nicht_onko)
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                    
-                    if total_nicht_onko > 0:
-                        # Gruppierung nach Jahr und Zugang
-                        grp = df_plot_nicht_onko.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "zugang", "count"]
-            
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="zugang",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"zugang": "Zugang"}
-                        )
-                    
-                        fig.update_traces(
-                            textposition='auto',
-                            textangle=0,
-                            cliponaxis=False,
-                            textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            marker_line_width=0
-                        )
-                    
-                        fig.update_layout(
-                            height=400,  
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend_title_text="",
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
-    
-                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                        st.session_state["pdf_figures"][bereich]["kachel_nicht_onko_ges"] = fig
-                        
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Daten für nicht-onkologische Kolonresektionen gefunden.")
-                else:
-                    missing = required_cols - set(df_bereich.columns)
-                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            # ================== Kachel 1 "Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen" ==================      
+            # ================== Kachel : "Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen" ==================      
             with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "anastomoseninsuffizienz"}
@@ -3135,8 +3072,71 @@ for i, bereich in enumerate(BEREICHE):
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
 
             st.markdown('</div>', unsafe_allow_html=True)
+            
+            # ================== Kachel : "Zugang - nicht-onkologische Kolonresektionen" ==================      
+            with col2.container(border=True):
+                # st.write(f"DEBUG: Bereich: '{bereich}'")
+                required_cols = {"gruppen", "jahr_opdatum", "zugang"}
+                
+                if required_cols.issubset(df_bereich.columns):                 
+                    pattern = "Kolon nicht-onkologisch"  # Filter für nicht-onkologische Kolonresektionen
+                    df_plot_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko = len(df_plot_nicht_onko)
+            
+                    st.metric(label="Zugang - nicht-onkologische Kolonresektionen", value=total_nicht_onko)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    
+                    if total_nicht_onko > 0:
+                        # Gruppierung nach Jahr und Zugang
+                        grp = df_plot_nicht_onko.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "zugang", "count"]
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="zugang",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"zugang": "Zugang"}
+                        )
+                    
+                        fig.update_traces(
+                            textposition='auto',
+                            textangle=0,
+                            cliponaxis=False,
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+                    
+                        fig.update_layout(
+                            height=400,  
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend_title_text="",
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+    
+                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                        st.session_state["pdf_figures"][bereich]["kachel_nicht_onko_ges"] = fig
+                        
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für nicht-onkologische Kolonresektionen gefunden.")
+                else:
+                    missing = required_cols - set(df_bereich.columns)
+                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
 
-            # ================== Kachel 2: "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            # ================== Kachel : "Clavien-Dindo-Grad >= IIIa - Rektopexien ==================
             with col1.container(border=True):          
                 required_cols = {"gruppen", "jahr_opdatum", "clavien_dindo", "zugang"}
             
@@ -3210,7 +3210,7 @@ for i, bereich in enumerate(BEREICHE):
                     else:
                         st.info("Keine Daten für Komplikationen nach Rektopexien")
 
-            # ================== Kachel 1 "Reoperation - Rektopexien" ==================      
+            # ================== Kachel : "Reoperation - Rektopexien" ==================      
             with col2.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "re_op"}
@@ -3286,72 +3286,9 @@ for i, bereich in enumerate(BEREICHE):
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
 
             st.markdown('</div>', unsafe_allow_html=True)   
-            # ================== Kachel 2 "Zugang - Rektopexien" ==================      
-            with col2.container(border=True):
-                # st.write(f"DEBUG: Bereich: '{bereich}'")
-                required_cols = {"gruppen", "jahr_opdatum", "zugang"}
-                
-                if required_cols.issubset(df_bereich.columns):
-                    # Filter für Rektopexie                
-                    pattern = "Rektopexie"
-                    df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                    total_rektopexie = len(df_plot_rektopexie)
             
-                    st.metric(label="Zugang - Rektopexien", value=total_rektopexie)
-                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
-                    
-                    if total_rektopexie > 0:
-                        # Gruppierung nach Jahr und Zugang
-                        grp = df_plot_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "zugang", "count"]
-            
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="zugang",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"zugang": "Zugang"}
-                        )
-                    
-                        fig.update_traces(
-                            textposition='auto',
-                            textangle=0,
-                            cliponaxis=False,
-                            textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            marker_line_width=0
-                        )
-                    
-                        fig.update_layout(
-                            height=400,  
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend_title_text="",
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
-    
-                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                        st.session_state["pdf_figures"][bereich]["kachel_rektopexie_ges"] = fig
-                        
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Daten für Rektopexie gefunden.")
-                else:
-                    missing = required_cols - set(df_bereich.columns)
-                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        # ================== Kachel 1 "Anastomoseninsuffizienz - Rektopexien" ==================      
-            with col2.container(border=True):
+            # ================== Kachel : "Anastomoseninsuffizienz - Rektopexien" ==================      
+            with col1.container(border=True):
                 # st.write(f"DEBUG: Bereich: '{bereich}'")
                 required_cols = {"gruppen", "jahr_opdatum", "anastomoseninsuffizienz"}
                 
@@ -3427,7 +3364,71 @@ for i, bereich in enumerate(BEREICHE):
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
 
             st.markdown('</div>', unsafe_allow_html=True)
+
+            # ================== Kachel : "Zugang - Rektopexien" ==================      
+            with col2.container(border=True):
+                # st.write(f"DEBUG: Bereich: '{bereich}'")
+                required_cols = {"gruppen", "jahr_opdatum", "zugang"}
+                
+                if required_cols.issubset(df_bereich.columns):
+                    # Filter für Rektopexie                
+                    pattern = "Rektopexie"
+                    df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_rektopexie = len(df_plot_rektopexie)
             
+                    st.metric(label="Zugang - Rektopexien", value=total_rektopexie)
+                    st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
+                    
+                    if total_rektopexie > 0:
+                        # Gruppierung nach Jahr und Zugang
+                        grp = df_plot_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "zugang", "count"]
+            
+                        fig = px.bar(
+                            grp,
+                            x="jahr_opdatum",
+                            y="count",
+                            color="zugang",
+                            barmode="group",
+                            text="count",
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"zugang": "Zugang"}
+                        )
+                    
+                        fig.update_traces(
+                            textposition='auto',
+                            textangle=0,
+                            cliponaxis=False,
+                            textfont_size=16, 
+                            insidetextfont=dict(size=16),
+                            outsidetextfont=dict(size=16),
+                            marker_line_width=0
+                        )
+                    
+                        fig.update_layout(
+                            height=400,  
+                            margin=dict(l=10, r=10, t=0, b=10),
+                            xaxis_title=None, 
+                            yaxis_title=None, 
+                            showlegend=True,
+                            legend_title_text="",
+                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                            xaxis={"type": "category", "tickfont": {"size": 16}},
+                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                        )
+    
+                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                        st.session_state["pdf_figures"][bereich]["kachel_rektopexie_ges"] = fig
+                        
+                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                    else:
+                        st.info("Keine Daten für Rektopexie gefunden.")
+                else:
+                    missing = required_cols - set(df_bereich.columns)
+                    st.error(f"Fehlende Spalten im Datensatz: {missing}")
+
+            st.markdown('</div>', unsafe_allow_html=True)
+        
         # ================== ENDE BEREICH KOLOREKTALE CHIRURGIE ================== 
         
 
