@@ -3028,8 +3028,8 @@ for i, bereich in enumerate(BEREICHE):
                             )
                 
                             st.plotly_chart(fig, use_container_width=True, key=f"kachel_rektopexie_claviendindo_{bereich}", config={"displayModeBar": False, "responsive": True})
-                        else:
-                            st.info("Keine Daten für Komplikationen nach Rektopexien")
+                    else:
+                        st.info("Keine Daten für Komplikationen nach Rektopexien")
     
             # ================== Kachel 2 "Rektopexie" ==================      
             with col2.container(border=True):
