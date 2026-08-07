@@ -2977,56 +2977,64 @@ for i, bereich in enumerate(BEREICHE):
                 
                 if required_cols.issubset(df_bereich.columns):              
                     pattern = "Kolon nicht-onkologisch" # Filter für nicht-onkologische Kolonresektionen 
-                    total_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
-                    total_nicht_onko_anastinsuff = len(total_nicht_onko)
+                    df_nicht_onko = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
+                    total_nicht_onko = len(df_nicht_onko)
 
+                    pattern = "ja"
+                    df_anastinsuff = df_nicht_onko[df_nicht_onko["anastomoseninsuffizienz"].str.contains(pattern, na=False)].copy()
+                    total_anastinsuff = len(df_anastinsuff)
+                    
                     st.metric(label="Anastomoseninsuffizienz - nicht-onkologische Kolonresektionen", value=f"{total_nicht_onko_anastinsuff} von {total_nicht_onko}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
-                    if total_nicht_onko_anastinsuff > 0:
-                        # Gruppierung nach Jahr und Anastomoseninsuffizienz
-                        grp = total_nicht_onko.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
-                        grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
-            
-                        fig = px.bar(
-                            grp,
-                            x="jahr_opdatum",
-                            y="count",
-                            color="anastomoseninsuffizienz",
-                            barmode="group",
-                            text="count",
-                            color_discrete_sequence=COLOR_PALETTE,
-                            labels={"anastomoseninsuffizienz": "Anastomoseninsuffizienz"}
-                        )
-                    
-                        fig.update_traces(
-                            textposition='auto',
-                            textangle=0,
-                            cliponaxis=False,
-                            textfont_size=16, 
-                            insidetextfont=dict(size=16),
-                            outsidetextfont=dict(size=16),
-                            marker_line_width=0
-                        )
-                    
-                        fig.update_layout(
-                            height=400,  
-                            margin=dict(l=10, r=10, t=0, b=10),
-                            xaxis_title=None, 
-                            yaxis_title=None, 
-                            showlegend=True,
-                            legend_title_text="",
-                            legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
-                            xaxis={"type": "category", "tickfont": {"size": 16}},
-                            yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
-                        )
-    
-                        st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
-                        st.session_state["pdf_figures"][bereich]["kachel_nicht_onko__anastinsuff_ges"] = fig
+                    if total_nicht_onko > 0:
+                        if total_anastinsuff == 0:
+                            st.success("Im ausgewählten Zeitraum sind keine Anastomoseninsuffizienzen aufgetreten.")
+                            st.html("<div style='height: 330px;'></div>")
+                        else:
+                            # Gruppierung nach Jahr und Anastomoseninsuffizienz
+                            grp = total_nicht_onko.groupby(["jahr_opdatum", "anastomoseninsuffizienz"], as_index=False).size()
+                            grp.columns = ["jahr_opdatum", "anastomoseninsuffizienz", "count"]
+                
+                            fig = px.bar(
+                                grp,
+                                x="jahr_opdatum",
+                                y="count",
+                                color="anastomoseninsuffizienz",
+                                barmode="group",
+                                text="count",
+                                color_discrete_sequence=COLOR_PALETTE,
+                                labels={"anastomoseninsuffizienz": "Anastomoseninsuffizienz"}
+                            )
                         
-                        st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko__anastinsuff_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
-                    else:
-                        st.info("Keine Daten für Anastomoseninsuffizienz bei nicht-onkologischen Kolonresektionen gefunden.")
+                            fig.update_traces(
+                                textposition='auto',
+                                textangle=0,
+                                cliponaxis=False,
+                                textfont_size=16, 
+                                insidetextfont=dict(size=16),
+                                outsidetextfont=dict(size=16),
+                                marker_line_width=0
+                            )
+                        
+                            fig.update_layout(
+                                height=400,  
+                                margin=dict(l=10, r=10, t=0, b=10),
+                                xaxis_title=None, 
+                                yaxis_title=None, 
+                                showlegend=True,
+                                legend_title_text="",
+                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                                xaxis={"type": "category", "tickfont": {"size": 16}},
+                                yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
+                            )
+        
+                            st.session_state.setdefault("pdf_figures", {}).setdefault(bereich, {})
+                            st.session_state["pdf_figures"][bereich]["kachel_nicht_onko__anastinsuff_ges"] = fig
+                            
+                            st.plotly_chart(fig, use_container_width=True, key=f"kachel_nicht_onko__anastinsuff_ges_{bereich}", config={"displayModeBar": False, "responsive": True})
+                        else:
+                            st.info("Keine Daten für Anastomoseninsuffizienz bei nicht-onkologischen Kolonresektionen gefunden.")
                 else:
                     missing = required_cols - set(df_bereich.columns)
                     st.error(f"Fehlende Spalten im Datensatz: {missing}")
