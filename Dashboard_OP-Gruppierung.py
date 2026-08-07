@@ -2914,11 +2914,11 @@ for i, bereich in enumerate(BEREICHE):
                             grp,
                             x="jahr_opdatum",
                             y="count",
-                            color="clavien_dindo",
-                            barmode="group",
-                            text="text_label",
+                            #color="clavien_dindo",
+                            #barmode="group",
+                            #text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"clavien_dindo": "Clavien-Dindo-Grad"},
+                            #labels={"clavien_dindo": "Clavien-Dindo-Grad"},
                         )
             
                         fig.update_traces(
