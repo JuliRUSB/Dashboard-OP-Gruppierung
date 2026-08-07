@@ -3022,9 +3022,7 @@ for i, bereich in enumerate(BEREICHE):
                                 margin=dict(l=10, r=10, t=0, b=10),
                                 xaxis_title=None, 
                                 yaxis_title=None, 
-                                showlegend=True,
-                                legend_title_text="",
-                                legend=dict(orientation="h", yanchor="top", xanchor="right", x=0.99),
+                                showlegend=False,
                                 xaxis={"type": "category", "tickfont": {"size": 16}},
                                 yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                             )
