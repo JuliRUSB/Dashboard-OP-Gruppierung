@@ -2848,14 +2848,20 @@ for i, bereich in enumerate(BEREICHE):
                     if total_nicht_onko > 0:
                         grp = df_plot_dindo_nicht_onko.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "zugang", "count"]
-            
+
+                        # Prozentanteil je Zugang berechnen
+                        grp["prozent"] = grp["count"] / total_nicht_onko * 100
+
+                        # Beschriftung für Balken
+                        grp["text_label"] = grp.apply(lambda x: f"{x['count']} ({x['prozent']:.1f}%)",axis=1)
+                        
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
                             y="count",
                             color="zugang",
                             barmode="group",
-                            text="count",
+                            text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
                             labels={"zugang": "Zugang"},
                         )
