@@ -2920,7 +2920,7 @@ for i, bereich in enumerate(BEREICHE):
                             grp,
                             x="jahr_opdatum",
                             y="count",
-                            color="gruppen",
+                            color="calvien_dindo",
                             barmode="group",
                             text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
