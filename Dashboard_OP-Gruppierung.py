@@ -2824,14 +2824,19 @@ for i, bereich in enumerate(BEREICHE):
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
                     
                     if total_rektopexie > 0:
-                        grp = df_plot_rektopexie.groupby("jahr_opdatum").size().reset_index(name="count")
+                        # Gruppierung nach Jahr und Zugang
+                        grp = df_plot_rektopexie.groupby(["jahr_opdatum", "zugang"], as_index=False).size()
+                        grp.columns = ["jahr_opdatum", "zugang", "count"]
             
                         fig = px.bar(
                             grp,
                             x="jahr_opdatum",
                             y="count",
+                            color="zugang",
+                            barmode="group",
                             text="count",
-                            color_discrete_sequence=COLOR_PALETTE
+                            color_discrete_sequence=COLOR_PALETTE,
+                            labels={"zugang": "Zugang"}
                         )
                     
                         fig.update_traces(
@@ -2849,7 +2854,8 @@ for i, bereich in enumerate(BEREICHE):
                             margin=dict(l=10, r=10, t=0, b=10),
                             xaxis_title=None, 
                             yaxis_title=None, 
-                            showlegend=False,
+                            showlegend=True,
+                            legend_title_text="",
                             xaxis={"type": "category", "tickfont": {"size": 16}},
                             yaxis={"showticklabels": True, "showgrid": True, "tickfont": {"size": 16}} 
                         )
