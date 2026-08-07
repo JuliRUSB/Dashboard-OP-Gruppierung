@@ -2918,7 +2918,7 @@ for i, bereich in enumerate(BEREICHE):
                             barmode="group",
                             text="text_label",
                             color_discrete_sequence=COLOR_PALETTE,
-                            labels={"zugang": "zugang"},
+                            labels={"zugang": "Zugang"},
                         )
             
                         fig.update_traces(
