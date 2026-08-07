@@ -2903,7 +2903,7 @@ for i, bereich in enumerate(BEREICHE):
                     df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"].str.contains(pattern, na=False)].copy()
                     total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
           
-                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - Rektopexien", value=f"{total_dindo} von total_rektopexie")
+                    st.metric(label="Clavien-Dindo-Grad ≥ IIIa - Rektopexien", value=f"{total_dindo} von {total_rektopexie}")
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_rektopexie > 0:
