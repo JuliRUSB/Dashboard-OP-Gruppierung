@@ -2899,7 +2899,7 @@ for i, bereich in enumerate(BEREICHE):
                     df_plot_rektopexie = df_bereich[df_bereich["gruppen"].str.contains(pattern, na=False)].copy()
                     total_rektopexie = len(df_plot_rektopexie)
 
-                    pattern = "IIIa|IIIb|IVa|IVb|V" # Filter für Clavien-Dindo >= IIIa
+                    pattern = "IIIa|IIIb|IVa|IVb|V"     # Filter für Clavien-Dindo >= IIIa
                     df_plot_dindo_rektopexie = df_plot_rektopexie[df_plot_rektopexie["clavien_dindo"].str.contains(pattern, na=False)].copy()
                     total_dindo_rektopexie = len(df_plot_dindo_rektopexie)
           
@@ -2907,6 +2907,7 @@ for i, bereich in enumerate(BEREICHE):
                     st.markdown("<hr style='margin-top: -15px; margin-bottom: 5px; border: none; border-top: 1px solid #ddd;'>", unsafe_allow_html=True)
             
                     if total_rektopexie > 0:
+                        st.write("Verfügbare Spalten:", df_plot_dindo.columns.tolist())
                         grp = df_plot_dindo.groupby(["jahr_opdatum", "gruppen"], as_index=False).size()
                         grp.columns = ["jahr_opdatum", "gruppen", "count"]
             
