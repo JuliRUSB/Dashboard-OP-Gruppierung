@@ -3002,13 +3002,16 @@ for i, bereich in enumerate(BEREICHE):
                             # Prozentanteil berechnen
                             grp["prozent"] = grp["count"] / total_nicht_onko * 100
 
+                            # Beschriftung für Balken
+                            grp["text_label"] = grp.apply(lambda x: f"{x['count']} <br> ({x['prozent']:.1f}%)",axis=1)
+
                             fig = px.bar(
                                 grp,
                                 x="jahr_opdatum",
                                 y="count",
                                 color="anastomoseninsuffizienz",
                                 barmode="group",
-                                text="count",
+                                text="text_label",
                                 color_discrete_sequence=COLOR_PALETTE,
                                 labels={"anastomoseninsuffizienz": "Anastomoseninsuffizienz"}
                             )
